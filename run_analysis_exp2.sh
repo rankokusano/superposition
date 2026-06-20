@@ -46,13 +46,13 @@ for data_name in self_stay_other_random grid; do
 
     if [ $data_name = "grid" ]; then
 
-        python3 analyze/analyze_vpt.py --epoch $restore_epoch --mode $mode --margin 1 --self_str "a1" --other_str "a2" --save_vision
+        MESA_GL_VERSION_OVERRIDE=3.3 xvfb-run -a python3 analyze/analyze_vpt.py --epoch $restore_epoch --mode $mode --margin 1 --self_str "a1" --other_str "a2" --save_vision
 
     else
 
         for i in "${visualize_data_indexes[@]}"; do
         
-            python3 analyze/record.py \
+            MESA_GL_VERSION_OVERRIDE=3.3 xvfb-run -a python3 analyze/record.py \
                 --epoch $restore_epoch \
                 --mode $mode \
                 --idx $i

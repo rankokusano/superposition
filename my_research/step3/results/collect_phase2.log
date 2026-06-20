@@ -1,0 +1,39 @@
+保存先     : /work/data/data/self_random_other_stay_multi_pref/data.h5
+A-1        : RL actor (/work/my_research/rl_model_v6_actor.pth)
+A-2        : MultiPrefAgent (4 選好)
+SEQ_LENGTH : 101
+N_TRAIN    : 2100
+N_TEST     : 220
+デバイス   : cuda
+
+=== train (2100 ep) ===
+  [train]   100/2100  pref=[Blue:26 Cyan:22 Green:21 Red:31]
+  [train]   200/2100  pref=[Blue:43 Cyan:51 Green:50 Red:56]
+  [train]   300/2100  pref=[Blue:63 Cyan:73 Green:76 Red:88]
+  [train]   400/2100  pref=[Blue:84 Cyan:97 Green:103 Red:116]
+  [train]   500/2100  pref=[Blue:102 Cyan:123 Green:123 Red:152]
+  [train]   600/2100  pref=[Blue:135 Cyan:147 Green:148 Red:170]
+  [train]   700/2100  pref=[Blue:171 Cyan:166 Green:175 Red:188]
+  [train]   800/2100  pref=[Blue:195 Cyan:192 Green:199 Red:214]
+  [train]   900/2100  pref=[Blue:224 Cyan:217 Green:222 Red:237]
+  [train]  1000/2100  pref=[Blue:254 Cyan:246 Green:240 Red:260]
+  [train]  1100/2100  pref=[Blue:271 Cyan:280 Green:267 Red:282]
+  [train]  1200/2100  pref=[Blue:293 Cyan:311 Green:287 Red:309]
+  [train]  1300/2100  pref=[Blue:313 Cyan:338 Green:312 Red:337]
+  [train]  1400/2100  pref=[Blue:340 Cyan:373 Green:330 Red:357]
+  [train]  1500/2100  pref=[Blue:362 Cyan:397 Green:361 Red:380]
+  [train]  1600/2100  pref=[Blue:388 Cyan:427 Green:383 Red:402]
+  [train]  1700/2100  pref=[Blue:417 Cyan:458 Green:402 Red:423]
+  [train]  1800/2100  pref=[Blue:441 Cyan:477 Green:428 Red:454]
+  [train]  1900/2100  pref=[Blue:474 Cyan:500 Green:454 Red:472]
+  [train]  2000/2100  pref=[Blue:494 Cyan:527 Green:482 Red:497]
+  [train]  2100/2100  pref=[Blue:518 Cyan:552 Green:505 Red:525]
+  [train] 完了: 2100 episodes  pref={'Red': 525, 'Green': 505, 'Blue': 518, 'Cyan': 552}
+
+=== test (220 ep) ===
+  [test]   100/220  pref=[Blue:32 Cyan:21 Green:20 Red:27]
+  [test]   200/220  pref=[Blue:54 Cyan:53 Green:40 Red:53]
+  [test] 完了: 220 episodes  pref={'Red': 56, 'Green': 48, 'Blue': 57, 'Cyan': 59}
+
+完了: /work/data/data/self_random_other_stay_multi_pref/data.h5
+ファイルサイズ: 2492.1 MB

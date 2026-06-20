@@ -1,0 +1,809 @@
+nohup: ignoring input
+Peforming regression analysis.
+epoch: 0:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 0: 100%|██████████| 1/1 [00:01<00:00,  1.61s/it]epoch: 0: 100%|██████████| 1/1 [00:01<00:00,  1.61s/it]
+epoch: 0: 0it [00:00, ?it/s]epoch: 0: 1it [00:00,  1.07it/s]epoch: 0: 1it [00:00,  1.07it/s]
+epoch: 1:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 1: 100%|██████████| 1/1 [00:01<00:00,  1.35s/it]epoch: 1: 100%|██████████| 1/1 [00:01<00:00,  1.35s/it]
+epoch: 1: 0it [00:00, ?it/s]epoch: 1: 1it [00:00,  1.07it/s]epoch: 1: 1it [00:00,  1.07it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 2:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 2: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]epoch: 2: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]
+epoch: 2: 0it [00:00, ?it/s]epoch: 2: 1it [00:01,  1.01s/it]epoch: 2: 1it [00:01,  1.01s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 3:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 3: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]epoch: 3: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]
+epoch: 3: 0it [00:00, ?it/s]epoch: 3: 1it [00:00,  1.11it/s]epoch: 3: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 4:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 4: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]epoch: 4: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]
+epoch: 4: 0it [00:00, ?it/s]epoch: 4: 1it [00:00,  1.09it/s]epoch: 4: 1it [00:00,  1.09it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 5:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 5: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]epoch: 5: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]
+epoch: 5: 0it [00:00, ?it/s]epoch: 5: 1it [00:00,  1.10it/s]epoch: 5: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 6:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 6: 100%|██████████| 1/1 [00:01<00:00,  1.44s/it]epoch: 6: 100%|██████████| 1/1 [00:01<00:00,  1.44s/it]
+epoch: 6: 0it [00:00, ?it/s]epoch: 6: 1it [00:00,  1.02it/s]epoch: 6: 1it [00:00,  1.02it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 7:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 7: 100%|██████████| 1/1 [00:01<00:00,  1.49s/it]epoch: 7: 100%|██████████| 1/1 [00:01<00:00,  1.49s/it]
+epoch: 7: 0it [00:00, ?it/s]epoch: 7: 1it [00:00,  1.06it/s]epoch: 7: 1it [00:00,  1.06it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 8:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 8: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]epoch: 8: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]
+epoch: 8: 0it [00:00, ?it/s]epoch: 8: 1it [00:00,  1.10it/s]epoch: 8: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 9:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 9: 100%|██████████| 1/1 [00:01<00:00,  1.44s/it]epoch: 9: 100%|██████████| 1/1 [00:01<00:00,  1.44s/it]
+epoch: 9: 0it [00:00, ?it/s]epoch: 9: 1it [00:01,  1.04s/it]epoch: 9: 1it [00:01,  1.04s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 10:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 10: 100%|██████████| 1/1 [00:01<00:00,  1.56s/it]epoch: 10: 100%|██████████| 1/1 [00:01<00:00,  1.56s/it]
+epoch: 10: 0it [00:00, ?it/s]epoch: 10: 1it [00:00,  1.00it/s]epoch: 10: 1it [00:00,  1.00it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 11:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 11: 100%|██████████| 1/1 [00:01<00:00,  1.68s/it]epoch: 11: 100%|██████████| 1/1 [00:01<00:00,  1.68s/it]
+epoch: 11: 0it [00:00, ?it/s]epoch: 11: 1it [00:00,  1.11it/s]epoch: 11: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 12:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 12: 100%|██████████| 1/1 [00:01<00:00,  1.38s/it]epoch: 12: 100%|██████████| 1/1 [00:01<00:00,  1.38s/it]
+epoch: 12: 0it [00:00, ?it/s]epoch: 12: 1it [00:00,  1.09it/s]epoch: 12: 1it [00:00,  1.09it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 13:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 13: 100%|██████████| 1/1 [00:01<00:00,  1.36s/it]epoch: 13: 100%|██████████| 1/1 [00:01<00:00,  1.36s/it]
+epoch: 13: 0it [00:00, ?it/s]epoch: 13: 1it [00:00,  1.11it/s]epoch: 13: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 14:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 14: 100%|██████████| 1/1 [00:01<00:00,  1.33s/it]epoch: 14: 100%|██████████| 1/1 [00:01<00:00,  1.33s/it]
+epoch: 14: 0it [00:00, ?it/s]epoch: 14: 1it [00:00,  1.09it/s]epoch: 14: 1it [00:00,  1.09it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 15:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 15: 100%|██████████| 1/1 [00:01<00:00,  1.47s/it]epoch: 15: 100%|██████████| 1/1 [00:01<00:00,  1.47s/it]
+epoch: 15: 0it [00:00, ?it/s]epoch: 15: 1it [00:01,  1.09s/it]epoch: 15: 1it [00:01,  1.09s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 16:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 16: 100%|██████████| 1/1 [00:01<00:00,  1.55s/it]epoch: 16: 100%|██████████| 1/1 [00:01<00:00,  1.55s/it]
+epoch: 16: 0it [00:00, ?it/s]epoch: 16: 1it [00:00,  1.04it/s]epoch: 16: 1it [00:00,  1.04it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 17:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 17: 100%|██████████| 1/1 [00:01<00:00,  1.37s/it]epoch: 17: 100%|██████████| 1/1 [00:01<00:00,  1.37s/it]
+epoch: 17: 0it [00:00, ?it/s]epoch: 17: 1it [00:00,  1.08it/s]epoch: 17: 1it [00:00,  1.08it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 18:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 18: 100%|██████████| 1/1 [00:01<00:00,  1.37s/it]epoch: 18: 100%|██████████| 1/1 [00:01<00:00,  1.37s/it]
+epoch: 18: 0it [00:00, ?it/s]epoch: 18: 1it [00:00,  1.06it/s]epoch: 18: 1it [00:00,  1.06it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 19:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 19: 100%|██████████| 1/1 [00:01<00:00,  1.34s/it]epoch: 19: 100%|██████████| 1/1 [00:01<00:00,  1.34s/it]
+epoch: 19: 0it [00:00, ?it/s]epoch: 19: 1it [00:00,  1.06it/s]epoch: 19: 1it [00:00,  1.06it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 20:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 20: 100%|██████████| 1/1 [00:01<00:00,  1.36s/it]epoch: 20: 100%|██████████| 1/1 [00:01<00:00,  1.36s/it]
+epoch: 20: 0it [00:00, ?it/s]epoch: 20: 1it [00:00,  1.09it/s]epoch: 20: 1it [00:00,  1.09it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 21:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 21: 100%|██████████| 1/1 [00:01<00:00,  1.45s/it]epoch: 21: 100%|██████████| 1/1 [00:01<00:00,  1.45s/it]
+epoch: 21: 0it [00:00, ?it/s]epoch: 21: 1it [00:01,  1.04s/it]epoch: 21: 1it [00:01,  1.04s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 22:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 22: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]epoch: 22: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]
+epoch: 22: 0it [00:00, ?it/s]epoch: 22: 1it [00:00,  1.12it/s]epoch: 22: 1it [00:00,  1.12it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 23:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 23: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]epoch: 23: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]
+epoch: 23: 0it [00:00, ?it/s]epoch: 23: 1it [00:00,  1.12it/s]epoch: 23: 1it [00:00,  1.12it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 24:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 24: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]epoch: 24: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]
+epoch: 24: 0it [00:00, ?it/s]epoch: 24: 1it [00:00,  1.13it/s]epoch: 24: 1it [00:00,  1.13it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 25:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 25: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]epoch: 25: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]
+epoch: 25: 0it [00:00, ?it/s]epoch: 25: 1it [00:00,  1.11it/s]epoch: 25: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 26:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 26: 100%|██████████| 1/1 [00:01<00:00,  1.39s/it]epoch: 26: 100%|██████████| 1/1 [00:01<00:00,  1.39s/it]
+epoch: 26: 0it [00:00, ?it/s]epoch: 26: 1it [00:01,  1.02s/it]epoch: 26: 1it [00:01,  1.02s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 27:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 27: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]epoch: 27: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]
+epoch: 27: 0it [00:00, ?it/s]epoch: 27: 1it [00:00,  1.11it/s]epoch: 27: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 28:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 28: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]epoch: 28: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]
+epoch: 28: 0it [00:00, ?it/s]epoch: 28: 1it [00:00,  1.09it/s]epoch: 28: 1it [00:00,  1.09it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 29:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 29: 100%|██████████| 1/1 [00:01<00:00,  1.31s/it]epoch: 29: 100%|██████████| 1/1 [00:01<00:00,  1.31s/it]
+epoch: 29: 0it [00:00, ?it/s]epoch: 29: 1it [00:00,  1.09it/s]epoch: 29: 1it [00:00,  1.09it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 30:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 30: 100%|██████████| 1/1 [00:01<00:00,  1.31s/it]epoch: 30: 100%|██████████| 1/1 [00:01<00:00,  1.31s/it]
+epoch: 30: 0it [00:00, ?it/s]epoch: 30: 1it [00:00,  1.10it/s]epoch: 30: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 31:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 31: 100%|██████████| 1/1 [00:01<00:00,  1.42s/it]epoch: 31: 100%|██████████| 1/1 [00:01<00:00,  1.42s/it]
+epoch: 31: 0it [00:00, ?it/s]epoch: 31: 1it [00:00,  1.05it/s]epoch: 31: 1it [00:00,  1.05it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 32:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 32: 100%|██████████| 1/1 [00:01<00:00,  1.38s/it]epoch: 32: 100%|██████████| 1/1 [00:01<00:00,  1.38s/it]
+epoch: 32: 0it [00:00, ?it/s]epoch: 32: 1it [00:00,  1.09it/s]epoch: 32: 1it [00:00,  1.09it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 33:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 33: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]epoch: 33: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]
+epoch: 33: 0it [00:00, ?it/s]epoch: 33: 1it [00:00,  1.11it/s]epoch: 33: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 34:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 34: 100%|██████████| 1/1 [00:01<00:00,  1.32s/it]epoch: 34: 100%|██████████| 1/1 [00:01<00:00,  1.32s/it]
+epoch: 34: 0it [00:00, ?it/s]epoch: 34: 1it [00:00,  1.09it/s]epoch: 34: 1it [00:00,  1.08it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 35:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 35: 100%|██████████| 1/1 [00:01<00:00,  1.37s/it]epoch: 35: 100%|██████████| 1/1 [00:01<00:00,  1.37s/it]
+epoch: 35: 0it [00:00, ?it/s]epoch: 35: 1it [00:00,  1.11it/s]epoch: 35: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 36:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 36: 100%|██████████| 1/1 [00:01<00:00,  1.44s/it]epoch: 36: 100%|██████████| 1/1 [00:01<00:00,  1.44s/it]
+epoch: 36: 0it [00:00, ?it/s]epoch: 36: 1it [00:00,  1.04it/s]epoch: 36: 1it [00:00,  1.04it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 37:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 37: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]epoch: 37: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]
+epoch: 37: 0it [00:00, ?it/s]epoch: 37: 1it [00:01,  1.02s/it]epoch: 37: 1it [00:01,  1.02s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 38:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 38: 100%|██████████| 1/1 [00:01<00:00,  1.31s/it]epoch: 38: 100%|██████████| 1/1 [00:01<00:00,  1.31s/it]
+epoch: 38: 0it [00:00, ?it/s]epoch: 38: 1it [00:00,  1.11it/s]epoch: 38: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 39:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 39: 100%|██████████| 1/1 [00:01<00:00,  1.42s/it]epoch: 39: 100%|██████████| 1/1 [00:01<00:00,  1.42s/it]
+epoch: 39: 0it [00:00, ?it/s]epoch: 39: 1it [00:00,  1.07it/s]epoch: 39: 1it [00:00,  1.07it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 40:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 40: 100%|██████████| 1/1 [00:01<00:00,  1.38s/it]epoch: 40: 100%|██████████| 1/1 [00:01<00:00,  1.38s/it]
+epoch: 40: 0it [00:00, ?it/s]epoch: 40: 1it [00:00,  1.07it/s]epoch: 40: 1it [00:00,  1.07it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 41:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 41: 100%|██████████| 1/1 [00:01<00:00,  1.33s/it]epoch: 41: 100%|██████████| 1/1 [00:01<00:00,  1.33s/it]
+epoch: 41: 0it [00:00, ?it/s]epoch: 41: 1it [00:00,  1.11it/s]epoch: 41: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 42:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 42: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]epoch: 42: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]
+epoch: 42: 0it [00:00, ?it/s]epoch: 42: 1it [00:00,  1.12it/s]epoch: 42: 1it [00:00,  1.12it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 43:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 43: 100%|██████████| 1/1 [00:01<00:00,  1.26s/it]epoch: 43: 100%|██████████| 1/1 [00:01<00:00,  1.26s/it]
+epoch: 43: 0it [00:00, ?it/s]epoch: 43: 1it [00:00,  1.13it/s]epoch: 43: 1it [00:00,  1.13it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 44:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 44: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]epoch: 44: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]
+epoch: 44: 0it [00:00, ?it/s]epoch: 44: 1it [00:00,  1.08it/s]epoch: 44: 1it [00:00,  1.08it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 45:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 45: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]epoch: 45: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]
+epoch: 45: 0it [00:00, ?it/s]epoch: 45: 1it [00:00,  1.06it/s]epoch: 45: 1it [00:00,  1.06it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 46:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 46: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]epoch: 46: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]
+epoch: 46: 0it [00:00, ?it/s]epoch: 46: 1it [00:00,  1.10it/s]epoch: 46: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 47:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 47: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]epoch: 47: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]
+epoch: 47: 0it [00:00, ?it/s]epoch: 47: 1it [00:00,  1.11it/s]epoch: 47: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 48:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 48: 100%|██████████| 1/1 [00:01<00:00,  1.42s/it]epoch: 48: 100%|██████████| 1/1 [00:01<00:00,  1.42s/it]
+epoch: 48: 0it [00:00, ?it/s]epoch: 48: 1it [00:00,  1.05it/s]epoch: 48: 1it [00:00,  1.05it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 49:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 49: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]epoch: 49: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]
+epoch: 49: 0it [00:00, ?it/s]epoch: 49: 1it [00:00,  1.07it/s]epoch: 49: 1it [00:00,  1.07it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 50:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 50: 100%|██████████| 1/1 [00:01<00:00,  1.48s/it]epoch: 50: 100%|██████████| 1/1 [00:01<00:00,  1.48s/it]
+epoch: 50: 0it [00:00, ?it/s]epoch: 50: 1it [00:00,  1.09it/s]epoch: 50: 1it [00:00,  1.09it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 51:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 51: 100%|██████████| 1/1 [00:01<00:00,  1.43s/it]epoch: 51: 100%|██████████| 1/1 [00:01<00:00,  1.43s/it]
+epoch: 51: 0it [00:00, ?it/s]epoch: 51: 1it [00:01,  1.05s/it]epoch: 51: 1it [00:01,  1.05s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 52:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 52: 100%|██████████| 1/1 [00:01<00:00,  1.42s/it]epoch: 52: 100%|██████████| 1/1 [00:01<00:00,  1.42s/it]
+epoch: 52: 0it [00:00, ?it/s]epoch: 52: 1it [00:01,  1.03s/it]epoch: 52: 1it [00:01,  1.03s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 53:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 53: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]epoch: 53: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]
+epoch: 53: 0it [00:00, ?it/s]epoch: 53: 1it [00:00,  1.12it/s]epoch: 53: 1it [00:00,  1.12it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 54:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 54: 100%|██████████| 1/1 [00:01<00:00,  1.43s/it]epoch: 54: 100%|██████████| 1/1 [00:01<00:00,  1.43s/it]
+epoch: 54: 0it [00:00, ?it/s]epoch: 54: 1it [00:01,  1.04s/it]epoch: 54: 1it [00:01,  1.04s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 55:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 55: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]epoch: 55: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]
+epoch: 55: 0it [00:00, ?it/s]epoch: 55: 1it [00:00,  1.07it/s]epoch: 55: 1it [00:00,  1.07it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 56:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 56: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]epoch: 56: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]
+epoch: 56: 0it [00:00, ?it/s]epoch: 56: 1it [00:00,  1.11it/s]epoch: 56: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 57:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 57: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]epoch: 57: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]
+epoch: 57: 0it [00:00, ?it/s]epoch: 57: 1it [00:00,  1.12it/s]epoch: 57: 1it [00:00,  1.12it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 58:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 58: 100%|██████████| 1/1 [00:01<00:00,  1.47s/it]epoch: 58: 100%|██████████| 1/1 [00:01<00:00,  1.47s/it]
+epoch: 58: 0it [00:00, ?it/s]epoch: 58: 1it [00:00,  1.05it/s]epoch: 58: 1it [00:00,  1.05it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 59:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 59: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]epoch: 59: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]
+epoch: 59: 0it [00:00, ?it/s]epoch: 59: 1it [00:00,  1.12it/s]epoch: 59: 1it [00:00,  1.12it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 60:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 60: 100%|██████████| 1/1 [00:01<00:00,  1.39s/it]epoch: 60: 100%|██████████| 1/1 [00:01<00:00,  1.39s/it]
+epoch: 60: 0it [00:00, ?it/s]epoch: 60: 1it [00:01,  1.02s/it]epoch: 60: 1it [00:01,  1.02s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 61:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 61: 100%|██████████| 1/1 [00:01<00:00,  1.75s/it]epoch: 61: 100%|██████████| 1/1 [00:01<00:00,  1.75s/it]
+epoch: 61: 0it [00:00, ?it/s]epoch: 61: 1it [00:00,  1.06it/s]epoch: 61: 1it [00:00,  1.05it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 62:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 62: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]epoch: 62: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]
+epoch: 62: 0it [00:00, ?it/s]epoch: 62: 1it [00:00,  1.10it/s]epoch: 62: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 63:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 63: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]epoch: 63: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]
+epoch: 63: 0it [00:00, ?it/s]epoch: 63: 1it [00:00,  1.10it/s]epoch: 63: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 64:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 64: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]epoch: 64: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]
+epoch: 64: 0it [00:00, ?it/s]epoch: 64: 1it [00:00,  1.13it/s]epoch: 64: 1it [00:00,  1.13it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 65:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 65: 100%|██████████| 1/1 [00:01<00:00,  1.47s/it]epoch: 65: 100%|██████████| 1/1 [00:01<00:00,  1.47s/it]
+epoch: 65: 0it [00:00, ?it/s]epoch: 65: 1it [00:01,  1.02s/it]epoch: 65: 1it [00:01,  1.02s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 66:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 66: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]epoch: 66: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]
+epoch: 66: 0it [00:00, ?it/s]epoch: 66: 1it [00:00,  1.10it/s]epoch: 66: 1it [00:00,  1.09it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 67:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 67: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]epoch: 67: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]
+epoch: 67: 0it [00:00, ?it/s]epoch: 67: 1it [00:00,  1.10it/s]epoch: 67: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 68:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 68: 100%|██████████| 1/1 [00:01<00:00,  1.46s/it]epoch: 68: 100%|██████████| 1/1 [00:01<00:00,  1.46s/it]
+epoch: 68: 0it [00:00, ?it/s]epoch: 68: 1it [00:00,  1.03it/s]epoch: 68: 1it [00:00,  1.03it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 69:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 69: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]epoch: 69: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]
+epoch: 69: 0it [00:00, ?it/s]epoch: 69: 1it [00:00,  1.08it/s]epoch: 69: 1it [00:00,  1.08it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 70:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 70: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]epoch: 70: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]
+epoch: 70: 0it [00:00, ?it/s]epoch: 70: 1it [00:00,  1.10it/s]epoch: 70: 1it [00:00,  1.09it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 71:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 71: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]epoch: 71: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]
+epoch: 71: 0it [00:00, ?it/s]epoch: 71: 1it [00:01,  1.02s/it]epoch: 71: 1it [00:01,  1.02s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 72:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 72: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]epoch: 72: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]
+epoch: 72: 0it [00:00, ?it/s]epoch: 72: 1it [00:01,  1.01s/it]epoch: 72: 1it [00:01,  1.01s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 73:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 73: 100%|██████████| 1/1 [00:01<00:00,  1.48s/it]epoch: 73: 100%|██████████| 1/1 [00:01<00:00,  1.48s/it]
+epoch: 73: 0it [00:00, ?it/s]epoch: 73: 1it [00:00,  1.06it/s]epoch: 73: 1it [00:00,  1.06it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 74:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 74: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]epoch: 74: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]
+epoch: 74: 0it [00:00, ?it/s]epoch: 74: 1it [00:00,  1.11it/s]epoch: 74: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 75:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 75: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]epoch: 75: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]
+epoch: 75: 0it [00:00, ?it/s]epoch: 75: 1it [00:00,  1.09it/s]epoch: 75: 1it [00:00,  1.09it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 76:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 76: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]epoch: 76: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]
+epoch: 76: 0it [00:00, ?it/s]epoch: 76: 1it [00:01,  1.02s/it]epoch: 76: 1it [00:01,  1.02s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 77:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 77: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]epoch: 77: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]
+epoch: 77: 0it [00:00, ?it/s]epoch: 77: 1it [00:00,  1.10it/s]epoch: 77: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 78:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 78: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]epoch: 78: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]
+epoch: 78: 0it [00:00, ?it/s]epoch: 78: 1it [00:00,  1.02it/s]epoch: 78: 1it [00:00,  1.02it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 79:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 79: 100%|██████████| 1/1 [00:01<00:00,  1.31s/it]epoch: 79: 100%|██████████| 1/1 [00:01<00:00,  1.31s/it]
+epoch: 79: 0it [00:00, ?it/s]epoch: 79: 1it [00:00,  1.09it/s]epoch: 79: 1it [00:00,  1.09it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 80:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 80: 100%|██████████| 1/1 [00:01<00:00,  1.34s/it]epoch: 80: 100%|██████████| 1/1 [00:01<00:00,  1.34s/it]
+epoch: 80: 0it [00:00, ?it/s]epoch: 80: 1it [00:00,  1.06it/s]epoch: 80: 1it [00:00,  1.06it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 81:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 81: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]epoch: 81: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]
+epoch: 81: 0it [00:00, ?it/s]epoch: 81: 1it [00:00,  1.10it/s]epoch: 81: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 82:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 82: 100%|██████████| 1/1 [00:01<00:00,  1.31s/it]epoch: 82: 100%|██████████| 1/1 [00:01<00:00,  1.31s/it]
+epoch: 82: 0it [00:00, ?it/s]epoch: 82: 1it [00:00,  1.10it/s]epoch: 82: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 83:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 83: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]epoch: 83: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]
+epoch: 83: 0it [00:00, ?it/s]epoch: 83: 1it [00:00,  1.11it/s]epoch: 83: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 84:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 84: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]epoch: 84: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]
+epoch: 84: 0it [00:00, ?it/s]epoch: 84: 1it [00:00,  1.11it/s]epoch: 84: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 85:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 85: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]epoch: 85: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]
+epoch: 85: 0it [00:00, ?it/s]epoch: 85: 1it [00:00,  1.11it/s]epoch: 85: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 86:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 86: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]epoch: 86: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]
+epoch: 86: 0it [00:00, ?it/s]epoch: 86: 1it [00:01,  1.02s/it]epoch: 86: 1it [00:01,  1.02s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 87:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 87: 100%|██████████| 1/1 [00:01<00:00,  1.50s/it]epoch: 87: 100%|██████████| 1/1 [00:01<00:00,  1.50s/it]
+epoch: 87: 0it [00:00, ?it/s]epoch: 87: 1it [00:01,  1.02s/it]epoch: 87: 1it [00:01,  1.02s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 88:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 88: 100%|██████████| 1/1 [00:01<00:00,  1.26s/it]epoch: 88: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]
+epoch: 88: 0it [00:00, ?it/s]epoch: 88: 1it [00:00,  1.11it/s]epoch: 88: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 89:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 89: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]epoch: 89: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]
+epoch: 89: 0it [00:00, ?it/s]epoch: 89: 1it [00:01,  1.02s/it]epoch: 89: 1it [00:01,  1.02s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 90:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 90: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]epoch: 90: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]
+epoch: 90: 0it [00:00, ?it/s]epoch: 90: 1it [00:00,  1.12it/s]epoch: 90: 1it [00:00,  1.12it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 91:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 91: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]epoch: 91: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]
+epoch: 91: 0it [00:00, ?it/s]epoch: 91: 1it [00:00,  1.09it/s]epoch: 91: 1it [00:00,  1.09it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 92:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 92: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]epoch: 92: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]
+epoch: 92: 0it [00:00, ?it/s]epoch: 92: 1it [00:00,  1.11it/s]epoch: 92: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 93:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 93: 100%|██████████| 1/1 [00:01<00:00,  1.38s/it]epoch: 93: 100%|██████████| 1/1 [00:01<00:00,  1.38s/it]
+epoch: 93: 0it [00:00, ?it/s]epoch: 93: 1it [00:00,  1.01it/s]epoch: 93: 1it [00:00,  1.01it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 94:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 94: 100%|██████████| 1/1 [00:01<00:00,  1.39s/it]epoch: 94: 100%|██████████| 1/1 [00:01<00:00,  1.39s/it]
+epoch: 94: 0it [00:00, ?it/s]epoch: 94: 1it [00:01,  1.01s/it]epoch: 94: 1it [00:01,  1.01s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 95:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 95: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]epoch: 95: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]
+epoch: 95: 0it [00:00, ?it/s]epoch: 95: 1it [00:01,  1.02s/it]epoch: 95: 1it [00:01,  1.02s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 96:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 96: 100%|██████████| 1/1 [00:01<00:00,  1.37s/it]epoch: 96: 100%|██████████| 1/1 [00:01<00:00,  1.37s/it]
+epoch: 96: 0it [00:00, ?it/s]epoch: 96: 1it [00:00,  1.08it/s]epoch: 96: 1it [00:00,  1.08it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 97:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 97: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]epoch: 97: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]
+epoch: 97: 0it [00:00, ?it/s]epoch: 97: 1it [00:01,  1.02s/it]epoch: 97: 1it [00:01,  1.02s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 98:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 98: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]epoch: 98: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]
+epoch: 98: 0it [00:00, ?it/s]epoch: 98: 1it [00:00,  1.11it/s]epoch: 98: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 99:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 99: 100%|██████████| 1/1 [00:01<00:00,  1.38s/it]epoch: 99: 100%|██████████| 1/1 [00:01<00:00,  1.38s/it]
+epoch: 99: 0it [00:00, ?it/s]epoch: 99: 1it [00:00,  1.03it/s]epoch: 99: 1it [00:00,  1.03it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 100:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 100: 100%|██████████| 1/1 [00:01<00:00,  1.44s/it]epoch: 100: 100%|██████████| 1/1 [00:01<00:00,  1.44s/it]
+epoch: 100: 0it [00:00, ?it/s]epoch: 100: 1it [00:00,  1.08it/s]epoch: 100: 1it [00:00,  1.08it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 101:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 101: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]epoch: 101: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]
+epoch: 101: 0it [00:00, ?it/s]epoch: 101: 1it [00:00,  1.10it/s]epoch: 101: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 102:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 102: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]epoch: 102: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]
+epoch: 102: 0it [00:00, ?it/s]epoch: 102: 1it [00:01,  1.02s/it]epoch: 102: 1it [00:01,  1.02s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 103:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 103: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]epoch: 103: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]
+epoch: 103: 0it [00:00, ?it/s]epoch: 103: 1it [00:00,  1.13it/s]epoch: 103: 1it [00:00,  1.13it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 104:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 104: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]epoch: 104: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]
+epoch: 104: 0it [00:00, ?it/s]epoch: 104: 1it [00:01,  1.01s/it]epoch: 104: 1it [00:01,  1.01s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 105:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 105: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]epoch: 105: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]
+epoch: 105: 0it [00:00, ?it/s]epoch: 105: 1it [00:00,  1.10it/s]epoch: 105: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 106:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 106: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]epoch: 106: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]
+epoch: 106: 0it [00:00, ?it/s]epoch: 106: 1it [00:00,  1.12it/s]epoch: 106: 1it [00:00,  1.12it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 107:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 107: 100%|██████████| 1/1 [00:01<00:00,  1.38s/it]epoch: 107: 100%|██████████| 1/1 [00:01<00:00,  1.38s/it]
+epoch: 107: 0it [00:00, ?it/s]epoch: 107: 1it [00:00,  1.11it/s]epoch: 107: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 108:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 108: 100%|██████████| 1/1 [00:01<00:00,  1.39s/it]epoch: 108: 100%|██████████| 1/1 [00:01<00:00,  1.39s/it]
+epoch: 108: 0it [00:00, ?it/s]epoch: 108: 1it [00:01,  1.01s/it]epoch: 108: 1it [00:01,  1.01s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 109:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 109: 100%|██████████| 1/1 [00:01<00:00,  1.39s/it]epoch: 109: 100%|██████████| 1/1 [00:01<00:00,  1.39s/it]
+epoch: 109: 0it [00:00, ?it/s]epoch: 109: 1it [00:01,  1.02s/it]epoch: 109: 1it [00:01,  1.02s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 110:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 110: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]epoch: 110: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]
+epoch: 110: 0it [00:00, ?it/s]epoch: 110: 1it [00:00,  1.12it/s]epoch: 110: 1it [00:00,  1.12it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 111:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 111: 100%|██████████| 1/1 [00:01<00:00,  1.48s/it]epoch: 111: 100%|██████████| 1/1 [00:01<00:00,  1.48s/it]
+epoch: 111: 0it [00:00, ?it/s]epoch: 111: 1it [00:00,  1.07it/s]epoch: 111: 1it [00:00,  1.07it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 112:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 112: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]epoch: 112: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]
+epoch: 112: 0it [00:00, ?it/s]epoch: 112: 1it [00:00,  1.11it/s]epoch: 112: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 113:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 113: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]epoch: 113: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]
+epoch: 113: 0it [00:00, ?it/s]epoch: 113: 1it [00:00,  1.08it/s]epoch: 113: 1it [00:00,  1.08it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 114:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 114: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]epoch: 114: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]
+epoch: 114: 0it [00:00, ?it/s]epoch: 114: 1it [00:00,  1.11it/s]epoch: 114: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 115:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 115: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]epoch: 115: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]
+epoch: 115: 0it [00:00, ?it/s]epoch: 115: 1it [00:00,  1.13it/s]epoch: 115: 1it [00:00,  1.13it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 116:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 116: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]epoch: 116: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]
+epoch: 116: 0it [00:00, ?it/s]epoch: 116: 1it [00:00,  1.11it/s]epoch: 116: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 117:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 117: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]epoch: 117: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]
+epoch: 117: 0it [00:00, ?it/s]epoch: 117: 1it [00:01,  1.02s/it]epoch: 117: 1it [00:01,  1.02s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 118:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 118: 100%|██████████| 1/1 [00:01<00:00,  1.49s/it]epoch: 118: 100%|██████████| 1/1 [00:01<00:00,  1.49s/it]
+epoch: 118: 0it [00:00, ?it/s]epoch: 118: 1it [00:01,  1.03s/it]epoch: 118: 1it [00:01,  1.03s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 119:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 119: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]epoch: 119: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]
+epoch: 119: 0it [00:00, ?it/s]epoch: 119: 1it [00:01,  1.01s/it]epoch: 119: 1it [00:01,  1.01s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 120:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 120: 100%|██████████| 1/1 [00:01<00:00,  1.26s/it]epoch: 120: 100%|██████████| 1/1 [00:01<00:00,  1.26s/it]
+epoch: 120: 0it [00:00, ?it/s]epoch: 120: 1it [00:00,  1.13it/s]epoch: 120: 1it [00:00,  1.13it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 121:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 121: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]epoch: 121: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]
+epoch: 121: 0it [00:00, ?it/s]epoch: 121: 1it [00:00,  1.12it/s]epoch: 121: 1it [00:00,  1.12it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 122:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 122: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]epoch: 122: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]
+epoch: 122: 0it [00:00, ?it/s]epoch: 122: 1it [00:00,  1.11it/s]epoch: 122: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 123:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 123: 100%|██████████| 1/1 [00:01<00:00,  1.31s/it]epoch: 123: 100%|██████████| 1/1 [00:01<00:00,  1.31s/it]
+epoch: 123: 0it [00:00, ?it/s]epoch: 123: 1it [00:00,  1.08it/s]epoch: 123: 1it [00:00,  1.08it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 124:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 124: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]epoch: 124: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]
+epoch: 124: 0it [00:00, ?it/s]epoch: 124: 1it [00:00,  1.13it/s]epoch: 124: 1it [00:00,  1.13it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 125:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 125: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]epoch: 125: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]
+epoch: 125: 0it [00:00, ?it/s]epoch: 125: 1it [00:00,  1.09it/s]epoch: 125: 1it [00:00,  1.09it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 126:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 126: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]epoch: 126: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]
+epoch: 126: 0it [00:00, ?it/s]epoch: 126: 1it [00:00,  1.12it/s]epoch: 126: 1it [00:00,  1.12it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 127:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 127: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]epoch: 127: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]
+epoch: 127: 0it [00:00, ?it/s]epoch: 127: 1it [00:00,  1.10it/s]epoch: 127: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 128:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 128: 100%|██████████| 1/1 [00:01<00:00,  1.38s/it]epoch: 128: 100%|██████████| 1/1 [00:01<00:00,  1.38s/it]
+epoch: 128: 0it [00:00, ?it/s]epoch: 128: 1it [00:00,  1.09it/s]epoch: 128: 1it [00:00,  1.09it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 129:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 129: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]epoch: 129: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]
+epoch: 129: 0it [00:00, ?it/s]epoch: 129: 1it [00:00,  1.12it/s]epoch: 129: 1it [00:00,  1.12it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 130:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 130: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]epoch: 130: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]
+epoch: 130: 0it [00:00, ?it/s]epoch: 130: 1it [00:00,  1.10it/s]epoch: 130: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 131:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 131: 100%|██████████| 1/1 [00:01<00:00,  1.44s/it]epoch: 131: 100%|██████████| 1/1 [00:01<00:00,  1.44s/it]
+epoch: 131: 0it [00:00, ?it/s]epoch: 131: 1it [00:01,  1.07s/it]epoch: 131: 1it [00:01,  1.07s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 132:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 132: 100%|██████████| 1/1 [00:01<00:00,  1.48s/it]epoch: 132: 100%|██████████| 1/1 [00:01<00:00,  1.48s/it]
+epoch: 132: 0it [00:00, ?it/s]epoch: 132: 1it [00:00,  1.07it/s]epoch: 132: 1it [00:00,  1.07it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 133:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 133: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]epoch: 133: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]
+epoch: 133: 0it [00:00, ?it/s]epoch: 133: 1it [00:00,  1.12it/s]epoch: 133: 1it [00:00,  1.12it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 134:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 134: 100%|██████████| 1/1 [00:01<00:00,  1.34s/it]epoch: 134: 100%|██████████| 1/1 [00:01<00:00,  1.34s/it]
+epoch: 134: 0it [00:00, ?it/s]epoch: 134: 1it [00:00,  1.09it/s]epoch: 134: 1it [00:00,  1.09it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 135:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 135: 100%|██████████| 1/1 [00:01<00:00,  1.49s/it]epoch: 135: 100%|██████████| 1/1 [00:01<00:00,  1.49s/it]
+epoch: 135: 0it [00:00, ?it/s]epoch: 135: 1it [00:00,  1.08it/s]epoch: 135: 1it [00:00,  1.08it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 136:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 136: 100%|██████████| 1/1 [00:01<00:00,  1.42s/it]epoch: 136: 100%|██████████| 1/1 [00:01<00:00,  1.42s/it]
+epoch: 136: 0it [00:00, ?it/s]epoch: 136: 1it [00:01,  1.03s/it]epoch: 136: 1it [00:01,  1.03s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 137:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 137: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]epoch: 137: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]
+epoch: 137: 0it [00:00, ?it/s]epoch: 137: 1it [00:00,  1.10it/s]epoch: 137: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 138:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 138: 100%|██████████| 1/1 [00:01<00:00,  1.39s/it]epoch: 138: 100%|██████████| 1/1 [00:01<00:00,  1.39s/it]
+epoch: 138: 0it [00:00, ?it/s]epoch: 138: 1it [00:00,  1.04it/s]epoch: 138: 1it [00:00,  1.04it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 139:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 139: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]epoch: 139: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]
+epoch: 139: 0it [00:00, ?it/s]epoch: 139: 1it [00:00,  1.12it/s]epoch: 139: 1it [00:00,  1.12it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 140:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 140: 100%|██████████| 1/1 [00:01<00:00,  1.31s/it]epoch: 140: 100%|██████████| 1/1 [00:01<00:00,  1.31s/it]
+epoch: 140: 0it [00:00, ?it/s]epoch: 140: 1it [00:00,  1.11it/s]epoch: 140: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 141:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 141: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]epoch: 141: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]
+epoch: 141: 0it [00:00, ?it/s]epoch: 141: 1it [00:00,  1.11it/s]epoch: 141: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 142:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 142: 100%|██████████| 1/1 [00:01<00:00,  1.31s/it]epoch: 142: 100%|██████████| 1/1 [00:01<00:00,  1.31s/it]
+epoch: 142: 0it [00:00, ?it/s]epoch: 142: 1it [00:00,  1.09it/s]epoch: 142: 1it [00:00,  1.09it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 143:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 143: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]epoch: 143: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]
+epoch: 143: 0it [00:00, ?it/s]epoch: 143: 1it [00:00,  1.10it/s]epoch: 143: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 144:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 144: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]epoch: 144: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]
+epoch: 144: 0it [00:00, ?it/s]epoch: 144: 1it [00:00,  1.10it/s]epoch: 144: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 145:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 145: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]epoch: 145: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]
+epoch: 145: 0it [00:00, ?it/s]epoch: 145: 1it [00:00,  1.11it/s]epoch: 145: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 146:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 146: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]epoch: 146: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]
+epoch: 146: 0it [00:00, ?it/s]epoch: 146: 1it [00:00,  1.09it/s]epoch: 146: 1it [00:00,  1.09it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 147:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 147: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]epoch: 147: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]
+epoch: 147: 0it [00:00, ?it/s]epoch: 147: 1it [00:00,  1.13it/s]epoch: 147: 1it [00:00,  1.13it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 148:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 148: 100%|██████████| 1/1 [00:01<00:00,  1.32s/it]epoch: 148: 100%|██████████| 1/1 [00:01<00:00,  1.32s/it]
+epoch: 148: 0it [00:00, ?it/s]epoch: 148: 1it [00:00,  1.08it/s]epoch: 148: 1it [00:00,  1.08it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 149:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 149: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]epoch: 149: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]
+epoch: 149: 0it [00:00, ?it/s]epoch: 149: 1it [00:01,  1.03s/it]epoch: 149: 1it [00:01,  1.03s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 150:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 150: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]epoch: 150: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]
+epoch: 150: 0it [00:00, ?it/s]epoch: 150: 1it [00:00,  1.11it/s]epoch: 150: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 151:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 151: 100%|██████████| 1/1 [00:01<00:00,  1.42s/it]epoch: 151: 100%|██████████| 1/1 [00:01<00:00,  1.42s/it]
+epoch: 151: 0it [00:00, ?it/s]epoch: 151: 1it [00:01,  1.02s/it]epoch: 151: 1it [00:01,  1.02s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 152:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 152: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]epoch: 152: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]
+epoch: 152: 0it [00:00, ?it/s]epoch: 152: 1it [00:00,  1.12it/s]epoch: 152: 1it [00:00,  1.12it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 153:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 153: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]epoch: 153: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]
+epoch: 153: 0it [00:00, ?it/s]epoch: 153: 1it [00:00,  1.12it/s]epoch: 153: 1it [00:00,  1.12it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 154:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 154: 100%|██████████| 1/1 [00:01<00:00,  1.32s/it]epoch: 154: 100%|██████████| 1/1 [00:01<00:00,  1.32s/it]
+epoch: 154: 0it [00:00, ?it/s]epoch: 154: 1it [00:00,  1.09it/s]epoch: 154: 1it [00:00,  1.09it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 155:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 155: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]epoch: 155: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]
+epoch: 155: 0it [00:00, ?it/s]epoch: 155: 1it [00:00,  1.12it/s]epoch: 155: 1it [00:00,  1.12it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 156:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 156: 100%|██████████| 1/1 [00:01<00:00,  1.36s/it]epoch: 156: 100%|██████████| 1/1 [00:01<00:00,  1.36s/it]
+epoch: 156: 0it [00:00, ?it/s]epoch: 156: 1it [00:00,  1.11it/s]epoch: 156: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 157:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 157: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]epoch: 157: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]
+epoch: 157: 0it [00:00, ?it/s]epoch: 157: 1it [00:01,  1.02s/it]epoch: 157: 1it [00:01,  1.02s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 158:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 158: 100%|██████████| 1/1 [00:01<00:00,  1.39s/it]epoch: 158: 100%|██████████| 1/1 [00:01<00:00,  1.39s/it]
+epoch: 158: 0it [00:00, ?it/s]epoch: 158: 1it [00:01,  1.02s/it]epoch: 158: 1it [00:01,  1.02s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 159:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 159: 100%|██████████| 1/1 [00:01<00:00,  1.31s/it]epoch: 159: 100%|██████████| 1/1 [00:01<00:00,  1.31s/it]
+epoch: 159: 0it [00:00, ?it/s]epoch: 159: 1it [00:00,  1.10it/s]epoch: 159: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 160:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 160: 100%|██████████| 1/1 [00:01<00:00,  1.39s/it]epoch: 160: 100%|██████████| 1/1 [00:01<00:00,  1.39s/it]
+epoch: 160: 0it [00:00, ?it/s]epoch: 160: 1it [00:00,  1.11it/s]epoch: 160: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 161:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 161: 100%|██████████| 1/1 [00:01<00:00,  1.52s/it]epoch: 161: 100%|██████████| 1/1 [00:01<00:00,  1.52s/it]
+epoch: 161: 0it [00:00, ?it/s]epoch: 161: 1it [00:00,  1.10it/s]epoch: 161: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 162:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 162: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]epoch: 162: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]
+epoch: 162: 0it [00:00, ?it/s]epoch: 162: 1it [00:00,  1.11it/s]epoch: 162: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 163:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 163: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]epoch: 163: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]
+epoch: 163: 0it [00:00, ?it/s]epoch: 163: 1it [00:00,  1.12it/s]epoch: 163: 1it [00:00,  1.12it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 164:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 164: 100%|██████████| 1/1 [00:01<00:00,  1.47s/it]epoch: 164: 100%|██████████| 1/1 [00:01<00:00,  1.47s/it]
+epoch: 164: 0it [00:00, ?it/s]epoch: 164: 1it [00:00,  1.07it/s]epoch: 164: 1it [00:00,  1.07it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 165:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 165: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]epoch: 165: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]
+epoch: 165: 0it [00:00, ?it/s]epoch: 165: 1it [00:00,  1.13it/s]epoch: 165: 1it [00:00,  1.13it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 166:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 166: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]epoch: 166: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]
+epoch: 166: 0it [00:00, ?it/s]epoch: 166: 1it [00:00,  1.12it/s]epoch: 166: 1it [00:00,  1.12it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 167:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 167: 100%|██████████| 1/1 [00:01<00:00,  1.33s/it]epoch: 167: 100%|██████████| 1/1 [00:01<00:00,  1.33s/it]
+epoch: 167: 0it [00:00, ?it/s]epoch: 167: 1it [00:00,  1.11it/s]epoch: 167: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 168:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 168: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]epoch: 168: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]
+epoch: 168: 0it [00:00, ?it/s]epoch: 168: 1it [00:01,  1.02s/it]epoch: 168: 1it [00:01,  1.02s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 169:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 169: 100%|██████████| 1/1 [00:01<00:00,  1.32s/it]epoch: 169: 100%|██████████| 1/1 [00:01<00:00,  1.32s/it]
+epoch: 169: 0it [00:00, ?it/s]epoch: 169: 1it [00:00,  1.12it/s]epoch: 169: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 170:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 170: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]epoch: 170: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]
+epoch: 170: 0it [00:00, ?it/s]epoch: 170: 1it [00:01,  1.02s/it]epoch: 170: 1it [00:01,  1.02s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 171:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 171: 100%|██████████| 1/1 [00:01<00:00,  1.36s/it]epoch: 171: 100%|██████████| 1/1 [00:01<00:00,  1.36s/it]
+epoch: 171: 0it [00:00, ?it/s]epoch: 171: 1it [00:00,  1.08it/s]epoch: 171: 1it [00:00,  1.08it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 172:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 172: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]epoch: 172: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]
+epoch: 172: 0it [00:00, ?it/s]epoch: 172: 1it [00:00,  1.13it/s]epoch: 172: 1it [00:00,  1.13it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 173:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 173: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]epoch: 173: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]
+epoch: 173: 0it [00:00, ?it/s]epoch: 173: 1it [00:00,  1.10it/s]epoch: 173: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 174:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 174: 100%|██████████| 1/1 [00:01<00:00,  1.31s/it]epoch: 174: 100%|██████████| 1/1 [00:01<00:00,  1.31s/it]
+epoch: 174: 0it [00:00, ?it/s]epoch: 174: 1it [00:00,  1.10it/s]epoch: 174: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 175:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 175: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]epoch: 175: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]
+epoch: 175: 0it [00:00, ?it/s]epoch: 175: 1it [00:00,  1.11it/s]epoch: 175: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 176:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 176: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]epoch: 176: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]
+epoch: 176: 0it [00:00, ?it/s]epoch: 176: 1it [00:00,  1.12it/s]epoch: 176: 1it [00:00,  1.12it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 177:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 177: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]epoch: 177: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]
+epoch: 177: 0it [00:00, ?it/s]epoch: 177: 1it [00:00,  1.12it/s]epoch: 177: 1it [00:00,  1.12it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 178:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 178: 100%|██████████| 1/1 [00:01<00:00,  1.32s/it]epoch: 178: 100%|██████████| 1/1 [00:01<00:00,  1.32s/it]
+epoch: 178: 0it [00:00, ?it/s]epoch: 178: 1it [00:00,  1.11it/s]epoch: 178: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 179:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 179: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]epoch: 179: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]
+epoch: 179: 0it [00:00, ?it/s]epoch: 179: 1it [00:00,  1.12it/s]epoch: 179: 1it [00:00,  1.12it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 180:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 180: 100%|██████████| 1/1 [00:01<00:00,  1.36s/it]epoch: 180: 100%|██████████| 1/1 [00:01<00:00,  1.36s/it]
+epoch: 180: 0it [00:00, ?it/s]epoch: 180: 1it [00:00,  1.08it/s]epoch: 180: 1it [00:00,  1.08it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 181:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 181: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]epoch: 181: 100%|██████████| 1/1 [00:01<00:00,  1.27s/it]
+epoch: 181: 0it [00:00, ?it/s]epoch: 181: 1it [00:00,  1.12it/s]epoch: 181: 1it [00:00,  1.12it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 182:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 182: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]epoch: 182: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]
+epoch: 182: 0it [00:00, ?it/s]epoch: 182: 1it [00:01,  1.01s/it]epoch: 182: 1it [00:01,  1.01s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 183:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 183: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]epoch: 183: 100%|██████████| 1/1 [00:01<00:00,  1.40s/it]
+epoch: 183: 0it [00:00, ?it/s]epoch: 183: 1it [00:01,  1.03s/it]epoch: 183: 1it [00:01,  1.03s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 184:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 184: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]epoch: 184: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]
+epoch: 184: 0it [00:00, ?it/s]epoch: 184: 1it [00:00,  1.12it/s]epoch: 184: 1it [00:00,  1.12it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 185:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 185: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]epoch: 185: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]
+epoch: 185: 0it [00:00, ?it/s]epoch: 185: 1it [00:00,  1.10it/s]epoch: 185: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 186:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 186: 100%|██████████| 1/1 [00:01<00:00,  1.39s/it]epoch: 186: 100%|██████████| 1/1 [00:01<00:00,  1.39s/it]
+epoch: 186: 0it [00:00, ?it/s]epoch: 186: 1it [00:01,  1.01s/it]epoch: 186: 1it [00:01,  1.01s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 187:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 187: 100%|██████████| 1/1 [00:01<00:00,  1.34s/it]epoch: 187: 100%|██████████| 1/1 [00:01<00:00,  1.34s/it]
+epoch: 187: 0it [00:00, ?it/s]epoch: 187: 1it [00:00,  1.10it/s]epoch: 187: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 188:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 188: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]epoch: 188: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]
+epoch: 188: 0it [00:00, ?it/s]epoch: 188: 1it [00:00,  1.11it/s]epoch: 188: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 189:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 189: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]epoch: 189: 100%|██████████| 1/1 [00:01<00:00,  1.28s/it]
+epoch: 189: 0it [00:00, ?it/s]epoch: 189: 1it [00:00,  1.11it/s]epoch: 189: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 190:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 190: 100%|██████████| 1/1 [00:01<00:00,  1.26s/it]epoch: 190: 100%|██████████| 1/1 [00:01<00:00,  1.26s/it]
+epoch: 190: 0it [00:00, ?it/s]epoch: 190: 1it [00:00,  1.12it/s]epoch: 190: 1it [00:00,  1.12it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 191:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 191: 100%|██████████| 1/1 [00:01<00:00,  1.37s/it]epoch: 191: 100%|██████████| 1/1 [00:01<00:00,  1.38s/it]
+epoch: 191: 0it [00:00, ?it/s]epoch: 191: 1it [00:00,  1.10it/s]epoch: 191: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 192:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 192: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]epoch: 192: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]
+epoch: 192: 0it [00:00, ?it/s]epoch: 192: 1it [00:01,  1.01s/it]epoch: 192: 1it [00:01,  1.01s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 193:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 193: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]epoch: 193: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]
+epoch: 193: 0it [00:00, ?it/s]epoch: 193: 1it [00:00,  1.07it/s]epoch: 193: 1it [00:00,  1.07it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 194:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 194: 100%|██████████| 1/1 [00:01<00:00,  1.39s/it]epoch: 194: 100%|██████████| 1/1 [00:01<00:00,  1.39s/it]
+epoch: 194: 0it [00:00, ?it/s]epoch: 194: 1it [00:01,  1.01s/it]epoch: 194: 1it [00:01,  1.01s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 195:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 195: 100%|██████████| 1/1 [00:01<00:00,  1.43s/it]epoch: 195: 100%|██████████| 1/1 [00:01<00:00,  1.43s/it]
+epoch: 195: 0it [00:00, ?it/s]epoch: 195: 1it [00:01,  1.01s/it]epoch: 195: 1it [00:01,  1.01s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 196:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 196: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]epoch: 196: 100%|██████████| 1/1 [00:01<00:00,  1.29s/it]
+epoch: 196: 0it [00:00, ?it/s]epoch: 196: 1it [00:00,  1.11it/s]epoch: 196: 1it [00:00,  1.11it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 197:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 197: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]epoch: 197: 100%|██████████| 1/1 [00:01<00:00,  1.30s/it]
+epoch: 197: 0it [00:00, ?it/s]epoch: 197: 1it [00:00,  1.10it/s]epoch: 197: 1it [00:00,  1.10it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 198:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 198: 100%|██████████| 1/1 [00:01<00:00,  1.34s/it]epoch: 198: 100%|██████████| 1/1 [00:01<00:00,  1.34s/it]
+epoch: 198: 0it [00:00, ?it/s]epoch: 198: 1it [00:00,  1.10it/s]epoch: 198: 1it [00:00,  1.09it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 199:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 199: 100%|██████████| 1/1 [00:01<00:00,  1.31s/it]epoch: 199: 100%|██████████| 1/1 [00:01<00:00,  1.31s/it]
+epoch: 199: 0it [00:00, ?it/s]epoch: 199: 1it [00:00,  1.09it/s]epoch: 199: 1it [00:00,  1.09it/s]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+epoch: 200:   0%|          | 0/1 [00:00<?, ?it/s]epoch: 200: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]epoch: 200: 100%|██████████| 1/1 [00:01<00:00,  1.41s/it]
+epoch: 200: 0it [00:00, ?it/s]epoch: 200: 1it [00:01,  1.02s/it]epoch: 200: 1it [00:01,  1.02s/it]
+ln: failed to create symbolic link './analyze': File exists
+ln: failed to create symbolic link './data.h5': File exists
+The PostScript backend does not support transparency; partially transparent artists will be rendered opaque.
+The PostScript backend does not support transparency; partially transparent artists will be rendered opaque.
+The PostScript backend does not support transparency; partially transparent artists will be rendered opaque.
+The PostScript backend does not support transparency; partially transparent artists will be rendered opaque.
+Done.

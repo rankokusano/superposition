@@ -26,11 +26,10 @@ if __name__ == '__main__':
     env = creator.create_environment(config.environment)
 
     save_dir = constants.SAVE_ROOT_DIR + args.config + '/'
-    subprocess.check_output(['mkdir', '-p', save_dir])
-
-    save_path = save_dir + constants.SAVE_DATA_NAME
-    assert not os.path.isfile(save_path)
-
+    work_root = '/work' if os.path.isdir('/work') else os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    abs_save_dir = os.path.join(work_root, save_dir)
+    os.makedirs(abs_save_dir, exist_ok=True)
+    save_path = os.path.join(abs_save_dir, constants.SAVE_DATA_NAME)
     h5_file = h5py.File(save_path, 'w')
 
     env.init()

@@ -1,0 +1,97 @@
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:240: RuntimeWarning: Glyph 65288 missing from current font.
+  font.set_text(s, 0.0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:240: RuntimeWarning: Glyph 12398 missing from current font.
+  font.set_text(s, 0.0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:240: RuntimeWarning: Glyph 20301 missing from current font.
+  font.set_text(s, 0.0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:240: RuntimeWarning: Glyph 32622 missing from current font.
+  font.set_text(s, 0.0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:240: RuntimeWarning: Glyph 12391 missing from current font.
+  font.set_text(s, 0.0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:240: RuntimeWarning: Glyph 30528 missing from current font.
+  font.set_text(s, 0.0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:240: RuntimeWarning: Glyph 33394 missing from current font.
+  font.set_text(s, 0.0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:240: RuntimeWarning: Glyph 65289 missing from current font.
+  font.set_text(s, 0.0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:240: RuntimeWarning: Glyph 20961 missing from current font.
+  font.set_text(s, 0.0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:240: RuntimeWarning: Glyph 20363 missing from current font.
+  font.set_text(s, 0.0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:240: RuntimeWarning: Glyph 35542 missing from current font.
+  font.set_text(s, 0.0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:240: RuntimeWarning: Glyph 25991 missing from current font.
+  font.set_text(s, 0.0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:240: RuntimeWarning: Glyph 12392 missing from current font.
+  font.set_text(s, 0.0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:240: RuntimeWarning: Glyph 21516 missing from current font.
+  font.set_text(s, 0.0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:240: RuntimeWarning: Glyph 12376 missing from current font.
+  font.set_text(s, 0.0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:240: RuntimeWarning: Glyph 27083 missing from current font.
+  font.set_text(s, 0.0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:240: RuntimeWarning: Glyph 36896 missing from current font.
+  font.set_text(s, 0.0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:240: RuntimeWarning: Glyph 12289 missing from current font.
+  font.set_text(s, 0.0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:203: RuntimeWarning: Glyph 65288 missing from current font.
+  font.set_text(s, 0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:203: RuntimeWarning: Glyph 12398 missing from current font.
+  font.set_text(s, 0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:203: RuntimeWarning: Glyph 20301 missing from current font.
+  font.set_text(s, 0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:203: RuntimeWarning: Glyph 32622 missing from current font.
+  font.set_text(s, 0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:203: RuntimeWarning: Glyph 12391 missing from current font.
+  font.set_text(s, 0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:203: RuntimeWarning: Glyph 30528 missing from current font.
+  font.set_text(s, 0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:203: RuntimeWarning: Glyph 33394 missing from current font.
+  font.set_text(s, 0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:203: RuntimeWarning: Glyph 65289 missing from current font.
+  font.set_text(s, 0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:203: RuntimeWarning: Glyph 20961 missing from current font.
+  font.set_text(s, 0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:203: RuntimeWarning: Glyph 20363 missing from current font.
+  font.set_text(s, 0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:203: RuntimeWarning: Glyph 35542 missing from current font.
+  font.set_text(s, 0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:203: RuntimeWarning: Glyph 25991 missing from current font.
+  font.set_text(s, 0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:203: RuntimeWarning: Glyph 12392 missing from current font.
+  font.set_text(s, 0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:203: RuntimeWarning: Glyph 21516 missing from current font.
+  font.set_text(s, 0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:203: RuntimeWarning: Glyph 12376 missing from current font.
+  font.set_text(s, 0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:203: RuntimeWarning: Glyph 27083 missing from current font.
+  font.set_text(s, 0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:203: RuntimeWarning: Glyph 36896 missing from current font.
+  font.set_text(s, 0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:203: RuntimeWarning: Glyph 12289 missing from current font.
+  font.set_text(s, 0, flags=flags)
+run: /work/my_research/step2/results/mg5_20260603_185717
+  episodes=1000  final_loss=0.13908  encoder_frozen=True
+
+隠れ状態収集中 (50 ep × 80 steps)...
+  10/50 done
+  20/50 done
+  30/50 done
+  40/50 done
+  50/50 done
+収集完了: 4000 ステップ
+PCA 寄与率: PC1=0.518, PC2=0.328 (合計=0.846)
+
+=== 線形回帰: 隠れ状態 → エージェント位置 (R²) ===
+  論文の期待: h¹→A-1 高, h²→A-2 高, 交差項は低
+  h¹ → A-1 位置 (自己,  期待: 高):  R²_x=0.984  R²_y=0.988
+  h² → A-2 位置 (他者,  期待: 高):  R²_x=0.864  R²_y=0.859
+  h¹ → A-2 位置 (交差,  期待: 低):  R²_x=0.358  R²_y=0.498
+  h² → A-1 位置 (交差,  期待: 低):  R²_x=0.893  R²_y=0.864
+
+保存: /work/my_research/step2/results/mg5_20260603_185717/pca_spatial_mg5.png
+
+=== 空間構造チェック（PCA 象限ごとの平均色の差） ===
+  差が大きいほど位置に応じた構造あり（期待: どちらも高い値）
+  Process-1 h¹: 対角象限の色差 = 0.145
+  Process-2 h²: 対角象限の色差 = 0.090

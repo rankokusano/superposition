@@ -1,0 +1,43 @@
+実行ディレクトリ : /work/my_research/step2/results/mg5_20260603_185717
+デバイス         : cuda
+encoder freeze   : 有効（元論文 exp3 準拠）
+scale_vision     : 有効 [-1,1]
+MG 入力          : ov_enc
+マスク戦略       : p_mask_other = (step==0 ? 0 : 1.0)
+Q_SCALE          : 50.0
+MG_HIDDEN        : 64
+LR_NEW           : 0.0001
+EPISODES         : 1000
+
+パラメータ数:
+  frozen (encoder) : 189,984
+  trainable (新規) : 313,846
+
+初期エンコーダ cos_sim: mean=0.2724  std=0.0701
+
+=== train_step2_mg5 学習開始 (encoder freeze) ===
+
+Episode    50/1000 | Loss=0.22030 | cos_sim=0.2573 | MG_L2=1.9668 | Φs_L2=9.5401
+Episode   100/1000 | Loss=0.16263 | cos_sim=0.2870 | MG_L2=1.9711 | Φs_L2=9.6174
+Episode   150/1000 | Loss=0.15432 | cos_sim=0.2737 | MG_L2=1.9728 | Φs_L2=9.7092
+Episode   200/1000 | Loss=0.15468 | cos_sim=0.2817 | MG_L2=1.9694 | Φs_L2=9.8324
+Episode   250/1000 | Loss=0.14977 | cos_sim=0.2831 | MG_L2=1.9780 | Φs_L2=9.9394
+Episode   300/1000 | Loss=0.15122 | cos_sim=0.2833 | MG_L2=1.9928 | Φs_L2=10.0197
+Episode   350/1000 | Loss=0.14530 | cos_sim=0.2782 | MG_L2=1.9926 | Φs_L2=10.1135
+Episode   400/1000 | Loss=0.14510 | cos_sim=0.2898 | MG_L2=1.9964 | Φs_L2=10.2159
+Episode   450/1000 | Loss=0.14478 | cos_sim=0.2773 | MG_L2=2.0077 | Φs_L2=10.3172
+Episode   500/1000 | Loss=0.14113 | cos_sim=0.2585 | MG_L2=2.0228 | Φs_L2=10.4091
+Episode   550/1000 | Loss=0.14228 | cos_sim=0.3070 | MG_L2=2.0187 | Φs_L2=10.4914
+Episode   600/1000 | Loss=0.14315 | cos_sim=0.2895 | MG_L2=2.0261 | Φs_L2=10.5627
+Episode   650/1000 | Loss=0.14170 | cos_sim=0.2729 | MG_L2=2.0381 | Φs_L2=10.6910
+Episode   700/1000 | Loss=0.13584 | cos_sim=0.2843 | MG_L2=2.0345 | Φs_L2=10.7692
+Episode   750/1000 | Loss=0.14154 | cos_sim=0.2947 | MG_L2=2.0384 | Φs_L2=10.8412
+Episode   800/1000 | Loss=0.14453 | cos_sim=0.2827 | MG_L2=2.0470 | Φs_L2=10.9542
+Episode   850/1000 | Loss=0.13848 | cos_sim=0.2793 | MG_L2=2.0403 | Φs_L2=11.0567
+Episode   900/1000 | Loss=0.13941 | cos_sim=0.2876 | MG_L2=2.0448 | Φs_L2=11.1541
+Episode   950/1000 | Loss=0.13811 | cos_sim=0.2773 | MG_L2=2.0271 | Φs_L2=11.2063
+Episode  1000/1000 | Loss=0.13908 | cos_sim=0.2676 | MG_L2=2.0485 | Φs_L2=11.3214
+
+学習完了。保存: /work/my_research/step2/results/mg5_20260603_185717/model_mg5.pth
+最終平均Loss : 0.139077
+最終 cos_sim : mean=0.2825  std=0.0671

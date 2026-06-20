@@ -1,0 +1,34 @@
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:240: RuntimeWarning: Glyph 25104 missing from current font.
+  font.set_text(s, 0.0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:240: RuntimeWarning: Glyph 20998 missing from current font.
+  font.set_text(s, 0.0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:203: RuntimeWarning: Glyph 25104 missing from current font.
+  font.set_text(s, 0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:203: RuntimeWarning: Glyph 20998 missing from current font.
+  font.set_text(s, 0, flags=flags)
+run: /work/my_research/step3/results/mg7_ablation_20260608_181914
+  episodes=1000  final_loss=0.16257
+  [ablation] VE 無効モデル（評価時は VE 有効で読み込み）
+
+データ収集中 (25 ep × 4 選好)...
+  Red: 2000 steps 収集完了
+  Green: 2000 steps 収集完了
+  Blue: 2000 steps 収集完了
+  Cyan: 2000 steps 収集完了
+
+合計: 8000 ステップ
+
+=== Motion Generator 出力と実際のモーションの相関 ===
+  x成分: r = -0.1191  (p = 1.19e-26)
+  y成分: r = +0.0206  (p = 6.50e-02)
+
+  平均 |r| = 0.0698
+  参考: 野口さん論文では CW/CCW で r ≈ 0.87〜0.88
+
+  選好ごとの相関:
+    Red   : rx=+0.4062  ry=+0.7173  mean|r|=0.5617
+    Green : rx=+0.6696  ry=+0.3926  mean|r|=0.5311
+    Blue  : rx=-0.6155  ry=-0.6287  mean|r|=0.6221
+    Cyan  : rx=+0.1215  ry=+0.8049  mean|r|=0.4632
+
+保存: /work/my_research/step3/results/mg7_ablation_20260608_181914/mg_correlation_mg7.png

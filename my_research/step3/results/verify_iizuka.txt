@@ -1,0 +1,22 @@
+飯塚モデル読み込み中...
+  loaded: /work/data/result/exp1_l1/0/model/00200.pth
+
+データ収集中 (50 ep × 80 steps, p_mask=1.0 for eval)...
+合計: 4000 ステップ  (hidden_dim=128)
+
+=== 検証 1: h¹/h² 位置マップ ===
+h¹ PCA 寄与率: PC1=0.511 PC2=0.419 合計=0.930
+h² PCA 寄与率: PC1=0.507 PC2=0.416 合計=0.923
+
+=== 検証 2: 線形回帰 R² ===
+  h¹ → A-1 位置 R² = 0.9745  [OK]
+  h² → A-2 位置 R² = 0.8060  [OK]
+
+保存: /work/my_research/step3/results/verify_iizuka_phase1.png
+
+=== 検証サマリ ===
+  R²(h¹→A-1) = 0.9745  [OK]
+  R²(h²→A-2) = 0.8060  [OK]
+
+  飯塚モデル = Phase 1 として使える: YES
+  → exp1_l1 checkpoint を frozen にして Phase 2 (MG 訓練) へ進む

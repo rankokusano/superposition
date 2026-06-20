@@ -1,0 +1,26 @@
+保存先     : /work/data/data/self_random_other_stay_single_green/data.h5
+A-1        : RL actor
+A-2        : LandmarkFollowerAgent('Green')  ← 単一選好
+SEQ_LENGTH : 101
+N_TRAIN    : 2100
+N_TEST     : 220
+
+=== train (2100 ep) ===
+  [train] 200/2100
+  [train] 400/2100
+  [train] 600/2100
+  [train] 800/2100
+  [train] 1000/2100
+  [train] 1200/2100
+  [train] 1400/2100
+  [train] 1600/2100
+  [train] 1800/2100
+  [train] 2000/2100
+  [train] 完了: 2100 episodes
+
+=== test (220 ep) ===
+  [test] 200/220
+  [test] 完了: 220 episodes
+
+完了: /work/data/data/self_random_other_stay_single_green/data.h5
+ファイルサイズ: 2753.1 MB

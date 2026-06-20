@@ -1,0 +1,32 @@
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:240: RuntimeWarning: Glyph 12399 missing from current font.
+  font.set_text(s, 0.0, flags=flags)
+/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:203: RuntimeWarning: Glyph 12399 missing from current font.
+  font.set_text(s, 0, flags=flags)
+run: /work/my_research/step3/results/mg6_20260606_191630
+  episodes=1000  final_loss=0.14097  ve_input=ov_enc+om_generated
+
+隠れ状態収集中 (50 ep x 80 steps)...
+  10/50 done
+  20/50 done
+  30/50 done
+  40/50 done
+  50/50 done
+収集完了: 4000 ステップ
+PCA 寄与率: PC1=0.451, PC2=0.393 (合計=0.844)
+
+=== 線形回帰: 隠れ状態 -> エージェント位置 (R^2) ===
+  mg5 結果参照: h1->A-1: 0.986, h2->A-2: 0.862, h2->A-1: 0.879 (問題)
+  mg6 期待: h2->A-2 が高く、h2->A-1 が低くなること
+  h1 -> A-1 (自己,  期待: 高):  R2_x=0.982  R2_y=0.983
+  h2 -> A-2 (他者,  期待: 高):  R2_x=0.870  R2_y=0.876
+  h1 -> A-2 (交差,  期待: 低):  R2_x=0.347  R2_y=0.361
+  h2 -> A-1 (交差,  期待: 低):  R2_x=0.868  R2_y=0.760
+
+  [自他分離度] h2->A-2: 0.873  h2->A-1: 0.814  差: +0.059
+  mg5 の差: 0.862 - 0.879 = -0.017  (A-1 の方が高かった)
+
+保存: /work/my_research/step3/results/mg6_20260606_191630/pca_spatial_mg6.png
+
+=== 空間構造チェック（PCA 象限ごとの平均色の差） ===
+  Process-1 h1: 対角象限の色差 = 0.175
+  Process-2 h2: 対角象限の色差 = 0.282

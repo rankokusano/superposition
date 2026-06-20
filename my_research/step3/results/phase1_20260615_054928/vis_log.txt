@@ -1,0 +1,29 @@
+run: /work/my_research/step3/results/phase1_20260615_054928
+  episodes=1000  final_loss=0.43822
+
+データ収集中 (50 ep × 80 steps, eval p_mask=1.0)...
+合計: 4000 ステップ  (hidden_dim=128)
+
+=== 検証 1: h¹/h² 位置マップ ===
+h¹ PCA 寄与率: PC1=0.640  PC2=0.188  合計=0.829
+h² PCA 寄与率: PC1=0.801  PC2=0.066  合計=0.867
+
+=== 検証 2: 線形回帰 R² ===
+  h¹ → A-1 位置 R² = 0.9545  [OK] (基準: >0.8)
+  h² → A-2 位置 R² = 0.0768  [FAIL] (基準: >0.8)
+
+=== 検証 3: 視覚復号 / 視点取得 ===
+  decoder R² (h¹ → 自己視覚): 0.3335
+  decoder R² (h² → 視点取得): -0.5508
+
+保存: /work/my_research/step3/results/phase1_20260615_054928/visualize_phase1.png
+
+=== Phase 1 検証サマリ ===
+  [1] h¹ PCA 寄与率合計: 0.829
+  [1] h² PCA 寄与率合計: 0.867
+  [2] R²(h¹→A-1 pos) = 0.9545  [OK]
+  [2] R²(h²→A-2 pos) = 0.0768  [FAIL]
+  [3] R²(decode h¹)   = 0.3335
+  [3] R²(decode h²)   = -0.5508
+
+  Phase 1 合格: NO → 訓練を見直す

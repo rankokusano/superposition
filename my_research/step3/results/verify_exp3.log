@@ -1,0 +1,32 @@
+モデル : /work/data/result/exp3/0/model/00200.pth
+データ : /work/data/data/self_random_other_stay_periodic/data.h5
+デバイス: cuda
+モデルロード完了
+
+h5 test keys: ['other_motion', 'other_position', 'self_motion', 'self_position', 'self_vision']
+✓ other_motion を h5 から直接ロード
+テストデータ: 220 ep × 101 steps  (H=16, W=64)
+評価エピソード数: 200
+  50/200 ep 処理済み
+  100/200 ep 処理済み
+  150/200 ep 処理済み
+  200/200 ep 処理済み
+
+合計サンプル数: 20200
+
+=== MG 相関 (Pearson r) ===
+  r_x : 0.7759  (p=0.00e+00)
+  r_y : 0.5835  (p=0.00e+00)
+  mean: 0.6797  [FAIL < 0.87]
+
+=== om_true 統計 (h5直接) ===
+  |om_true| mean : 0.9000  (PeriodicAgent v=1 なら 1.0 が期待値)
+  |om_true| std  : 0.3000
+  |om_pred| mean : 0.3165
+
+=== サマリ ===
+  exp3 (CW/CCW, 元論文)         : MG r = 0.6797
+  我々 (MultiPref, 4 択)         : MG r = 0.3140
+  我々 (SinglePref, Green のみ)  : MG r = 0.1969
+
+  論文の閾値 r≥0.87: 未達成

@@ -1,0 +1,37 @@
+run: /work/my_research/step3/results/phase1_20260612_195405
+  episodes=1000  final_loss=0.26713
+
+データ収集中 (50 エピソード × 80 ステップ)...
+合計: 4000 ステップ  (hidden_dim=128)
+
+=== 検証 1: h¹/h² 位置マップ ===
+h¹ PCA 寄与率: PC1=0.465  PC2=0.274  合計=0.738
+h² PCA 寄与率: PC1=0.447  PC2=0.195  合計=0.642
+
+=== 検証 2: 線形回帰 R² ===
+  h¹ → A-1 位置 R² = 0.8861  [OK] (基準: >0.8)
+  h² → A-2 位置 R² = 0.0910  [FAIL] (基準: >0.8)
+
+=== 検証 3: 視覚復号 / 視点取得 ===
+  decoder R² (h¹ → 自己視覚, 再現): -542531002119.5433
+  decoder R² (h² → 視点取得)      : -554090594651.4663
+Traceback (most recent call last):
+  File "my_research/step3/phase1/visualize_phase1.py", line 352, in <module>
+    plt.savefig(SAVE_PATH, dpi=150, bbox_inches='tight')
+  File "/usr/local/lib/python3.8/site-packages/matplotlib/pyplot.py", line 966, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/matplotlib/figure.py", line 3015, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/matplotlib/backend_bases.py", line 2255, in print_figure
+    result = print_method(
+  File "/usr/local/lib/python3.8/site-packages/matplotlib/backend_bases.py", line 1669, in wrapper
+    return func(*args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py", line 508, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py", line 401, in draw
+    self.renderer = self.get_renderer(cleared=True)
+  File "/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py", line 417, in get_renderer
+    self.renderer = RendererAgg(w, h, self.figure.dpi)
+  File "/usr/local/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py", line 91, in __init__
+    self._renderer = _RendererAgg(int(width), int(height), dpi)
+ValueError: Image size of 2460x1288265604 pixels is too large. It must be less than 2^16 in each direction.

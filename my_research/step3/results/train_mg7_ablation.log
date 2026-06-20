@@ -1,0 +1,41 @@
+実行ディレクトリ : /work/my_research/step3/results/mg7_ablation_20260608_181914
+デバイス         : cuda
+アブレーション   : q_other = 0 固定（VE 無効）
+A-2 行動         : MultiPrefAgent（mg7 と同じ）
+encoder freeze   : 有効
+Q_SCALE          : 50.0
+EPISODES         : 1000
+[load_iizuka_weights] loaded=40, skipped=4
+
+パラメータ数:
+  frozen   : 189,984
+  trainable: 309,878
+
+初期エンコーダ cos_sim: mean=0.2806  std=0.0694
+
+=== mg7_ablation 学習開始 (VE 無効, q_other=0) ===
+
+Episode    50/1000 | Loss=0.32372 | cos_sim=0.2857 | MG_L2=2.0992 | Φs_L2=9.5423 | pref_dist=[Blue:12 Cyan:10 Green:13 Red:15]
+Episode   100/1000 | Loss=0.22474 | cos_sim=0.2720 | MG_L2=2.1174 | Φs_L2=9.6674 | pref_dist=[Blue:21 Cyan:21 Green:28 Red:30]
+Episode   150/1000 | Loss=0.22679 | cos_sim=0.2800 | MG_L2=2.1223 | Φs_L2=9.8148 | pref_dist=[Blue:29 Cyan:33 Green:44 Red:44]
+Episode   200/1000 | Loss=0.21764 | cos_sim=0.2846 | MG_L2=2.1363 | Φs_L2=9.9646 | pref_dist=[Blue:40 Cyan:49 Green:58 Red:53]
+Episode   250/1000 | Loss=0.20240 | cos_sim=0.2761 | MG_L2=2.1238 | Φs_L2=10.0784 | pref_dist=[Blue:54 Cyan:55 Green:78 Red:63]
+Episode   300/1000 | Loss=0.20625 | cos_sim=0.2688 | MG_L2=2.1039 | Φs_L2=10.2481 | pref_dist=[Blue:64 Cyan:64 Green:92 Red:80]
+Episode   350/1000 | Loss=0.18328 | cos_sim=0.2509 | MG_L2=2.0878 | Φs_L2=10.4102 | pref_dist=[Blue:71 Cyan:78 Green:104 Red:97]
+Episode   400/1000 | Loss=0.18637 | cos_sim=0.2735 | MG_L2=2.0805 | Φs_L2=10.5793 | pref_dist=[Blue:89 Cyan:92 Green:118 Red:101]
+Episode   450/1000 | Loss=0.19028 | cos_sim=0.2929 | MG_L2=2.0691 | Φs_L2=10.7089 | pref_dist=[Blue:104 Cyan:102 Green:134 Red:110]
+Episode   500/1000 | Loss=0.19164 | cos_sim=0.2833 | MG_L2=2.0790 | Φs_L2=10.8367 | pref_dist=[Blue:110 Cyan:114 Green:150 Red:126]
+Episode   550/1000 | Loss=0.20605 | cos_sim=0.2699 | MG_L2=2.0726 | Φs_L2=10.9743 | pref_dist=[Blue:128 Cyan:122 Green:157 Red:143]
+Episode   600/1000 | Loss=0.19964 | cos_sim=0.2843 | MG_L2=2.0740 | Φs_L2=11.0994 | pref_dist=[Blue:140 Cyan:133 Green:169 Red:158]
+Episode   650/1000 | Loss=0.18964 | cos_sim=0.2827 | MG_L2=2.0878 | Φs_L2=11.2379 | pref_dist=[Blue:150 Cyan:146 Green:182 Red:172]
+Episode   700/1000 | Loss=0.18588 | cos_sim=0.2633 | MG_L2=2.0764 | Φs_L2=11.3444 | pref_dist=[Blue:162 Cyan:163 Green:189 Red:186]
+Episode   750/1000 | Loss=0.17796 | cos_sim=0.2833 | MG_L2=2.0791 | Φs_L2=11.4579 | pref_dist=[Blue:172 Cyan:175 Green:206 Red:197]
+Episode   800/1000 | Loss=0.17406 | cos_sim=0.2714 | MG_L2=2.0739 | Φs_L2=11.5689 | pref_dist=[Blue:183 Cyan:185 Green:224 Red:208]
+Episode   850/1000 | Loss=0.17685 | cos_sim=0.2819 | MG_L2=2.0674 | Φs_L2=11.6930 | pref_dist=[Blue:201 Cyan:199 Green:235 Red:215]
+Episode   900/1000 | Loss=0.16256 | cos_sim=0.2771 | MG_L2=2.0745 | Φs_L2=11.8530 | pref_dist=[Blue:215 Cyan:215 Green:249 Red:221]
+Episode   950/1000 | Loss=0.16471 | cos_sim=0.2808 | MG_L2=2.0627 | Φs_L2=11.9552 | pref_dist=[Blue:226 Cyan:231 Green:257 Red:236]
+Episode  1000/1000 | Loss=0.16257 | cos_sim=0.2662 | MG_L2=2.0554 | Φs_L2=12.1150 | pref_dist=[Blue:236 Cyan:248 Green:270 Red:246]
+
+学習完了。保存: /work/my_research/step3/results/mg7_ablation_20260608_181914/model_mg7.pth
+最終平均Loss : 0.162568
+最終 cos_sim : mean=0.2655  std=0.0588

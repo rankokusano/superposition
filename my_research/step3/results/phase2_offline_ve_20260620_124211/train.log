@@ -1,0 +1,23 @@
+実行ディレクトリ : /work/my_research/step3/results/phase2_offline_ve_20260620_124211
+デバイス         : cuda
+データ           : /work/data/data/self_random_other_stay_multi_pref/data.h5
+モデル           : SuperpositionNetworkWithMG3 (VE 付き)
+encoder freeze   : 有効（exp1 weights, 論文準拠）
+trainable        : SM + MG + VE + integration + decoder + feat_pred
+Q_SCALE          : 50.0
+MG_HIDDEN        : 64
+MAX_EPOCHS       : 200
+BATCH_SIZE       : 10
+SEQ_LEN          : 100
+LR               : 0.0001  (AdamW, wd=0.01)
+
+Critic ロード完了: /work/my_research/rl_model_v6_critic.pth
+exp1 weights ロード完了: /work/data/result/exp1_l1/0/model/00200.pth
+  frozen (encoder)      : 189,984
+  trainable (SM+MG+VE+) : 309,878
+
+データ読み込み中...
+  train: 1890 ep  val: 210 ep
+
+=== offline VE 訓練開始 ===
+

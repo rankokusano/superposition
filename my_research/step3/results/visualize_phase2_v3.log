@@ -1,0 +1,31 @@
+モデル読み込み: my_research/step3/results/phase2_20260616_004705/model_phase2.pth
+  読み込み完了
+
+データ収集中 (4 選好 × 50 ep × 80 steps)...
+  Red: 50 ep 完了
+  Green: 50 ep 完了
+  Blue: 50 ep 完了
+  Cyan: 50 ep 完了
+
+合計サンプル数: 16000
+
+=== 検証 1: MG 相関 (Pearson r) ===
+  r_x (x 方向): 0.3812  (p=0.00e+00)
+  r_y (y 方向): 0.3557  (p=0.00e+00)
+  r_mean      : 0.3684  [FAIL < 0.87]
+
+=== 検証 2: h² PCA 選好分離 ===
+  h² PCA 寄与率: PC1=0.878, PC2=0.070, 合計=0.948
+  選好分離スコア (between/total): 1.4020
+
+=== 検証 3: h² 線形分類精度 ===
+  Logistic Regression 精度: 0.7644  (chance=0.25)
+
+保存: my_research/step3/results/phase2_20260616_004705/visualize_phase2.png
+
+=== Phase 2 検証サマリ ===
+  MG r_x  = 0.3812
+  MG r_y  = 0.3557
+  MG mean = 0.3684  [FAIL]
+  h² clf acc = 0.7644  [OK]
+  sep score  = 1.4020

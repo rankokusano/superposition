@@ -1,0 +1,41 @@
+実行ディレクトリ : /work/my_research/step3/results/phase1_20260612_195405
+デバイス         : cuda
+Phase            : 1 (SM ベース訓練、A-2 静止)
+encoder freeze   : 有効（飯塚モデルから転送）
+A-2 行動         : 静止 (om = zeros(2))
+マスク戦略       : step==0 のみ両視覚マスクなし、以降 p_mask=1.0
+Q_SCALE          : 50.0
+LR_NEW           : 0.0001
+EPISODES         : 1000
+MAX_STEPS        : 100
+[load_iizuka_weights] loaded=40, skipped=4
+
+パラメータ数:
+  frozen (encoder)  : 189,984
+  trainable (SM 等) : 267,955
+
+=== Phase 1 学習開始 ===
+
+Episode    50/1000 | Loss=0.38860 | Φs_L2=9.5263
+Episode   100/1000 | Loss=0.35359 | Φs_L2=9.5718
+Episode   150/1000 | Loss=0.34445 | Φs_L2=9.6158
+Episode   200/1000 | Loss=0.30425 | Φs_L2=9.6588
+Episode   250/1000 | Loss=0.26029 | Φs_L2=9.6885
+Episode   300/1000 | Loss=0.30570 | Φs_L2=9.7242
+Episode   350/1000 | Loss=0.26712 | Φs_L2=9.7728
+Episode   400/1000 | Loss=0.28675 | Φs_L2=9.8340
+Episode   450/1000 | Loss=0.29561 | Φs_L2=9.8776
+Episode   500/1000 | Loss=0.27919 | Φs_L2=9.9347
+Episode   550/1000 | Loss=0.29159 | Φs_L2=9.9875
+Episode   600/1000 | Loss=0.26412 | Φs_L2=10.0554
+Episode   650/1000 | Loss=0.27141 | Φs_L2=10.1047
+Episode   700/1000 | Loss=0.28798 | Φs_L2=10.1549
+Episode   750/1000 | Loss=0.26592 | Φs_L2=10.2081
+Episode   800/1000 | Loss=0.26162 | Φs_L2=10.2643
+Episode   850/1000 | Loss=0.25936 | Φs_L2=10.3464
+Episode   900/1000 | Loss=0.30590 | Φs_L2=10.3902
+Episode   950/1000 | Loss=0.25221 | Φs_L2=10.4565
+Episode  1000/1000 | Loss=0.26713 | Φs_L2=10.4912
+
+学習完了。保存: /work/my_research/step3/results/phase1_20260612_195405/model_phase1.pth
+最終平均Loss : 0.267134

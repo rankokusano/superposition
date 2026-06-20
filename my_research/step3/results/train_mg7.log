@@ -1,0 +1,46 @@
+実行ディレクトリ : /work/my_research/step3/results/mg7_20260608_154447
+デバイス         : cuda
+encoder freeze   : 有効（元論文 exp3 準拠）
+scale_vision     : 有効 [-1,1]
+A-2 行動         : MultiPrefAgent（エピソードごとにランドマークをランダム選択）
+VE 入力          : (ov_enc, om_generated)
+マスク戦略       : p_mask_other = (step==0 ? 0 : 1.0)
+Q_SCALE          : 50.0
+MG_HIDDEN        : 64
+LR_NEW           : 0.0001
+EPISODES         : 1000
+[load_iizuka_weights] loaded=40, skipped=4
+
+パラメータ数:
+  frozen (encoder) : 189,984
+  trainable (新規) : 309,878
+
+初期エンコーダ cos_sim: mean=0.2754  std=0.0724
+
+=== train_step3_mg7 学習開始 (encoder freeze, MultiPrefAgent) ===
+
+Episode    50/1000 | Loss=0.30884 | cos_sim=0.2788 | MG_L2=1.9704 | Φs_L2=9.5655 | pref_dist=[Blue:10 Cyan:15 Green:15 Red:10]
+Episode   100/1000 | Loss=0.25416 | cos_sim=0.2785 | MG_L2=1.9999 | Φs_L2=9.6850 | pref_dist=[Blue:22 Cyan:31 Green:23 Red:24]
+Episode   150/1000 | Loss=0.21960 | cos_sim=0.2776 | MG_L2=2.0310 | Φs_L2=9.8378 | pref_dist=[Blue:33 Cyan:41 Green:36 Red:40]
+Episode   200/1000 | Loss=0.19172 | cos_sim=0.2752 | MG_L2=2.0429 | Φs_L2=9.9725 | pref_dist=[Blue:40 Cyan:54 Green:50 Red:56]
+Episode   250/1000 | Loss=0.20397 | cos_sim=0.2866 | MG_L2=2.0664 | Φs_L2=10.1056 | pref_dist=[Blue:55 Cyan:63 Green:62 Red:70]
+Episode   300/1000 | Loss=0.18980 | cos_sim=0.2709 | MG_L2=2.0799 | Φs_L2=10.2431 | pref_dist=[Blue:67 Cyan:70 Green:80 Red:83]
+Episode   350/1000 | Loss=0.19027 | cos_sim=0.2825 | MG_L2=2.0748 | Φs_L2=10.3802 | pref_dist=[Blue:79 Cyan:85 Green:92 Red:94]
+Episode   400/1000 | Loss=0.18892 | cos_sim=0.2723 | MG_L2=2.0732 | Φs_L2=10.5297 | pref_dist=[Blue:93 Cyan:95 Green:108 Red:104]
+Episode   450/1000 | Loss=0.18030 | cos_sim=0.2780 | MG_L2=2.0781 | Φs_L2=10.6576 | pref_dist=[Blue:106 Cyan:106 Green:124 Red:114]
+Episode   500/1000 | Loss=0.18349 | cos_sim=0.2699 | MG_L2=2.0660 | Φs_L2=10.7615 | pref_dist=[Blue:124 Cyan:118 Green:134 Red:124]
+Episode   550/1000 | Loss=0.17866 | cos_sim=0.2726 | MG_L2=2.0761 | Φs_L2=10.8624 | pref_dist=[Blue:138 Cyan:134 Green:141 Red:137]
+Episode   600/1000 | Loss=0.17376 | cos_sim=0.2894 | MG_L2=2.0795 | Φs_L2=11.0175 | pref_dist=[Blue:148 Cyan:149 Green:152 Red:151]
+Episode   650/1000 | Loss=0.18022 | cos_sim=0.2728 | MG_L2=2.0676 | Φs_L2=11.1541 | pref_dist=[Blue:160 Cyan:159 Green:164 Red:167]
+Episode   700/1000 | Loss=0.18529 | cos_sim=0.2859 | MG_L2=2.0729 | Φs_L2=11.3051 | pref_dist=[Blue:173 Cyan:166 Green:177 Red:184]
+Episode   750/1000 | Loss=0.16827 | cos_sim=0.2573 | MG_L2=2.0730 | Φs_L2=11.4399 | pref_dist=[Blue:184 Cyan:177 Green:195 Red:194]
+Episode   800/1000 | Loss=0.17705 | cos_sim=0.2643 | MG_L2=2.0728 | Φs_L2=11.5704 | pref_dist=[Blue:199 Cyan:185 Green:206 Red:210]
+Episode   850/1000 | Loss=0.17173 | cos_sim=0.2597 | MG_L2=2.0715 | Φs_L2=11.6906 | pref_dist=[Blue:211 Cyan:196 Green:219 Red:224]
+Episode   900/1000 | Loss=0.16678 | cos_sim=0.2692 | MG_L2=2.0792 | Φs_L2=11.8123 | pref_dist=[Blue:222 Cyan:208 Green:234 Red:236]
+Episode   950/1000 | Loss=0.16179 | cos_sim=0.2656 | MG_L2=2.0665 | Φs_L2=11.9352 | pref_dist=[Blue:234 Cyan:222 Green:249 Red:245]
+Episode  1000/1000 | Loss=0.17149 | cos_sim=0.2762 | MG_L2=2.0579 | Φs_L2=12.0892 | pref_dist=[Blue:255 Cyan:233 Green:258 Red:254]
+
+学習完了。保存: /work/my_research/step3/results/mg7_20260608_154447/model_mg7.pth
+最終平均Loss : 0.171491
+最終 cos_sim : mean=0.2718  std=0.0628
+選好分布     : {'Green': 258, 'Cyan': 233, 'Red': 254, 'Blue': 255}

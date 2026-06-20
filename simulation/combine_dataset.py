@@ -13,9 +13,11 @@ parser.add_argument('--save_as', default='default')
 
 args = parser.parse_args()
 
+work_root = '/work' if os.path.isdir('/work') else os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 targets = []
 for target in args.targets:
-    f_target = constants.SAVE_ROOT_DIR + target + '/' + constants.SAVE_DATA_NAME
+    f_target = os.path.join(work_root, constants.SAVE_ROOT_DIR, target, constants.SAVE_DATA_NAME)
     with h5py.File(f_target, 'r') as f_h5:
         dct = {}
         for mode in f_h5.keys():
@@ -24,11 +26,12 @@ for target in args.targets:
                 dct[mode][modal] = f_h5[mode][modal][()]
         targets.append(dct)
 
-save_dir = constants.SAVE_ROOT_DIR + args.save_as + '/'
-subprocess.check_output(['mkdir', '-p', save_dir])
+save_dir = os.path.join(work_root, constants.SAVE_ROOT_DIR, args.save_as) + '/'
+os.makedirs(save_dir, exist_ok=True)
 
 save_path = save_dir + constants.SAVE_DATA_NAME
-assert not os.path.isfile(save_path)
+# 以前の失敗作があるかもしれないので assert はコメントアウト推奨
+#assert not os.path.isfile(save_path)
 
 h5_dataset = h5py.File(save_path, 'w')
 

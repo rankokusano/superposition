@@ -1,0 +1,38 @@
+実行ディレクトリ : /work/my_research/step3/results/phase2_offline_ve_20260620_124321
+デバイス         : cuda
+データ           : /work/data/data/self_random_other_stay_multi_pref/data.h5
+モデル           : SuperpositionNetworkWithMG3 (VE 付き)
+encoder freeze   : 有効（exp1 weights, 論文準拠）
+trainable        : SM + MG + VE + integration + decoder + feat_pred
+Q_SCALE          : 50.0
+MG_HIDDEN        : 64
+MAX_EPOCHS       : 200
+BATCH_SIZE       : 10
+SEQ_LEN          : 100
+LR               : 0.0001  (AdamW, wd=0.01)
+
+Critic ロード完了: /work/my_research/rl_model_v6_critic.pth
+exp1 weights ロード完了: /work/data/result/exp1_l1/0/model/00200.pth
+  frozen (encoder)      : 189,984
+  trainable (SM+MG+VE+) : 309,878
+
+データ読み込み中...
+  train: 1890 ep  val: 210 ep
+
+=== offline VE 訓練開始 ===
+
+Epoch   10/200 | train=0.02490 | test=0.00181* | MG_L2=1.9645  VE_L2=0.5843
+Epoch   20/200 | train=0.01117 | test=0.00151* | MG_L2=1.9712  VE_L2=0.6088
+Epoch   30/200 | train=0.01040 | test=0.00123* | MG_L2=1.9743  VE_L2=0.6312
+Epoch   40/200 | train=0.01082 | test=0.00141  | MG_L2=1.9772  VE_L2=0.6524
+Epoch   50/200 | train=0.00969 | test=0.00121* | MG_L2=1.9799  VE_L2=0.6755
+Epoch   60/200 | train=0.00912 | test=0.00141  | MG_L2=1.9826  VE_L2=0.7012
+Epoch   70/200 | train=0.00668 | test=0.00117* | MG_L2=1.9859  VE_L2=0.7287
+Epoch   80/200 | train=0.00699 | test=0.00118  | MG_L2=1.9875  VE_L2=0.7538
+Epoch   90/200 | train=0.00678 | test=0.00122  | MG_L2=1.9885  VE_L2=0.7802
+Epoch  100/200 | train=0.00783 | test=0.00117* | MG_L2=1.9886  VE_L2=0.8069
+Epoch  110/200 | train=0.00481 | test=0.00116* | MG_L2=1.9909  VE_L2=0.8334
+Epoch  120/200 | train=0.00389 | test=0.00116* | MG_L2=1.9935  VE_L2=0.8585
+Epoch  130/200 | train=0.00836 | test=0.00117  | MG_L2=1.9946  VE_L2=0.8844
+Epoch  140/200 | train=0.00447 | test=0.00115* | MG_L2=1.9949  VE_L2=0.9074
+Epoch  150/200 | train=0.00684 | test=0.00115  | MG_L2=1.9963  VE_L2=0.9301

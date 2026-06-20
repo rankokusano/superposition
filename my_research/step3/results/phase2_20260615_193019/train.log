@@ -1,0 +1,75 @@
+実行ディレクトリ : /work/my_research/step3/results/phase2_20260615_193019
+デバイス         : cuda
+Phase            : 2 (MG 専用訓練、SM frozen)
+基盤モデル       : /work/data/result/exp1_l1/0/model/00200.pth
+A-2 行動         : MultiPrefAgent (4 選好、エピソードごとランダム)
+マスク戦略       : step>0 → p_mask=1.0 (self & other)
+学習方式         : BPTT (エピソード全体で loss 積算、1回 backward)
+LR_MG            : 0.0001
+EPISODES         : 5000
+MAX_STEPS        : 100
+
+飯塚 checkpoint 読み込み:
+  missing (MG 等): ['motion_generator_module.lstm.weight_ih', 'motion_generator_module.lstm.weight_hh', 'motion_generator_module.lstm.bias_ih', 'motion_generator_module.lstm.bias_hh', 'motion_generator_module.fc.weight', 'motion_generator_module.fc.bias']
+  unexpected     : []
+
+パラメータ数:
+  frozen (SM 等) : 457,427
+  trainable (MG) : 99,586
+
+=== Phase 2 学習開始 ===
+
+Episode   100/5000 | Loss=0.78343 | MG_L2=3.3062 | r=(0.073,0.093) | pref=[Blue:18 Cyan:34 Green:27 Red:21]
+Episode   200/5000 | Loss=0.75649 | MG_L2=3.3047 | r=(-0.055,0.116) | pref=[Blue:44 Cyan:60 Green:50 Red:46]
+Episode   300/5000 | Loss=0.73844 | MG_L2=3.3029 | r=(-0.012,0.032) | pref=[Blue:63 Cyan:83 Green:87 Red:67]
+Episode   400/5000 | Loss=0.74863 | MG_L2=3.3012 | r=(-0.025,0.073) | pref=[Blue:86 Cyan:104 Green:110 Red:100]
+Episode   500/5000 | Loss=0.74961 | MG_L2=3.3001 | r=(0.007,0.047) | pref=[Blue:109 Cyan:134 Green:132 Red:125]
+Episode   600/5000 | Loss=0.73979 | MG_L2=3.2989 | r=(-0.015,0.047) | pref=[Blue:142 Cyan:150 Green:153 Red:155]
+Episode   700/5000 | Loss=0.73342 | MG_L2=3.2979 | r=(0.009,0.061) | pref=[Blue:163 Cyan:179 Green:178 Red:180]
+Episode   800/5000 | Loss=0.71954 | MG_L2=3.2970 | r=(-0.081,0.051) | pref=[Blue:184 Cyan:199 Green:203 Red:214]
+Episode   900/5000 | Loss=0.72802 | MG_L2=3.2953 | r=(0.071,0.046) | pref=[Blue:202 Cyan:222 Green:227 Red:249]
+Episode  1000/5000 | Loss=0.74985 | MG_L2=3.2946 | r=(0.055,0.041) | pref=[Blue:226 Cyan:249 Green:252 Red:273]
+Episode  1100/5000 | Loss=0.74012 | MG_L2=3.2932 | r=(0.024,0.070) | pref=[Blue:249 Cyan:276 Green:277 Red:298]
+Episode  1200/5000 | Loss=0.71507 | MG_L2=3.2920 | r=(0.005,0.096) | pref=[Blue:270 Cyan:294 Green:313 Red:323]
+Episode  1300/5000 | Loss=0.75253 | MG_L2=3.2907 | r=(0.133,0.088) | pref=[Blue:299 Cyan:325 Green:334 Red:342]
+Episode  1400/5000 | Loss=0.73626 | MG_L2=3.2900 | r=(0.088,0.107) | pref=[Blue:327 Cyan:355 Green:355 Red:363]
+Episode  1500/5000 | Loss=0.73373 | MG_L2=3.2896 | r=(0.086,0.106) | pref=[Blue:353 Cyan:377 Green:377 Red:393]
+Episode  1600/5000 | Loss=0.75405 | MG_L2=3.2881 | r=(0.098,0.090) | pref=[Blue:376 Cyan:406 Green:394 Red:424]
+Episode  1700/5000 | Loss=0.72491 | MG_L2=3.2876 | r=(0.023,0.113) | pref=[Blue:398 Cyan:430 Green:422 Red:450]
+Episode  1800/5000 | Loss=0.75519 | MG_L2=3.2861 | r=(0.087,0.110) | pref=[Blue:425 Cyan:462 Green:443 Red:470]
+Episode  1900/5000 | Loss=0.72114 | MG_L2=3.2856 | r=(0.136,0.109) | pref=[Blue:448 Cyan:485 Green:470 Red:497]
+Episode  2000/5000 | Loss=0.75947 | MG_L2=3.2853 | r=(0.073,0.135) | pref=[Blue:475 Cyan:517 Green:482 Red:526]
+Episode  2100/5000 | Loss=0.73617 | MG_L2=3.2840 | r=(0.110,0.130) | pref=[Blue:506 Cyan:539 Green:505 Red:550]
+Episode  2200/5000 | Loss=0.72218 | MG_L2=3.2827 | r=(0.047,0.082) | pref=[Blue:529 Cyan:563 Green:526 Red:582]
+Episode  2300/5000 | Loss=0.72425 | MG_L2=3.2822 | r=(0.132,0.126) | pref=[Blue:558 Cyan:587 Green:552 Red:603]
+Episode  2400/5000 | Loss=0.71969 | MG_L2=3.2819 | r=(0.190,0.144) | pref=[Blue:578 Cyan:613 Green:580 Red:629]
+Episode  2500/5000 | Loss=0.72477 | MG_L2=3.2812 | r=(0.054,0.155) | pref=[Blue:604 Cyan:635 Green:602 Red:659]
+Episode  2600/5000 | Loss=0.74127 | MG_L2=3.2798 | r=(0.115,0.162) | pref=[Blue:632 Cyan:657 Green:629 Red:682]
+Episode  2700/5000 | Loss=0.72968 | MG_L2=3.2788 | r=(0.127,0.138) | pref=[Blue:653 Cyan:684 Green:654 Red:709]
+Episode  2800/5000 | Loss=0.72517 | MG_L2=3.2783 | r=(0.143,0.136) | pref=[Blue:676 Cyan:709 Green:675 Red:740]
+Episode  2900/5000 | Loss=0.71441 | MG_L2=3.2779 | r=(0.092,0.140) | pref=[Blue:695 Cyan:733 Green:703 Red:769]
+Episode  3000/5000 | Loss=0.71368 | MG_L2=3.2773 | r=(0.216,0.186) | pref=[Blue:720 Cyan:757 Green:732 Red:791]
+Episode  3100/5000 | Loss=0.70729 | MG_L2=3.2763 | r=(0.164,0.166) | pref=[Blue:744 Cyan:782 Green:763 Red:811]
+Episode  3200/5000 | Loss=0.72434 | MG_L2=3.2758 | r=(0.120,0.136) | pref=[Blue:775 Cyan:807 Green:784 Red:834]
+Episode  3300/5000 | Loss=0.72149 | MG_L2=3.2750 | r=(0.095,0.181) | pref=[Blue:804 Cyan:830 Green:806 Red:860]
+Episode  3400/5000 | Loss=0.72129 | MG_L2=3.2743 | r=(0.148,0.159) | pref=[Blue:829 Cyan:854 Green:826 Red:891]
+Episode  3500/5000 | Loss=0.69897 | MG_L2=3.2740 | r=(0.178,0.215) | pref=[Blue:853 Cyan:874 Green:852 Red:921]
+Episode  3600/5000 | Loss=0.72568 | MG_L2=3.2735 | r=(0.243,0.162) | pref=[Blue:875 Cyan:905 Green:877 Red:943]
+Episode  3700/5000 | Loss=0.73260 | MG_L2=3.2730 | r=(0.207,0.241) | pref=[Blue:897 Cyan:932 Green:900 Red:971]
+Episode  3800/5000 | Loss=0.70454 | MG_L2=3.2724 | r=(0.219,0.243) | pref=[Blue:914 Cyan:958 Green:934 Red:994]
+Episode  3900/5000 | Loss=0.73566 | MG_L2=3.2715 | r=(0.232,0.223) | pref=[Blue:942 Cyan:982 Green:957 Red:1019]
+Episode  4000/5000 | Loss=0.71455 | MG_L2=3.2707 | r=(0.166,0.194) | pref=[Blue:977 Cyan:999 Green:974 Red:1050]
+Episode  4100/5000 | Loss=0.73923 | MG_L2=3.2700 | r=(0.184,0.226) | pref=[Blue:1001 Cyan:1023 Green:992 Red:1084]
+Episode  4200/5000 | Loss=0.72719 | MG_L2=3.2689 | r=(0.210,0.255) | pref=[Blue:1030 Cyan:1049 Green:1019 Red:1102]
+Episode  4300/5000 | Loss=0.70133 | MG_L2=3.2686 | r=(0.312,0.252) | pref=[Blue:1053 Cyan:1072 Green:1045 Red:1130]
+Episode  4400/5000 | Loss=0.72779 | MG_L2=3.2672 | r=(0.328,0.219) | pref=[Blue:1080 Cyan:1096 Green:1067 Red:1157]
+Episode  4500/5000 | Loss=0.70152 | MG_L2=3.2672 | r=(0.309,0.242) | pref=[Blue:1098 Cyan:1125 Green:1097 Red:1180]
+Episode  4600/5000 | Loss=0.72642 | MG_L2=3.2666 | r=(0.237,0.274) | pref=[Blue:1124 Cyan:1152 Green:1118 Red:1206]
+Episode  4700/5000 | Loss=0.71007 | MG_L2=3.2663 | r=(0.186,0.220) | pref=[Blue:1154 Cyan:1173 Green:1141 Red:1232]
+Episode  4800/5000 | Loss=0.71606 | MG_L2=3.2655 | r=(0.253,0.273) | pref=[Blue:1182 Cyan:1195 Green:1162 Red:1261]
+Episode  4900/5000 | Loss=0.74018 | MG_L2=3.2643 | r=(0.249,0.254) | pref=[Blue:1213 Cyan:1220 Green:1183 Red:1284]
+Episode  5000/5000 | Loss=0.70254 | MG_L2=3.2639 | r=(0.283,0.283) | pref=[Blue:1234 Cyan:1249 Green:1212 Red:1305]
+
+学習完了。保存: /work/my_research/step3/results/phase2_20260615_193019/model_phase2.pth
+最終平均 Loss : 0.702541
+選好分布      : {'Blue': 1234, 'Green': 1212, 'Cyan': 1249, 'Red': 1305}

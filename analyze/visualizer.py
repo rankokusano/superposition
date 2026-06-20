@@ -71,15 +71,15 @@ class Visualizer(object):
         if plot_type in ['self_position']:
             t1 = position[:, 0]
             t2 = position[:, 1]
-            t_idx1 = (t1 + self.field_size).astype(numpy.int)
-            t_idx2 = (t2 + self.field_size).astype(numpy.int)
+            t_idx1 = (t1 + self.field_size).astype(int)
+            t_idx2 = (t2 + self.field_size).astype(int)
             color = self.colormap[t_idx1, t_idx2]
             d = self.ax.scatter(p1, p2, c=color, alpha=0.9, zorder=0)
         elif plot_type in ['other_position']:
             t1 = position[:, 0]
             t2 = position[:, 1]
-            t_idx1 = (t1 + self.field_size).astype(numpy.int)
-            t_idx2 = (t2 + self.field_size).astype(numpy.int)
+            t_idx1 = (t1 + self.field_size).astype(int)
+            t_idx2 = (t2 + self.field_size).astype(int)
             color = self.colormap[t_idx1, t_idx2]
             d = self.ax.scatter(p1, p2, c=color, alpha=0.9, zorder=0)
         elif plot_type == 'point':

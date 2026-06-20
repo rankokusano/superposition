@@ -1,0 +1,45 @@
+実行ディレクトリ : /work/my_research/step3/results/phase2_20260615_182451
+デバイス         : cuda
+Phase            : 2 (MG 専用訓練、SM frozen)
+基盤モデル       : /work/data/result/exp1_l1/0/model/00200.pth
+A-2 行動         : MultiPrefAgent (4 選好、エピソードごとランダム)
+マスク戦略       : step>0 → p_mask=1.0 (self & other)
+学習方式         : BPTT (エピソード全体で loss 積算、1回 backward)
+LR_MG            : 0.0001
+EPISODES         : 1000
+MAX_STEPS        : 100
+
+飯塚 checkpoint 読み込み:
+  missing (MG 等): ['motion_generator_module.lstm.weight_ih', 'motion_generator_module.lstm.weight_hh', 'motion_generator_module.lstm.bias_ih', 'motion_generator_module.lstm.bias_hh', 'motion_generator_module.fc.weight', 'motion_generator_module.fc.bias']
+  unexpected     : []
+
+パラメータ数:
+  frozen (SM 等) : 457,427
+  trainable (MG) : 99,586
+
+=== Phase 2 学習開始 ===
+
+Episode    50/1000 | Loss=0.88669 | MG_L2=3.3804 | pref=[Blue:8 Cyan:14 Green:15 Red:13]
+Episode   100/1000 | Loss=0.96084 | MG_L2=3.3788 | pref=[Blue:20 Cyan:28 Green:29 Red:23]
+Episode   150/1000 | Loss=0.86423 | MG_L2=3.3781 | pref=[Blue:39 Cyan:36 Green:41 Red:34]
+Episode   200/1000 | Loss=0.94827 | MG_L2=3.3772 | pref=[Blue:51 Cyan:50 Green:51 Red:48]
+Episode   250/1000 | Loss=0.89096 | MG_L2=3.3767 | pref=[Blue:65 Cyan:60 Green:60 Red:65]
+Episode   300/1000 | Loss=0.85084 | MG_L2=3.3767 | pref=[Blue:71 Cyan:74 Green:74 Red:81]
+Episode   350/1000 | Loss=0.80993 | MG_L2=3.3765 | pref=[Blue:89 Cyan:80 Green:89 Red:92]
+Episode   400/1000 | Loss=0.87417 | MG_L2=3.3761 | pref=[Blue:100 Cyan:91 Green:102 Red:107]
+Episode   450/1000 | Loss=0.85888 | MG_L2=3.3757 | pref=[Blue:107 Cyan:102 Green:120 Red:121]
+Episode   500/1000 | Loss=0.87380 | MG_L2=3.3752 | pref=[Blue:116 Cyan:116 Green:139 Red:129]
+Episode   550/1000 | Loss=0.83303 | MG_L2=3.3746 | pref=[Blue:132 Cyan:125 Green:154 Red:139]
+Episode   600/1000 | Loss=0.92188 | MG_L2=3.3746 | pref=[Blue:144 Cyan:142 Green:161 Red:153]
+Episode   650/1000 | Loss=0.92346 | MG_L2=3.3743 | pref=[Blue:155 Cyan:156 Green:171 Red:168]
+Episode   700/1000 | Loss=0.91197 | MG_L2=3.3740 | pref=[Blue:168 Cyan:168 Green:185 Red:179]
+Episode   750/1000 | Loss=0.88510 | MG_L2=3.3735 | pref=[Blue:181 Cyan:180 Green:199 Red:190]
+Episode   800/1000 | Loss=0.90336 | MG_L2=3.3732 | pref=[Blue:197 Cyan:189 Green:213 Red:201]
+Episode   850/1000 | Loss=0.91579 | MG_L2=3.3728 | pref=[Blue:211 Cyan:207 Green:223 Red:209]
+Episode   900/1000 | Loss=0.84630 | MG_L2=3.3728 | pref=[Blue:231 Cyan:215 Green:235 Red:219]
+Episode   950/1000 | Loss=0.94662 | MG_L2=3.3727 | pref=[Blue:246 Cyan:228 Green:243 Red:233]
+Episode  1000/1000 | Loss=0.88234 | MG_L2=3.3726 | pref=[Blue:263 Cyan:237 Green:255 Red:245]
+
+学習完了。保存: /work/my_research/step3/results/phase2_20260615_182451/model_phase2.pth
+最終平均 Loss : 0.882337
+選好分布      : {'Cyan': 237, 'Red': 245, 'Green': 255, 'Blue': 263}

@@ -1,0 +1,9 @@
+実行ディレクトリ : /work/my_research/step3/results/phase2_offline_20260616_051124
+デバイス         : cuda
+データ           : /work/data/data/self_random_other_stay_multi_pref/data.h5
+MAX_EPOCHS       : 2
+BATCH_SIZE       : 10
+SEQ_LEN          : 100
+LR               : 0.001  (AdamW, wd=0.01)
+
+データ読み込み中...

@@ -1,0 +1,46 @@
+実行ディレクトリ : /work/my_research/step2/results/mg3_20260603_044509
+デバイス         : cuda
+MG 入力          : ov_enc (元論文準拠)
+マスク戦略       : p_mask_other=(step==0? 0 : 1.0) (MotionGenerationPredictionRunner準拠)
+Q_SCALE          : 50.0
+MG_HIDDEN        : 64
+LR_ENCODER       : 1e-05
+LR_NEW           : 0.0001
+EPISODES         : 1000
+保存先           : /work/my_research/step2/results/mg3_20260603_044509/model_mg3.pth
+
+パラメータ数:
+  VisionEncoder  : 189,984  (lr=1e-05)
+  LSTM など新規  : 313,846  (lr=0.0001)
+  合計           : 503,830
+
+初期エンコーダ cos_sim: mean=0.1880  std=0.0225
+
+=== train_step2_mg3 学習開始 ===
+
+Episode    50/1000 | 平均Loss=0.11966 | cos_sim=0.2125 | MG重みL2=1.9392 | Φ_s重みL2=9.5513
+Episode   100/1000 | 平均Loss=0.07626 | cos_sim=0.2054 | MG重みL2=1.9604 | Φ_s重みL2=9.6739
+Episode   150/1000 | 平均Loss=0.07119 | cos_sim=0.2233 | MG重みL2=1.9823 | Φ_s重みL2=9.8832
+Episode   200/1000 | 平均Loss=0.06823 | cos_sim=0.2344 | MG重みL2=1.9625 | Φ_s重みL2=10.0621
+Episode   250/1000 | 平均Loss=0.06163 | cos_sim=0.2291 | MG重みL2=1.9476 | Φ_s重みL2=10.2764
+Episode   300/1000 | 平均Loss=0.06191 | cos_sim=0.2305 | MG重みL2=1.9365 | Φ_s重みL2=10.4449
+Episode   350/1000 | 平均Loss=0.06339 | cos_sim=0.2311 | MG重みL2=1.9180 | Φ_s重みL2=10.6099
+Episode   400/1000 | 平均Loss=0.06409 | cos_sim=0.2291 | MG重みL2=1.9016 | Φ_s重みL2=10.7674
+Episode   450/1000 | 平均Loss=0.06227 | cos_sim=0.2273 | MG重みL2=1.9084 | Φ_s重みL2=10.9204
+Episode   500/1000 | 平均Loss=0.06233 | cos_sim=0.2354 | MG重みL2=1.8891 | Φ_s重みL2=11.0709
+Episode   550/1000 | 平均Loss=0.06536 | cos_sim=0.2409 | MG重みL2=1.8756 | Φ_s重みL2=11.2039
+Episode   600/1000 | 平均Loss=0.07061 | cos_sim=0.2470 | MG重みL2=1.8716 | Φ_s重みL2=11.3083
+Episode   650/1000 | 平均Loss=0.07281 | cos_sim=0.2441 | MG重みL2=1.8668 | Φ_s重みL2=11.4457
+Episode   700/1000 | 平均Loss=0.07532 | cos_sim=0.2233 | MG重みL2=1.8748 | Φ_s重みL2=11.5921
+Episode   750/1000 | 平均Loss=0.07823 | cos_sim=0.2408 | MG重みL2=1.8606 | Φ_s重みL2=11.6889
+Episode   800/1000 | 平均Loss=0.07782 | cos_sim=0.2474 | MG重みL2=1.8585 | Φ_s重みL2=11.7409
+Episode   850/1000 | 平均Loss=0.08047 | cos_sim=0.2634 | MG重みL2=1.8536 | Φ_s重みL2=11.8452
+Episode   900/1000 | 平均Loss=0.08297 | cos_sim=0.2462 | MG重みL2=1.8586 | Φ_s重みL2=11.9321
+Episode   950/1000 | 平均Loss=0.08301 | cos_sim=0.2554 | MG重みL2=1.8531 | Φ_s重みL2=12.0186
+Episode  1000/1000 | 平均Loss=0.07423 | cos_sim=0.2506 | MG重みL2=1.8470 | Φ_s重みL2=12.1025
+
+学習完了。保存: /work/my_research/step2/results/mg3_20260603_044509/model_mg3.pth
+最終平均Loss    : 0.074228
+最終エンコーダ cos_sim: mean=0.2530  std=0.0527
+MG出力重みL2ノルム   : 1.8470
+Φ_s LSTM重みL2ノルム : 12.1025

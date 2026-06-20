@@ -1,0 +1,41 @@
+実行ディレクトリ : /work/my_research/step3/results/phase2_single_pref_20260618_104752
+デバイス         : cuda
+データ           : /work/data/data/self_random_other_stay_single_green/data.h5
+A-2              : Green のみ（単一選好・診断実験）
+MAX_EPOCHS       : 200
+BATCH_SIZE       : 10
+SEQ_LEN          : 100
+LR               : 0.001  (AdamW, wd=0.01)
+
+データ読み込み中...
+  train: 1890 ep  val: 210 ep
+
+飯塚 checkpoint 読み込み (missing=6 params)
+  frozen: 457,427  trainable (MG): 99,586
+
+=== offline 訓練開始 ===
+
+Epoch   10/200 | train=0.50750 | test=1.39776* | MG_L2=2.9791
+Epoch   20/200 | train=0.50866 | test=1.39464* | MG_L2=3.0040
+Epoch   30/200 | train=0.50824 | test=1.39353* | MG_L2=3.0613
+Epoch   40/200 | train=0.50848 | test=1.39416  | MG_L2=3.1299
+Epoch   50/200 | train=0.50953 | test=1.39273* | MG_L2=3.2128
+Epoch   60/200 | train=0.50749 | test=1.40223  | MG_L2=3.2862
+Epoch   70/200 | train=0.50932 | test=1.39929  | MG_L2=3.3605
+Epoch   80/200 | train=0.50632 | test=1.40465  | MG_L2=3.4150
+Epoch   90/200 | train=0.50918 | test=1.39743  | MG_L2=3.4806
+Epoch  100/200 | train=0.50877 | test=1.40777  | MG_L2=3.5276
+Epoch  110/200 | train=0.50699 | test=1.40196  | MG_L2=3.5895
+Epoch  120/200 | train=0.50537 | test=1.40786  | MG_L2=3.6382
+Epoch  130/200 | train=0.50808 | test=1.39988  | MG_L2=3.7146
+Epoch  140/200 | train=0.50340 | test=1.39886  | MG_L2=3.7754
+Epoch  150/200 | train=0.50539 | test=1.40574  | MG_L2=3.8461
+Epoch  160/200 | train=0.50807 | test=1.39724  | MG_L2=3.9049
+Epoch  170/200 | train=0.50697 | test=1.39851  | MG_L2=3.9681
+Epoch  180/200 | train=0.50988 | test=1.40105  | MG_L2=4.0226
+Epoch  190/200 | train=0.50537 | test=1.40645  | MG_L2=4.0920
+Epoch  200/200 | train=0.50570 | test=1.40148  | MG_L2=4.1465
+
+学習完了。最終モデル: /work/my_research/step3/results/phase2_single_pref_20260618_104752/model_phase2.pth
+ベストモデル: /work/my_research/step3/results/phase2_single_pref_20260618_104752/model_best.pth
+best test loss: 1.392734

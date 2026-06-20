@@ -1,0 +1,22 @@
+実行ディレクトリ : /work/my_research/step3/results/phase2_offline_20260616_052415
+デバイス         : cuda
+データ           : /work/data/data/self_random_other_stay_multi_pref/data.h5
+MAX_EPOCHS       : 2
+BATCH_SIZE       : 10
+SEQ_LEN          : 100
+LR               : 0.001  (AdamW, wd=0.01)
+
+データ読み込み中...
+  train: 1890 ep  val: 210 ep  (total の 10% を val に使用)
+
+飯塚 checkpoint 読み込み (missing=6 params)
+  frozen: 457,427  trainable (MG): 99,586
+
+=== offline 訓練開始 ===
+
+Epoch    1/2 | train=1.53567 | test=1.65028* | MG_L2=2.9094
+Epoch    2/2 | train=1.52592 | test=1.64237* | MG_L2=2.8214
+
+学習完了。最終モデル: /work/my_research/step3/results/phase2_offline_20260616_052415/model_phase2.pth
+ベストモデル: /work/my_research/step3/results/phase2_offline_20260616_052415/model_best.pth
+best test loss: 1.642373
