@@ -1,0 +1,10 @@
+=== Q̂² vs True Q² (proxy: Green proximity) ===
+episodes x steps : 2100 x 100
+Q̂² range         : [-481.941, 62.046]
+Q̂² mean          : -6.847
+dist_Green range  : [0.014, 26.608]
+Pearson r (Q̂² vs -dist_Green): 0.1736  (p=0.00e+00)
+
+Interpretation:
+  r > 0 means Q̂² is higher when A-2 is closer to Green → VE learning OK
+  r ≈ 0 means VE has not learned A-2 preference

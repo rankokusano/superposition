@@ -1,0 +1,11 @@
+=== Motion Generator Evaluation (v3 B-MGVE) ===
+N=100, T=101, total samples=10100
+
+True motion range:  x=[-0.150, 0.094]  y=[-0.150, -0.127]
+Pred motion range:  x=[-0.999, 0.998]  y=[-1.000, 1.000]
+
+R² (x-axis): -538.4108
+R² (y-axis): -576351.8948
+R² (joint):  -288445.1513
+MSE (x):     0.659155
+MSE (y):     0.414692

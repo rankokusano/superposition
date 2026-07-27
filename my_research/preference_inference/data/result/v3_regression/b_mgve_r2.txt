@@ -1,0 +1,5 @@
+=== b_mgve R² (epoch 200) ===
+h¹ → A-1 pos (self):  0.9339  ← should be HIGH
+h² → A-2 pos (other): 0.6799  ← should be HIGH
+h¹ → A-2 pos:         0.4283  ← should be LOW
+h² → A-1 pos:         0.8812  ← should be LOW

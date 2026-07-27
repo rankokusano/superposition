@@ -1,0 +1,13 @@
+# large datasets
+data/data/
+
+# model checkpoints (large .pth files)
+data/result/*/0/model/
+data/result/*/0/test/*/save/
+data/result/*/0/test/
+
+# RL model files (keep data/model/ — it's 30MB and needed to reproduce)
+# data/model/
+
+__pycache__/
+*.pyc

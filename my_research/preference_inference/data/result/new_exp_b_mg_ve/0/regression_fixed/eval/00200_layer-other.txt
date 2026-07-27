@@ -1,0 +1,6 @@
+layer: other
+mode: eval
+epoch: 200
+n_samples: 79600
+logistic_accuracy: 0.931143216080402
+ridge_r2: 0.8115626114673767

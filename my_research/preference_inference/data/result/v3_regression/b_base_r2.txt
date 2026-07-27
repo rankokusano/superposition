@@ -1,0 +1,5 @@
+=== b_base R² (epoch 200) ===
+h¹ → A-1 pos (self):  0.9350  ← should be HIGH
+h² → A-2 pos (other): 0.8187  ← should be HIGH
+h¹ → A-2 pos:         0.4238  ← should be LOW
+h² → A-1 pos:         0.4941  ← should be LOW
