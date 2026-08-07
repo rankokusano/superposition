@@ -1,0 +1,14 @@
+{
+  "label": "exp3",
+  "source_h5": "/work/data/result/exp3/0/test/self_random_other_stay_periodic/save/saved.h5",
+  "epoch": 200,
+  "mode": "eval",
+  "n_data": 300,
+  "n_steps": 100,
+  "hidden_dim": 128,
+  "n_samples": 30000,
+  "h1_to_self": 0.9634732094289515,
+  "h1_to_other": 0.012912961595576478,
+  "h2_to_self": 0.07156637603002264,
+  "h2_to_other": 0.7121668890010521
+}

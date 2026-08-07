@@ -1,0 +1,14 @@
+{
+  "label": "v3_b_mgve",
+  "source_h5": "/work/my_research/preference_inference/data/result/v3_exp_b_mgve/0/test/v3_b_mgve_train/save/saved.h5",
+  "epoch": 200,
+  "mode": "eval",
+  "n_data": 2100,
+  "n_steps": 100,
+  "hidden_dim": 128,
+  "n_samples": 210000,
+  "h1_to_self": 0.9339281032139836,
+  "h1_to_other": 0.4283271738853777,
+  "h2_to_self": 0.8811539682026779,
+  "h2_to_other": 0.6799165506551881
+}

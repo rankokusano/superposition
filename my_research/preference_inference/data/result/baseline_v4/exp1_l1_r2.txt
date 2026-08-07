@@ -1,0 +1,7 @@
+=== exp1_l1 R^2 (epoch 200, mode eval) ===
+source: /work/data/result/exp1_l1/0/test/self_random_other_stay/save/saved.h5
+n_samples: 10000 (N=100 x T=100)
+h1 -> self  pos: 0.9772
+h1 -> other pos: 0.0373
+h2 -> self  pos: 0.0774
+h2 -> other pos: 0.9725

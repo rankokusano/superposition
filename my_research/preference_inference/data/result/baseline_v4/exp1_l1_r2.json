@@ -1,0 +1,14 @@
+{
+  "label": "exp1_l1",
+  "source_h5": "/work/data/result/exp1_l1/0/test/self_random_other_stay/save/saved.h5",
+  "epoch": 200,
+  "mode": "eval",
+  "n_data": 100,
+  "n_steps": 100,
+  "hidden_dim": 128,
+  "n_samples": 10000,
+  "h1_to_self": 0.977171246733953,
+  "h1_to_other": 0.037304749467347686,
+  "h2_to_self": 0.07737219283604979,
+  "h2_to_other": 0.972507530270976
+}

@@ -1,0 +1,7 @@
+=== v3_b_mgve R^2 (epoch 200, mode eval) ===
+source: /work/my_research/preference_inference/data/result/v3_exp_b_mgve/0/test/v3_b_mgve_train/save/saved.h5
+n_samples: 210000 (N=2100 x T=100)
+h1 -> self  pos: 0.9339
+h1 -> other pos: 0.4283
+h2 -> self  pos: 0.8812
+h2 -> other pos: 0.6799

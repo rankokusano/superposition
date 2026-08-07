@@ -1,0 +1,7 @@
+=== exp3 R^2 (epoch 200, mode eval) ===
+source: /work/data/result/exp3/0/test/self_random_other_stay_periodic/save/saved.h5
+n_samples: 30000 (N=300 x T=100)
+h1 -> self  pos: 0.9635
+h1 -> other pos: 0.0129
+h2 -> self  pos: 0.0716
+h2 -> other pos: 0.7122
