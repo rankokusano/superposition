@@ -15,7 +15,9 @@ Usage (inside Docker):
 """
 
 import argparse
+import hashlib
 import os
+import random
 import sys
 
 import h5py
@@ -190,15 +192,38 @@ def collect(env, a1_actor, a1_critic, a2_actor, cfg, h5_file, device):
         print(f"  [{mode}] done.")
 
 
+def get_seed(seed_key):
+    """Deterministic seed from a string key, same scheme as root repo's
+    simulation/collect_data.py (md5(key) -> first 8 hex chars -> int)."""
+    return int(hashlib.md5(seed_key.encode('utf-8')).hexdigest()[:8], 16)
+
+
+def seed_all(seed):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset', required=True, choices=list(DATASET_CONFIGS.keys()))
+    parser.add_argument('--seed_key', default=None,
+                         help='String hashed into the seed. Defaults to --dataset, '
+                              'so re-running with the same --dataset reproduces the '
+                              'same trajectories. Override to collect a distinct seed '
+                              'variant of the same dataset (e.g. for repeated-measurement '
+                              'baselines).')
     args = parser.parse_args()
+
+    seed_key = args.seed_key if args.seed_key is not None else args.dataset
+    seed = get_seed(seed_key)
+    seed_all(seed)
 
     cfg = DATASET_CONFIGS[args.dataset]
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(f'Device: {device}')
     print(f'Dataset: {args.dataset}')
+    print(f'Seed key: {seed_key!r} -> seed: {seed}')
 
     env_cfg = load_config(cfg['env_config'])
     env = creator.create_environment(env_cfg.environment)
@@ -213,6 +238,9 @@ def main():
     save_path = os.path.join(save_dir, 'data.h5')
 
     with h5py.File(save_path, 'w') as h5_file:
+        h5_file.attrs['seed_key'] = seed_key
+        h5_file.attrs['seed'] = seed
+        h5_file.attrs['dataset'] = args.dataset
         collect(env, a1_actor, a1_critic, a2_actor, cfg, h5_file, device)
 
     print(f'Saved: {save_path}')
