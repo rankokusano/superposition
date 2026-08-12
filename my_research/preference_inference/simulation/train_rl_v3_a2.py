@@ -4,15 +4,29 @@ v3 RL agent training for A-2: learns green-preference via SAC.
 Design:
     - A-2 (other_agent) is controlled by SAC policy
     - A-1 (self_agent) stays stationary during A-2 training
-    - Reward: green visible (>50 px) → +1.0 only
+    - Reward (v4 Sec.5.2, revised 2026-08-12):
+          reward = green_fraction - red_fraction   (continuous, no threshold)
+      Sign-flipped mirror of A-1's red_fraction - green_fraction in
+      train_rl_v3.py, symmetric in the same *principle* (vision pixel
+      signal, no privileged position). The earlier threshold version
+      (green>50px:+1, red>50px:-1) was measured (probe scan at fixed x=-9,
+      varying y) to be locally flat across the whole region satisfying
+      both conditions -- Q(s,a_probe) would carry no spatial information
+      inside that region, which R4/R5 need. Continuous fractions restore
+      a gradient. Coverage (the original problem this reward redesign
+      was trying to fix) is instead restored by keeping action generation
+      stochastic at rollout/collection time -- deterministic tanh(mean)
+      rollout measurably collapsed A-2's position std vs. the original
+      stochastic-sampling collection, so it is not used here or downstream.
     - Uses 'other' camera to capture A-2's own vision
 
 Run inside Docker:
     xvfb-run --auto-servernum --server-args='-screen 0 1024x768x24' \
-        python -u my_research/preference_inference/simulation/train_rl_v3_a2.py \
+        python -u my_research/preference_inference/simulation/train_rl_v3_a2.py --seed 0 \
         > /tmp/train_rl_v3_a2.log 2>&1
 """
 
+import argparse
 import os
 import sys
 
@@ -42,20 +56,28 @@ LR_CRITIC       = 0.0001
 LR_ALPHA        = 0.0001
 BATCH_SIZE      = 32
 MEMORY_SIZE     = 50000
-TARGET_ENTROPY  = -2.0
-GREEN_THRESHOLD = 50
+TARGET_ENTROPY  = -2.0  # SAC entropy coefficient target; tune here if coverage needs adjusting
 
 ENV_CONFIG  = '/work/simulation/config/collect/self_stay_other_random.yml'
 
 SAVE_DIR    = '/work/my_research/preference_inference/data/model'
-ACTOR_SAVE  = os.path.join(SAVE_DIR, 'v3_rl_a2_actor.pth')
-CRITIC_SAVE = os.path.join(SAVE_DIR, 'v3_rl_a2_critic.pth')
+
+
+def seed_all(seed):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
 
 
 def get_reward(vision_np):
     r, g, b = vision_np[:, :, 0], vision_np[:, :, 1], vision_np[:, :, 2]
     green_pixels = int(((g > 0.9) & (r < 0.1) & (b < 0.1)).sum())
-    return 1.0 if green_pixels > GREEN_THRESHOLD else 0.0
+    red_pixels   = int(((r > 0.9) & (g < 0.1) & (b < 0.1)).sum())
+    total_pixels = vision_np.shape[0] * vision_np.shape[1]
+    green_fraction = green_pixels / total_pixels
+    red_fraction = red_pixels / total_pixels
+    return green_fraction - red_fraction
 
 
 def vision_to_tensor(vision_np):
@@ -90,8 +112,11 @@ class ReplayBuffer:
         return len(self.buffer)
 
 
-def train():
+def train(seed):
     os.makedirs(SAVE_DIR, exist_ok=True)
+    seed_all(seed)
+    actor_save = os.path.join(SAVE_DIR, f'v3_rl_a2_actor_seed{seed}.pth')
+    critic_save = os.path.join(SAVE_DIR, f'v3_rl_a2_critic_seed{seed}.pth')
 
     config = load_config(ENV_CONFIG)
     env = creator.create_environment(config.environment)
@@ -118,8 +143,9 @@ def train():
     episode_rewards = []
 
     print(f'Device: {DEVICE}')
+    print(f'Seed: {seed}')
     print(f'Algorithm: SAC (CNN+LSTM, continuous action)')
-    print(f'Reward: green >50px → +1.0 only')
+    print(f'Reward: green_fraction - red_fraction (continuous)')
     print(f'Episodes: {EPISODES} × {MAX_STEPS} steps')
 
     for episode in range(EPISODES):
@@ -197,11 +223,14 @@ def train():
             avg = np.mean(episode_rewards[-50:])
             print(f'  ep {episode:4d} | avg_reward(50ep): {avg:.3f} | alpha: {alpha.item():.4f}')
 
-    torch.save(actor.state_dict(), ACTOR_SAVE)
-    torch.save(critic1.state_dict(), CRITIC_SAVE)
-    print(f'Saved: {ACTOR_SAVE}')
-    print(f'Saved: {CRITIC_SAVE}')
+    torch.save(actor.state_dict(), actor_save)
+    torch.save(critic1.state_dict(), critic_save)
+    print(f'Saved: {actor_save}')
+    print(f'Saved: {critic_save}')
 
 
 if __name__ == '__main__':
-    train()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--seed', type=int, default=0)
+    args = parser.parse_args()
+    train(args.seed)

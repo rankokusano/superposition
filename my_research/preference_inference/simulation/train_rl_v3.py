@@ -5,11 +5,19 @@ Changes from v2:
     - MAX_STEPS: 200 → 100  (matches original paper seq_length=101)
     - EPISODES:  2000 → 1000 (matches mg7)
     - Environment: explicit self_random_other_stay config (A-2 present and stationary)
-    - Save path: v3_rl_actor.pth / v3_rl_critic.pth
+    - Save path: v3_rl_actor_seed{N}.pth / v3_rl_critic_seed{N}.pth (--seed, default 0)
 
-Reward design (same as v2):
-    Red visible (>50 px): +1.0
-    Green visible (>50 px): -1.0  (same as mg7)
+Reward design (v4 Sec.5.2 revision, 2026-08-12):
+    reward = red_fraction - green_fraction   (continuous, no threshold)
+    Thresholded reward (red>50px:+1, green>50px:-1) made Q(s,·) locally
+    constant across the whole region satisfying both conditions -- once
+    "enough" red is visible, there is no further gradient toward the
+    landmark itself, so Q stops carrying spatial information exactly
+    where R4/R5 need it most (VE has to predict a real value, not a
+    constant). Continuous pixel fraction restores a spatial gradient.
+    This is orthogonal to coverage: coverage is restored by keeping
+    action generation stochastic (SAC sampling / epsilon-greedy) at
+    rollout/collection time, not by the reward shape.
 
 Run inside Docker:
     xvfb-run --auto-servernum --server-args='-screen 0 1024x768x24' \
@@ -17,6 +25,7 @@ Run inside Docker:
         > /tmp/train_rl_v3.log 2>&1
 """
 
+import argparse
 import os
 import sys
 
@@ -46,27 +55,28 @@ LR_CRITIC    = 0.0001
 LR_ALPHA     = 0.0001
 BATCH_SIZE   = 32
 MEMORY_SIZE  = 50000
-TARGET_ENTROPY = -2.0
-RED_THRESHOLD  = 50
-GREEN_THRESHOLD = 50
+TARGET_ENTROPY = -2.0  # SAC entropy coefficient target; tune here if coverage needs adjusting
 
 ENV_CONFIG = '/work/simulation/config/collect/self_random_other_stay.yml'
 
 SAVE_DIR   = '/work/my_research/preference_inference/data/model'
-ACTOR_SAVE = os.path.join(SAVE_DIR, 'v3_rl_actor.pth')
-CRITIC_SAVE = os.path.join(SAVE_DIR, 'v3_rl_critic.pth')
+
+
+def seed_all(seed):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
 
 
 def get_reward(vision_np):
     r, g, b = vision_np[:, :, 0], vision_np[:, :, 1], vision_np[:, :, 2]
     red_pixels   = int(((r > 0.9) & (g < 0.1) & (b < 0.1)).sum())
     green_pixels = int(((g > 0.9) & (r < 0.1) & (b < 0.1)).sum())
-    reward = 0.0
-    if red_pixels > RED_THRESHOLD:
-        reward += 1.0
-    if green_pixels > GREEN_THRESHOLD:
-        reward -= 1.0
-    return reward
+    total_pixels = vision_np.shape[0] * vision_np.shape[1]
+    red_fraction = red_pixels / total_pixels
+    green_fraction = green_pixels / total_pixels
+    return red_fraction - green_fraction
 
 
 def vision_to_tensor(vision_np):
@@ -95,8 +105,11 @@ class ReplayBuffer:
         return len(self.buffer)
 
 
-def train():
+def train(seed):
     os.makedirs(SAVE_DIR, exist_ok=True)
+    seed_all(seed)
+    actor_save = os.path.join(SAVE_DIR, f'v3_rl_actor_seed{seed}.pth')
+    critic_save = os.path.join(SAVE_DIR, f'v3_rl_critic_seed{seed}.pth')
 
     config = load_config(ENV_CONFIG)
     env = creator.create_environment(config.environment)
@@ -123,8 +136,9 @@ def train():
     episode_rewards = []
 
     print(f'Device: {DEVICE}')
+    print(f'Seed: {seed}')
     print(f'Algorithm: SAC (CNN+LSTM, continuous action)')
-    print(f'Reward: red >50px → +1.0 | green >50px → -1.0')
+    print(f'Reward: red_fraction - green_fraction (continuous)')
     print(f'Episodes: {EPISODES} × {MAX_STEPS} steps')
 
     for episode in range(EPISODES):
@@ -200,11 +214,14 @@ def train():
             avg = np.mean(episode_rewards[-50:])
             print(f'  ep {episode:4d} | avg_reward(50ep): {avg:.3f} | alpha: {alpha.item():.4f}')
 
-    torch.save(actor.state_dict(), ACTOR_SAVE)
-    torch.save(critic1.state_dict(), CRITIC_SAVE)
-    print(f'Saved: {ACTOR_SAVE}')
-    print(f'Saved: {CRITIC_SAVE}')
+    torch.save(actor.state_dict(), actor_save)
+    torch.save(critic1.state_dict(), critic_save)
+    print(f'Saved: {actor_save}')
+    print(f'Saved: {critic_save}')
 
 
 if __name__ == '__main__':
-    train()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--seed', type=int, default=0)
+    args = parser.parse_args()
+    train(args.seed)
