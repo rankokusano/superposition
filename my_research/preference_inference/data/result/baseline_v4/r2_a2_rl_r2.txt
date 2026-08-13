@@ -1,0 +1,7 @@
+=== r2_a2_rl R^2 (epoch 200, mode eval) ===
+source: /work/my_research/preference_inference/data/result/r2_a2_rl/0/test/r2_a1random_a2rl/save/saved.h5
+n_samples: 300000 (N=3000 x T=100)
+h1 -> self  pos: 0.9658
+h1 -> other pos: 0.4929
+h2 -> self  pos: 0.3421
+h2 -> other pos: 0.8811

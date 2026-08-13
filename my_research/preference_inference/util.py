@@ -212,6 +212,12 @@ def de_transpose_vision(v, dim=5):
 
 
 def scale_vision(v):
+    # v4: vision may be stored as uint8 (0-255, 4x smaller on disk than
+    # float32) since the source render is already 8-bit-quantized -- see
+    # collect_data_r2.py. Older datasets are still float32 in [0,1];
+    # both are handled here so callers don't need to know which.
+    if v.dtype == numpy.uint8:
+        v = v.astype(numpy.float32) / 255.0
     return v * 2 - 1
 
 

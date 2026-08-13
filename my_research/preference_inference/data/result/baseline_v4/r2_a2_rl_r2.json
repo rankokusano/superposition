@@ -1,0 +1,14 @@
+{
+  "label": "r2_a2_rl",
+  "source_h5": "/work/my_research/preference_inference/data/result/r2_a2_rl/0/test/r2_a1random_a2rl/save/saved.h5",
+  "epoch": 200,
+  "mode": "eval",
+  "n_data": 3000,
+  "n_steps": 100,
+  "hidden_dim": 128,
+  "n_samples": 300000,
+  "h1_to_self": 0.9657987651785861,
+  "h1_to_other": 0.49285196927559893,
+  "h2_to_self": 0.34213003701763595,
+  "h2_to_other": 0.8810792253060133
+}
