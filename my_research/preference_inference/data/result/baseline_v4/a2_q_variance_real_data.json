@@ -1,0 +1,12 @@
+{
+  "n_samples": 8000,
+  "q_range": [
+    2.9466843605041504,
+    4.691487789154053
+  ],
+  "q_mean": 4.294798304319381,
+  "q_std": 0.17371538207963166,
+  "q_var": 0.030177033971072412,
+  "corr_q_dist_to_green": -0.7039597060365076,
+  "note": "measured on REAL R2-collected other_vision frames (actual visitation density), not a synthetic uniform grid scan"
+}

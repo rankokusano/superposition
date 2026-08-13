@@ -144,3 +144,71 @@ out fine despite A-2's band-shaped (not point-shaped) distribution, this
 confound may turn out not to matter for the regression-based gates at all,
 and R3+ (where Q-value precision starts to matter more directly) is a more
 useful place to dig further if needed.
+
+**Update 2026-08-14 (R2 results in):** h²→A-2-position came out *fine*
+(0.8811, exceeding exp3's own 0.7122) — the band-shaped distribution did
+not, in fact, hurt this regression. The actual problem R2 surfaced was
+different and unrelated to position precision at all: see "A value-driven
+policy structurally starves the Motion Generator" below.
+
+## A value-driven policy structurally starves the Motion Generator
+
+**Raised:** 2026-08-14, after diagnosing R2's gate failure.
+
+R2 (A-2's Cycler replaced by the trained RL Green-policy, architecture
+otherwise identical to exp3, MG present and directly wired into SM's
+process-2 input per the original paper) failed its gate: h²→self = 0.3421
+(need <0.15), though h²→other = 0.8811 comfortably passed.
+
+**Root cause, confirmed by direct measurement, not inference:** A-2's RL
+policy converged to `other_motion` with std_y = 0.0154, vs. A-1's own
+reference std_y = 0.678 and exp3's Cycler-driven A-2 std_y = 0.690 — a
+~44x collapse, mean_y = -0.988 (i.e. essentially constant near-maximal
+speed toward Green). Two hypotheses were checked and ruled out first: A-1/
+A-2 position correlation (measured near-zero, <0.003 R² ceiling, nowhere
+near the observed 0.34-0.49 leakage) and a regional/localized MG failure
+(error is uniformly moderate across A-2's entire real operating region,
+not concentrated in specific cells). The motion-variance collapse is the
+only measured factor that actually explains the failure: MG has almost no
+y-axis signal to learn from, produces inaccurate `om` fed straight into
+SM (exp3's direct wiring, unlike v3's Approach-B design), and h² falls
+back on directly-visible A-1 features instead of representing A-2 — this
+also explains why *vision reconstruction* losses were simultaneously
+**better** than exp3's (self_vision 11.65 vs 16.79) while *self/other
+separation* got worse: falling back on A-1's own directly-visible features
+is a genuinely easier reconstruction target.
+
+**Why this isn't a bug to fix — it's a structural property worth stating
+plainly:** A SAC agent that has converged to a good policy is *supposed*
+to move purposefully toward whatever maximizes reward. A-2 heading
+straight for Green is the policy working correctly, not failing. Cycler's
+omnidirectional motion (which let exp3's MG learn) came from an entirely
+different source: a scripted agent with no value function at all, cycling
+between arbitrary targets. There is a real tension between "motion serves
+value" (what an RL agent is trained to do) and "motion is directionally
+diverse enough to be predictable by an unsupervised observer" (what MG
+needs) — a value-maximizing policy will generically *reduce* its own
+motion entropy as it improves, which is close to the opposite of what a
+motion-generation objective needs. This is worth stating as a finding in
+its own right when writing this up: extending the original paper's
+architecture from motion-observation to value-observation isn't a
+drop-in substitution, because motion and value have structurally
+different relationships to behavioral diversity.
+
+**Why it doesn't block progress:** R3 removes MG from the architecture
+entirely (process-2 input becomes a zero vector — §5.4), and R4 replaces
+it with VE, which reads value directly rather than trying to predict
+motion. Neither depends on MG converging. R2's job — telling apart "the
+v3 h² collapse was caused by Q-value stuff" vs. "caused by A-2's policy"
+— is done: swapping only A-2's policy took h²→self from 0.8812 (v3) to
+0.3421 (R2), and R2's remaining gap traces to MG specifically, which won't
+exist in R3+.
+
+**Status:** treating R2 as a conditional pass on this basis (2026-08-14
+decision) and proceeding to R3 rather than iterating further on A-2's RL
+policy. Recorded here in case it needs to be cited later, e.g. if a
+future stage reintroduces a motion-prediction objective and hits the same
+wall.
+
+**Revisit at:** would only matter again if a future design reintroduces
+a motion-generation objective fed by a value-driven agent's actions.
