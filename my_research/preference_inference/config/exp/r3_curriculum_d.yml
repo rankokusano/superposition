@@ -1,0 +1,42 @@
+# R3-curriculum stage d: Q-value only (action dropped entirely). Reuses
+# SuperpositionNetworkProbeQ -- architecturally identical to R3-A/direct,
+# the only difference is where its pretrain chain came from (c's
+# curriculum checkpoint vs exp1_l1 directly). SM's input width changes
+# 10 -> 8 vs stage c, so it resets from scratch here (util.load_pretrain
+# skips the mismatched key) -- the final transition mirrors R3-A's own
+# exp1_l1 -> direct jump, just one stage later in the curriculum.
+model:
+    name: SuperpositionNetworkProbeQ
+    config: default
+    mode: ~
+runner: PredictionFeaturePredictionRunner
+data:
+    name: r2_a1random_a2rl
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+    loss_function: l1_loss
+    pretrain:
+        exp_config: r3_curriculum_c
+        seed: 0
+        epoch: 200
+    batch_size: 10
+    max_epochs: 200
+    save_interval: 10
+    test_interval: 10
+    optimizer: AdamW
+    optim_config:
+        default:
+            lr: 0.001
+            weight_decay: 0.01
+        freeze:
+            - vision_encoder_module
+            - vision_decoder_module
+            - integration_module
+            - feature_prediction_module
+            - share_lns
+            - probe_critic
+        per_params:
+            - name: bias
+              args:
+                  weight_decay: 0.0

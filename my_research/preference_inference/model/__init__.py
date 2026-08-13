@@ -5,4 +5,6 @@ from .model import (Autoencoder, SuperpositionNetwork,
                     SuperpositionNetworkApproachBBase,
                     SuperpositionNetworkApproachBMGVE,
                     SuperpositionNetworkApproachBBaseV3,
-                    SuperpositionNetworkApproachBMGVEV3)
+                    SuperpositionNetworkApproachBMGVEV3,
+                    SuperpositionNetworkProbeQ,
+                    SuperpositionNetworkProbeQConcat)

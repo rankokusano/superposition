@@ -1,0 +1,39 @@
+# R3-curriculum stage c: same concat input as b, but action_dropout_rate
+# =0.5 (action zeroed on half the forward passes -- "sometimes no action,
+# only Q"). Same input width as b (10), so SM transfers fully from b's
+# checkpoint (fine-tune, not a shape-mismatch reset).
+model:
+    name: SuperpositionNetworkProbeQConcat
+    config: r3c
+    mode: ~
+runner: PredictionFeaturePredictionRunner
+data:
+    name: r2_a1random_a2rl
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+    loss_function: l1_loss
+    pretrain:
+        exp_config: r3_curriculum_b
+        seed: 0
+        epoch: 200
+    batch_size: 10
+    max_epochs: 200
+    save_interval: 10
+    test_interval: 10
+    optimizer: AdamW
+    optim_config:
+        default:
+            lr: 0.001
+            weight_decay: 0.01
+        freeze:
+            - vision_encoder_module
+            - vision_decoder_module
+            - integration_module
+            - feature_prediction_module
+            - share_lns
+            - probe_critic
+        per_params:
+            - name: bias
+              args:
+                  weight_decay: 0.0

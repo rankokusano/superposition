@@ -1,0 +1,67 @@
+input:
+    vision: &input_vision
+        channel: 3
+        width: 64
+        height: 16
+    motion: &probe_k 8
+
+probe_q:
+    k: 8
+    mu: 1.9233
+    sigma: 0.9466
+    critic_path: /work/my_research/preference_inference/data/model/v3_rl_critic.pth
+
+vision_encoder_module:
+    input: *input_vision
+    conv:
+        - ch: 16
+          kernel_size: [3, 10]
+          stride: 2
+          padding: 1
+        - ch: 32
+          kernel_size: [3, 10]
+          stride: 2
+          padding: 1
+        - ch: 64
+          kernel_size: [3, 10]
+          stride: 2
+          padding: 1
+    fc:
+        - input: ~
+          output: &enc_out 64
+
+superposition_module:
+    input:
+        motion: *probe_k
+        vision: *enc_out
+    hidden: &sp_hidden 128
+
+integration_module:
+    fc:
+        each_input: *sp_hidden
+        output: *enc_out
+
+feature_prediction_module:
+    fc:
+        - input: *sp_hidden
+          output: 128
+        - input: 128
+          output: *enc_out
+
+vision_decoder_module:
+    fc:
+        - input: *enc_out
+          output: ~
+    conv:
+        - ch: 32
+          kernel_size: [4, 10]
+          stride: 2
+          padding: 1
+        - ch: 16
+          kernel_size: [4, 12]
+          stride: 2
+          padding: 1
+        - ch: 3
+          kernel_size: [4, 12]
+          stride: 2
+          padding: 1

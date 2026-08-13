@@ -47,11 +47,30 @@ def load_model(model_dir, restore_epoch, model):
 
 def load_pretrain(model, exp_config):
     if not (exp_config.train.pretrain is None):
-        model.load_state_dict(
-            torch.load(
-                gen_model_dir(gen_result_dir(exp_config.train.pretrain)) +
-                '{:05d}.pth'.format(exp_config.train.pretrain.epoch))['model'],
-            strict=exp_config.load_state_dict_strict)
+        checkpoint = torch.load(
+            gen_model_dir(gen_result_dir(exp_config.train.pretrain)) +
+            '{:05d}.pth'.format(exp_config.train.pretrain.epoch))['model']
+
+        # v4 R3: SM's input width changes (m_t's 2-dim -> probe-Q's K-dim),
+        # so its weights aren't shape-compatible with an exp1_l1/exp3
+        # checkpoint even though the key names match. strict=False alone
+        # doesn't help here -- it only tolerates missing/extra keys, not
+        # shape mismatches on keys present in both, which would raise a
+        # RuntimeError. Skip those, load everything else (in the normal
+        # same-shape case this is identical to a plain load_state_dict).
+        model_state = model.state_dict()
+        compatible = {}
+        skipped = []
+        for k, v in checkpoint.items():
+            if k in model_state and model_state[k].shape == v.shape:
+                compatible[k] = v
+            else:
+                skipped.append(k)
+        if skipped:
+            print(f'load_pretrain: skipping {len(skipped)} shape-mismatched/'
+                  f'absent keys (trained from scratch instead): {skipped}')
+
+        model.load_state_dict(compatible, strict=False)
 
 
 def save_model_optimizer(model_dir, epoch, model, optimizer):

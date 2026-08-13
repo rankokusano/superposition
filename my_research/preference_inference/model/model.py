@@ -288,3 +288,180 @@ class SuperpositionNetworkApproachBMGVEV3(SuperpositionNetworkApproachBMGVE):
 
     def predict_feature(self, x):
         return self.feature_prediction_module(x)
+
+
+# ---------------------------------------------------------------------------
+# R3: probe-Q-vector replaces m_t (2026-08-14)
+# ---------------------------------------------------------------------------
+
+class SuperpositionNetworkProbeQ(SuperpositionNetworkBase):
+    """
+    R3-direct (R3-A): process-1's SM input is a K-dim normalized probe-Q
+    vector -- Q(self_vision, a_probe) for K fixed directional actions,
+    evaluated by A-1's own frozen, pretrained critic and normalized with
+    A-1's own real-data (mu, sigma) via tanh -- computed fresh every
+    forward pass, never baked into the dataset (config.probe_q.*).
+    process-2 gets a zero vector of the same dimension (post-normalization
+    "no directional preference", mirroring how the original paper's base
+    training left process-2 at a constant zero motion). No MG, no VE.
+
+    SM's LSTM input width changes from m_t's 2-dim to K-dim, so its
+    weights are NOT shape-compatible with an exp1_l1 pretrain checkpoint
+    -- util.load_pretrain() skips shape-mismatched keys, so SM trains
+    from scratch while vision_encoder/decoder/integration/FPM transfer
+    from exp1_l1 unchanged (see exp config's freeze list: everything
+    except superposition_module is frozen).
+    """
+    def __init__(self, config):
+        super().__init__(config)
+        add_feature_prediction_module(self, config)
+
+        import sys
+        if '/work' not in sys.path:
+            sys.path.insert(0, '/work')
+        from my_research.rl_agent_sac import CriticLSTM
+
+        self.probe_critic = CriticLSTM()
+        self.probe_critic.load_state_dict(
+            torch.load(config.probe_q.critic_path, map_location='cpu'))
+        self.probe_critic.eval()
+        for p in self.probe_critic.parameters():
+            p.requires_grad = False
+
+        import math
+        k = config.probe_q.k
+        angles = [2 * math.pi * i / k for i in range(k)]
+        probes = torch.tensor(
+            [[math.cos(a), math.sin(a)] for a in angles],
+            dtype=torch.float32)
+        self.register_buffer('probe_actions', probes)
+        self.register_buffer('q_mu', torch.tensor(float(config.probe_q.mu)))
+        self.register_buffer('q_sigma', torch.tensor(float(config.probe_q.sigma)))
+
+    def predict_feature(self, x):
+        return self.feature_prediction_module(x)
+
+    def compute_probe_q(self, sv_raw):
+        """sv_raw: (B, 3, H, W) in [0,1] (critic's native scale)."""
+        b = sv_raw.size(0)
+        k = self.probe_actions.size(0)
+        v_rep = sv_raw.unsqueeze(1).expand(-1, k, -1, -1, -1).reshape(
+            b * k, *sv_raw.shape[1:])
+        a_rep = self.probe_actions.unsqueeze(0).expand(b, -1, -1).reshape(b * k, 2)
+        with torch.no_grad():
+            q, _ = self.probe_critic(v_rep, a_rep, hidden=None)
+        q = q.reshape(b, k)
+        return torch.tanh((q - self.q_mu) / self.q_sigma)
+
+    def forward(self, x, p_mask_vision_self, p_mask_vision_other):
+        sv = x['self_vision']  # already scaled to [-1, 1] by the data loader
+
+        sv_enc = self.self_vision_encoder_module(sv)
+        ov_enc = self.other_vision_encoder_module(sv)
+
+        sv_raw = (sv + 1) / 2  # back to the critic's native [0,1] scale
+        q1_vec = self.compute_probe_q(sv_raw)
+        q2_vec = torch.zeros_like(q1_vec)
+
+        sv_enc = util.mask(sv_enc, p_mask_vision_self)
+        ov_enc = util.mask(ov_enc, p_mask_vision_other)
+
+        ss, os = self.superposition_module(sv_enc, q1_vec, ov_enc, q2_vec)
+
+        so = self.integration_module(
+            F.dropout(ss, p=0.5, training=self.training),
+            F.dropout(os, p=0.5, training=self.training),
+        )
+
+        pred = {}
+        pred['self_vision'] = self.vision_decoder_module(so)
+
+        return pred
+
+
+class SuperpositionNetworkProbeQConcat(SuperpositionNetworkBase):
+    """
+    R3-curriculum stages b/c: process-1 input is concat([action(vx,vy),
+    probe-Q(K)]) -- action_dim(2) + K. The action component is
+    stochastically zeroed at rate config.probe_q.action_dropout_rate
+    ("time to time no action, only Q" per the professor's note):
+    rate=0.0 -> R3b (pure concat, action always present), rate>0 -> R3c
+    (increasingly Q-reliant). Applied unconditionally (train and eval),
+    since this is a literal input-corruption curriculum condition, not a
+    regularizer. process-2 stays a zero vector of the same combined
+    dimension throughout (no MG/VE anywhere in R3). No motion generation:
+    this class never predicts other_motion.
+    """
+    def __init__(self, config):
+        super().__init__(config)
+        add_feature_prediction_module(self, config)
+
+        import sys
+        if '/work' not in sys.path:
+            sys.path.insert(0, '/work')
+        from my_research.rl_agent_sac import CriticLSTM
+
+        self.probe_critic = CriticLSTM()
+        self.probe_critic.load_state_dict(
+            torch.load(config.probe_q.critic_path, map_location='cpu'))
+        self.probe_critic.eval()
+        for p in self.probe_critic.parameters():
+            p.requires_grad = False
+
+        import math
+        k = config.probe_q.k
+        angles = [2 * math.pi * i / k for i in range(k)]
+        probes = torch.tensor(
+            [[math.cos(a), math.sin(a)] for a in angles],
+            dtype=torch.float32)
+        self.register_buffer('probe_actions', probes)
+        self.register_buffer('q_mu', torch.tensor(float(config.probe_q.mu)))
+        self.register_buffer('q_sigma', torch.tensor(float(config.probe_q.sigma)))
+        self.action_dropout_rate = float(config.probe_q.action_dropout_rate)
+
+    def predict_feature(self, x):
+        return self.feature_prediction_module(x)
+
+    def compute_probe_q(self, sv_raw):
+        b = sv_raw.size(0)
+        k = self.probe_actions.size(0)
+        v_rep = sv_raw.unsqueeze(1).expand(-1, k, -1, -1, -1).reshape(
+            b * k, *sv_raw.shape[1:])
+        a_rep = self.probe_actions.unsqueeze(0).expand(b, -1, -1).reshape(b * k, 2)
+        with torch.no_grad():
+            q, _ = self.probe_critic(v_rep, a_rep, hidden=None)
+        q = q.reshape(b, k)
+        return torch.tanh((q - self.q_mu) / self.q_sigma)
+
+    def forward(self, x, p_mask_vision_self, p_mask_vision_other):
+        sv = x['self_vision']
+        sm = x['self_motion']  # (B, 2), raw action
+
+        sv_enc = self.self_vision_encoder_module(sv)
+        ov_enc = self.other_vision_encoder_module(sv)
+
+        sv_raw = (sv + 1) / 2
+        q1_vec = self.compute_probe_q(sv_raw)
+
+        if self.action_dropout_rate > 0:
+            drop = (torch.rand(sm.size(0), 1, device=sm.device)
+                    < self.action_dropout_rate).float()
+            sm = sm * (1 - drop)
+
+        process1_input = torch.cat([sm, q1_vec], dim=1)
+        process2_input = torch.zeros_like(process1_input)
+
+        sv_enc = util.mask(sv_enc, p_mask_vision_self)
+        ov_enc = util.mask(ov_enc, p_mask_vision_other)
+
+        ss, os = self.superposition_module(sv_enc, process1_input, ov_enc, process2_input)
+
+        so = self.integration_module(
+            F.dropout(ss, p=0.5, training=self.training),
+            F.dropout(os, p=0.5, training=self.training),
+        )
+
+        pred = {}
+        pred['self_vision'] = self.vision_decoder_module(so)
+
+        return pred

@@ -1,0 +1,35 @@
+model:
+    name: SuperpositionNetworkProbeQ
+    config: default
+    mode: ~
+runner: PredictionFeaturePredictionRunner
+data:
+    name: r2_a1random_a2rl
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+    loss_function: l1_loss
+    pretrain:
+        exp_config: exp1_l1
+        seed: 0
+        epoch: 200
+    batch_size: 10
+    max_epochs: 200
+    save_interval: 10
+    test_interval: 10
+    optimizer: AdamW
+    optim_config:
+        default:
+            lr: 0.001
+            weight_decay: 0.01
+        freeze:
+            - vision_encoder_module
+            - vision_decoder_module
+            - integration_module
+            - feature_prediction_module
+            - share_lns
+            - probe_critic
+        per_params:
+            - name: bias
+              args:
+                  weight_decay: 0.0

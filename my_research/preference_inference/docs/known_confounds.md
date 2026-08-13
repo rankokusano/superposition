@@ -109,6 +109,41 @@ scheme has to be picked concretely. The range mismatch documented above is
 expected to still be present at that point and will need an actual decision
 (shared vs. per-process normalization stats), not just more seed-hunting.
 
+**Update 2026-08-14 (normalization scheme decided):** Confirmed by
+simulation (`analyze` scripts + `q_normalization_simulation.json`) that
+this range mismatch bites hardest under tanh normalization. Using A-1's
+own real-data statistics (μ=1.9233, σ=0.9466, from `self_vision` +
+8-probe critic evaluation) as the shared normalization source (this is
+"self's own experience used as the yardstick," not a pooled A-1+A-2
+statistic — keeps the superposition claim intact):
+
+|                     | A-1 normalized std | A-2 normalized std | A-2 variance retained |
+|---|---|---|---|
+| tanh((Q-μ)/σ)       | 0.629               | 0.0090              | ~5.5% |
+| (Q-μ)/(3σ), clipped | 0.333               | 0.0581              | ~35% |
+
+**Decision: tanh, not the linear clip.** R3 only exercises process-1 (A-2
+is a zero vector there), so A-1's own normalized variance is what R3's
+outcome actually depends on — and tanh preserves nearly 2x more of it
+(0.629 vs 0.333) than the linear clip, which maps ±3σ to ±1 and leaves
+most real data compressed into a ±0.33 band, far short of how the
+original paper's `m_t` used the full (-1,1) range. **A-2's collapse under
+tanh (std=0.0090) does not block R3** (process-2 is zero regardless of
+normalization scheme there) **but is a real open question for R4**, where
+VE has to produce a value for process-2 that lands somewhere usable in
+this same tanh-normalized space. The ~5.5%-variance-retained figure is
+the number to check against once VE exists: if VE's raw output range
+can't be usefully distinguished after passing through this normalization,
+R4 will need one of: retraining A-2's critic for a wider natural Q range,
+revisiting the reward design so Q separates more across A-2's operating
+region, or (least preferred, since it reopens this whole tradeoff)
+switching just A-2's downstream normalization path to something gentler
+than tanh at the cost of breaking the "same normalization for both
+processes" property.
+
+**Revisit at:** R4, when VE's output actually needs to pass through this
+normalization for the first time.
+
 ## Convergence asymmetry: A-1 reaches its landmark far more precisely than A-2
 
 **Raised:** 2026-08-12, same investigation as above.
