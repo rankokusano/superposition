@@ -1,0 +1,69 @@
+{
+  "label": "r3_a_direct_probe_q_ablation",
+  "exp_config": "r3_a_direct",
+  "epoch": 200,
+  "n_episodes": 3000,
+  "n_steps": 100,
+  "mask_seed": 20260815,
+  "shuffle_seed": 20260815,
+  "shuffle_permutation": [
+    0,
+    3,
+    6,
+    7,
+    5,
+    2,
+    1,
+    4
+  ],
+  "a2_critic_path": "/work/my_research/preference_inference/data/model/v3_rl_a2_critic.pth",
+  "results": [
+    {
+      "condition": "baseline",
+      "vision_l1_error": 0.11122650215029717,
+      "h1_to_self": 0.9092116949995622,
+      "h1_to_other": 0.585565387760586,
+      "h2_to_self": 0.09019266727220537,
+      "h2_to_other": 0.8994264159853503
+    },
+    {
+      "condition": "rotate90",
+      "vision_l1_error": 0.280514002636075,
+      "h1_to_self": 0.6720579849163857,
+      "h1_to_other": 0.4809384079070137,
+      "h2_to_self": 0.09019266727220537,
+      "h2_to_other": 0.8994264159853503
+    },
+    {
+      "condition": "shuffle",
+      "vision_l1_error": 0.219933454160889,
+      "h1_to_self": 0.6381506196361212,
+      "h1_to_other": 0.5086637166673594,
+      "h2_to_self": 0.09019266727220537,
+      "h2_to_other": 0.8994264159853503
+    },
+    {
+      "condition": "critic_swap",
+      "vision_l1_error": 0.2978527459899584,
+      "h1_to_self": 0.5927482116310887,
+      "h1_to_other": 0.5072283508131985,
+      "h2_to_self": 0.09019266727220537,
+      "h2_to_other": 0.8994264159853503
+    },
+    {
+      "condition": "constant",
+      "vision_l1_error": 0.23058105646570523,
+      "h1_to_self": 0.587728058038814,
+      "h1_to_other": 0.5200631533417357,
+      "h2_to_self": 0.09019266727220537,
+      "h2_to_other": 0.8994264159853503
+    }
+  ],
+  "timestamp": "2026-08-15T04:13:00.986034",
+  "git_commit": "1dbfaaf70712f5a0e5a6ec5c79796248111a5b25",
+  "exp_config_name": "r3_a_direct",
+  "config_path": "config/exp/r3_a_direct.yml",
+  "config_content": "model:\n    name: SuperpositionNetworkProbeQ\n    config: default\n    mode: ~\nrunner: PredictionFeaturePredictionRunner\ndata:\n    name: r2_a1random_a2rl\nload_state_dict_strict: False\np_mask_vision: 0.99\ntrain:\n    loss_function: l1_loss\n    pretrain:\n        exp_config: exp1_l1\n        seed: 0\n        epoch: 200\n    batch_size: 10\n    max_epochs: 200\n    save_interval: 10\n    test_interval: 10\n    optimizer: AdamW\n    optim_config:\n        default:\n            lr: 0.001\n            weight_decay: 0.01\n        freeze:\n            - vision_encoder_module\n            - vision_decoder_module\n            - integration_module\n            - feature_prediction_module\n            - share_lns\n            - probe_critic\n        per_params:\n            - name: bias\n              args:\n                  weight_decay: 0.0\n",
+  "seed": 0,
+  "dataset_name": "r2_a1random_a2rl"
+}

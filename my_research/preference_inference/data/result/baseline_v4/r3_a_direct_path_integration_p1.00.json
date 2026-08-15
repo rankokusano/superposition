@@ -1,0 +1,19 @@
+{
+  "label": "r3_a_direct_path_integration_p1.00",
+  "exp_config": "r3_a_direct",
+  "dataset_name": "r2_a1random_a2rl",
+  "epoch": 200,
+  "p_mask": 1.0,
+  "n_episodes": 3000,
+  "n_steps": 100,
+  "h1_to_self": 0.8342124608212693,
+  "h1_to_other": 0.38951795038181664,
+  "h2_to_self": 0.00012692080543852402,
+  "h2_to_other": 0.5537591755573888,
+  "timestamp": "2026-08-15T04:16:05.237337",
+  "git_commit": "1dbfaaf70712f5a0e5a6ec5c79796248111a5b25",
+  "exp_config_name": "r3_a_direct",
+  "config_path": "config/exp/r3_a_direct.yml",
+  "config_content": "model:\n    name: SuperpositionNetworkProbeQ\n    config: default\n    mode: ~\nrunner: PredictionFeaturePredictionRunner\ndata:\n    name: r2_a1random_a2rl\nload_state_dict_strict: False\np_mask_vision: 0.99\ntrain:\n    loss_function: l1_loss\n    pretrain:\n        exp_config: exp1_l1\n        seed: 0\n        epoch: 200\n    batch_size: 10\n    max_epochs: 200\n    save_interval: 10\n    test_interval: 10\n    optimizer: AdamW\n    optim_config:\n        default:\n            lr: 0.001\n            weight_decay: 0.01\n        freeze:\n            - vision_encoder_module\n            - vision_decoder_module\n            - integration_module\n            - feature_prediction_module\n            - share_lns\n            - probe_critic\n        per_params:\n            - name: bias\n              args:\n                  weight_decay: 0.0\n",
+  "seed": 0
+}

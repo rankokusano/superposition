@@ -1,0 +1,19 @@
+{
+  "label": "exp1_l1_path_integration_p1.00",
+  "exp_config": "exp1_l1",
+  "dataset_name": "self_random_other_stay",
+  "epoch": 200,
+  "p_mask": 1.0,
+  "n_episodes": 100,
+  "n_steps": 100,
+  "h1_to_self": 0.5463270642972877,
+  "h1_to_other": 0.03381603256405402,
+  "h2_to_self": 0.0008621994526778476,
+  "h2_to_other": -6.853443368370904e-10,
+  "timestamp": "2026-08-15T04:24:34.365563",
+  "git_commit": "1dbfaaf70712f5a0e5a6ec5c79796248111a5b25",
+  "exp_config_name": "exp1_l1",
+  "config_path": "config/exp/exp1_l1.yml",
+  "config_content": "model:\n    name: SuperpositionNetworkFeaturePrediction\n    config: default\n    mode: ~\nrunner: PredictionFeaturePredictionRunner\ndata:\n    name: self_random_other_stay\nload_state_dict_strict: False\np_mask_vision: 0.99\ntrain:\n    loss_function: l1_loss\n    pretrain:\n        exp_config: exp1_mse\n        seed: 0\n        epoch: 200\n    batch_size: 10\n    max_epochs: 200\n    save_interval: 10\n    test_interval: 10\n    optimizer: AdamW\n    optim_config:\n        default:\n            lr: 0.001\n            weight_decay: 0.01\n        freeze:\n            - superposition_module\n            - vision_encoder_module\n            - integration_module\n            - share_lns\n            - feature_prediction_module\n        per_params:\n            - name: bias\n              args:\n                  weight_decay: 0.0\n",
+  "seed": 0
+}
