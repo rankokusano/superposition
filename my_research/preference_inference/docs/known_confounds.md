@@ -247,3 +247,73 @@ wall.
 
 **Revisit at:** would only matter again if a future design reintroduces
 a motion-generation objective fed by a value-driven agent's actions.
+
+## Fig.5 (viewpoint-taking) reproduction: corrected after root-repo audit
+
+**Raised:** 2026-08-14/15, R4-prerequisite check (independent of the R3
+gate itself).
+
+**Original (incorrect) conclusion:** an ad-hoc reproduction attempt
+(`train_fig5_decoder.py`, since discarded) trained a fresh
+`VisionDecoderModule` on top of frozen exp1_l1 vision encoders, with a
+plain L1 autoencoder objective on `self_random_other_stay` (~100k steps,
+paper's batch=10). This was reported as failing to reproduce the paper's
+claim (other_other=0.5506 not < other_self=0.3536).
+
+**Correction (2026-08-15):** the root repo (outside `my_research/`) was
+not audited before attempting this from scratch. It turns out Fig.5 is
+already fully reproduced by the *original* pipeline:
+`config/exp/exp2.yml` (`model.name: Autoencoder`, a distinct class in
+root `model/model.py`, not `VisionDecoderModule`), trained via
+`run_training.sh` with **weight_decay=3.0** (~1000x a typical value —
+evidently a deliberate regularization choice to force the decoder to
+generalize from Encoder-1's output to Encoder-2's, rather than overfit
+to Encoder-1 alone) and evaluated on the **`grid`** dataset (self and
+other exhaustively placed on every cell of a 21x21 grid, not a natural
+random trajectory) via `analyze/analyze_vpt.py` (root-level, called from
+`run_analysis_exp2.sh`). The precomputed result is sitting at
+`data/result/exp2/0/test/grid/save/vpt/1/histogram/result.txt`:
+
+| | mean | std |
+|---|---|---|
+| self_true_and_self_rec | 0.0513 | 0.0170 |
+| other_true_and_other_rec | 0.1125 | 0.0366 |
+| self_true_and_other_rec | 0.1393 | 0.0400 |
+| other_true_and_self_rec | 0.1465 | 0.0506 |
+
+`other_other (0.1125) < other_self (0.1465)` — **the paper's claim holds**
+in the original repo's own pipeline. The ad-hoc reproduction's failure and
+~5x larger absolute errors were a methodology gap (wrong model class,
+missing the heavy weight_decay, wrong eval dataset), not a real property
+of this codebase's encoders.
+
+**R4 implication retracted:** the earlier note that Encoder-2's output
+(`ov_enc`) might carry too little A-2-specific information to decode
+usefully is withdrawn — for **exp1_l1's** encoders, A-2 viewpoint
+information is confirmed present and decodable. Whether the same holds
+for **R3-A's own** (retrained-from-scratch superposition_module, still
+using exp1_l1's frozen vision encoders) is a separate, still-open
+question, since R3-A's SM was trained on Probe-Q not motion input — the
+vision encoders themselves are unchanged/frozen through R3-A, so this is
+expected to still hold, but hasn't been directly checked against R3-A's
+own checkpoint.
+
+**Assets now protected from deletion** (do not remove/regenerate):
+`data/result/exp2/` (~10GB, root repo) and the `grid` dataset under
+`data/data/` — required to reproduce Fig.5d/5e. Also: `exp1_l1_1000`,
+`exp1_mse_1000`, `exp3_1000` configs and `run_analysis_1000.sh` (root,
+dated 6/20-21 — an undocumented but likely self-authored variant
+pipeline) are no longer delete candidates; provenance unconfirmed but
+probably prior work by the same researcher, not paper-original material
+to discard as irrelevant.
+
+**Status:** applying the real exp2/vpt methodology to R3-A's own
+checkpoint is deferred — not urgent, since R3's pass/fail gate is
+h¹→self's R², and Fig.5-equivalent viewpoint-taking is only an R4
+prerequisite check, not an R3 criterion. Revisit once R3-A's final
+(corrected-weight-transfer) results are confirmed.
+
+**Revisit at:** before R4, if VE's decoded output needs a Fig.5-style
+qualitative/quantitative viewpoint-taking check — at that point, prefer
+adapting `analyze_vpt.py` / the `Autoencoder`+grid-dataset approach over
+another ad-hoc implementation.

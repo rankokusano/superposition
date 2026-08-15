@@ -1,3 +1,5 @@
+import datetime
+import os
 import random
 import subprocess
 import sys
@@ -58,14 +60,44 @@ def load_pretrain(model, exp_config):
         # shape mismatches on keys present in both, which would raise a
         # RuntimeError. Skip those, load everything else (in the normal
         # same-shape case this is identical to a plain load_state_dict).
+        #
+        # Special case (2026-08-14): SuperpositionModule concatenates
+        # [vision(enc_out), motion] before the LSTM (see modules.py:
+        # `sx = torch.cat([sv, sm], 1)`), so weight_ih's columns are
+        # always [vision_cols..., motion_cols...] in that order. When the
+        # column count differs (rows/gates match) ONLY the first
+        # VISION_ENC_DIM columns are transferred -- NOT
+        # min(old_width, new_width), which would wrongly reuse some of
+        # the checkpoint's old *motion* columns (e.g. exp1_l1's 2 action
+        # weight columns) as if they were meaningful for the new probe-Q
+        # columns, just because they happened to land in the shared
+        # numeric range. All motion/Q columns (indices >= VISION_ENC_DIM)
+        # keep the model's own random init instead.
+        VISION_ENC_DIM = 64
         model_state = model.state_dict()
         compatible = {}
+        partial = []
         skipped = []
         for k, v in checkpoint.items():
-            if k in model_state and model_state[k].shape == v.shape:
+            if k not in model_state:
+                skipped.append(k)
+                continue
+            target = model_state[k]
+            if target.shape == v.shape:
                 compatible[k] = v
+            elif (k.endswith('weight_ih') and target.dim() == 2 and v.dim() == 2
+                  and target.shape[0] == v.shape[0]):
+                n_common = min(VISION_ENC_DIM, target.shape[1], v.shape[1])
+                merged = target.clone()
+                merged[:, :n_common] = v[:, :n_common]
+                compatible[k] = merged
+                partial.append(f'{k} (kept first {n_common}/{target.shape[1]} '
+                               f'vision cols only, rest random-init)')
             else:
                 skipped.append(k)
+        if partial:
+            print(f'load_pretrain: partially loading {len(partial)} keys '
+                  f'(shared prefix columns transferred, rest random-init): {partial}')
         if skipped:
             print(f'load_pretrain: skipping {len(skipped)} shape-mismatched/'
                   f'absent keys (trained from scratch instead): {skipped}')
@@ -242,6 +274,55 @@ def scale_vision(v):
 
 def de_scale_vision(v):
     return (v + 1) / 2
+
+
+def gen_result_metadata(exp_config_name=None, seed=None, dataset_name=None):
+    # v4 (2026-08-15): result JSONs previously recorded only source_h5/epoch/
+    # mode, with the exp_config and weight-transfer variant only inferable
+    # from the label/filename -- e.g. r3_a_direct_r2.json (original,
+    # full-random-init weight_ih) vs r3_a_direct_v2_r2.json (corrected
+    # partial-transfer) were indistinguishable except by reading this
+    # session's chat history. Every analysis script that writes a result
+    # JSON should merge this dict in, so results are self-describing even
+    # after the config file or codebase moves on.
+    meta = {
+        'timestamp': datetime.datetime.now().isoformat(),
+        'git_commit': None,
+        'exp_config_name': exp_config_name,
+        'config_path': None,
+        'config_content': None,
+        'seed': seed,
+        'dataset_name': dataset_name,
+    }
+    # the `git` binary isn't installed in the training container (only the
+    # bind-mounted .git directory is available there), so read HEAD by
+    # walking .git files directly instead of shelling out to git.
+    try:
+        repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        for _ in range(6):
+            if os.path.isdir(os.path.join(repo_root, '.git')):
+                break
+            repo_root = os.path.dirname(repo_root)
+        git_dir = os.path.join(repo_root, '.git')
+        with open(os.path.join(git_dir, 'HEAD')) as f:
+            head = f.read().strip()
+        if head.startswith('ref:'):
+            ref_path = os.path.join(git_dir, head[len('ref:'):].strip())
+            with open(ref_path) as f:
+                meta['git_commit'] = f.read().strip()
+        else:
+            meta['git_commit'] = head
+    except Exception:
+        pass
+    if exp_config_name is not None:
+        config_path = EXP_CONFIG_DIR + '{:s}.yml'.format(exp_config_name)
+        meta['config_path'] = config_path
+        try:
+            with open(config_path) as f:
+                meta['config_content'] = f.read()
+        except Exception:
+            pass
+    return meta
 
 
 def load_data(f_data, load_memory=False):

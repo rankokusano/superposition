@@ -1,0 +1,21 @@
+{
+  "label": "r3_a_direct_cycler_v2",
+  "source_h5": "data/result/r3_a_direct_cycler_control/0/test/r3_control_a1random_a2cycler/save/saved.h5",
+  "epoch": 200,
+  "mode": "eval",
+  "n_data": 3000,
+  "n_steps": 100,
+  "hidden_dim": 128,
+  "n_samples": 300000,
+  "h1_to_self": 0.8219052307436892,
+  "h1_to_other": 0.9062404518146818,
+  "h2_to_self": 0.0713057615716714,
+  "h2_to_other": 0.9537517083096928,
+  "timestamp": "2026-08-15T03:58:30.733780",
+  "git_commit": "5d218349271c04efec598204f3097f255daefcaa",
+  "exp_config_name": "r3_a_direct_cycler_control",
+  "config_path": "config/exp/r3_a_direct_cycler_control.yml",
+  "config_content": "# Control experiment (2026-08-14): identical to r3_a_direct.yml in every\n# respect except data -- A-2 is CyclerA2 (deterministic, independent of\n# A-1) instead of the trained RL Green policy. Tests whether r3_a_direct's\n# elevated h1->other (0.582, vs exp1_l1/exp3's ~0.01-0.04) is caused by\n# A-2's RL-driven behavior or is architectural (present regardless of\n# A-2's policy, e.g. from SM retraining from scratch on top of already-\n# self/other-differentiated frozen vision encoders).\nmodel:\n    name: SuperpositionNetworkProbeQ\n    config: default\n    mode: ~\nrunner: PredictionFeaturePredictionRunner\ndata:\n    name: r3_control_a1random_a2cycler\nload_state_dict_strict: False\np_mask_vision: 0.99\ntrain:\n    loss_function: l1_loss\n    pretrain:\n        exp_config: exp1_l1\n        seed: 0\n        epoch: 200\n    batch_size: 10\n    max_epochs: 200\n    save_interval: 10\n    test_interval: 10\n    optimizer: AdamW\n    optim_config:\n        default:\n            lr: 0.001\n            weight_decay: 0.01\n        freeze:\n            - vision_encoder_module\n            - vision_decoder_module\n            - integration_module\n            - feature_prediction_module\n            - share_lns\n            - probe_critic\n        per_params:\n            - name: bias\n              args:\n                  weight_decay: 0.0\n",
+  "seed": 0,
+  "dataset_name": "r3_control_a1random_a2cycler"
+}

@@ -1,0 +1,7 @@
+=== r3_a_direct_v2 R^2 (epoch 200, mode eval) ===
+source: data/result/r3_a_direct/0/test/r2_a1random_a2rl/save/saved.h5
+n_samples: 300000 (N=3000 x T=100)
+h1 -> self  pos: 0.9086
+h1 -> other pos: 0.5849
+h2 -> self  pos: 0.0910
+h2 -> other pos: 0.8996

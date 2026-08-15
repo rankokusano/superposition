@@ -1,0 +1,20 @@
+{
+  "self_self": {
+    "mean": 1.068015694618225,
+    "std": 0.07393040508031845
+  },
+  "other_other": {
+    "mean": 1.1700706481933594,
+    "std": 0.05352790281176567
+  },
+  "self_other": {
+    "mean": 1.179363489151001,
+    "std": 0.05462479963898659
+  },
+  "other_self": {
+    "mean": 1.0572457313537598,
+    "std": 0.0729747787117958
+  },
+  "paper_claim_other_other_lt_other_self": false,
+  "self_other_lt_other_other": false
+}

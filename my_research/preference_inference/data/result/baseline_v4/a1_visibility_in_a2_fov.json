@@ -1,0 +1,13 @@
+{
+  "n_samples": 20000,
+  "white_px_count_mean": 42.3141,
+  "white_px_count_median": 22.0,
+  "visible_fraction_at_20px": 0.5121,
+  "visible_fraction_by_threshold": {
+    "1": 0.99045,
+    "5": 0.9853,
+    "10": 0.9248,
+    "20": 0.5121,
+    "50": 0.19595
+  }
+}

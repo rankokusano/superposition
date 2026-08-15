@@ -24,10 +24,17 @@ Usage (inside Docker, from /work/my_research/preference_inference):
 import argparse
 import json
 import os
+import sys
 
 import h5py
 from sklearn.linear_model import Ridge
 from sklearn.metrics import r2_score
+
+_PI_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _PI_DIR not in sys.path:
+    sys.path.insert(0, _PI_DIR)
+
+import util  # noqa
 
 SAVE_DIR = 'data/result/baseline_v4'
 
@@ -60,7 +67,32 @@ def main():
     parser.add_argument('--epoch', type=int, default=200)
     parser.add_argument('--mode', default='eval')
     parser.add_argument('--label', required=True)
+    parser.add_argument('--exp_config', default=None,
+                         help='name of the config/exp/<name>.yml this saved_h5 came from '
+                              '(recorded verbatim, incl. full yaml content, in the output JSON)')
+    parser.add_argument('--seed', type=int, default=None)
+    parser.add_argument('--dataset_name', default=None,
+                         help='dataset the model was tested on (test_data_name passed to test.py)')
     args = parser.parse_args()
+
+    # best-effort fallback if the caller didn't pass --exp_config/--seed/
+    # --dataset_name explicitly: saved_h5 paths follow
+    # data/result/<exp_config>/<seed>/test/<dataset_name>/save/saved.h5
+    exp_config_name, seed, dataset_name = args.exp_config, args.seed, args.dataset_name
+    if exp_config_name is None or seed is None or dataset_name is None:
+        parts = args.saved_h5.replace('\\', '/').split('/')
+        if 'result' in parts and 'test' in parts:
+            ri = parts.index('result')
+            ti = parts.index('test')
+            if exp_config_name is None and ri + 1 < len(parts):
+                exp_config_name = parts[ri + 1]
+            if seed is None and ri + 2 < len(parts):
+                try:
+                    seed = int(parts[ri + 2])
+                except ValueError:
+                    pass
+            if dataset_name is None and ti + 1 < len(parts):
+                dataset_name = parts[ti + 1]
 
     if not os.path.exists(args.saved_h5):
         raise FileNotFoundError(args.saved_h5)
@@ -90,6 +122,8 @@ def main():
         'h2_to_self': r2_h2_self,
         'h2_to_other': r2_h2_other,
     }
+    result.update(util.gen_result_metadata(
+        exp_config_name=exp_config_name, seed=seed, dataset_name=dataset_name))
 
     txt = (
         f'=== {args.label} R^2 (epoch {args.epoch}, mode {args.mode}) ===\n'
