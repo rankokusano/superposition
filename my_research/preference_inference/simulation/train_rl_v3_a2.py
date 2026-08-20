@@ -56,7 +56,6 @@ LR_CRITIC       = 0.0001
 LR_ALPHA        = 0.0001
 BATCH_SIZE      = 32
 MEMORY_SIZE     = 50000
-TARGET_ENTROPY  = -2.0  # SAC entropy coefficient target; tune here if coverage needs adjusting
 
 ENV_CONFIG  = '/work/simulation/config/collect/self_stay_other_random.yml'
 
@@ -112,11 +111,13 @@ class ReplayBuffer:
         return len(self.buffer)
 
 
-def train(seed):
+def train(seed, target_entropy, epsilon):
     os.makedirs(SAVE_DIR, exist_ok=True)
     seed_all(seed)
-    actor_save = os.path.join(SAVE_DIR, f'v3_rl_a2_actor_seed{seed}.pth')
-    critic_save = os.path.join(SAVE_DIR, f'v3_rl_a2_critic_seed{seed}.pth')
+    te_tag = f'te{target_entropy:.1f}'.replace('-', 'm').replace('.', 'p')
+    eps_tag = f'eps{epsilon:.1f}'.replace('.', 'p')
+    actor_save = os.path.join(SAVE_DIR, f'v3_rl_a2_actor_{te_tag}_{eps_tag}_seed{seed}.pth')
+    critic_save = os.path.join(SAVE_DIR, f'v3_rl_a2_critic_{te_tag}_{eps_tag}_seed{seed}.pth')
 
     config = load_config(ENV_CONFIG)
     env = creator.create_environment(config.environment)
@@ -147,6 +148,8 @@ def train(seed):
     print(f'Algorithm: SAC (CNN+LSTM, continuous action)')
     print(f'Reward: green_fraction - red_fraction (continuous)')
     print(f'Episodes: {EPISODES} × {MAX_STEPS} steps')
+    print(f'Target entropy: {target_entropy}')
+    print(f'Epsilon (training-rollout exploration only, not used by collect_data_r2.py): {epsilon}')
 
     for episode in range(EPISODES):
         env.reset()
@@ -159,6 +162,14 @@ def train(seed):
             with torch.no_grad():
                 action_t, _, hidden = actor.sample(state, hidden)
             action_np = action_t.squeeze(0).cpu().numpy()
+
+            # epsilon-greedy exploration for TRAINING rollout only (widens the
+            # states the replay buffer / critic get trained on). NOT used by
+            # collect_data_r2.py, which stays on pure actor.sample() so A-2's
+            # collected behavior still reads as "the Green-preference agent".
+            if epsilon > 0.0 and np.random.rand() < epsilon:
+                action_np = np.random.uniform(-1.0, 1.0, size=2).astype(np.float32)
+                action_t = torch.tensor(action_np, dtype=torch.float32).unsqueeze(0).to(DEVICE)
 
             # Move A-2 with RL action; A-1 stays stationary
             env.other_agent.p = np.clip(
@@ -210,7 +221,7 @@ def train(seed):
                 actor_opt.step()
 
                 alpha_opt.zero_grad()
-                (-(log_alpha * (lp2 + TARGET_ENTROPY).detach())).mean().backward()
+                (-(log_alpha * (lp2 + target_entropy).detach())).mean().backward()
                 alpha_opt.step()
                 alpha = log_alpha.exp()
 
@@ -232,5 +243,14 @@ def train(seed):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--seed', type=int, default=0)
+    parser.add_argument('--target_entropy', type=float, default=-2.0,
+                         help='SAC automatic-entropy-tuning target; less negative -> '
+                              'higher-entropy (more exploratory) converged policy. '
+                              'Reward function is untouched by this flag.')
+    parser.add_argument('--epsilon', type=float, default=0.0,
+                         help='probability of a uniform-random action during the '
+                              'TRAINING rollout only (widens replay-buffer state '
+                              'coverage for the critic). collect_data_r2.py is '
+                              'unaffected -- it always uses pure actor.sample().')
     args = parser.parse_args()
-    train(args.seed)
+    train(args.seed, args.target_entropy, args.epsilon)

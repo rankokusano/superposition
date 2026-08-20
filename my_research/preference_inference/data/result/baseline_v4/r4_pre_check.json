@@ -1,0 +1,66 @@
+{
+  "label": "r4_pre_check",
+  "exp_config": "r3_a_direct",
+  "epoch": 200,
+  "n_episodes": 3000,
+  "n_steps": 100,
+  "note": "oracle linear (Ridge) feasibility check only -- not a trained VE, no recurrence/causality constraint. Answers \"is there enough signal\", not \"can VE as designed learn it\".",
+  "target_stats": {
+    "a1_q1_per_dim_std": [
+      0.6097301840782166,
+      0.614138662815094,
+      0.6280017495155334,
+      0.6412191390991211,
+      0.642831563949585,
+      0.636353075504303,
+      0.6297876238822937,
+      0.6189008355140686
+    ],
+    "a1_q1_overall_std": 0.6300503015518188,
+    "a2_q2_per_dim_std": [
+      0.009541052393615246,
+      0.00982803013175726,
+      0.009741965681314468,
+      0.009845923632383347,
+      0.008989797905087471,
+      0.008079062215983868,
+      0.008036063052713871,
+      0.008522863499820232
+    ],
+    "a2_q2_overall_std": 0.009157047607004642,
+    "a2_q2_range": [
+      0.6813516020774841,
+      0.9950163960456848
+    ],
+    "variance_ratio_a2_over_a1": 0.0002112323732721211
+  },
+  "oracle_r2_ov_enc_to_a2_q2_per_dim": [
+    0.5794129073791716,
+    0.5776688205591126,
+    0.5521717993412092,
+    0.5073874024186846,
+    0.48702839589424485,
+    0.5102205266920554,
+    0.5419508763204376,
+    0.5781047103235455
+  ],
+  "oracle_r2_ov_enc_to_a2_q2_mean": 0.5417431798660577,
+  "oracle_r2_h2_to_a2_q2_per_dim": [
+    0.4413176081769863,
+    0.4407807017157255,
+    0.4383183175706177,
+    0.39800618559435275,
+    0.36866372051669094,
+    0.386371915651599,
+    0.42580354768685447,
+    0.4446783190646245
+  ],
+  "oracle_r2_h2_to_a2_q2_mean": 0.4179925394971814,
+  "timestamp": "2026-08-19T18:11:28.581630",
+  "git_commit": "103caba47c3cae991f5b602251b4ea7cd6d52f91",
+  "exp_config_name": "r3_a_direct",
+  "config_path": "config/exp/r3_a_direct.yml",
+  "config_content": "model:\n    name: SuperpositionNetworkProbeQ\n    config: default\n    mode: ~\nrunner: PredictionFeaturePredictionRunner\ndata:\n    name: r2_a1random_a2rl\nload_state_dict_strict: False\np_mask_vision: 0.99\ntrain:\n    loss_function: l1_loss\n    pretrain:\n        exp_config: exp1_l1\n        seed: 0\n        epoch: 200\n    batch_size: 10\n    max_epochs: 200\n    save_interval: 10\n    test_interval: 10\n    optimizer: AdamW\n    optim_config:\n        default:\n            lr: 0.001\n            weight_decay: 0.01\n        freeze:\n            - vision_encoder_module\n            - vision_decoder_module\n            - integration_module\n            - feature_prediction_module\n            - share_lns\n            - probe_critic\n        per_params:\n            - name: bias\n              args:\n                  weight_decay: 0.0\n",
+  "seed": 0,
+  "dataset_name": "r2_a1random_a2rl"
+}

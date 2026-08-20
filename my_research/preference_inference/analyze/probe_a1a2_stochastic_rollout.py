@@ -85,7 +85,15 @@ def rollout(actor_path, env_config, move_self, camera_key, seed, epsilon):
             agent.p = np.clip(agent.p + action_np, -9.5, 9.5)
             all_pos.append(agent.p.copy())
 
-    return np.array(all_pos)
+    return np.array(all_pos).reshape(N_EPISODES, SEQ_LEN, 2)
+
+
+def motion_stats(pos_by_episode):
+    # frame-to-frame displacement within each episode (excludes the
+    # inter-episode boundary, since env.reset() makes that jump meaningless)
+    motion = np.diff(pos_by_episode, axis=1).reshape(-1, 2)
+    return {'std_x': float(motion[:, 0].std()), 'std_y': float(motion[:, 1].std()),
+            'mean_x': float(motion[:, 0].mean()), 'mean_y': float(motion[:, 1].mean())}
 
 
 def landmark_stats(pos):
@@ -148,18 +156,26 @@ def main():
     print(f'epsilon={args.epsilon}')
 
     if args.only in ('a1', 'both'):
-        pos_a1 = rollout(args.a1_path, '/work/simulation/config/collect/self_random_other_stay.yml',
-                          move_self=True, camera_key='self', seed=12345, epsilon=args.epsilon)
+        pos_a1_ep = rollout(args.a1_path, '/work/simulation/config/collect/self_random_other_stay.yml',
+                             move_self=True, camera_key='self', seed=12345, epsilon=args.epsilon)
+        mstats_a1 = motion_stats(pos_a1_ep)
+        pos_a1 = pos_a1_ep.reshape(-1, 2)
         stats_a1 = landmark_stats(pos_a1)
         print_stats(f'A-1{args.label} (Red-seeking, continuous reward, stochastic)', pos_a1, stats_a1)
+        print(f'  motion: std=({mstats_a1["std_x"]:.4f},{mstats_a1["std_y"]:.4f})  '
+              f'mean=({mstats_a1["mean_x"]:.4f},{mstats_a1["mean_y"]:.4f})')
         heatmap(pos_a1, f'A-1{args.label} position visits (continuous reward, stochastic)',
                 os.path.join(SAVE_DIR, f'a1{args.label}_heatmap_stochastic.png'))
 
     if args.only in ('a2', 'both'):
-        pos_a2 = rollout(args.a2_path, '/work/simulation/config/collect/self_stay_other_random.yml',
-                          move_self=False, camera_key='other', seed=12345, epsilon=args.epsilon)
+        pos_a2_ep = rollout(args.a2_path, '/work/simulation/config/collect/self_stay_other_random.yml',
+                             move_self=False, camera_key='other', seed=12345, epsilon=args.epsilon)
+        mstats_a2 = motion_stats(pos_a2_ep)
+        pos_a2 = pos_a2_ep.reshape(-1, 2)
         stats_a2 = landmark_stats(pos_a2)
         print_stats(f'A-2{args.label} (Green-seeking, continuous reward, stochastic)', pos_a2, stats_a2)
+        print(f'  motion: std=({mstats_a2["std_x"]:.4f},{mstats_a2["std_y"]:.4f})  '
+              f'mean=({mstats_a2["mean_x"]:.4f},{mstats_a2["mean_y"]:.4f})')
         heatmap(pos_a2, f'A-2{args.label} position visits (continuous reward, stochastic)',
                 os.path.join(SAVE_DIR, f'a2{args.label}_heatmap_stochastic.png'))
 

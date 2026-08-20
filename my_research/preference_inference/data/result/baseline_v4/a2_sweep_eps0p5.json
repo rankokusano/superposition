@@ -1,0 +1,52 @@
+{
+  "label": "eps0p5",
+  "actor_path": "my_research/preference_inference/data/model/v3_rl_a2_actor_tem2p0_eps0p5_seed0.pth",
+  "critic_path": "my_research/preference_inference/data/model/v3_rl_a2_critic_tem2p0_eps0p5_seed0.pth",
+  "n_episodes": 50,
+  "raw_q_mean": 4.962551116943359,
+  "raw_q_std": 0.17534370720386505,
+  "raw_q_min": 3.440694808959961,
+  "raw_q_max": 5.231517314910889,
+  "norm_q_mean": 0.9963975548744202,
+  "norm_q_std": 0.0029804143123328686,
+  "norm_q_min": 0.9221275448799133,
+  "norm_q_max": 0.998159646987915,
+  "position_std": [
+    2.574575677051723,
+    2.535847295983987
+  ],
+  "motion_std": [
+    0.4819782379144546,
+    0.37339449868353447
+  ],
+  "motion_mean": [
+    -0.0740053171245253,
+    -0.062146487785266276
+  ],
+  "landmark_stats": {
+    "Red": {
+      "mean_dist": 16.933596619363584,
+      "std_dist": 2.3462614519676435,
+      "frac_within_1.5": 0.0,
+      "frac_within_3.0": 0.0
+    },
+    "Green": {
+      "mean_dist": 3.293884165702575,
+      "std_dist": 2.6097991029351864,
+      "frac_within_1.5": 0.12811881188118812,
+      "frac_within_3.0": 0.5819801980198019
+    },
+    "Blue": {
+      "mean_dist": 16.63149198474589,
+      "std_dist": 2.38798616341687,
+      "frac_within_1.5": 0.00039603960396039607,
+      "frac_within_3.0": 0.0009900990099009901
+    },
+    "Yellow": {
+      "mean_dist": 23.488774217082373,
+      "std_dist": 2.2753905923659157,
+      "frac_within_1.5": 0.0,
+      "frac_within_3.0": 0.0
+    }
+  }
+}

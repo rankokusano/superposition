@@ -1,0 +1,21 @@
+{
+  "label": "exp1_l1_1000",
+  "source_h5": "/work/data/result/exp1_l1_1000/0/test/self_random_other_stay_1000/save/saved.h5",
+  "epoch": 200,
+  "mode": "eval",
+  "n_data": 1000,
+  "n_steps": 100,
+  "hidden_dim": 128,
+  "n_samples": 100000,
+  "h1_to_self": 0.966744389762948,
+  "h1_to_other": 0.0612688611534688,
+  "h2_to_self": 0.04717119566738753,
+  "h2_to_other": 0.9932006647822087,
+  "timestamp": "2026-08-19T19:15:49.730156",
+  "git_commit": "103caba47c3cae991f5b602251b4ea7cd6d52f91",
+  "exp_config_name": "exp1_l1_1000",
+  "config_path": "config/exp/exp1_l1_1000.yml",
+  "config_content": null,
+  "seed": 0,
+  "dataset_name": "self_random_other_stay_1000"
+}
