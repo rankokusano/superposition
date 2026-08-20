@@ -216,6 +216,47 @@ class MotionGeneratorModule(nn.Module, RNNBase):
         return o
 
 
+class ValueEstimatorModuleR4(nn.Module, RNNBase):
+    """
+    R4: VE as MG's direct one-to-one replacement (v4_experiment_log.md
+    Sec.1.2/8.2) -- same architecture as MotionGeneratorModule (LSTMCell
+    over ov_enc, tanh-bounded output), just with output dim = K (probe-Q's
+    dimensionality) instead of 2 (motion's). Takes UNMASKED ov_enc as
+    input, mirroring how MG reads ov_enc before util.mask() is applied
+    and how process-1's own q1_vec is computed from unmasked sv -- the
+    "motion slot" input is always fully available to the module that
+    produces it, only the vision-encoding slot fed to the Shared Module
+    is stochastically masked.
+    """
+    def __init__(self, config):
+        super().__init__()
+        self.config = config
+        self.lstm = nn.LSTMCell(config.input, config.hidden)
+        self.fc = nn.Linear(config.hidden, config.output)
+
+        util.init_fc(self.fc, 'tanh', 'xavier')
+
+    def init_state(self, batch_size):
+        device = next(self.lstm.parameters()).device
+        init_h = torch.zeros((batch_size, self.config.hidden), device=device)
+        init_c = torch.zeros((batch_size, self.config.hidden), device=device)
+        self.state = {
+            'value_estimator': LSTMState(init_h, init_c),
+        }
+
+    def forward(self, x):
+
+        h, c = self.state['value_estimator']
+
+        next_h, next_c = self.lstm(x, (h, c))
+
+        self.state['value_estimator'] = LSTMState(next_h, next_c)
+
+        o = torch.tanh(self.fc(next_h))
+
+        return o
+
+
 class FeaturePredictionModule(nn.Module):
     def __init__(self, config):
         super().__init__()

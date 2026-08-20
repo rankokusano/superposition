@@ -6,8 +6,8 @@ from . import util
 from .base import WithRNNModuleBase
 from .modules import (FeaturePredictionModule, IntegrationModule,
                       MotionGeneratorModule, SuperpositionModule,
-                      ValueEstimatorModule, VisionDecoderModule,
-                      VisionEncoderModule)
+                      ValueEstimatorModule, ValueEstimatorModuleR4,
+                      VisionDecoderModule, VisionEncoderModule)
 
 
 def add_vision_encoder_module(self, config):
@@ -375,6 +375,59 @@ class SuperpositionNetworkProbeQ(SuperpositionNetworkBase):
 
         pred = {}
         pred['self_vision'] = self.vision_decoder_module(so)
+
+        return pred
+
+
+class SuperpositionNetworkProbeQValueEstimation(SuperpositionNetworkProbeQ):
+    """
+    R4: VE (Value Estimator) as the original paper's MG's direct one-to-one
+    replacement (v4_experiment_log.md Sec.1.2/8.2) -- process-2's SM input
+    becomes VE(ov_enc) (K-dim, tanh-bounded, same shape as q1_vec) instead
+    of R3-A's zero vector. Everything else is identical to R3-A
+    (SuperpositionNetworkProbeQ): process-1's probe-Q computation, the
+    masking convention (VE reads ov_enc BEFORE masking, exactly as MG did
+    and as q1_vec is computed from unmasked sv), and the loss (vision
+    reconstruction + feature-prediction only, via the same
+    PredictionFeaturePredictionRunner already used for R3-A -- VE gets NO
+    direct supervision from A-2's true Q-value anywhere; that quantity is
+    used only for post-hoc evaluation, never as a training target, exactly
+    as the original MG was never directly supervised against A-1's real
+    motion despite being compared to it at evaluation time).
+
+    Per Sec.8.2's decision: pretrain from r3_a_direct_1000pretrain
+    (SM fully trained there), freeze superposition_module too this time
+    (mirroring exp3's freeze list when it added MG on top of an
+    already-trained base) -- only value_estimator_module is trainable.
+    """
+    def __init__(self, config):
+        super().__init__(config)
+        self.value_estimator_module = ValueEstimatorModuleR4(config.value_estimator_module)
+        self.rnn_modules.append(self.value_estimator_module)
+
+    def forward(self, x, p_mask_vision_self, p_mask_vision_other):
+        sv = x['self_vision']  # already scaled to [-1, 1] by the data loader
+
+        sv_enc = self.self_vision_encoder_module(sv)
+        ov_enc = self.other_vision_encoder_module(sv)
+
+        sv_raw = (sv + 1) / 2  # back to the critic's native [0,1] scale
+        q1_vec = self.compute_probe_q(sv_raw)
+        q2_vec = self.value_estimator_module(ov_enc)
+
+        sv_enc = util.mask(sv_enc, p_mask_vision_self)
+        ov_enc = util.mask(ov_enc, p_mask_vision_other)
+
+        ss, os = self.superposition_module(sv_enc, q1_vec, ov_enc, q2_vec)
+
+        so = self.integration_module(
+            F.dropout(ss, p=0.5, training=self.training),
+            F.dropout(os, p=0.5, training=self.training),
+        )
+
+        pred = {}
+        pred['self_vision'] = self.vision_decoder_module(so)
+        pred['other_q'] = q2_vec  # not used by any loss -- exposed for analysis only
 
         return pred
 
