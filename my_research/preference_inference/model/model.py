@@ -427,7 +427,11 @@ class SuperpositionNetworkProbeQValueEstimation(SuperpositionNetworkProbeQ):
 
         pred = {}
         pred['self_vision'] = self.vision_decoder_module(so)
-        pred['other_q'] = q2_vec  # not used by any loss -- exposed for analysis only
+        # key name 'q2_hat' matches the pre-existing save hook in
+        # exp/runner.py's PredictionRunnerBase.run_seq (from the v3/
+        # Approach-B era) so test.py's saver picks it up automatically.
+        # Not used by any loss -- exposed for analysis only.
+        pred['q2_hat'] = q2_vec
 
         return pred
 
