@@ -801,6 +801,23 @@ h²→self（0.0988→0.0528、元論文0.0472に接近）とh¹→other（0.570
 - `config/exp/r3_a_direct_1000pretrain_400.yml`：既存のR3-A(1000pretrain)のmax_epochsを400に変更したのみ。**目的が変わった**：学習量を揃えるためではなく、「h¹→otherの悪化が学習量の関数か、A-2静止条件に固有か」を判定するための対照実験（R3-A-400でもさらに悪化すればQ値入力に固有の構造的現象、横ばいなら静止条件固有の何か、という切り分け）。GPU5で実行中。
 - 両方ともスモークテスト済み（pretrainの重み転移が想定通り機能することを確認）。学習曲線は全エポック記録される（train.pyの既存ロギングで対応済み、§10参照）。
 
+### 8.5 Fig.5正規手法をv4モデルに適用：構造的な発見（Visual Encoderは全段階で凍結）
+
+**発覚**：2026-08-23〜24、元論文Fig.5の正規パイプライン（`exp2.yml`のAutoencoderクラス、`analyze/analyze_vpt.py`）をv4のチェックポイントに適用する準備の過程で判明。
+
+**重要な構造的事実（重み比較で実測確認済み）**：`self_vision_encoder_module`・`other_vision_encoder_module`は、`exp1_l1_1000`以降のv4の**全段階**（R3-A・R3-stay・R4-move）で常に凍結されており、一度も勾配が流れていない。R3-stay(400ep)のVisual Encoderの重みを`exp1_l1_1000`のものと直接比較したところ、**全パラメータが完全に一致**（`torch.equal`でTrue）した。
+
+**含意**：
+- Fig.5手法（Encoder出力のみを見る、Shared Moduleを経由しない）の結果は、exp1_l1_1000・R3-A・R3-stay・R4-moveの**すべてで数学的に同一になる**。process-1の入力を運動からQ値に変えたことも、A-2を動かす/静止させたことも、VEを追加したことも、一度もVisual Encoder自体には影響していない。
+- したがって「Q値入力にしたことで他者視点の取得能力（Visual Encoderの段階での）が変化したか」は、この手法では原理的に測定できない——差が測定できるとすれば、Encoderの学習段階（exp1_mse→exp1_l1）にQ値化の影響が及んでいた場合のみだが、v4はこの段階を素通しして`exp1_l1_1000`をそのまま継承しているため、その経路も存在しない。
+- **一方でこの制約はむしろ解釈上有用**：Fig.5が成立していれば「Encoderの段階では他者の情報が取れている、問題はその後（Shared Module以降）の処理段階にある」と切り分けられる——VEがA-2の情報を使えていないのは入力不足（Encoder由来）ではないと言える。逆に不成立なら、より上流に問題があることになる。
+
+**実行方針**：`config/exp/exp2.yml`・`analyze/analyze_vpt.py`はroot repoのファイルを一切改変せず、`my_research/preference_inference/`配下にコピー・複製して使用（`config/exp/fig5_v4_exp1l1000.yml`, `config/exp/fig5_v4_r3stay400.yml`, `config/model/Autoencoder/default.yml`）。出力先も`data/result/fig5_v4_exp1l1000/`・`data/result/fig5_v4_r3stay400/`という新規ディレクトリに分離し、`data/result/exp2/`・`data/result/exp1_l1_1000/`・`data/result/r3_stay_400/`（削除禁止資産）には一切書き込まない。gridデータセット（`data/data/grid/`、削除禁止資産）は読み取り専用で使用——環境の純粋なレンダリングでありモデルに依存しないため、新規収集は不要と判断（`self_vision_no_agent`/`other_vision_no_agent`フィールドの存在を実データで確認済み、shape=(441,441,16,64,3)で21×21グリッドの全組み合わせに対応）。
+
+**元exp2.ymlからの変更点**：(1) `pretrain.exp_config`を`exp1_l1`→`exp1_l1_1000`または`r3_stay_400`に変更、(2) `data.name`（デコーダ自体の学習データ）を`self_random_other_stay`（100episode）→`self_random_other_stay_1000`（1000episode）に変更——pretrain元を_1000系に揃えたことと一貫させるための意図的な変更。それ以外（`weight_decay=3.0`, `batch_size=100`, `max_epochs=100`, freeze対象）は元exp2.ymlのまま。
+
+**ユーザー判断**：「両方回して実測で一致を確認する」方針を採用（推論のみに頼らない習慣の維持）。結果は次回更新で追記する。
+
 ---
 
 ## 9. 運用ルール
