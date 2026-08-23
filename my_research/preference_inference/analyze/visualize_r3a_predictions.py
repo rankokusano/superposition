@@ -62,7 +62,7 @@ import model as models  # noqa
 import util  # noqa
 
 DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-DATA_H5 = '/work/my_research/preference_inference/data/data/r2_a1random_a2rl/data.h5'
+DATA_ROOT = '/work/my_research/preference_inference/data/data'
 SAVE_DIR = 'data/result/baseline_v4'
 TIMESTEPS = [10, 30, 50, 70, 90]
 SEED = 12345
@@ -86,8 +86,13 @@ def main():
     parser.add_argument('--epoch', type=int, default=200)
     parser.add_argument('--n_episodes', type=int, default=3)
     parser.add_argument('--label', default=None)
+    parser.add_argument('--data_name', default='r2_a1random_a2rl',
+                         help='dataset (under data/data/<name>/data.h5) to source ground-truth '
+                              'self_vision/other_vision/self_motion from -- does not need to be '
+                              "the model's own training set, just needs other_vision present")
     args = parser.parse_args()
     label = args.label or args.exp_config
+    DATA_H5 = os.path.join(DATA_ROOT, args.data_name, 'data.h5')
 
     torch.manual_seed(SEED)
     np.random.seed(SEED)
@@ -117,7 +122,9 @@ def main():
         recon = {'A': {'self': {}, 'other': {}}, 'B': {'self': {}, 'other': {}}}
         with torch.no_grad():
             for t in range(max(TIMESTEPS) + 1):
-                sv_float = sv_all[e, t].astype(np.float32) / 255.0
+                sv_float = sv_all[e, t].astype(np.float32)
+                if sv_float.max() > 1.5:
+                    sv_float = sv_float / 255.0
                 sv_scaled = util.scale_vision(sv_float)
                 sv_t = torch.tensor(sv_scaled).permute(2, 0, 1).unsqueeze(0).float().to(DEVICE)
                 sm_t = torch.tensor(sm_all[e, t]).unsqueeze(0).float().to(DEVICE)
@@ -145,12 +152,21 @@ def main():
                     recon['B']['self'][t] = to_img(dec_self_b.squeeze(0))
                     recon['B']['other'][t] = to_img(dec_other_b.squeeze(0))
 
-        fig, axes = plt.subplots(len(TIMESTEPS), 6, figsize=(24, 2.2 * len(TIMESTEPS)))
+        fig, axes = plt.subplots(len(TIMESTEPS), 6, figsize=(24, 2.4 * len(TIMESTEPS)))
+        fig.suptitle(
+            f'exp_config={args.exp_config}  epoch={args.epoch}  ground-truth data={args.data_name}\n'
+            f'Method A: vision_decoder_module(feature_prediction_module(h))  |  '
+            f'Method B: vision_decoder_module(integration_module(h, zeros))',
+            fontsize=10)
         col_titles = ['A-1 truth', 'h1 (method A)', 'h1 (method B)',
                       'A-2 truth', 'h2 (method A)', 'h2 (method B)']
         for row, t in enumerate(TIMESTEPS):
-            truth_self = sv_all[e, t].astype(np.float32) / 255.0
-            truth_other = ov_all[e, t].astype(np.float32) / 255.0
+            truth_self = sv_all[e, t].astype(np.float32)
+            if truth_self.max() > 1.5:
+                truth_self = truth_self / 255.0
+            truth_other = ov_all[e, t].astype(np.float32)
+            if truth_other.max() > 1.5:
+                truth_other = truth_other / 255.0
 
             axes[row, 0].imshow(truth_self)
             axes[row, 1].imshow(recon['A']['self'][t])
@@ -166,7 +182,7 @@ def main():
                 for c in range(6):
                     axes[row, c].set_title(col_titles[c], fontsize=9)
 
-        plt.tight_layout()
+        plt.tight_layout(rect=[0, 0, 1, 0.96])
         out_path = os.path.join(SAVE_DIR, f'{label}_prediction_viz_ep{e}.png')
         plt.savefig(out_path, dpi=130)
         plt.close()
