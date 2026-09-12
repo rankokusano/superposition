@@ -186,10 +186,10 @@ def gen_optim_params(net, config):
 
         if False if config.freeze is None else any(
                 s in name for s in config.freeze):
-            param.requres_grad = False
+            param.requires_grad = False
             freezed_params[name] = param
         else:
-            param.requres_grad = True
+            param.requires_grad = True
             train_params[name] = param
 
     default = {'params': []}

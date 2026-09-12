@@ -90,14 +90,33 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--exp_config', default='r4_ve')
     parser.add_argument('--epoch', type=int, default=200)
+    parser.add_argument('--seed', type=int, default=0)  # training seed of the checkpoint
     parser.add_argument('--n_episodes', type=int, default=N_EPISODES)
     parser.add_argument('--label', default=None)
+    parser.add_argument('--eval_seed', type=int, default=0)  # P0-0: reproducible eval
+    # P1.75 (Sec.4ter): A-2 = red-seeker via A-1's actor, so A-2's "true value"
+    # is A-1's own critic. Default keeps the legacy A-2 critic for v4 runs.
+    parser.add_argument('--a2_critic_path', default=A2_CRITIC_PATH)
+    parser.add_argument('--data_h5', default=DATA_H5)
+    # direction-pattern target. v4 default = Green (A-2 = green-seeker). P1.75
+    # (Sec.4ter) A-2 = red-seeker via A-1's actor, so pass --target_pos -9,9.
+    parser.add_argument('--target_pos', default='-9,-9',
+                        help='"x,y" the true reward landmark A-2 heads for')
+    parser.add_argument('--dump_arrays', action='store_true',
+                        help='save q2_all + true_q2_all to <label>_arrays.npz (for Fig.6b scatter)')
     args = parser.parse_args()
+    target_pos = np.array([float(v) for v in args.target_pos.split(',')])
     label = args.label or f'{args.exp_config}_eval'
 
-    exp_config = util.gen_exp_config(Args(args.exp_config, 0))
+    import random as _random
+    _random.seed(args.eval_seed); np.random.seed(args.eval_seed)
+    torch.manual_seed(args.eval_seed); torch.cuda.manual_seed_all(args.eval_seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+
+    exp_config = util.gen_exp_config(Args(args.exp_config, args.seed))
     model_config = util.gen_model_config(exp_config)
-    result_dir, model_dir, log_dir = util.gen_dirs(Args(args.exp_config, 0), test=False)
+    result_dir, model_dir, log_dir = util.gen_dirs(Args(args.exp_config, args.seed), test=False)
 
     model = getattr(models, exp_config.model.name)(model_config)
     model.to(DEVICE)
@@ -107,7 +126,7 @@ def main():
     p_mask_vision = exp_config.p_mask_vision
 
     a2_critic = CriticLSTM()
-    a2_critic.load_state_dict(torch.load(A2_CRITIC_PATH, map_location=DEVICE))
+    a2_critic.load_state_dict(torch.load(args.a2_critic_path, map_location=DEVICE))
     a2_critic.to(DEVICE)
     a2_critic.eval()
     for p in a2_critic.parameters():
@@ -116,7 +135,7 @@ def main():
     K = model.probe_actions.size(0)
     probe_actions_np = model.probe_actions.cpu().numpy()  # (K,2) unit vectors
 
-    with h5py.File(DATA_H5, 'r') as f:
+    with h5py.File(args.data_h5, 'r') as f:
         n_avail = f['train/self_vision'].shape[0]
         n_use = min(args.n_episodes, n_avail)
         print(f'Loading {n_use}/{n_avail} episodes ...')
@@ -131,7 +150,7 @@ def main():
     q2_all = np.zeros((n_use, T, K), dtype=np.float32)
     true_q2_all = np.zeros((n_use, T, K), dtype=np.float32)
 
-    torch.manual_seed(0)
+    torch.manual_seed(args.eval_seed)
     with torch.no_grad():
         for b0 in range(0, n_use, BATCH):
             b1 = min(b0 + BATCH, n_use)
@@ -199,7 +218,7 @@ def main():
 
     # --- item 4: direction-pattern match against Green ---
     op_flat = op_all[:, :T].reshape(-1, 2)
-    to_green = GREEN_POS[None, :] - op_flat  # (N*T, 2)
+    to_green = target_pos[None, :] - op_flat  # (N*T, 2)  [target set by --target_pos]
     to_green_norm = to_green / (np.linalg.norm(to_green, axis=1, keepdims=True) + 1e-8)
     q2_flat = q2_all.reshape(-1, K)
     argmax_idx = q2_flat.argmax(axis=1)
@@ -273,6 +292,8 @@ def main():
         'label': label,
         'exp_config': args.exp_config,
         'epoch': args.epoch,
+        'eval_seed': args.eval_seed,  # P0-0: full RNG re-seed at main() top; randomness source is p_mask_vision's
+                          # masking (model_util.mask -> torch.rand) -- reproducible run-to-run
         'n_episodes': n_use,
         'vision_l1_by_ablation': vision_l1,
         'q2_stats': {
@@ -292,13 +313,18 @@ def main():
         },
     }
     result.update(util.gen_result_metadata(
-        exp_config_name=args.exp_config, seed=0, dataset_name='r2_a1random_a2rl'))
+        exp_config_name=args.exp_config, seed=0, dataset_name=os.path.basename(os.path.dirname(args.data_h5))))
 
     os.makedirs(SAVE_DIR, exist_ok=True)
     out_path = os.path.join(SAVE_DIR, f'{label}.json')
     with open(out_path, 'w') as f:
         json.dump(result, f, indent=2)
     print(f'\nSaved: {out_path}')
+    if args.dump_arrays:
+        npz = os.path.join(SAVE_DIR, f'{label}_arrays.npz')
+        np.savez_compressed(npz, q2=q2_flat.astype('float32'),
+                            true_q2=true_q2_flat.astype('float32'))
+        print(f'Saved arrays: {npz}')
 
 
 if __name__ == '__main__':

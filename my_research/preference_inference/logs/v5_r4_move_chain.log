@@ -1,0 +1,7 @@
+[v5r4] Wed Sep  9 13:05:01 UTC 2026 start train 400ep
+[v5r4] train rc=0 last=00400.pth
+v5_r4_move/seed0                           E= 400 v_min= 19.583 m_W=  19.67 drift=  0.066 (i)OK  (ii)OK  -> CONVERGED  trans@3
+
+v5_r4_move                                 convergence rate: 1/1
+
+[v5r4] DONE Thu Sep 10 06:31:29 UTC 2026

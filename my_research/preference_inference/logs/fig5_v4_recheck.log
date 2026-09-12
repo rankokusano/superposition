@@ -1,0 +1,5 @@
+[recheck] Tue Sep  8 19:30:01 UTC 2026 retrain fig5_v4_r3stay400 Autoencoder (100ep) with fixed loader
+[recheck] train rc=120  last=00100.pth
+logs/fig5_v4_recheck.sh: line 9: logs/fig5_v4_recheck_test.log: No space left on device
+[recheck] test rc=1
+[recheck] DONE Tue Sep  8 20:11:45 UTC 2026

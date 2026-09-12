@@ -45,6 +45,9 @@ class PredictionRunnerBase(RunnerBase):
                     "self_position",
                     "other_motion",
                     "other_position",
+                    "other_vision",  # P0-6: A-2's own camera (save target for
+                                     # prediction-image montages); only present
+                                     # when the dataset carries it.
                 ]:
                     _data[modal] = {
                         itp: val[modal]

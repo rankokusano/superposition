@@ -1,0 +1,42 @@
+############## r3_a_direct_1000pretrain_400 seed0 (r2_a1random_a2rl)  start Mon Sep  7 11:02:51 UTC 2026 ##############
+  r3_a_direct_1000pretrain_400 seed0 rc=0  end Mon Sep  7 11:28:41 UTC 2026
+4-axis R^2 (mean +/- sd over checkpoints):
+  h1_to_self    : 0.9060 +/- 0.00150  (n=5)  raw=[0.9085, 0.906, 0.9067, 0.9043, 0.9047]
+  h2_to_self    : 0.0886 +/- 0.00074  (n=5)  raw=[0.088, 0.089, 0.0888, 0.0876, 0.0896]
+############## r3_a_direct_1000pretrain_400 seed1 (r2_a1random_a2rl)  start Mon Sep  7 11:28:41 UTC 2026 ##############
+  r3_a_direct_1000pretrain_400 seed1 rc=0  end Mon Sep  7 11:53:46 UTC 2026
+4-axis R^2 (mean +/- sd over checkpoints):
+  h1_to_self    : 0.9069 +/- 0.00300  (n=5)  raw=[0.9098, 0.9034, 0.9091, 0.9091, 0.9031]
+  h2_to_self    : 0.0873 +/- 0.00070  (n=5)  raw=[0.0871, 0.0872, 0.0875, 0.0862, 0.0883]
+############## r3_a_direct_1000pretrain_400 seed2 (r2_a1random_a2rl)  start Mon Sep  7 11:53:46 UTC 2026 ##############
+  r3_a_direct_1000pretrain_400 seed2 rc=0  end Mon Sep  7 12:18:49 UTC 2026
+4-axis R^2 (mean +/- sd over checkpoints):
+  h1_to_self    : 0.8971 +/- 0.00384  (n=5)  raw=[0.8906, 0.9013, 0.8992, 0.8994, 0.8952]
+  h2_to_self    : 0.0897 +/- 0.00211  (n=5)  raw=[0.0866, 0.0889, 0.0902, 0.0895, 0.0932]
+############## r3_stay_400 seed0 (r3_stay)  start Mon Sep  7 12:18:49 UTC 2026 ##############
+  r3_stay_400 seed0 rc=0  end Mon Sep  7 12:44:10 UTC 2026
+4-axis R^2 (mean +/- sd over checkpoints):
+  h1_to_self    : 0.7770 +/- 0.00263  (n=5)  raw=[0.7772, 0.7809, 0.7779, 0.7764, 0.7728]
+  h2_to_self    : 0.0580 +/- 0.00138  (n=5)  raw=[0.0604, 0.0562, 0.0581, 0.0573, 0.058]
+############## r3_stay_400 seed1 (r3_stay)  start Mon Sep  7 12:44:10 UTC 2026 ##############
+  r3_stay_400 seed1 rc=0  end Mon Sep  7 13:10:05 UTC 2026
+4-axis R^2 (mean +/- sd over checkpoints):
+  h1_to_self    : 0.7696 +/- 0.00433  (n=5)  raw=[0.774, 0.7728, 0.7714, 0.768, 0.7619]
+  h2_to_self    : 0.0563 +/- 0.00069  (n=5)  raw=[0.0566, 0.0574, 0.0554, 0.0562, 0.0557]
+############## r3_stay_400 seed2 (r3_stay)  start Mon Sep  7 13:10:05 UTC 2026 ##############
+  r3_stay_400 seed2 rc=0  end Mon Sep  7 13:35:39 UTC 2026
+4-axis R^2 (mean +/- sd over checkpoints):
+  h1_to_self    : 0.7586 +/- 0.01852  (n=5)  raw=[0.7691, 0.7722, 0.7608, 0.7223, 0.7685]
+  h2_to_self    : 0.0537 +/- 0.00320  (n=5)  raw=[0.0581, 0.0568, 0.0495, 0.0516, 0.0527]
+########## CONVERGENCE ##########
+r3_a_direct_1000pretrain_400/seed0         E= 400 v_min=   9.53 m_W= 10.109 drift=  0.295 (i)OK  (ii)OK  -> CONVERGED  trans@290
+r3_a_direct_1000pretrain_400/seed1         E= 400 v_min= 10.431 m_W= 11.397 drift=   0.35 (i)OK  (ii)OK  -> CONVERGED  trans@236
+r3_a_direct_1000pretrain_400/seed2         E= 400 v_min=  9.494 m_W= 11.429 drift=  1.983 (i)OK  (ii)NG  -> NOT-converged  trans@327
+r3_stay_400/seed0                          E= 400 v_min= 29.775 m_W= 31.959 drift=   3.35 (i)OK  (ii)NG  -> NOT-converged  trans@1
+r3_stay_400/seed1                          E= 400 v_min=  33.54 m_W= 41.824 drift= 23.055 (i)OK  (ii)NG  -> NOT-converged  trans@1
+r3_stay_400/seed2                          E= 400 v_min= 36.068 m_W= 57.152 drift=  1.453 (i)NG  (ii)OK  -> NOT-converged  trans@1
+
+r3_a_direct_1000pretrain_400               convergence rate: 2/3
+r3_stay_400                                convergence rate: 0/3
+
+[p0_3-late5] ALL DONE Mon Sep  7 13:35:39 UTC 2026

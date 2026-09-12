@@ -1,0 +1,6 @@
+usage: analyze_vpt.py [-h] [--epoch EPOCH] [--fontsize FONTSIZE]
+                      [--ytick_space YTICK_SPACE] [--mode MODE]
+                      [--with_coordinate] [--self_str SELF_STR]
+                      [--other_str OTHER_STR] [--margin MARGIN]
+                      [--save_vision] [--plot_every PLOT_EVERY]
+analyze_vpt.py: error: unrecognized arguments: --exp_config fig5_v5_base

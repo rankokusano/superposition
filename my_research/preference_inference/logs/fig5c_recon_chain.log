@@ -1,0 +1,36 @@
+[recon] Wed Sep  9 17:11:30 UTC 2026 fig5_v5_base grid test ep10
+[recon] fig5_v5_base ep10 rc=0
+[recon] Wed Sep  9 17:15:04 UTC 2026 fig5_v5_base grid test ep100
+[recon] fig5_v5_base ep100 rc=0
+[recon] === fig5_v5_base ep10 vpt result ===
+self_true_and_self_rec: mean: 0.071009, std: 0.030104
+other_true_and_other_rec: mean: 0.135963, std: 0.039076
+self_true_and_other_rec: mean: 0.131774, std: 0.046335
+other_true_and_self_rec: mean: 0.156386, std: 0.041663
+
+[recon] === fig5_v5_base ep100 vpt result ===
+self_true_and_self_rec: mean: 0.072209, std: 0.031458
+other_true_and_other_rec: mean: 0.133521, std: 0.039389
+self_true_and_other_rec: mean: 0.129823, std: 0.044868
+other_true_and_self_rec: mean: 0.158410, std: 0.042989
+
+-rw-r--r-- 1 root root 14344942808 Sep  9 17:18 data/result/fig5_v5_base/0/test/grid_recon/save/saved.h5
+[recon] Wed Sep  9 17:23:55 UTC 2026 fig5_v4_r3stay400 grid test ep10
+[recon] fig5_v4_r3stay400 ep10 rc=0
+[recon] Wed Sep  9 17:27:34 UTC 2026 fig5_v4_r3stay400 grid test ep100
+[recon] fig5_v4_r3stay400 ep100 rc=0
+[recon] === fig5_v4_r3stay400 ep10 vpt result ===
+self_true_and_self_rec: mean: 0.046908, std: 0.014557
+other_true_and_other_rec: mean: 0.058038, std: 0.023738
+self_true_and_other_rec: mean: 0.136305, std: 0.047370
+other_true_and_self_rec: mean: 0.148485, std: 0.052476
+
+[recon] === fig5_v4_r3stay400 ep100 vpt result ===
+self_true_and_self_rec: mean: 0.045719, std: 0.014477
+other_true_and_other_rec: mean: 0.058056, std: 0.025274
+self_true_and_other_rec: mean: 0.135707, std: 0.047094
+other_true_and_self_rec: mean: 0.149148, std: 0.052688
+
+-rw-r--r-- 1 root root 14344942808 Sep  9 17:31 data/result/fig5_v4_r3stay400/0/test/grid_recon/save/saved.h5
+/dev/sdb1       894G  865G   30G  97% /work
+[recon] DONE Wed Sep  9 17:36:04 UTC 2026

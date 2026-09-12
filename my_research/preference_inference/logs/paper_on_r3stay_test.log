@@ -1,0 +1,11 @@
+epoch: 200: 0it [00:00, ?it/s]epoch: 200: 0it [00:00, ?it/s]
+Traceback (most recent call last):
+  File "test.py", line 84, in <module>
+    runner.eval_epoch(
+  File "/work/my_research/preference_inference/exp/runner.py", line 94, in eval_epoch
+    for seq_loader, batch_index in data_iter:
+  File "/usr/local/lib/python3.8/site-packages/tqdm/std.py", line 1180, in __iter__
+    for obj in iterable:
+  File "/work/my_research/preference_inference/exp/loader.py", line 111, in __next__
+    batch_end = batch_begin + self.batch_size
+TypeError: unsupported operand type(s) for +: 'int' and 'NoneType'

@@ -1,0 +1,41 @@
+########## r4_move_sym RED-target ep360 ##########
+Loading 3000/3000 episodes ...
+  mean cos_sim(argmax_dir, true_dir_to_Green) = -0.5793  (1.0=perfect, 0.0=chance/orthogonal, -1.0=opposite)
+  mean angular error = 127.51 deg  (chance expectation for uniform random 8-way pick ~ 90-101 deg)
+  fraction within 45deg of true Green direction: 3.48%  (chance ~ 2/8=25%)
+  overall: mean=-0.0614 std=0.7987 range=[-1.0000,1.0000]
+  true Q2 std (for context): 0.5927  Q̂2 std: 0.7987
+Saved: data/result/baseline_v4/r4_move_sym_red_ep360.json
+########## r4_move_sym RED-target ep370 ##########
+Loading 3000/3000 episodes ...
+  mean cos_sim(argmax_dir, true_dir_to_Green) = -0.4395  (1.0=perfect, 0.0=chance/orthogonal, -1.0=opposite)
+  mean angular error = 117.11 deg  (chance expectation for uniform random 8-way pick ~ 90-101 deg)
+  fraction within 45deg of true Green direction: 11.21%  (chance ~ 2/8=25%)
+  overall: mean=-0.0666 std=0.7970 range=[-1.0000,1.0000]
+  true Q2 std (for context): 0.5927  Q̂2 std: 0.7970
+Saved: data/result/baseline_v4/r4_move_sym_red_ep370.json
+########## r4_move_sym RED-target ep380 ##########
+Loading 3000/3000 episodes ...
+  mean cos_sim(argmax_dir, true_dir_to_Green) = -0.3665  (1.0=perfect, 0.0=chance/orthogonal, -1.0=opposite)
+  mean angular error = 111.71 deg  (chance expectation for uniform random 8-way pick ~ 90-101 deg)
+  fraction within 45deg of true Green direction: 15.24%  (chance ~ 2/8=25%)
+  overall: mean=-0.0687 std=0.7919 range=[-1.0000,1.0000]
+  true Q2 std (for context): 0.5927  Q̂2 std: 0.7919
+Saved: data/result/baseline_v4/r4_move_sym_red_ep380.json
+########## r4_move_sym RED-target ep390 ##########
+Loading 3000/3000 episodes ...
+  mean cos_sim(argmax_dir, true_dir_to_Green) = -0.4783  (1.0=perfect, 0.0=chance/orthogonal, -1.0=opposite)
+  mean angular error = 120.05 deg  (chance expectation for uniform random 8-way pick ~ 90-101 deg)
+  fraction within 45deg of true Green direction: 8.63%  (chance ~ 2/8=25%)
+  overall: mean=-0.0586 std=0.8151 range=[-1.0000,1.0000]
+  true Q2 std (for context): 0.5927  Q̂2 std: 0.8151
+Saved: data/result/baseline_v4/r4_move_sym_red_ep390.json
+########## r4_move_sym RED-target ep400 ##########
+Loading 3000/3000 episodes ...
+  mean cos_sim(argmax_dir, true_dir_to_Green) = -0.4495  (1.0=perfect, 0.0=chance/orthogonal, -1.0=opposite)
+  mean angular error = 117.93 deg  (chance expectation for uniform random 8-way pick ~ 90-101 deg)
+  fraction within 45deg of true Green direction: 10.32%  (chance ~ 2/8=25%)
+  overall: mean=-0.0680 std=0.7837 range=[-1.0000,1.0000]
+  true Q2 std (for context): 0.5927  Q̂2 std: 0.7837
+Saved: data/result/baseline_v4/r4_move_sym_red_ep400.json
+[dir-fix] DONE

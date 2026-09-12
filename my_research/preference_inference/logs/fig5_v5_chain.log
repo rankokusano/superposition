@@ -1,0 +1,6 @@
+[fig5-v5] Tue Sep  8 18:53:06 UTC 2026 train Autoencoder (fig5_v5_base, 100ep)
+[fig5-v5] train rc=120  last=00026.pth
+[fig5-v5] Tue Sep  8 20:11:40 UTC 2026 test.py on grid -> saved.h5
+[fig5-v5] test rc=120
+[fig5-v5] NO saved.h5 -- test step failed
+[fig5-v5] DONE Tue Sep  8 20:11:46 UTC 2026

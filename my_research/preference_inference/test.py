@@ -26,8 +26,10 @@ if __name__ == '__main__':
 
     exp_config = util.gen_exp_config(args)
     model_config = util.gen_model_config(exp_config)
+    test_name = args.test_name if args.test_name is not None \
+        else args.test_data_name
     result_dir, model_dir, log_dir, save_dir = util.gen_dirs(
-        args, test=True, test_name=args.test_data_name)
+        args, test=True, test_name=test_name)
 
     if args.mask_off:
         exp_config.p_mask_vision = 0
@@ -65,6 +67,16 @@ if __name__ == '__main__':
     )
 
     model.eval()
+
+    # P0-0: deterministic evaluation. util.mask() draws torch.rand every
+    # forward, so with p_mask_vision=0.99 the eval loss depends on which
+    # timesteps get masked. Re-seed here so the same checkpoint evaluates
+    # bit-identically. --eval_seed unset keeps the legacy (non-seeded here)
+    # behaviour.
+    if args.eval_seed is not None:
+        util.seed_all(args.eval_seed)
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
 
     with torch.no_grad():
 

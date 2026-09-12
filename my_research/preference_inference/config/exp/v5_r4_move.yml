@@ -1,0 +1,39 @@
+# P2-a (research_plan Sec.P2-a, promoted to P1): identical to r4_move_exp3parity.yml
+# EXCEPT pretrain = v5_base_l1 ep200 (Encoder retrained under probe-Q) instead of r3_stay_400.
+# Isolates the Encoder factor from the Q-range factor (P1.75).
+model:
+    name: SuperpositionNetworkProbeQValueEstimation
+    config: default
+    mode: ~
+runner: MotionGenerationPredictionFeaturePredictionRunner  # P0-4: exp3-parity (see r4_ve_exp3parity.yml). Renamed alias GeneratorTrainingFeaturePredictionRunner planned.
+data:
+    name: r2_a1random_a2rl
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+    loss_function: l1_loss
+    pretrain:
+        exp_config: v5_base_l1
+        seed: 0
+        epoch: 200
+    batch_size: 10
+    max_epochs: 400
+    save_interval: 10
+    test_interval: 10
+    optimizer: AdamW
+    optim_config:
+        default:
+            lr: 0.001
+            weight_decay: 0.01
+        freeze:
+            - vision_encoder_module
+            - vision_decoder_module
+            - integration_module
+            - feature_prediction_module
+            - share_lns
+            - probe_critic
+            - superposition_module
+        per_params:
+            - name: bias
+              args:
+                  weight_decay: 0.0

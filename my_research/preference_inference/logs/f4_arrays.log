@@ -1,0 +1,19 @@
+  overall: mean=-0.0065 std=0.7828 range=[-1.0000,1.0000]
+  Saved heatmap: data/result/baseline_v4/f4_p0_4_direction_heatmap.png
+  overall (flattened) correlation: -0.0353
+  true Q2 std (for context): 0.0092  Q̂2 std: 0.7828
+Saved: data/result/baseline_v4/f4_p0_4.json
+Saved arrays: data/result/baseline_v4/f4_p0_4_arrays.npz
+  overall: mean=-0.0680 std=0.7837 range=[-1.0000,1.0000]
+  Saved heatmap: data/result/baseline_v4/f4_p1_75_direction_heatmap.png
+  overall (flattened) correlation: 0.0250
+  true Q2 std (for context): 0.5927  Q̂2 std: 0.7837
+Saved: data/result/baseline_v4/f4_p1_75.json
+Saved arrays: data/result/baseline_v4/f4_p1_75_arrays.npz
+  overall: mean=-0.3298 std=0.7057 range=[-1.0000,1.0000]
+  Saved heatmap: data/result/baseline_v4/f4_p2_a_direction_heatmap.png
+  overall (flattened) correlation: 0.0298
+  true Q2 std (for context): 0.0092  Q̂2 std: 0.7057
+Saved: data/result/baseline_v4/f4_p2_a.json
+Saved arrays: data/result/baseline_v4/f4_p2_a_arrays.npz
+[f4-arrays] DONE

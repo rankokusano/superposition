@@ -1,0 +1,5 @@
+usage: regression_baseline_v4.py [-h] --saved_h5 SAVED_H5 [--epoch EPOCH]
+                                 [--mode MODE] --label LABEL
+                                 [--exp_config EXP_CONFIG] [--seed SEED]
+                                 [--dataset_name DATASET_NAME]
+regression_baseline_v4.py: error: the following arguments are required: --saved_h5, --label
