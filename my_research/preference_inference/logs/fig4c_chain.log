@@ -1,0 +1,13 @@
+[fig4c] Wed Sep  9 07:32:10 UTC 2026 test exp1_l1_1000 ep200 on self_random_other_stay_1000 (state only)
+[fig4c] exp1_l1_1000 rc=0 -> data/result/exp1_l1_1000/0/test/self_random_other_stay_1000_fig4c/save/saved.h5
+-rw-r--r-- 1 root root 208019120 Sep  9 07:33 data/result/exp1_l1_1000/0/test/self_random_other_stay_1000_fig4c/save/saved.h5
+[fig4c] Wed Sep  9 07:33:40 UTC 2026 test v5_base_l1 ep200 on r3_stay (state only)
+[fig4c] v5_base_l1 rc=0 -> data/result/v5_base_l1/0/test/r3_stay_fig4c/save/saved.h5
+-rw-r--r-- 1 root root 624019120 Sep  9 07:38 data/result/v5_base_l1/0/test/r3_stay_fig4c/save/saved.h5
+[fig4c] Wed Sep  9 07:38:04 UTC 2026 test v5_base_l1 ep200 on r2_a1random_a2rl (state only)
+[fig4c] v5_base_l1 rc=0 -> data/result/v5_base_l1/0/test/r2_a1random_a2rl_fig4c/save/saved.h5
+-rw-r--r-- 1 root root 624019120 Sep  9 07:42 data/result/v5_base_l1/0/test/r2_a1random_a2rl_fig4c/save/saved.h5
+[fig4c] Wed Sep  9 07:42:31 UTC 2026 test r3_a_direct_1000pretrain_400 ep400 on r2_a1random_a2rl (state only)
+[fig4c] r3_a_direct_1000pretrain_400 rc=0 -> data/result/r3_a_direct_1000pretrain_400/0/test/r2_a1random_a2rl_fig4c/save/saved.h5
+-rw-r--r-- 1 root root 624019120 Sep  9 07:47 data/result/r3_a_direct_1000pretrain_400/0/test/r2_a1random_a2rl_fig4c/save/saved.h5
+[fig4c] DONE Wed Sep  9 07:47:10 UTC 2026

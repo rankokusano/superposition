@@ -1,0 +1,7 @@
+[fig5v5-t3] Wed Sep  9 11:43:14 UTC 2026 test on grid (batch 100)
+[fig5v5-t3] test rc=0
+=== fig5_v5 RESULT ===
+head: cannot open 'data/result/fig5_v5_base/0/test/grid/save/vpt/0/histogram/result.txt' for reading: No such file or directory
+--- cleanup 7GB grid saved.h5 (result.txt 取得済) ---
+/dev/sdb1       894G  837G   58G  94% /work
+[fig5v5-t3] DONE Wed Sep  9 11:47:00 UTC 2026

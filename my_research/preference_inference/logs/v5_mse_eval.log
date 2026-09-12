@@ -1,0 +1,7 @@
+[v5-mse-eval] r3_stay rc=0
+[v5-mse-eval] common rc=0
+v5_base_mse/seed0                          E= 400 v_min= 19.417 m_W= 20.034 drift=  0.118 (i)OK  (ii)OK  -> CONVERGED  trans@27
+
+v5_base_mse                                convergence rate: 1/1
+
+[v5-mse-eval] DONE Tue Sep  8 19:34:03 UTC 2026

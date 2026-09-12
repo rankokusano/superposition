@@ -1,0 +1,50 @@
+# P1 v5 base stage, L1 refine (research_plan_v4_v5.md Sec.4.2). Q-input version
+# of the paper's exp1_l1: everything frozen EXCEPT the decoder, refined with
+# L1 loss. SM is frozen here, so no phase-transition concern -> 200ep (same as
+# the paper) is enough; the long budget is only on v5_base_mse.
+#
+# Diff vs ROOT config/exp/exp1_l1.yml (4 lines):
+#   model.name : SuperpositionNetworkFeaturePrediction -> SuperpositionNetworkProbeQ
+#   data.name  : self_random_other_stay -> r3_stay
+#   pretrain   : exp1_mse ep200 -> v5_base_mse ep400
+#   train.freeze: [...] -> [...] + probe_critic  (A-1's critic is a given)
+# max_epochs stays 200 (decoder-only). Everything else identical: l1_loss,
+# batch 10, save_interval 10, test_interval 10, AdamW, lr 1e-3, wd 1e-2, bias wd=0.
+#
+# freeze list leaves ONLY vision_decoder_module trainable (substring match:
+# "vision_encoder_module" catches both self_/other_ encoders).
+model:
+    name: SuperpositionNetworkProbeQ
+    config: default
+    mode: ~
+runner: PredictionFeaturePredictionRunner
+data:
+    name: r3_stay
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+    loss_function: l1_loss
+    pretrain:
+        exp_config: v5_base_mse
+        seed: 0
+        epoch: 400
+    batch_size: 10
+    max_epochs: 200
+    save_interval: 10
+    test_interval: 10
+    optimizer: AdamW
+    optim_config:
+        default:
+            lr: 0.001
+            weight_decay: 0.01
+        freeze:
+            - superposition_module
+            - vision_encoder_module
+            - integration_module
+            - share_lns
+            - feature_prediction_module
+            - probe_critic
+        per_params:
+            - name: bias
+              args:
+                  weight_decay: 0.0

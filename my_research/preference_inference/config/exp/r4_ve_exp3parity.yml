@@ -1,0 +1,44 @@
+# P0-2 (research_plan_v4_v5.md Sec.P0-2): identical to r4_ve.yml EXCEPT the
+# runner. r4_ve.yml uses PredictionFeaturePredictionRunner, which (a) detaches
+# ss/os before predict_feature so L_feat_other never reaches VE, and (b) masks
+# vision at p_mask_vision=0.99 (1% leak). The original paper's exp3 (adding MG)
+# uses MotionGenerationPredictionFeaturePredictionRunner: NO detach (FPM_other
+# gradient flows FPM -> os -> SM -> generator) and full masking (p=1.0 for t>0).
+# This config makes v4's VE receive the exact same training signal the paper's
+# MG did, so an R4 failure here is attributable to the mechanism, not the build.
+model:
+    name: SuperpositionNetworkProbeQValueEstimation
+    config: default
+    mode: ~
+runner: MotionGenerationPredictionFeaturePredictionRunner
+data:
+    name: r2_a1random_a2rl
+load_state_dict_strict: False
+p_mask_vision: 0.99  # ignored by MotionGeneration* runner (it forces p=1 for t>0)
+train:
+    loss_function: l1_loss
+    pretrain:
+        exp_config: r3_a_direct_1000pretrain
+        seed: 0
+        epoch: 200
+    batch_size: 10
+    max_epochs: 200
+    save_interval: 10
+    test_interval: 10
+    optimizer: AdamW
+    optim_config:
+        default:
+            lr: 0.001
+            weight_decay: 0.01
+        freeze:
+            - vision_encoder_module
+            - vision_decoder_module
+            - integration_module
+            - feature_prediction_module
+            - share_lns
+            - probe_critic
+            - superposition_module
+        per_params:
+            - name: bias
+              args:
+                  weight_decay: 0.0

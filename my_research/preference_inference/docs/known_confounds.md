@@ -317,3 +317,56 @@ prerequisite check, not an R3 criterion. Revisit once R3-A's final
 qualitative/quantitative viewpoint-taking check — at that point, prefer
 adapting `analyze_vpt.py` / the `Autoencoder`+grid-dataset approach over
 another ad-hoc implementation.
+
+## Position–preference confound: classifying a preference *label* from h² is indistinguishable from reading position
+
+**Raised:** 2026-09-03, from re-analysing step3 Phase 3 (the older MG-only
+line, `my_research/README.md`). Re-analysis script:
+`my_research/step3/phase3/analyze_phase3_baselines.py`.
+
+step3 Phase 3 reported "h² preference-classification accuracy rises from
+0.271 (t=0) to 0.771 (t=65), therefore h² progressively encodes the
+other's preference." A position baseline breaks that reading:
+
+- Phase 3's A-2 is a `LandmarkFollowerAgent` walking straight to its
+  preferred corner. The four preferences' A-2 positions go from
+  separation-score 0.11 (t=0) to 4.7 (t=15) to ~38 (t>=26, saturated).
+- A **pos baseline** (classify preference from A-2's true (x,y) with the
+  same LogReg + split) reaches **acc = 1.00 at t=15** and stays there.
+  h² classification (max ~0.74–0.77) is **below pos at every t>0**, by
+  0.24–0.58. This number already existed in the old `phase3.log`
+  (`pos max: 1.0000 at step 14`) but was never carried into the README.
+- h² is known to encode A-2 position (h²→A-2-pos R² ≈ 0.81–0.97 across
+  exp1_l1 / v4). So h²'s preference signal can be **fully mediated by
+  h²'s internal A-2-position estimate**. Without a position-controlled
+  analysis (residualise h² against A-2 position before classifying, or
+  use an A-2 policy where position does *not* reveal preference),
+  "position tracking" and "preference/value understanding" cannot be
+  separated.
+- The Cyan-only accuracy spike and the PC1 "Cyan vs not-Cyan" split are
+  h²-specific (the pos confusion matrix is symmetric across all four
+  corners). That is a viewpoint-dependence signature, not evidence of
+  preference understanding.
+- **mg7's "h² PCA preference-separation score 2.72" likely carries the
+  same confound** (A-2 is `MultiPrefAgent`, position reveals preference;
+  the Green–Cyan-largest / Red–Blue-smallest pattern is also explainable
+  from position). mg7's VE line is retired, no re-analysis planned; the
+  pivot to the MG-only approach stands regardless (the VE Q-map did not
+  separate either), but "h² encoded preference" should be stated as "h²
+  encoded (preference-correlated) A-2 position."
+
+**v4 implication — R5 needs an explicit control.** R3/R4 judge on
+Q̂²↔A-2-true-Q correlation and Q̂²→A-2-pos vs →A-1-pos R² (§7.9), which
+is confound-resistant, so existing R3/R4 verdicts stand. But **R5**
+(self-projection bias) measures a Red→Green shift in Q̂² while A-2 walks
+toward Green — position, vision and (correlated) Q all leak "Green
+preference," so Q̂² tracking A-2's *position* would produce the same
+transition curve as Q̂² tracking A-2's *value*. R5 design must add:
+(a) residualise Q̂² against A-2 position before correlating with
+Red-/Green-based true Q; (b) one control condition with an A-2 policy
+that decorrelates position from preference; (c) plot "A-2 position vs
+Red-/Green-based true Q" on the same axis to show the Q̂² transition is
+not position-driven. Recorded in `v4_experiment_log.md` §7.13 and §8.3.
+
+**Related:** §7.1 (h¹→other leak), §7.4 / the green-aversion section
+above (A-1's green-aversion may also suppress R5).

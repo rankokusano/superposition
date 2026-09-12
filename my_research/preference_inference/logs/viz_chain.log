@@ -1,0 +1,10 @@
+[viz] Wed Sep  9 13:06:48 UTC 2026 v5_base_l1 ep200 on r3_stay_viz20
+[viz] v5_base_l1 rc=0
+   ['eval/other_position/input', 'eval/other_position/truth', 'eval/self_position/input', 'eval/self_position/truth', 'eval/self_vision/input', 'eval/self_vision/prediction', 'eval/self_vision/truth']
+[viz] Wed Sep  9 13:07:01 UTC 2026 r3_stay_400 ep400 on r3_stay_viz20
+[viz] r3_stay_400 rc=0
+   ['eval/other_position/input', 'eval/other_position/truth', 'eval/self_position/input', 'eval/self_position/truth', 'eval/self_vision/input', 'eval/self_vision/prediction', 'eval/self_vision/truth']
+[viz] Wed Sep  9 13:07:15 UTC 2026 exp1_l1_1000 ep200 on r3_stay_viz20
+[viz] exp1_l1_1000 rc=0
+   ['eval/other_position/input', 'eval/other_position/truth', 'eval/self_position/input', 'eval/self_position/truth', 'eval/self_vision/input', 'eval/self_vision/prediction', 'eval/self_vision/truth']
+[viz] DONE Wed Sep  9 13:07:29 UTC 2026

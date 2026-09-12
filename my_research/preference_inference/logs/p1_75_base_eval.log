@@ -1,0 +1,16 @@
+[base-eval] waiting for dir-fix ...
+[base-eval] Mon Sep  7 05:45:43 UTC 2026 eval r3_stay_400/0 ep400 on r2_a1red_a2red (base h2->self reference)
+=== [2/5] regression_baseline_v4.py -> 4-axis R^2 ===
+=== r3_stay_400_s0_ep400_r2_a1red_a2red_es0 R^2 (epoch 400, mode eval) ===
+h1 -> self  pos: 0.6673
+h1 -> other pos: 0.5749
+h2 -> self  pos: 0.0561
+h2 -> other pos: 0.8021
+Saved: data/result/baseline_v4/r3_stay_400_s0_ep400_r2_a1red_a2red_es0_r2.{txt,json}
+q1_vec -> self_position  R^2 = 0.5989
+q1_vec -> other_position R^2 = 0.0436
+(for comparison: h1 [after LSTM recurrence] -> self_position R^2 = 0.9086-0.9092 per r3_a_direct_v2_r2.json / the probe-Q ablation baseline)
+Saved: data/result/baseline_v4/r3_stay_400_s0_ep400_r2_a1red_a2red_es0_probeq.json
+Saved: data/result/baseline_v4/r3_stay_400_training_curve.png
+=== DONE: r3_stay_400_s0_ep400_r2_a1red_a2red_es0  ->  data/result/baseline_v4/r3_stay_400_s0_ep400_r2_a1red_a2red_es0_*.{json,txt}  +  data/result/r3_stay_400/0/test/r2_a1red_a2red_canon_es0/save/saved.h5 ===
+[base-eval] DONE

@@ -27,6 +27,11 @@ class SequenceLoader(object):
 
         x['other_motion'] = self.data['other_motion'][:, self.t]
         x['other_position'] = self.data['other_position'][:, self.t]
+        # other_vision (A-2's own camera) if the dataset carries it -- needed
+        # only as a save target for prediction-image montages (P0-6). Backward
+        # compatible: absent for the paper's non-R2 datasets.
+        if 'other_vision' in self.data:
+            x['other_vision'] = self.data['other_vision'][:, self.t]
 
         # Approach B: include A-1 Q-values if present in data
         if 'a1_q_values' in self.data:
@@ -43,6 +48,8 @@ class SequenceLoader(object):
 
         y['other_motion'] = self.data['other_motion'][:, self.t + 1]
         y['other_position'] = self.data['other_position'][:, self.t + 1]
+        if 'other_vision' in self.data:
+            y['other_vision'] = self.data['other_vision'][:, self.t + 1]
 
         current_t = self.t
         self.t += 1
@@ -135,6 +142,14 @@ class SeqLoader(object):
         batch['other_position'] = torch.from_numpy(batch['other_position']).to(
             self.device)
 
+        # other_vision (A-2's own camera), P0-6: pass through as a save target
+        # for prediction-image montages. Guarded -- absent for paper datasets.
+        if 'other_vision' in self.data:
+            batch['other_vision'] = util.scale_vision(
+                util.transpose_vision(self.data['other_vision'][batch_index]))
+            batch['other_vision'] = torch.from_numpy(batch['other_vision']).to(
+                self.device)
+
         # Approach B: include A-1 Q-values if present
         if 'a1_q_values' in self.data:
             batch['a1_q_values'] = self.data['a1_q_values'][batch_index]
@@ -184,27 +199,33 @@ class FlattenLoader(object):
         batch_index = self.order[batch_begin:batch_end]
         batch_index = numpy.sort(batch_index)
 
-        batch_index = numpy.unravel_index(batch_index,
-                                          (self._n_data, self._n_steps))
+        rows, cols = numpy.unravel_index(batch_index,
+                                         (self._n_data, self._n_steps))
+
+        # h5py >=3 rejects fancy point-selection data[rows, cols] unless each
+        # index array is itself strictly increasing (cols is not). Load the
+        # unique rows as a hyperslab, then index cols in numpy. Equivalent
+        # result, order preserved.
+        uniq_rows, inv = numpy.unique(rows, return_inverse=True)
+
+        def _read(name):
+            sub = self.data[name][uniq_rows]
+            return sub[inv, cols]
 
         batch = {}
 
         batch['self_vision'] = util.scale_vision(
-            util.transpose_vision(
-                self.data['self_vision'][batch_index[0], batch_index[1]],
-                dim=4))
+            util.transpose_vision(_read('self_vision'), dim=4))
         batch['self_vision'] = torch.from_numpy(batch['self_vision']).to(
             self.device)
 
-        batch['self_position'] = self.data['self_position'][batch_index[0],
-                                                            batch_index[1]]
-        batch['self_position'] = torch.from_numpy(batch['self_position']).to(
+        batch['self_position'] = torch.from_numpy(_read('self_position')).to(
             self.device)
 
-        batch['other_position'] = self.data['other_position'][batch_index[0],
-                                                              batch_index[1]]
-        batch['other_position'] = torch.from_numpy(batch['other_position']).to(
+        batch['other_position'] = torch.from_numpy(_read('other_position')).to(
             self.device)
+
+        batch_index = (rows, cols)
 
         self.i += self.batch_size
 

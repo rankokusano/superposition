@@ -1,0 +1,47 @@
+[p2a-eval] Thu Sep 10 06:32:48 UTC 2026 training done, running late-5 eval
+v5_r4_move/seed0                           E= 400 v_min= 19.583 m_W=  19.67 drift=  0.066 (i)OK  (ii)OK  -> CONVERGED  trans@3
+
+v5_r4_move                                 convergence rate: 1/1
+
+[p2a-eval] late-5 harness rc=0
+  mean cos_sim(argmax_dir, true_dir_to_Green) = -0.3919  (1.0=perfect, 0.0=chance/orthogonal, -1.0=opposite)
+=== Item 1: self_vision L1 loss, real Q̂2 vs ablated ===
+  real           : 0.2421
+  zero           : 0.2346
+  true_q2        : 0.2381
+  real vs zero:           delta=+0.0075  (Q̂2 does not help)
+  real vs constant_mean:  delta=+0.0049  (directional structure does not help)
+Saved: data/result/baseline_v4/v5_r4_move_ep360.json
+  mean cos_sim(argmax_dir, true_dir_to_Green) = -0.3766  (1.0=perfect, 0.0=chance/orthogonal, -1.0=opposite)
+=== Item 1: self_vision L1 loss, real Q̂2 vs ablated ===
+  real           : 0.2420
+  zero           : 0.2345
+  true_q2        : 0.2378
+  real vs zero:           delta=+0.0075  (Q̂2 does not help)
+  real vs constant_mean:  delta=+0.0050  (directional structure does not help)
+Saved: data/result/baseline_v4/v5_r4_move_ep370.json
+  mean cos_sim(argmax_dir, true_dir_to_Green) = -0.3673  (1.0=perfect, 0.0=chance/orthogonal, -1.0=opposite)
+=== Item 1: self_vision L1 loss, real Q̂2 vs ablated ===
+  real           : 0.2422
+  zero           : 0.2347
+  true_q2        : 0.2380
+  real vs zero:           delta=+0.0075  (Q̂2 does not help)
+  real vs constant_mean:  delta=+0.0048  (directional structure does not help)
+Saved: data/result/baseline_v4/v5_r4_move_ep380.json
+  mean cos_sim(argmax_dir, true_dir_to_Green) = -0.3828  (1.0=perfect, 0.0=chance/orthogonal, -1.0=opposite)
+=== Item 1: self_vision L1 loss, real Q̂2 vs ablated ===
+  real           : 0.2423
+  zero           : 0.2346
+  true_q2        : 0.2380
+  real vs zero:           delta=+0.0077  (Q̂2 does not help)
+  real vs constant_mean:  delta=+0.0051  (directional structure does not help)
+Saved: data/result/baseline_v4/v5_r4_move_ep390.json
+  mean cos_sim(argmax_dir, true_dir_to_Green) = -0.3726  (1.0=perfect, 0.0=chance/orthogonal, -1.0=opposite)
+=== Item 1: self_vision L1 loss, real Q̂2 vs ablated ===
+  real           : 0.2416
+  zero           : 0.2345
+  true_q2        : 0.2377
+  real vs zero:           delta=+0.0071  (Q̂2 does not help)
+  real vs constant_mean:  delta=+0.0047  (directional structure does not help)
+Saved: data/result/baseline_v4/v5_r4_move_ep400.json
+[p2a-eval] DONE Thu Sep 10 07:25:48 UTC 2026  -- saved.h5 cleanup pending manual review of JSONs

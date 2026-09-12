@@ -1,0 +1,13 @@
+[correct] waiting for main eval-chain ...
+[correct] Mon Sep  7 05:25:31 UTC 2026 running corrected P1.75 r4_ve_eval at last 5 ckpts
+########## r4_move_sym CORRECT ep360 ##########
+                     [--eval_seed EVAL_SEED] [--a2_critic_path A2_CRITIC_PATH]
+########## r4_move_sym CORRECT ep370 ##########
+                     [--eval_seed EVAL_SEED] [--a2_critic_path A2_CRITIC_PATH]
+########## r4_move_sym CORRECT ep380 ##########
+                     [--eval_seed EVAL_SEED] [--a2_critic_path A2_CRITIC_PATH]
+########## r4_move_sym CORRECT ep390 ##########
+                     [--eval_seed EVAL_SEED] [--a2_critic_path A2_CRITIC_PATH]
+########## r4_move_sym CORRECT ep400 ##########
+                     [--eval_seed EVAL_SEED] [--a2_critic_path A2_CRITIC_PATH]
+[correct] DONE Mon Sep  7 05:25:37 UTC 2026

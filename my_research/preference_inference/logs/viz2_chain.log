@@ -1,0 +1,7 @@
+[viz2] v5_base_l1 rc=0
+   ['eval/other_position/input', 'eval/other_position/truth', 'eval/other_vision/input', 'eval/other_vision/truth', 'eval/self_position/input', 'eval/self_position/truth', 'eval/self_vision/input', 'eval/self_vision/prediction', 'eval/self_vision/truth']
+[viz2] r3_stay_400 rc=0
+   ['eval/other_position/input', 'eval/other_position/truth', 'eval/other_vision/input', 'eval/other_vision/truth', 'eval/self_position/input', 'eval/self_position/truth', 'eval/self_vision/input', 'eval/self_vision/prediction', 'eval/self_vision/truth']
+[viz2] exp1_l1_1000 rc=0
+   ['eval/other_position/input', 'eval/other_position/truth', 'eval/other_vision/input', 'eval/other_vision/truth', 'eval/self_position/input', 'eval/self_position/truth', 'eval/self_vision/input', 'eval/self_vision/prediction', 'eval/self_vision/truth']
+DONE

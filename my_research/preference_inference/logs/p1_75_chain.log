@@ -1,0 +1,11 @@
+[chain] waiting for collection to finish ...
+[chain] collection process gone. verifying h5 ...
+[chain] h5 OK  train/self_vision (3000, 101, 16, 64, 3)  test/self_vision (300, 101, 16, 64, 3)  attrs: {'a2_actor_path': '/work/my_research/preference_inference/data/model/v3_rl_actor.pth', 'a2_preference': 'Red', 'dataset': 'r2_a1red_a2red', 'seed': 926877711, 'seed_key': 'r2_a1red_a2red'}
+[chain] tail of collection log:
+  [train] done.
+Collecting [test]: 300 episodes x 101 steps
+  test: 200/300 episodes done
+  [test] done.
+Saved: /work/my_research/preference_inference/data/data/r2_a1red_a2red/data.h5
+[chain] launching r4_move_sym training on GPU7 -> logs/p1_75_train_r4_move_sym.log
+[chain] train pid 57975

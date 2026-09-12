@@ -1,0 +1,47 @@
+# P1 v5 base stage (research_plan_v4_v5.md Sec.4.2). The Q-input version of
+# the paper's exp1_mse: Visual Encoder + SM + Integration + Decoder + FPM all
+# trained FROM SCRATCH (pretrain: ~), so we can test whether the mechanism
+# self-organises self/other visual representations when the SM side-channel
+# is a probe-Q vector instead of m_t.
+#
+# Diff vs ROOT config/exp/exp1_mse.yml (5 lines):
+#   model.name : SuperpositionNetworkFeaturePrediction -> SuperpositionNetworkProbeQ  (m_t -> 8-dim probe-Q)
+#   data.name  : self_random_other_stay -> r3_stay  (Q-input dataset; A-2 static, same "other stay" semantics)
+#   train.freeze: ~ -> [probe_critic]  (A-1's SAC critic is a given, must NOT be trained)
+#   train.max_epochs : 200 -> 400  (R3-A/R3-stay both needed 400ep to phase-transition; scratch is likely slower)
+#   train.save_interval : 1 -> 10  (exp1_mse used 1 for Fig.5 epoch selection; not needed, saves ~1GB disk)
+# Everything else identical: mse_loss, batch 10, test_interval 10, AdamW, lr 1e-3,
+# weight_decay 1e-2, per_params (bias wd=0, vision_encoder wd=1e-3, share_lns wd=1e-3).
+model:
+  name: SuperpositionNetworkProbeQ
+  config: default
+  mode: ~
+runner: PredictionFeaturePredictionRunner
+data:
+  name: r3_stay
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+  loss_function: mse_loss
+  pretrain: ~
+  batch_size: 10
+  max_epochs: 400
+  save_interval: 10
+  test_interval: 10
+  optimizer: AdamW
+  optim_config:
+    default:
+      lr: 0.001
+      weight_decay: 0.01
+    freeze:
+      - probe_critic
+    per_params:
+      - name: bias
+        args:
+          weight_decay: 0.0
+      - name: vision_encoder
+        args:
+          weight_decay: 0.001
+      - name: share_lns
+        args:
+          weight_decay: 0.001

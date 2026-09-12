@@ -74,14 +74,25 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--exp_config', default='r3_a_direct')
     parser.add_argument('--epoch', type=int, default=200)
+    parser.add_argument('--seed', type=int, default=0)  # training seed of the checkpoint
     parser.add_argument('--n_episodes', type=int, default=3000)
     parser.add_argument('--label', default=None)
+    parser.add_argument('--eval_seed', type=int, default=0)  # P0-0: reproducible eval
     args = parser.parse_args()
     label = args.label or f'{args.exp_config}_probe_q_direct_regression'
 
-    exp_config = util.gen_exp_config(Args(args.exp_config, 0))
+    import random as _random
+    _random.seed(args.eval_seed); np.random.seed(args.eval_seed)
+    torch.manual_seed(args.eval_seed); torch.cuda.manual_seed_all(args.eval_seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+    # NOTE: this script only calls model.compute_probe_q() (frozen critic on
+    # raw vision) -- no masking, no LSTM recurrence -- so it is already
+    # deterministic; the seeding above is for uniformity across P0-0 scripts.
+
+    exp_config = util.gen_exp_config(Args(args.exp_config, args.seed))
     model_config = util.gen_model_config(exp_config)
-    result_dir, model_dir, log_dir = util.gen_dirs(Args(args.exp_config, 0), test=False)
+    result_dir, model_dir, log_dir = util.gen_dirs(Args(args.exp_config, args.seed), test=False)
 
     model = getattr(models, exp_config.model.name)(model_config)
     model.to(DEVICE)
