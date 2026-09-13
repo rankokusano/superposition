@@ -215,6 +215,27 @@ data/data/r3_stay_viz20/data.h5           同上
 
 **推奨**：Tier Aから着手（最も確度が高く、単独で16GB超を回収できる）。Tier Bは`r4_ve`（保護ワイルドカードに一致）を除き、古い命名規則（v2/v3/new_exp/_400なし変種）で現行ドキュメントに言及がないため実質的に放棄されたrunと考えられるが、**最終判断はユーザに委ねる**。チェックポイント（`.pth`、合計6.3GB）は評価中間ファイルと異なり再学習なしに復元不可能なため、今回は削除候補に含めていない（`r3_stay_400`/`r3_a_direct_1000pretrain_400`が123個ずつと密だが、優先度は低いと判断）。
 
+### 4.6 削除の実施（2026-09-13、ユーザ確認済みの範囲のみ実行）
+
+削除前に`ls`で実在確認・JSON中身の表示・件数の実列挙を行った（結果は本節末尾に記載）。**一度に全部ではなく、確認できたものから1グループずつ削除**。
+
+**Tier A：全削除**
+- `fig5_v4_r3stay400/0/test/grid/save/saved.h5`（6.7G）、`fig5_v4_exp1l1000/0/test/grid/save/saved.h5`（6.7G）
+- `r3_stay_400/0/test/{r3_stay, r3_stay_fig4c, viz20b}/save/saved.h5`（596M+148M+118M）
+- `r3_a_direct_1000pretrain_400/0/test/{r2_a1random_a2rl, r2_a1random_a2rl_fig4c}/save/saved.h5`（596M×2）
+- `v5_base_l1/0/test/{r3_stay_fig4c, r2_a1random_a2rl_fig4c, viz20b}/save/saved.h5`（596M+596M+118M）
+
+**Tier B：v2/v3/new_exp系のみ削除**（`thesis_skeleton.md`・`v4_experiment_log.md`をgrepし、`v2_exp`/`v3_exp`/`new_exp_a`/`new_exp_b`/`r2_a2_rl`への言及が0件であることを確認してから実施）
+- `v2_exp_b_mg_ve/`, `v2_exp_b_base/`, `new_exp_b_mg_ve/`, `new_exp_b_base/`, `new_exp_a/` 配下の全`saved.h5`（計28ファイル）
+
+**Tier B：保留（ユーザ判断により削除しない）**
+- `r4_ve/`（保護ワイルドカード`r4_*`に一致、非parity版の対照として保持）
+- `r3_a_direct_cycler_control/`（RL方策仮説棄却の根拠、論文§6で使用）
+- `r3_stay/`, `r3_a_direct/`, `r3_a_direct_1000pretrain/`（`_400`なし版。「200epでは0/3収束」の定量的証拠の元データ）
+- `r2_a2_rl/`, `v3_exp_b_mgve/`, `v3_exp_b_base_l1/`, `exp1_l1_1000/0/test/.../saved.h5`（v4独自複製）→ 個別の判断材料が不足しているため保留
+
+**結果**：`df -h /home` の空き容量 **53GB → 71GB**（削除実施分のみ、Tier B保留分は含まず）。内訳：Tier A実施で52→66GB（+14GB、fig5_v4のみでほぼ全量）、r3_stay_400/r3_a_direct_1000pretrain_400/v5_base_l1の残りで66→69GB、Tier B（v2/v3/new_exp）で69→71GB。
+
 ---
 
 ## 5. 未解決の懸念・要決定事項
@@ -223,10 +244,14 @@ data/data/r3_stay_viz20/data.h5           同上
 - 報酬パラメータ`r`のサンプリング分布 → 連続一様＋L1正規化（`Σ|w_k|=2`）
 - Actorも`r`で条件付ける
 
+**S1実装時に決定・解消済み**（2026-09-13、§8参照）：
+- cyan/blueのピクセルしきい値 → `data/data/grid/data.h5`で実測確認、red/greenと同じ`>0.9`/`<0.1`パターンでそのまま拡張可能と確定
+- ディスク削減 → Tier A全件、Tier B（v2/v3/new_exp系）を実施、53GB→71GB（§4.6）
+
 **残っている懸念**：
-1. **cyan/blueのピクセルしきい値が未実測**。4.1参照。S1のreward計算実装前に実データでヒストグラムを取って確定させる。
-2. `analyze_vpt.py`（Fig.5視点取得）がv4 Encoder前提のハードコードを含むかどうか未検証（他スクリプトほど深く見ていない）。S2/S3着手前に確認する。
-3. **ディスク削減の実施待ち**（4.5参照）。Tier A/Bの削除候補リストを提示済み、ユーザ確認後に削除予定。S1のcritic学習自体はディスク消費が小さいため着手は妨げないが、S2以降の大きめの評価ジョブ前には空き容量を再確認する。
+1. `analyze_vpt.py`（Fig.5視点取得）がv4 Encoder前提のハードコードを含むかどうか未検証（他スクリプトほど深く見ていない）。S2/S3着手前に確認する。
+2. Tier B保留分（`r4_ve`、`r3_a_direct_cycler_control`、`r3_stay`/`r3_a_direct`/`r3_a_direct_1000pretrain`の`_400`なし版、`r2_a2_rl`、v3系、`exp1_l1_1000`複製）は今回削除していない。S2以降でディスクが再び逼迫したら再検討。
+3. S1の実際の学習実行（GPU3/7で起動）はまだ行っていない。ここまでは実装のみ。学習曲線・health check結果はS1完了報告で提示する。
 
 ## 6. 棄却された仮説
 
@@ -235,3 +260,56 @@ data/data/r3_stay_viz20/data.h5           同上
 ## 7. 失敗した実験・撤回した判断
 
 （まだなし）
+
+## 8. S1 実装（2026-09-13、学習実行前）
+
+### 8.1 新規ファイル
+
+`my_research/rl_agent_sac.py`（step3と共有、§3参照）は直接編集せず、以下を`preference_inference/`配下に新設した：
+
+| ファイル | 内容 |
+|---|---|
+| `model/rl_agent_sac_v6.py` | `CNNEncoder`（無変更コピー）、`ActorLSTM`（`r`条件付き）、`CriticLSTM`（`r`条件付き）、`sample_reward_param()`、`landmark_fractions()`、`reward_from_vision()` |
+| `simulation/train_rl_v6.py` | `train_rl_v3.py`を複製・拡張したSAC学習ループ。エピソードごとに`r`をサンプルし、`ReplayBuffer`に`r`を追加保存、全actor/critic呼び出しに`r`を渡す |
+| `analyze/check_critic_health_v6.py` | `check_critic_health.py`を拡張。§3.0のS1判定基準（action/state感度、報酬条件への応答、値域一致）＋2026-09-13追加の「未知のrへの汎化」を実装 |
+
+### 8.2 条件付き critic / Actor の実装
+
+**`r`の連結位置**：LSTM出力の後、actionと同じ段（`torch.cat([lstm_out, action, r], dim=-1)`、Actorは`torch.cat([lstm_out, r], dim=-1)`）。LSTM入力（CNN特徴量）には混ぜていない。
+
+**理由**：`r`はエピソード内で不変な定数であり、LSTMが担う「時間方向の統合」を必要としない（視覚観察には時間構造があるが`r`にはない）。LSTM入力に混ぜると、各タイムステップで同じ値を冗長に見せることになり、CNNEncoderの入力次元設計にも影響が及ぶため、actionと同じ場所で連結する方が構造として素直と判断した。
+
+**入力次元の変更箇所**：
+- `CriticLSTM.q`の最初の線形層：`nn.Linear(hidden_dim + 2, 64)` → `nn.Linear(hidden_dim + 2 + R_DIM, 64)`（`R_DIM=4`）
+- `ActorLSTM.mean`/`.log_std`：`nn.Linear(hidden_dim, 2)` → `nn.Linear(hidden_dim + R_DIM, 2)`
+- 両者の`forward`/`sample`シグネチャに`r`引数を追加
+
+**動作確認**（Docker内、シミュレータ環境なしのテンソル形状チェック）：`ActorLSTM.sample(v, r)` → action shape `(B,2)`、logp shape `(B,1)`。`CriticLSTM(v, action, r)` → q shape `(B,1)`。バッチサイズ2で確認済み。
+
+### 8.3 r のサンプリング実装
+
+`sample_reward_param()`：`w ~ Uniform(-1,1)^4` → `Σ|w_k|≈0`の縮退ケースをリサンプル → `w' = w * (2/Σ|w_k|)`で`Σ|w_k|=2`に正規化。動作確認：5回サンプルしていずれも`L1=2.0`（浮動小数点誤差内）。`A1_TRUE_R`/`A2_TRUE_R`が両方とも`Σ|w_k|=2`を満たすことをアサーションで確認済み（§3の設計判断通り、不動点になっている）。
+
+### 8.4 blue/cyan の pixel fraction 計算（実測確認込み）
+
+**実測方法**：`data/data/grid/data.h5`の`self_vision_no_agent`（441×441グリッド全域、自他位置の全組み合わせ）から一部をサンプルし、彩度（`max-min > 0.3`）の高いピクセルを0.05刻みで丸めてクラスタリング。
+
+**実測結果**（ノイズの少ない主要クラスタ、ピクセル数付き）：
+```
+(1,0,0) red    43076px   (0.95,0,0) (0.9,0,0) (0.85,0,0) (0.8,0,0) と減衰
+(0,0,1) blue   43076px   同様に減衰（redと完全対称）
+(0,1,0) green  29370px   同様に減衰
+(0,1,1) cyan   29370px   同様に減衰（"Yellow"表記だが実測は純粋なシアン、v4の既知の食い違いを再確認）
+```
+4色とも「純色→減衰」という同一のパターンを示し、既存のred/green用しきい値（該当チャンネル`>0.9`、他チャンネル`<0.1`）がblue/cyanにもそのまま適用できることを確認した。想定していた「しきい値の調整が必要かもしれない」という懸念（§5旧項目）は実測により解消——調整不要だった。
+
+**実装**：`landmark_fractions()`が`(red_frac, green_frac, blue_frac, cyan_frac)`を返す。合成フレーム（純赤・純シアン）でのユニットテストで相互汚染がないことを確認済み（赤フレーム→`[0.156,0,0,0]`、シアンフレーム→`[0,0,0,0.156]`）。`reward_from_vision(vision, w) = w · landmark_fractions(vision)`が`train_rl_v3.py`の`get_reward`（`w=(+1,-1,0,0)`のとき）と整合することを確認。
+
+### 8.5 §10.2 図の材料：学習起動前の確認
+
+S1自体は`test.py`の評価パイプラインを通らない（生のSAC学習ループ）ため、`--save_targets`は**S1では未使用**。S2以降で必要になった時点の状態は以下の通り、現時点で確認済み：
+
+- `--save_targets`は`exp/saver.py`で「保存パスに部分一致した名前をすべて保存」という汎用実装（固定enumではない）。S5で`r_hat`をモデル出力に追加すれば、`--save_targets r_hat`は追加のsaver改修なしに機能する見込み
+- other_vision loaderパッチ・viz20データセットは§4.3で確認済み、v6ブランチに引き継ぎ済み（変更なし）
+
+**S1着手前の残タスクなし。** 次はGPU3/7での実学習起動。
