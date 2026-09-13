@@ -1,0 +1,21 @@
+{
+  "label": "r4_move_exp3parity_s0_ep380_r2_a1random_a2rl_es0",
+  "source_h5": "data/result/r4_move_exp3parity/0/test/r2_a1random_a2rl_canon_es0/save/saved.h5",
+  "epoch": 380,
+  "mode": "eval",
+  "n_data": 3000,
+  "n_steps": 100,
+  "hidden_dim": 128,
+  "n_samples": 300000,
+  "h1_to_self": 0.772718915883583,
+  "h1_to_other": 0.4970681993223446,
+  "h2_to_self": 0.5236224349828076,
+  "h2_to_other": 0.9334019014024584,
+  "timestamp": "2026-09-06T05:10:00.494339",
+  "git_commit": "ef0cc640ecb4eedff9461c94a24372e604afc8f9",
+  "exp_config_name": "r4_move_exp3parity",
+  "config_path": "config/exp/r4_move_exp3parity.yml",
+  "config_content": "# P0-4 (research_plan_v4_v5.md Sec.P0-4): identical to r4_move.yml EXCEPT runner\nmodel:\n    name: SuperpositionNetworkProbeQValueEstimation\n    config: default\n    mode: ~\nrunner: MotionGenerationPredictionFeaturePredictionRunner  # P0-4: exp3-parity (see r4_ve_exp3parity.yml). Renamed alias GeneratorTrainingFeaturePredictionRunner planned.\ndata:\n    name: r2_a1random_a2rl\nload_state_dict_strict: False\np_mask_vision: 0.99\ntrain:\n    loss_function: l1_loss\n    pretrain:\n        exp_config: r3_stay_400\n        seed: 0\n        epoch: 400\n    batch_size: 10\n    max_epochs: 400\n    save_interval: 10\n    test_interval: 10\n    optimizer: AdamW\n    optim_config:\n        default:\n            lr: 0.001\n            weight_decay: 0.01\n        freeze:\n            - vision_encoder_module\n            - vision_decoder_module\n            - integration_module\n            - feature_prediction_module\n            - share_lns\n            - probe_critic\n            - superposition_module\n        per_params:\n            - name: bias\n              args:\n                  weight_decay: 0.0\n",
+  "seed": 0,
+  "dataset_name": "r2_a1random_a2rl"
+}

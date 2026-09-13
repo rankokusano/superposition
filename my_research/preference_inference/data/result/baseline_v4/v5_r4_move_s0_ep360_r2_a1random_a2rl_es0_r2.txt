@@ -1,0 +1,7 @@
+=== v5_r4_move_s0_ep360_r2_a1random_a2rl_es0 R^2 (epoch 360, mode eval) ===
+source: data/result/v5_r4_move/0/test/r2_a1random_a2rl_canon_es0/save/saved.h5
+n_samples: 300000 (N=3000 x T=100)
+h1 -> self  pos: 0.7149
+h1 -> other pos: 0.5099
+h2 -> self  pos: 0.6267
+h2 -> other pos: 0.6610

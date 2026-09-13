@@ -1,0 +1,4 @@
+=== r4_move_ep400_q2pos (epoch 400) ===
+n_samples: 300000
+Q̂2 -> A-1 self  pos R^2: 0.0056
+Q̂2 -> A-2 other pos R^2: 0.6775

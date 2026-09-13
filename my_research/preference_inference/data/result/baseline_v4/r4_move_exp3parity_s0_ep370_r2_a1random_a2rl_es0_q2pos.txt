@@ -1,0 +1,4 @@
+=== r4_move_exp3parity_s0_ep370_r2_a1random_a2rl_es0_q2pos (epoch 370) ===
+n_samples: 300000
+Q̂2 -> A-1 self  pos R^2: 0.0440
+Q̂2 -> A-2 other pos R^2: 0.6697

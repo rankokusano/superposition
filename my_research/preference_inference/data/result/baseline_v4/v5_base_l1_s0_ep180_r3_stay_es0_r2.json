@@ -1,0 +1,21 @@
+{
+  "label": "v5_base_l1_s0_ep180_r3_stay_es0",
+  "source_h5": "data/result/v5_base_l1/0/test/r3_stay_canon_es0/save/saved.h5",
+  "epoch": 180,
+  "mode": "eval",
+  "n_data": 3000,
+  "n_steps": 100,
+  "hidden_dim": 128,
+  "n_samples": 300000,
+  "h1_to_self": 0.7898015578022101,
+  "h1_to_other": 0.5916536108657555,
+  "h2_to_self": 0.2274705819954107,
+  "h2_to_other": 0.5292215338527886,
+  "timestamp": "2026-09-08T18:38:33.972800",
+  "git_commit": "ef0cc640ecb4eedff9461c94a24372e604afc8f9",
+  "exp_config_name": "v5_base_l1",
+  "config_path": "config/exp/v5_base_l1.yml",
+  "config_content": "# P1 v5 base stage, L1 refine (research_plan_v4_v5.md Sec.4.2). Q-input version\n# of the paper's exp1_l1: everything frozen EXCEPT the decoder, refined with\n# L1 loss. SM is frozen here, so no phase-transition concern -> 200ep (same as\n# the paper) is enough; the long budget is only on v5_base_mse.\n#\n# Diff vs ROOT config/exp/exp1_l1.yml (4 lines):\n#   model.name : SuperpositionNetworkFeaturePrediction -> SuperpositionNetworkProbeQ\n#   data.name  : self_random_other_stay -> r3_stay\n#   pretrain   : exp1_mse ep200 -> v5_base_mse ep400\n#   train.freeze: [...] -> [...] + probe_critic  (A-1's critic is a given)\n# max_epochs stays 200 (decoder-only). Everything else identical: l1_loss,\n# batch 10, save_interval 10, test_interval 10, AdamW, lr 1e-3, wd 1e-2, bias wd=0.\n#\n# freeze list leaves ONLY vision_decoder_module trainable (substring match:\n# \"vision_encoder_module\" catches both self_/other_ encoders).\nmodel:\n    name: SuperpositionNetworkProbeQ\n    config: default\n    mode: ~\nrunner: PredictionFeaturePredictionRunner\ndata:\n    name: r3_stay\nload_state_dict_strict: False\np_mask_vision: 0.99\ntrain:\n    loss_function: l1_loss\n    pretrain:\n        exp_config: v5_base_mse\n        seed: 0\n        epoch: 400\n    batch_size: 10\n    max_epochs: 200\n    save_interval: 10\n    test_interval: 10\n    optimizer: AdamW\n    optim_config:\n        default:\n            lr: 0.001\n            weight_decay: 0.01\n        freeze:\n            - superposition_module\n            - vision_encoder_module\n            - integration_module\n            - share_lns\n            - feature_prediction_module\n            - probe_critic\n        per_params:\n            - name: bias\n              args:\n                  weight_decay: 0.0\n",
+  "seed": 0,
+  "dataset_name": "r3_stay"
+}

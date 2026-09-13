@@ -1,0 +1,7 @@
+=== r3_stay_400_s1_ep380_r2_a1random_a2rl_es0 R^2 (epoch 380, mode eval) ===
+source: data/result/r3_stay_400/1/test/r2_a1random_a2rl_canon_es0/save/saved.h5
+n_samples: 300000 (N=3000 x T=100)
+h1 -> self  pos: 0.7795
+h1 -> other pos: 0.4631
+h2 -> self  pos: 0.0671
+h2 -> other pos: 0.8826

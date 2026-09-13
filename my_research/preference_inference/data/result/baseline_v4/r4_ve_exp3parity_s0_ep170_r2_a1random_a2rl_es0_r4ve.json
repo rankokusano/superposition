@@ -1,0 +1,55 @@
+{
+  "label": "r4_ve_exp3parity_s0_ep170_r2_a1random_a2rl_es0_r4ve",
+  "exp_config": "r4_ve_exp3parity",
+  "epoch": 170,
+  "eval_seed": 0,
+  "n_episodes": 3000,
+  "vision_l1_by_ablation": {
+    "real": 0.1506406449774901,
+    "zero": 0.1604462556739648,
+    "constant_mean": 0.16151744708915552,
+    "true_q2": 0.155687707439065
+  },
+  "q2_stats": {
+    "mean": 0.10694481432437897,
+    "std": 0.7262390851974487,
+    "min": -0.9999914169311523,
+    "max": 0.9999998807907104,
+    "per_dim_std": [
+      0.2963816821575165,
+      0.23821915686130524,
+      0.3824576139450073,
+      0.08352675288915634,
+      0.42332902550697327,
+      0.34855830669403076,
+      0.5456486344337463,
+      0.31465670466423035
+    ]
+  },
+  "direction_match": {
+    "mean_cos_sim_with_green_dir": 0.31738311805286695,
+    "mean_angle_error_deg": 71.28615836751872,
+    "frac_within_45deg": 0.03401333333333333
+  },
+  "true_q_correlation": {
+    "per_dim": [
+      -0.01983015912971754,
+      0.36606415673687603,
+      0.01608571238135983,
+      -0.48797301244942565,
+      0.30303480505359426,
+      0.5987941643374888,
+      0.10104955104819277,
+      0.6115940538059159
+    ],
+    "overall": 0.11439009551104055,
+    "true_q2_std": 0.009156049229204655
+  },
+  "timestamp": "2026-09-06T04:38:56.264702",
+  "git_commit": "ef0cc640ecb4eedff9461c94a24372e604afc8f9",
+  "exp_config_name": "r4_ve_exp3parity",
+  "config_path": "config/exp/r4_ve_exp3parity.yml",
+  "config_content": "# P0-2 (research_plan_v4_v5.md Sec.P0-2): identical to r4_ve.yml EXCEPT the\n# runner. r4_ve.yml uses PredictionFeaturePredictionRunner, which (a) detaches\n# ss/os before predict_feature so L_feat_other never reaches VE, and (b) masks\n# vision at p_mask_vision=0.99 (1% leak). The original paper's exp3 (adding MG)\n# uses MotionGenerationPredictionFeaturePredictionRunner: NO detach (FPM_other\n# gradient flows FPM -> os -> SM -> generator) and full masking (p=1.0 for t>0).\n# This config makes v4's VE receive the exact same training signal the paper's\n# MG did, so an R4 failure here is attributable to the mechanism, not the build.\nmodel:\n    name: SuperpositionNetworkProbeQValueEstimation\n    config: default\n    mode: ~\nrunner: MotionGenerationPredictionFeaturePredictionRunner\ndata:\n    name: r2_a1random_a2rl\nload_state_dict_strict: False\np_mask_vision: 0.99  # ignored by MotionGeneration* runner (it forces p=1 for t>0)\ntrain:\n    loss_function: l1_loss\n    pretrain:\n        exp_config: r3_a_direct_1000pretrain\n        seed: 0\n        epoch: 200\n    batch_size: 10\n    max_epochs: 200\n    save_interval: 10\n    test_interval: 10\n    optimizer: AdamW\n    optim_config:\n        default:\n            lr: 0.001\n            weight_decay: 0.01\n        freeze:\n            - vision_encoder_module\n            - vision_decoder_module\n            - integration_module\n            - feature_prediction_module\n            - share_lns\n            - probe_critic\n            - superposition_module\n        per_params:\n            - name: bias\n              args:\n                  weight_decay: 0.0\n",
+  "seed": 0,
+  "dataset_name": "r2_a1random_a2rl"
+}

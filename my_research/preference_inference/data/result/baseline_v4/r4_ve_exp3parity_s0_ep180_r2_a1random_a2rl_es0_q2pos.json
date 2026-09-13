@@ -1,0 +1,9 @@
+{
+  "label": "r4_ve_exp3parity_s0_ep180_r2_a1random_a2rl_es0_q2pos",
+  "exp_config": "r4_ve_exp3parity",
+  "epoch": 180,
+  "eval_seed": 0,
+  "n_samples": 300000,
+  "q2_to_self_pos_r2": 0.49132272499471974,
+  "q2_to_other_pos_r2": 0.7198988191458817
+}

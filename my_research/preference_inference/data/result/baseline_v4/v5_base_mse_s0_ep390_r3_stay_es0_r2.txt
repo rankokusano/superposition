@@ -1,0 +1,7 @@
+=== v5_base_mse_s0_ep390_r3_stay_es0 R^2 (epoch 390, mode eval) ===
+source: data/result/v5_base_mse/0/test/r3_stay_canon_es0/save/saved.h5
+n_samples: 300000 (N=3000 x T=100)
+h1 -> self  pos: 0.7989
+h1 -> other pos: 0.5862
+h2 -> self  pos: 0.2289
+h2 -> other pos: 0.5300

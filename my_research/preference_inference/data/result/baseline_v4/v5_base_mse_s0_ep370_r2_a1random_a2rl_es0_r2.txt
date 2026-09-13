@@ -1,0 +1,7 @@
+=== v5_base_mse_s0_ep370_r2_a1random_a2rl_es0 R^2 (epoch 370, mode eval) ===
+source: data/result/v5_base_mse/0/test/r2_a1random_a2rl_canon_es0/save/saved.h5
+n_samples: 300000 (N=3000 x T=100)
+h1 -> self  pos: 0.7185
+h1 -> other pos: 0.4907
+h2 -> self  pos: 0.0826
+h2 -> other pos: 0.6439

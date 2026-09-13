@@ -1,0 +1,7 @@
+=== r4_move_exp3parity_s0_ep400_r2_a1random_a2rl_es2 R^2 (epoch 400, mode eval) ===
+source: data/result/r4_move_exp3parity/0/test/r2_a1random_a2rl_canon_es2/save/saved.h5
+n_samples: 300000 (N=3000 x T=100)
+h1 -> self  pos: 0.7727
+h1 -> other pos: 0.4971
+h2 -> self  pos: 0.5264
+h2 -> other pos: 0.9272

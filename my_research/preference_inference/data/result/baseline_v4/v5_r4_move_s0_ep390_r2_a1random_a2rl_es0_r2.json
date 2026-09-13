@@ -1,0 +1,21 @@
+{
+  "label": "v5_r4_move_s0_ep390_r2_a1random_a2rl_es0",
+  "source_h5": "data/result/v5_r4_move/0/test/r2_a1random_a2rl_canon_es0/save/saved.h5",
+  "epoch": 390,
+  "mode": "eval",
+  "n_data": 3000,
+  "n_steps": 100,
+  "hidden_dim": 128,
+  "n_samples": 300000,
+  "h1_to_self": 0.714869851429605,
+  "h1_to_other": 0.509911086640191,
+  "h2_to_self": 0.6413290447816338,
+  "h2_to_other": 0.6617914124304067,
+  "timestamp": "2026-09-10T06:46:29.813206",
+  "git_commit": "ef0cc640ecb4eedff9461c94a24372e604afc8f9",
+  "exp_config_name": "v5_r4_move",
+  "config_path": "config/exp/v5_r4_move.yml",
+  "config_content": "# P2-a (research_plan Sec.P2-a, promoted to P1): identical to r4_move_exp3parity.yml\n# EXCEPT pretrain = v5_base_l1 ep200 (Encoder retrained under probe-Q) instead of r3_stay_400.\n# Isolates the Encoder factor from the Q-range factor (P1.75).\nmodel:\n    name: SuperpositionNetworkProbeQValueEstimation\n    config: default\n    mode: ~\nrunner: MotionGenerationPredictionFeaturePredictionRunner  # P0-4: exp3-parity (see r4_ve_exp3parity.yml). Renamed alias GeneratorTrainingFeaturePredictionRunner planned.\ndata:\n    name: r2_a1random_a2rl\nload_state_dict_strict: False\np_mask_vision: 0.99\ntrain:\n    loss_function: l1_loss\n    pretrain:\n        exp_config: v5_base_l1\n        seed: 0\n        epoch: 200\n    batch_size: 10\n    max_epochs: 400\n    save_interval: 10\n    test_interval: 10\n    optimizer: AdamW\n    optim_config:\n        default:\n            lr: 0.001\n            weight_decay: 0.01\n        freeze:\n            - vision_encoder_module\n            - vision_decoder_module\n            - integration_module\n            - feature_prediction_module\n            - share_lns\n            - probe_critic\n            - superposition_module\n        per_params:\n            - name: bias\n              args:\n                  weight_decay: 0.0\n",
+  "seed": 0,
+  "dataset_name": "r2_a1random_a2rl"
+}
