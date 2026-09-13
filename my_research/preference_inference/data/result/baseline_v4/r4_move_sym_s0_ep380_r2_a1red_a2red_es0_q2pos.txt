@@ -1,0 +1,4 @@
+=== r4_move_sym_s0_ep380_r2_a1red_a2red_es0_q2pos (epoch 380) ===
+n_samples: 300000
+Q̂2 -> A-1 self  pos R^2: 0.1668
+Q̂2 -> A-2 other pos R^2: 0.3700

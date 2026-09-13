@@ -1,0 +1,9 @@
+{
+  "label": "r4_move_exp3parity_s0_ep400_r2_a1random_a2rl_es1_q2pos",
+  "exp_config": "r4_move_exp3parity",
+  "epoch": 400,
+  "eval_seed": 1,
+  "n_samples": 300000,
+  "q2_to_self_pos_r2": 0.24325240045156293,
+  "q2_to_other_pos_r2": 0.5288023254103235
+}

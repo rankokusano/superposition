@@ -1,0 +1,18 @@
+{
+  "label": "r4_move_sym_s0_ep390_r2_a1red_a2red_es0_probeq",
+  "exp_config": "r4_move_sym",
+  "epoch": 390,
+  "n_episodes": 3000,
+  "n_steps": 100,
+  "note": "no LSTM/recurrence involved -- q1_vec(t) regressed directly onto position(t), same (episode,t) pairs, to test whether h1->self R^2 requires temporal integration or is already achievable from a single timestep's Q vector alone",
+  "q_to_self_position_r2": 0.5989301688643069,
+  "q_to_other_position_r2": 0.04358690176649932,
+  "reference_h1_to_self_r2_with_recurrence": 0.9086,
+  "timestamp": "2026-09-07T04:53:28.420359",
+  "git_commit": "ef0cc640ecb4eedff9461c94a24372e604afc8f9",
+  "exp_config_name": "r4_move_sym",
+  "config_path": "config/exp/r4_move_sym.yml",
+  "config_content": "# P1.75 symmetric sanity (Sec.4ter): identical to r4_move_exp3parity.yml\n# EXCEPT data.name (A-2 = red-seeker via A-1 actor). base pretrain reused\n# (r3_stay_400: A-2 static, so its reward is irrelevant to the base).\nmodel:\n    name: SuperpositionNetworkProbeQValueEstimation\n    config: default\n    mode: ~\nrunner: MotionGenerationPredictionFeaturePredictionRunner  # P0-4: exp3-parity (see r4_ve_exp3parity.yml). Renamed alias GeneratorTrainingFeaturePredictionRunner planned.\ndata:\n    name: r2_a1red_a2red\nload_state_dict_strict: False\np_mask_vision: 0.99\ntrain:\n    loss_function: l1_loss\n    pretrain:\n        exp_config: r3_stay_400\n        seed: 0\n        epoch: 400\n    batch_size: 10\n    max_epochs: 400\n    save_interval: 10\n    test_interval: 10\n    optimizer: AdamW\n    optim_config:\n        default:\n            lr: 0.001\n            weight_decay: 0.01\n        freeze:\n            - vision_encoder_module\n            - vision_decoder_module\n            - integration_module\n            - feature_prediction_module\n            - share_lns\n            - probe_critic\n            - superposition_module\n        per_params:\n            - name: bias\n              args:\n                  weight_decay: 0.0\n",
+  "seed": 0,
+  "dataset_name": "r2_a1random_a2rl"
+}

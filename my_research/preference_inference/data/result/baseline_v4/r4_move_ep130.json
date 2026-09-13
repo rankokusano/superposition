@@ -1,0 +1,54 @@
+{
+  "label": "r4_move_ep130",
+  "exp_config": "r4_move",
+  "epoch": 130,
+  "n_episodes": 3000,
+  "vision_l1_by_ablation": {
+    "real": 0.2064637024650971,
+    "zero": 0.21129353711009025,
+    "constant_mean": 0.21608441355327765,
+    "true_q2": 0.21685003171364467
+  },
+  "q2_stats": {
+    "mean": -0.30941182374954224,
+    "std": 0.6970338821411133,
+    "min": -0.9999974966049194,
+    "max": 0.9999499917030334,
+    "per_dim_std": [
+      0.41924208402633667,
+      0.34772273898124695,
+      0.3867918848991394,
+      0.03218841180205345,
+      0.002272354904562235,
+      0.24100705981254578,
+      0.04089923948049545,
+      0.5784009695053101
+    ]
+  },
+  "direction_match": {
+    "mean_cos_sim_with_green_dir": 0.20590323491347687,
+    "mean_angle_error_deg": 79.13165183659183,
+    "frac_within_45deg": 0.01214
+  },
+  "true_q_correlation": {
+    "per_dim": [
+      0.2695119504960119,
+      0.2896789783817643,
+      -0.1775097947895359,
+      -0.3664907909172645,
+      -0.5131111074242679,
+      0.687480958353438,
+      0.0597961324585159,
+      0.0431835074159412
+    ],
+    "overall": 0.04460200838684577,
+    "true_q2_std": 0.009156049229204655
+  },
+  "timestamp": "2026-08-24T17:15:09.765740",
+  "git_commit": "ef0cc640ecb4eedff9461c94a24372e604afc8f9",
+  "exp_config_name": "r4_move",
+  "config_path": "config/exp/r4_move.yml",
+  "config_content": "model:\n    name: SuperpositionNetworkProbeQValueEstimation\n    config: default\n    mode: ~\nrunner: PredictionFeaturePredictionRunner\ndata:\n    name: r2_a1random_a2rl\nload_state_dict_strict: False\np_mask_vision: 0.99\ntrain:\n    loss_function: l1_loss\n    pretrain:\n        exp_config: r3_stay_400\n        seed: 0\n        epoch: 400\n    batch_size: 10\n    max_epochs: 400\n    save_interval: 10\n    test_interval: 10\n    optimizer: AdamW\n    optim_config:\n        default:\n            lr: 0.001\n            weight_decay: 0.01\n        freeze:\n            - vision_encoder_module\n            - vision_decoder_module\n            - integration_module\n            - feature_prediction_module\n            - share_lns\n            - probe_critic\n            - superposition_module\n        per_params:\n            - name: bias\n              args:\n                  weight_decay: 0.0\n",
+  "seed": 0,
+  "dataset_name": "r2_a1random_a2rl"
+}

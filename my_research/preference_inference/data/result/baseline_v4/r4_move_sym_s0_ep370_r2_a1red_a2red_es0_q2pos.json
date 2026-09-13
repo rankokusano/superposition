@@ -1,0 +1,9 @@
+{
+  "label": "r4_move_sym_s0_ep370_r2_a1red_a2red_es0_q2pos",
+  "exp_config": "r4_move_sym",
+  "epoch": 370,
+  "eval_seed": 0,
+  "n_samples": 300000,
+  "q2_to_self_pos_r2": 0.17765756853690107,
+  "q2_to_other_pos_r2": 0.38627579437515797
+}

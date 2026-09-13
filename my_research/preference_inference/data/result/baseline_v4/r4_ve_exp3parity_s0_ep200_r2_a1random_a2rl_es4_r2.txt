@@ -1,0 +1,7 @@
+=== r4_ve_exp3parity_s0_ep200_r2_a1random_a2rl_es4 R^2 (epoch 200, mode eval) ===
+source: data/result/r4_ve_exp3parity/0/test/r2_a1random_a2rl_canon_es4/save/saved.h5
+n_samples: 300000 (N=3000 x T=100)
+h1 -> self  pos: 0.8774
+h1 -> other pos: 0.5863
+h2 -> self  pos: 0.8152
+h2 -> other pos: 0.9672

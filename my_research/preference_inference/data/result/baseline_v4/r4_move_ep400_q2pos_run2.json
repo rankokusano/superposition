@@ -1,0 +1,8 @@
+{
+  "label": "r4_move_ep400_q2pos_run2",
+  "exp_config": "r4_move",
+  "epoch": 400,
+  "n_samples": 300000,
+  "q2_to_self_pos_r2": 0.005615760374561851,
+  "q2_to_other_pos_r2": 0.6774802698235161
+}

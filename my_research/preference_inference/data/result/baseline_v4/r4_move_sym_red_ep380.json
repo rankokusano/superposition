@@ -1,0 +1,55 @@
+{
+  "label": "r4_move_sym_red_ep380",
+  "exp_config": "r4_move_sym",
+  "epoch": 380,
+  "eval_seed": 0,
+  "n_episodes": 3000,
+  "vision_l1_by_ablation": {
+    "real": 0.19046066334843637,
+    "zero": 0.19057393265267214,
+    "constant_mean": 0.19832188710570336,
+    "true_q2": 0.1910247120509545
+  },
+  "q2_stats": {
+    "mean": -0.06867458671331406,
+    "std": 0.7918666005134583,
+    "min": -0.9999951124191284,
+    "max": 0.9999997615814209,
+    "per_dim_std": [
+      0.3591899871826172,
+      0.30451053380966187,
+      0.4282165467739105,
+      0.41827595233917236,
+      0.46777814626693726,
+      0.4292110502719879,
+      0.22088587284088135,
+      0.28414008021354675
+    ]
+  },
+  "direction_match": {
+    "mean_cos_sim_with_green_dir": -0.3664990160507462,
+    "mean_angle_error_deg": 111.7129280909814,
+    "frac_within_45deg": 0.15241333333333335
+  },
+  "true_q_correlation": {
+    "per_dim": [
+      0.23951119113250244,
+      -0.1147637534934348,
+      0.1911455009712955,
+      -0.2945884698870134,
+      0.1710475392486507,
+      0.15480304693889826,
+      -0.18381642808858326,
+      -0.2383605081259444
+    ],
+    "overall": 0.021752439059318573,
+    "true_q2_std": 0.5927477478981018
+  },
+  "timestamp": "2026-09-07T05:42:29.490110",
+  "git_commit": "ef0cc640ecb4eedff9461c94a24372e604afc8f9",
+  "exp_config_name": "r4_move_sym",
+  "config_path": "config/exp/r4_move_sym.yml",
+  "config_content": "# P1.75 symmetric sanity (Sec.4ter): identical to r4_move_exp3parity.yml\n# EXCEPT data.name (A-2 = red-seeker via A-1 actor). base pretrain reused\n# (r3_stay_400: A-2 static, so its reward is irrelevant to the base).\nmodel:\n    name: SuperpositionNetworkProbeQValueEstimation\n    config: default\n    mode: ~\nrunner: MotionGenerationPredictionFeaturePredictionRunner  # P0-4: exp3-parity (see r4_ve_exp3parity.yml). Renamed alias GeneratorTrainingFeaturePredictionRunner planned.\ndata:\n    name: r2_a1red_a2red\nload_state_dict_strict: False\np_mask_vision: 0.99\ntrain:\n    loss_function: l1_loss\n    pretrain:\n        exp_config: r3_stay_400\n        seed: 0\n        epoch: 400\n    batch_size: 10\n    max_epochs: 400\n    save_interval: 10\n    test_interval: 10\n    optimizer: AdamW\n    optim_config:\n        default:\n            lr: 0.001\n            weight_decay: 0.01\n        freeze:\n            - vision_encoder_module\n            - vision_decoder_module\n            - integration_module\n            - feature_prediction_module\n            - share_lns\n            - probe_critic\n            - superposition_module\n        per_params:\n            - name: bias\n              args:\n                  weight_decay: 0.0\n",
+  "seed": 0,
+  "dataset_name": "r2_a1red_a2red"
+}

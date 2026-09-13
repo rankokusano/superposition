@@ -1,0 +1,21 @@
+{
+  "label": "r4_ve_exp3parity_s0_ep200_r2_a1random_a2rl_es2",
+  "source_h5": "data/result/r4_ve_exp3parity/0/test/r2_a1random_a2rl_canon_es2/save/saved.h5",
+  "epoch": 200,
+  "mode": "eval",
+  "n_data": 3000,
+  "n_steps": 100,
+  "hidden_dim": 128,
+  "n_samples": 300000,
+  "h1_to_self": 0.877426077712798,
+  "h1_to_other": 0.5863217343542433,
+  "h2_to_self": 0.8152369671084796,
+  "h2_to_other": 0.9671625995700398,
+  "timestamp": "2026-09-04T04:59:47.703210",
+  "git_commit": "ef0cc640ecb4eedff9461c94a24372e604afc8f9",
+  "exp_config_name": "r4_ve_exp3parity",
+  "config_path": "config/exp/r4_ve_exp3parity.yml",
+  "config_content": "# P0-2 (research_plan_v4_v5.md Sec.P0-2): identical to r4_ve.yml EXCEPT the\n# runner. r4_ve.yml uses PredictionFeaturePredictionRunner, which (a) detaches\n# ss/os before predict_feature so L_feat_other never reaches VE, and (b) masks\n# vision at p_mask_vision=0.99 (1% leak). The original paper's exp3 (adding MG)\n# uses MotionGenerationPredictionFeaturePredictionRunner: NO detach (FPM_other\n# gradient flows FPM -> os -> SM -> generator) and full masking (p=1.0 for t>0).\n# This config makes v4's VE receive the exact same training signal the paper's\n# MG did, so an R4 failure here is attributable to the mechanism, not the build.\nmodel:\n    name: SuperpositionNetworkProbeQValueEstimation\n    config: default\n    mode: ~\nrunner: MotionGenerationPredictionFeaturePredictionRunner\ndata:\n    name: r2_a1random_a2rl\nload_state_dict_strict: False\np_mask_vision: 0.99  # ignored by MotionGeneration* runner (it forces p=1 for t>0)\ntrain:\n    loss_function: l1_loss\n    pretrain:\n        exp_config: r3_a_direct_1000pretrain\n        seed: 0\n        epoch: 200\n    batch_size: 10\n    max_epochs: 200\n    save_interval: 10\n    test_interval: 10\n    optimizer: AdamW\n    optim_config:\n        default:\n            lr: 0.001\n            weight_decay: 0.01\n        freeze:\n            - vision_encoder_module\n            - vision_decoder_module\n            - integration_module\n            - feature_prediction_module\n            - share_lns\n            - probe_critic\n            - superposition_module\n        per_params:\n            - name: bias\n              args:\n                  weight_decay: 0.0\n",
+  "seed": 0,
+  "dataset_name": "r2_a1random_a2rl"
+}

@@ -1,0 +1,55 @@
+{
+  "label": "r4_move_exp3parity_s0_ep400_r2_a1random_a2rl_es4_r4ve",
+  "exp_config": "r4_move_exp3parity",
+  "epoch": 400,
+  "eval_seed": 4,
+  "n_episodes": 3000,
+  "vision_l1_by_ablation": {
+    "real": 0.20651220844189325,
+    "zero": 0.20821332055826983,
+    "constant_mean": 0.21231597648064296,
+    "true_q2": 0.2127315649787585
+  },
+  "q2_stats": {
+    "mean": -0.006482301279902458,
+    "std": 0.7828212976455688,
+    "min": -1.0,
+    "max": 0.9999998807907104,
+    "per_dim_std": [
+      0.27659872174263,
+      0.36350172758102417,
+      0.6600639224052429,
+      0.4242831766605377,
+      0.7385981678962708,
+      0.7437836527824402,
+      0.6287015676498413,
+      0.5477630496025085
+    ]
+  },
+  "direction_match": {
+    "mean_cos_sim_with_green_dir": -0.8026916715964244,
+    "mean_angle_error_deg": 148.2437598228301,
+    "frac_within_45deg": 0.029473333333333334
+  },
+  "true_q_correlation": {
+    "per_dim": [
+      0.4153846757382723,
+      -0.14025544325862493,
+      0.11725177952773536,
+      -0.4195411911513554,
+      -0.1347698358905034,
+      0.07040878068293983,
+      -0.14588410408617677,
+      0.33591429769564807
+    ],
+    "overall": -0.03527760271475541,
+    "true_q2_std": 0.009156049229204655
+  },
+  "timestamp": "2026-09-05T03:06:51.979671",
+  "git_commit": "ef0cc640ecb4eedff9461c94a24372e604afc8f9",
+  "exp_config_name": "r4_move_exp3parity",
+  "config_path": "config/exp/r4_move_exp3parity.yml",
+  "config_content": "# P0-4 (research_plan_v4_v5.md Sec.P0-4): identical to r4_move.yml EXCEPT runner\nmodel:\n    name: SuperpositionNetworkProbeQValueEstimation\n    config: default\n    mode: ~\nrunner: MotionGenerationPredictionFeaturePredictionRunner  # P0-4: exp3-parity (see r4_ve_exp3parity.yml). Renamed alias GeneratorTrainingFeaturePredictionRunner planned.\ndata:\n    name: r2_a1random_a2rl\nload_state_dict_strict: False\np_mask_vision: 0.99\ntrain:\n    loss_function: l1_loss\n    pretrain:\n        exp_config: r3_stay_400\n        seed: 0\n        epoch: 400\n    batch_size: 10\n    max_epochs: 400\n    save_interval: 10\n    test_interval: 10\n    optimizer: AdamW\n    optim_config:\n        default:\n            lr: 0.001\n            weight_decay: 0.01\n        freeze:\n            - vision_encoder_module\n            - vision_decoder_module\n            - integration_module\n            - feature_prediction_module\n            - share_lns\n            - probe_critic\n            - superposition_module\n        per_params:\n            - name: bias\n              args:\n                  weight_decay: 0.0\n",
+  "seed": 0,
+  "dataset_name": "r2_a1random_a2rl"
+}

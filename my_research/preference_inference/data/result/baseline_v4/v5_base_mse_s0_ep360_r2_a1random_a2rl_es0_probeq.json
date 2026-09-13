@@ -1,0 +1,18 @@
+{
+  "label": "v5_base_mse_s0_ep360_r2_a1random_a2rl_es0_probeq",
+  "exp_config": "v5_base_mse",
+  "epoch": 360,
+  "n_episodes": 3000,
+  "n_steps": 100,
+  "note": "no LSTM/recurrence involved -- q1_vec(t) regressed directly onto position(t), same (episode,t) pairs, to test whether h1->self R^2 requires temporal integration or is already achievable from a single timestep's Q vector alone",
+  "q_to_self_position_r2": 0.5989301688643069,
+  "q_to_other_position_r2": 0.04358690176649932,
+  "reference_h1_to_self_r2_with_recurrence": 0.9086,
+  "timestamp": "2026-09-08T19:34:01.401578",
+  "git_commit": "ef0cc640ecb4eedff9461c94a24372e604afc8f9",
+  "exp_config_name": "v5_base_mse",
+  "config_path": "config/exp/v5_base_mse.yml",
+  "config_content": "# P1 v5 base stage (research_plan_v4_v5.md Sec.4.2). The Q-input version of\n# the paper's exp1_mse: Visual Encoder + SM + Integration + Decoder + FPM all\n# trained FROM SCRATCH (pretrain: ~), so we can test whether the mechanism\n# self-organises self/other visual representations when the SM side-channel\n# is a probe-Q vector instead of m_t.\n#\n# Diff vs ROOT config/exp/exp1_mse.yml (5 lines):\n#   model.name : SuperpositionNetworkFeaturePrediction -> SuperpositionNetworkProbeQ  (m_t -> 8-dim probe-Q)\n#   data.name  : self_random_other_stay -> r3_stay  (Q-input dataset; A-2 static, same \"other stay\" semantics)\n#   train.freeze: ~ -> [probe_critic]  (A-1's SAC critic is a given, must NOT be trained)\n#   train.max_epochs : 200 -> 400  (R3-A/R3-stay both needed 400ep to phase-transition; scratch is likely slower)\n#   train.save_interval : 1 -> 10  (exp1_mse used 1 for Fig.5 epoch selection; not needed, saves ~1GB disk)\n# Everything else identical: mse_loss, batch 10, test_interval 10, AdamW, lr 1e-3,\n# weight_decay 1e-2, per_params (bias wd=0, vision_encoder wd=1e-3, share_lns wd=1e-3).\nmodel:\n  name: SuperpositionNetworkProbeQ\n  config: default\n  mode: ~\nrunner: PredictionFeaturePredictionRunner\ndata:\n  name: r3_stay\nload_state_dict_strict: False\np_mask_vision: 0.99\ntrain:\n  loss_function: mse_loss\n  pretrain: ~\n  batch_size: 10\n  max_epochs: 400\n  save_interval: 10\n  test_interval: 10\n  optimizer: AdamW\n  optim_config:\n    default:\n      lr: 0.001\n      weight_decay: 0.01\n    freeze:\n      - probe_critic\n    per_params:\n      - name: bias\n        args:\n          weight_decay: 0.0\n      - name: vision_encoder\n        args:\n          weight_decay: 0.001\n      - name: share_lns\n        args:\n          weight_decay: 0.001\n",
+  "seed": 0,
+  "dataset_name": "r2_a1random_a2rl"
+}

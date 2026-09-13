@@ -1,0 +1,9 @@
+{
+  "label": "v5_r4_move_s0_ep400_r2_a1random_a2rl_es0_q2pos",
+  "exp_config": "v5_r4_move",
+  "epoch": 400,
+  "eval_seed": 0,
+  "n_samples": 300000,
+  "q2_to_self_pos_r2": 0.38600417601051445,
+  "q2_to_other_pos_r2": 0.09719715984295263
+}

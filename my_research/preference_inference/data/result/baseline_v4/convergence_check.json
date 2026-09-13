@@ -1,0 +1,16 @@
+{
+  "v5_r4_move/seed0": {
+    "total_epochs": 400,
+    "window": 80,
+    "burn_in_epoch": 41,
+    "v_min": 19.583,
+    "m_W": 19.67,
+    "slope_per_epoch": -0.00084,
+    "drift_over_window": 0.066,
+    "cond_i_level": true,
+    "cond_ii_no_rise": true,
+    "CONVERGED": true,
+    "transition_epoch": 3,
+    "log": "data/result/v5_r4_move/0/log/train/feature_prediction_other.log"
+  }
+}
