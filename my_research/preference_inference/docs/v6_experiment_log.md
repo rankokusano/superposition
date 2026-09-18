@@ -362,4 +362,54 @@ S1自体は`test.py`の評価パイプラインを通らない（生のSAC学習
 - (b) 同時に、SACのハイパーパラメータ（`TARGET_ENTROPY=-2.0`固定、alpha減衰が速すぎる可能性）を見直す
 - (c) (a)(b)で改善しなければ、§8.2のFiLM案に進む
 
-**まだ実施していない。** ユーザの判断を待つ。
+## 10. 報酬計算バグ疑惑の検証（2026-09-18、ユーザ指摘）
+
+**ユーザの仮説**：S1試行1のQ値空間マップが「上半分（Red/Cyan）高、下半分（Green/Blue）低」というA-1の素の価値関数のような形に見えることから、`reward_from_vision`が`r`を無視して旧`red_fraction - green_fraction`のまま計算されているのではないか、という疑い。
+
+**検証方法**：`simulation/self_random_other_stay.yml`環境で4隅+中心の実視覚を取得し、同一の観測に対して`r=A1(+1,-1,0,0)`・`r=A2(-1,+1,0,0)`・`r=blue_pref(0,0,+1,-1)`で`reward_from_vision`を計算し比較。
+
+**結果**（実測値）：
+
+| 位置 | fractions(red,green,blue,cyan) | reward(A1) | reward(A2) | reward(blue_pref) |
+|---|---|---|---|---|
+| Red | [0.094, 0.012, 0, 0.012] | **+0.082** | **-0.082** | -0.012 |
+| Green | [0.012, 0.094, 0.012, 0] | **-0.082** | **+0.082** | +0.012 |
+| Blue | [0, 0.012, 0.094, 0.012] | -0.012 | +0.012 | **+0.082** |
+| Cyan | [0.012, 0, 0.012, 0.094] | +0.012 | -0.012 | **-0.082** |
+| Center | [0.021, 0.021, 0.021, 0.021] | 0.0 | 0.0 | 0.0 |
+
+**結論：バグではない。** A1↔A2で符号が完全に反転（+0.082 ⇔ -0.082、絶対値も一致）、blue_pref条件でも青の近くで正・シアンの近くで負と期待通りに応答している。学習ループのコード（`train_rl_v6.py`の`reward = reward_from_vision(v_next_raw, r_param_np)`、バッチ学習時の`r_params_t = torch.tensor(np.stack(r_params), ...)`）も再確認したが、`r`の受け渡し・インデックス対応に誤りは見当たらなかった。
+
+**するとS1試行1の空間マップの奇妙な形状（Cyanが最高、Blueが低い——A1/A2どちらの真の報酬にも本来無関係なはずの2色が両方とも極端な値を示す）は、報酬計算ではなく学習側（critic/actorの学習過程）で生じている**。§9.3で挙げた2つの候補原因（アーキテクチャの浅い相互作用／学習不足）の検証を続ける。
+
+**なお本検証の直前、Dockerコンテナ`kusano_research`が2時間前（2026-09-18 08:20 UTC頃）に exit code 137（kill）で停止しているのを発見し、再起動した。** `/work`はホスト側のbind mountのため、git状態・チェックポイント・削除済みファイルの状態には影響なし（`git log`・チェックポイントのmtimeで確認済み）。原因は特定できていない（コンテナ外の要因の可能性。dmesgでOOM-killのシグネチャは確認できなかった）。作業に支障はなかったが、今後もコンテナが同様に落ちる可能性があるため、長時間ジョブ起動時は都度`docker ps`で生存確認をすること。
+
+## 11. S1 試行2：hindsight relabeling を追加して再学習（2026-09-18）
+
+### 11.1 TARGET_ENTROPY は変更しない
+
+ユーザの懸念（v4で緩めたら崩壊した経験）を`v4_experiment_log.md` §7.8で確認：「探索拡大（TARGET_ENTROPY緩和 → 全条件でcritic崩壊）」と明記されている。**v6は既に`-2.0`（v3/v4と同じ値）を使っており、変更していない。** この方向のハイパラ変更は行わないことを確定させた。
+
+### 11.2 hindsight relabeling の実装
+
+**ユーザ提案**：報酬が状態（視覚）のみから計算できるため、1つの軌跡の`(s,a,s')`は任意の`r`のもとで有効。同じ`(s,a,s')`に対して複数の`r`で報酬を計算し直し、それぞれ独立した遷移としてreplay bufferに追加する（Hindsight Experience Replayと同じ論理：Q学習はoff-policyなので、実際に行動を生成した`r`と異なる`r`で学習しても妥当）。
+
+**実装**（`simulation/train_rl_v6.py`）：
+```python
+memory.push(state, action_t, r_param_np, reward, next_state, done)
+for _ in range(K_RELABEL - 1):
+    r_relabel = sample_reward_param()
+    reward_relabel = reward_from_vision(v_next_raw, r_relabel)
+    memory.push(state, action_t, r_relabel, reward_relabel, next_state, done)
+```
+`K_RELABEL=10`（実1＋relabel9）。1000エピソード×100ステップの環境相互作用は変えずに、`(s,a,r)`の経験数を10倍（実質10000通りの`r`経験）にする。
+
+**副作用と対応**：relabelingにより1環境ステップあたりのbuffer push数が10倍になるため、`MEMORY_SIZE`を50000→100000に増量した（それでも保持エピソード数は500→100に減る計算——relabeling前は1状態=1r経験だったのに対し、relabeling後は1状態=10r経験になるため、同じメモリ容量でも「異なる状態」の保持数は減る。r被覆と状態被覆のトレードオフとして意図的に許容）。
+
+**着手前確認**：60秒のスモークテストで動作確認（エラーなし、ep0出力確認）。GPU7・disk空き容量（65GB）を再確認してから起動。
+
+### 11.3 起動
+
+`simulation/train_rl_v6.py --seed 0 --tag relabel`、GPU7、1000episode×100step（試行1と同一のエピソード数——relabelingの効果を単独で見るため意図的に据え置き）。チェックポイントは`v6_rl_actor_seed0_relabel.pth`・`v6_rl_critic_seed0_relabel.pth`（試行1の`v6_rl_*_seed0.pth`は上書きせず、比較のため保持）。ログ：`logs/train_rl_v6_s0_relabel.log`。
+
+**まだ完了していない。** 完了後、試行1と同じ5項目（Q値空間マップ・health check・未知rへの汎化・値域一致・学習曲線）を報告する。

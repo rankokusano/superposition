@@ -11,9 +11,21 @@ Differences from train_rl_v3.py:
   - actor/critic take a 4-dim reward-parameter r (model/rl_agent_sac_v6.py)
   - r is sampled once per episode (continuous-uniform + L1-normalized,
     sample_reward_param()) and held fixed for that episode's transitions
+    (this is the "behavior r" -- the one the actor actually saw and acted
+    under)
   - reward is the general 4-landmark form (reward_from_vision), not the
     hardcoded red_fraction - green_fraction
   - ReplayBuffer transitions carry r alongside (s,a,reward,s',done)
+  - hindsight relabeling (2026-09-18, user suggestion after S1 trial 1):
+    since reward is a pure function of the observed vision (not of which r
+    generated the action), each real transition is relabeled with
+    K_RELABEL-1 additional resampled r's, recomputing reward for each from
+    the SAME (state, action, next_state) -- multiplying (s,a,r) coverage
+    per environment step without extra rollout cost. This is the standard
+    off-policy relabeling argument (as in Hindsight Experience Replay): a
+    transition (s,a,s') is valid under any r, only the reward/done need
+    recomputing, and Q-learning is off-policy so training on
+    counterfactual r's the actor didn't actually act under is sound.
 
 Run inside Docker:
     xvfb-run --auto-servernum --server-args='-screen 0 1024x768x24' \
@@ -52,8 +64,19 @@ LR_ACTOR = 0.0001
 LR_CRITIC = 0.0001
 LR_ALPHA = 0.0001
 BATCH_SIZE = 32
-MEMORY_SIZE = 50000
-TARGET_ENTROPY = -2.0
+MEMORY_SIZE = 100000
+TARGET_ENTROPY = -2.0  # kept at v3/v4's validated value -- v4_experiment_log.md
+                        # §7.8 documents that relaxing this caused critic
+                        # collapse across all conditions, so this is NOT
+                        # touched per the 2026-09-18 decision (see
+                        # docs/v6_experiment_log.md)
+K_RELABEL = 10  # hindsight relabeling factor (1 real + 9 relabeled r's per transition):
+                # each real env step now pushes 10 transitions, so
+                # MEMORY_SIZE=100000 retains ~100 recent episodes' worth
+                # (100000 / (100 steps * 10 pushes/step)), vs 500 episodes
+                # pre-relabeling (50000/100) -- a deliberate trade-off of
+                # per-episode state coverage for far more (s,a,r) coverage
+                # per environment step
 
 ENV_CONFIG = '/work/simulation/config/collect/self_random_other_stay.yml'
 
@@ -96,11 +119,12 @@ class ReplayBuffer:
         return len(self.buffer)
 
 
-def train(seed):
+def train(seed, tag=''):
     os.makedirs(SAVE_DIR, exist_ok=True)
     seed_all(seed)
-    actor_save = os.path.join(SAVE_DIR, f'v6_rl_actor_seed{seed}.pth')
-    critic_save = os.path.join(SAVE_DIR, f'v6_rl_critic_seed{seed}.pth')
+    suffix = f'_{tag}' if tag else ''
+    actor_save = os.path.join(SAVE_DIR, f'v6_rl_actor_seed{seed}{suffix}.pth')
+    critic_save = os.path.join(SAVE_DIR, f'v6_rl_critic_seed{seed}{suffix}.pth')
 
     config = load_config(ENV_CONFIG)
     env = creator.create_environment(config.environment)
@@ -158,6 +182,14 @@ def train(seed):
             done = (step == MAX_STEPS - 1)
 
             memory.push(state, action_t, r_param_np, reward, next_state, done)
+
+            # hindsight relabeling: same (s,a,s') is valid under any r --
+            # recompute reward for K_RELABEL-1 other r's and push those too
+            for _ in range(K_RELABEL - 1):
+                r_relabel = sample_reward_param()
+                reward_relabel = reward_from_vision(v_next_raw, r_relabel)
+                memory.push(state, action_t, r_relabel, reward_relabel, next_state, done)
+
             state = next_state
 
             if len(memory) >= BATCH_SIZE:
@@ -218,5 +250,8 @@ def train(seed):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--seed', type=int, default=0)
+    parser.add_argument('--tag', default='',
+                         help='appended to checkpoint filenames, e.g. "relabel", '
+                              'to keep runs from overwriting each other')
     args = parser.parse_args()
-    train(args.seed)
+    train(args.seed, tag=args.tag)
