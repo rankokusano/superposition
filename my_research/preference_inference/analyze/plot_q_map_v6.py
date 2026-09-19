@@ -183,6 +183,11 @@ def main():
         json.dump(stats, f, indent=2)
     print(f'Saved: {stats_path}')
 
+    # raw grids too, for quantitative cross-run comparison (e.g. corr(Q_A1, -Q_A2))
+    grids_path = os.path.join(SAVE_DIR, f'q_map_v6_seed{args.seed}{suffix}_grids.npz')
+    np.savez(grids_path, **{name.split(' ')[0]: grids[name] for name, _ in R_CONDITIONS})
+    print(f'Saved: {grids_path}')
+
 
 if __name__ == '__main__':
     main()
