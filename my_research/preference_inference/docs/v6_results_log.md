@@ -34,6 +34,20 @@
 
 **総合判定：FAIL**（§3.0のS1判定基準に対して）。詳細は`docs/v6_experiment_log.md` §9。
 
+**試行2（2026-09-19、hindsight relabeling追加、commit `e1f2de6`以降）**：`--tag relabel`、K_RELABEL=10、MEMORY_SIZE=100000、他は試行1と同一（1000ep×100step、seed0、GPU7）。
+
+| r条件 | action_std（閾値0.05） | corner argmax（期待） | corner argmin |
+|---|---|---|---|
+| A1(+1,-1,0,0) | 0.0068 FAIL | Cyan（期待Red）FAIL | Green |
+| A2(-1,+1,0,0) | 0.0368 FAIL | Green（期待Green）PASS | Blue |
+| unseen(0,+1,-1,0) | 0.0361 FAIL | Green（期待Green）PASS | Blue（期待Blue）PASS |
+
+値域の一致：corner-std比1.74x、グリッド全体std比1.66x（試行1は2.69x/2.47x）、PASS。
+
+Q値空間マップ：`data/result/v6_baseline/q_map_v6_seed0_relabel.png`ほか（個別・統計json同ディレクトリ）。**全グリッド可視化により、A2・未知rの5点PASSはランドマーク識別ではなくx座標（左右）への単調依存が偶然一致した結果である疑いが強いと判明**（A1はy軸、A2は同じ|r|でx軸に依存——単純な符号反転になっていない）。詳細解釈は`docs/v6_experiment_log.md` §12。
+
+**総合判定：FAIL**（改善傾向はあるが、視覚検証により5点チェックのPASSの信頼性が低いと判断）。次のアクションとしてFiLM条件付けの実装を提案（ユーザ判断待ち）。
+
 ## S2: base 段（MSE）
 
 （未着手）

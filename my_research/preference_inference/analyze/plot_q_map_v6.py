@@ -109,9 +109,13 @@ def plot_q_map(q_grid, title, ax, vmin, vmax):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--seed', type=int, default=0)
+    parser.add_argument('--tag', default='',
+                         help='matches train_rl_v6.py --tag, e.g. "relabel", '
+                              'to load/save under that run\'s filenames')
     args = parser.parse_args()
 
     os.makedirs(SAVE_DIR, exist_ok=True)
+    suffix = f'_{args.tag}' if args.tag else ''
 
     config = load_config(ENV_CONFIG)
     env = creator.create_environment(config.environment)
@@ -120,11 +124,11 @@ def main():
 
     actor = ActorLSTM().to(DEVICE)
     actor.load_state_dict(torch.load(
-        os.path.join(MODEL_DIR, f'v6_rl_actor_seed{args.seed}.pth'), map_location=DEVICE))
+        os.path.join(MODEL_DIR, f'v6_rl_actor_seed{args.seed}{suffix}.pth'), map_location=DEVICE))
     actor.eval()
     critic = CriticLSTM().to(DEVICE)
     critic.load_state_dict(torch.load(
-        os.path.join(MODEL_DIR, f'v6_rl_critic_seed{args.seed}.pth'), map_location=DEVICE))
+        os.path.join(MODEL_DIR, f'v6_rl_critic_seed{args.seed}{suffix}.pth'), map_location=DEVICE))
     critic.eval()
 
     grids = {}
@@ -155,7 +159,7 @@ def main():
         fontsize=12)
     plt.tight_layout()
 
-    save_path = os.path.join(SAVE_DIR, f'q_map_v6_seed{args.seed}.png')
+    save_path = os.path.join(SAVE_DIR, f'q_map_v6_seed{args.seed}{suffix}.png')
     plt.savefig(save_path, dpi=150)
     plt.close()
     print(f'Saved: {save_path}')
@@ -168,13 +172,13 @@ def main():
         plt.colorbar(im, ax=ax, label='Q-value')
         plt.tight_layout()
         safe_name = name.split(' ')[0]
-        p = os.path.join(SAVE_DIR, f'q_map_v6_seed{args.seed}_{safe_name}.png')
+        p = os.path.join(SAVE_DIR, f'q_map_v6_seed{args.seed}{suffix}_{safe_name}.png')
         plt.savefig(p, dpi=150)
         plt.close()
         print(f'Saved: {p}')
 
     import json
-    stats_path = os.path.join(SAVE_DIR, f'q_map_v6_seed{args.seed}_stats.json')
+    stats_path = os.path.join(SAVE_DIR, f'q_map_v6_seed{args.seed}{suffix}_stats.json')
     with open(stats_path, 'w') as f:
         json.dump(stats, f, indent=2)
     print(f'Saved: {stats_path}')
