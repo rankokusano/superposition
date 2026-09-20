@@ -100,6 +100,17 @@ def reward_param_to_tensor(w):
     return torch.tensor(w, dtype=torch.float32).unsqueeze(0).to(DEVICE)
 
 
+def get_reward_v3(vision_np):
+    """Verbatim copy of train_rl_v3.py:get_reward, used only by --control."""
+    r, g, b = vision_np[:, :, 0], vision_np[:, :, 1], vision_np[:, :, 2]
+    red_pixels = int(((r > 0.9) & (g < 0.1) & (b < 0.1)).sum())
+    green_pixels = int(((g > 0.9) & (r < 0.1) & (b < 0.1)).sum())
+    total_pixels = vision_np.shape[0] * vision_np.shape[1]
+    red_fraction = red_pixels / total_pixels
+    green_fraction = green_pixels / total_pixels
+    return red_fraction - green_fraction
+
+
 def soft_update(target, source, tau):
     for tp, sp in zip(target.parameters(), source.parameters()):
         tp.data.copy_(tau * sp.data + (1 - tau) * tp.data)
@@ -119,7 +130,20 @@ class ReplayBuffer:
         return len(self.buffer)
 
 
-def train(seed, tag=''):
+def train(seed, tag='', control=False):
+    """control=True (2026-09-20, docs/v6_experiment_log.md §16): the same
+    v6 code path with every r-related element removed, to test whether the
+    v6 implementation itself regressed vs v3. r_dim=0 (critic/actor take no
+    r, architecture identical to v3's), no r sampling, no relabeling
+    (K_RELABEL=1, MEMORY_SIZE back to v3's 50000 since the 100000 was only
+    there to compensate relabeling), reward = red_fraction - green_fraction.
+    Everything else (env, episodes, steps, GAMMA/TAU/LRs/BATCH_SIZE,
+    TARGET_ENTROPY, update loop) is untouched."""
+    if control and not tag:
+        tag = 'control'
+    r_dim = 0 if control else R_DIM
+    memory_size = 50000 if control else MEMORY_SIZE
+    k_relabel = 1 if control else K_RELABEL
     os.makedirs(SAVE_DIR, exist_ok=True)
     seed_all(seed)
     suffix = f'_{tag}' if tag else ''
@@ -131,11 +155,11 @@ def train(seed, tag=''):
     env.init()
     env.off_display()
 
-    actor = ActorLSTM().to(DEVICE)
-    critic1 = CriticLSTM().to(DEVICE)
-    critic2 = CriticLSTM().to(DEVICE)
-    critic1_target = CriticLSTM().to(DEVICE)
-    critic2_target = CriticLSTM().to(DEVICE)
+    actor = ActorLSTM(r_dim=r_dim).to(DEVICE)
+    critic1 = CriticLSTM(r_dim=r_dim).to(DEVICE)
+    critic2 = CriticLSTM(r_dim=r_dim).to(DEVICE)
+    critic1_target = CriticLSTM(r_dim=r_dim).to(DEVICE)
+    critic2_target = CriticLSTM(r_dim=r_dim).to(DEVICE)
     critic1_target.load_state_dict(critic1.state_dict())
     critic2_target.load_state_dict(critic2.state_dict())
 
@@ -147,17 +171,22 @@ def train(seed, tag=''):
     critic2_opt = optim.Adam(critic2.parameters(), lr=LR_CRITIC)
     alpha_opt = optim.Adam([log_alpha], lr=LR_ALPHA)
 
-    memory = ReplayBuffer(MEMORY_SIZE)
+    memory = ReplayBuffer(memory_size)
     episode_rewards = []
 
     print(f'Device: {DEVICE}')
     print(f'Seed: {seed}')
-    print('Algorithm: SAC (CNN+LSTM, continuous action, reward-conditioned Q(s,a,r)/pi(a|s,r))')
-    print('Reward: sum_k w_k * fraction_k, r resampled per episode (continuous-uniform, L1-normalized)')
+    if control:
+        print('CONTROL MODE: no r (r_dim=0), no relabeling, MEMORY_SIZE=50000, '
+              'reward = red_fraction - green_fraction (v3 reward)')
+    else:
+        print('Algorithm: SAC (CNN+LSTM, continuous action, reward-conditioned Q(s,a,r)/pi(a|s,r))')
+        print('Reward: sum_k w_k * fraction_k, r resampled per episode (continuous-uniform, L1-normalized)')
     print(f'Episodes: {EPISODES} x {MAX_STEPS} steps')
 
     for episode in range(EPISODES):
-        r_param_np = sample_reward_param()
+        r_param_np = (np.zeros(0, dtype=np.float32) if control
+                      else sample_reward_param())
         r_param_t = reward_param_to_tensor(r_param_np)
 
         env.reset()
@@ -177,7 +206,8 @@ def train(seed, tag=''):
             v_next_raw, _, _, _, _ = env.step()
             next_state = vision_to_tensor(v_next_raw)
 
-            reward = reward_from_vision(v_next_raw, r_param_np)
+            reward = (get_reward_v3(v_next_raw) if control
+                      else reward_from_vision(v_next_raw, r_param_np))
             total_reward += reward
             done = (step == MAX_STEPS - 1)
 
@@ -185,7 +215,7 @@ def train(seed, tag=''):
 
             # hindsight relabeling: same (s,a,s') is valid under any r --
             # recompute reward for K_RELABEL-1 other r's and push those too
-            for _ in range(K_RELABEL - 1):
+            for _ in range(k_relabel - 1):
                 r_relabel = sample_reward_param()
                 reward_relabel = reward_from_vision(v_next_raw, r_relabel)
                 memory.push(state, action_t, r_relabel, reward_relabel, next_state, done)
@@ -253,5 +283,8 @@ if __name__ == '__main__':
     parser.add_argument('--tag', default='',
                          help='appended to checkpoint filenames, e.g. "relabel", '
                               'to keep runs from overwriting each other')
+    parser.add_argument('--control', action='store_true',
+                         help='r-free control run (see train() docstring); '
+                              'defaults --tag to "control"')
     args = parser.parse_args()
-    train(args.seed, tag=args.tag)
+    train(args.seed, tag=args.tag, control=args.control)
