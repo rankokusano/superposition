@@ -18,6 +18,9 @@ docs/v6_experiment_log.md §3):
     not fed into the LSTM input alongside the CNN features: r is constant
     for a whole episode (no temporal structure to integrate), unlike the
     visual observations the LSTM is there to integrate.
+  - film=True (2026-09-21, docs/v6_experiment_log.md §17.3) additionally
+    modulates the 256-d CNN features by r before the LSTM (FiLM). Off by
+    default, so existing checkpoints and runs are unaffected.
 """
 import numpy as np
 import torch
@@ -56,14 +59,36 @@ class CNNEncoder(nn.Module):
         return x
 
 
+class FiLM(nn.Module):
+    """
+    Feature-wise linear modulation by the reward parameter r
+    (docs/v6_experiment_log.md §17.3): out = (1 + W_g r) * feat + W_b r.
+    Linear in r, so the interaction feat_j * (sum_k u_jk r_k) is bilinear
+    in (feature, reward weights) -- the structure Q ~ sum_k w_k G_k(s, a).
+    Zero-initialized, so at the start of training it is the identity and
+    the network is exactly the non-FiLM one.
+    """
+    def __init__(self, r_dim, feat_dim):
+        super().__init__()
+        self.gamma = nn.Linear(r_dim, feat_dim)
+        self.beta = nn.Linear(r_dim, feat_dim)
+        for m in (self.gamma, self.beta):
+            nn.init.zeros_(m.weight)
+            nn.init.zeros_(m.bias)
+
+    def forward(self, feat, r):
+        return (1.0 + self.gamma(r)) * feat + self.beta(r)
+
+
 class ActorLSTM(nn.Module):
     """
     行動を決めるネットワーク（Actor）: pi(a | s, r)
     CNN + LSTM -> [lstm_out, r] を連結 -> 平均・標準偏差を出力 -> 連続行動をサンプリング
     """
-    def __init__(self, hidden_dim=128, r_dim=R_DIM):
+    def __init__(self, hidden_dim=128, r_dim=R_DIM, film=False):
         super().__init__()
         self.encoder = CNNEncoder()
+        self.film = FiLM(r_dim, 256) if film else None
         self.lstm = nn.LSTM(256, hidden_dim, batch_first=True)
         self.mean = nn.Linear(hidden_dim + r_dim, 2)
         self.log_std = nn.Linear(hidden_dim + r_dim, 2)
@@ -71,7 +96,10 @@ class ActorLSTM(nn.Module):
         self.r_dim = r_dim
 
     def forward(self, v, r, hidden=None):
-        feat = self.encoder(v).unsqueeze(1)
+        feat = self.encoder(v)
+        if self.film is not None:
+            feat = self.film(feat, r)
+        feat = feat.unsqueeze(1)
         lstm_out, hidden = self.lstm(feat, hidden)
         lstm_out = lstm_out.squeeze(1)
         x = torch.cat([lstm_out, r], dim=-1)
@@ -97,9 +125,10 @@ class CriticLSTM(nn.Module):
     Q値を評価するネットワーク（Critic）: Q(s, a, r)
     CNN + LSTM + 行動 + 報酬パラメータ -> Q値
     """
-    def __init__(self, hidden_dim=128, r_dim=R_DIM):
+    def __init__(self, hidden_dim=128, r_dim=R_DIM, film=False):
         super().__init__()
         self.encoder = CNNEncoder()
+        self.film = FiLM(r_dim, 256) if film else None
         self.lstm = nn.LSTM(256, hidden_dim, batch_first=True)
         self.q = nn.Sequential(
             nn.Linear(hidden_dim + 2 + r_dim, 64),
@@ -109,7 +138,10 @@ class CriticLSTM(nn.Module):
         self.r_dim = r_dim
 
     def forward(self, v, action, r, hidden=None):
-        feat = self.encoder(v).unsqueeze(1)
+        feat = self.encoder(v)
+        if self.film is not None:
+            feat = self.film(feat, r)
+        feat = feat.unsqueeze(1)
         lstm_out, hidden = self.lstm(feat, hidden)
         lstm_out = lstm_out.squeeze(1)
         x = torch.cat([lstm_out, action, r], dim=-1)

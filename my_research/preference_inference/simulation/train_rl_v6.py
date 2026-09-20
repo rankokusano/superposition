@@ -130,7 +130,7 @@ class ReplayBuffer:
         return len(self.buffer)
 
 
-def train(seed, tag='', control=False):
+def train(seed, tag='', control=False, no_relabel=False, film=False):
     """control=True (2026-09-20, docs/v6_experiment_log.md §16): the same
     v6 code path with every r-related element removed, to test whether the
     v6 implementation itself regressed vs v3. r_dim=0 (critic/actor take no
@@ -139,11 +139,14 @@ def train(seed, tag='', control=False):
     there to compensate relabeling), reward = red_fraction - green_fraction.
     Everything else (env, episodes, steps, GAMMA/TAU/LRs/BATCH_SIZE,
     TARGET_ENTROPY, update loop) is untouched."""
-    if control and not tag:
-        tag = 'control'
+    assert not (control and film), '--control and --film are mutually exclusive'
+    if not tag:
+        tag = 'control' if control else ('film' if film else ('norelabel' if no_relabel else ''))
     r_dim = 0 if control else R_DIM
-    memory_size = 50000 if control else MEMORY_SIZE
-    k_relabel = 1 if control else K_RELABEL
+    # --no_relabel (2026-09-21, §17.2): r-conditioned, K_RELABEL=1, MEMORY_SIZE
+    # back to 50000 -- the exact trial-1 recipe, to isolate r from relabeling
+    memory_size = 50000 if (control or no_relabel) else MEMORY_SIZE
+    k_relabel = 1 if (control or no_relabel) else K_RELABEL
     os.makedirs(SAVE_DIR, exist_ok=True)
     seed_all(seed)
     suffix = f'_{tag}' if tag else ''
@@ -155,11 +158,11 @@ def train(seed, tag='', control=False):
     env.init()
     env.off_display()
 
-    actor = ActorLSTM(r_dim=r_dim).to(DEVICE)
-    critic1 = CriticLSTM(r_dim=r_dim).to(DEVICE)
-    critic2 = CriticLSTM(r_dim=r_dim).to(DEVICE)
-    critic1_target = CriticLSTM(r_dim=r_dim).to(DEVICE)
-    critic2_target = CriticLSTM(r_dim=r_dim).to(DEVICE)
+    actor = ActorLSTM(r_dim=r_dim, film=film).to(DEVICE)
+    critic1 = CriticLSTM(r_dim=r_dim, film=film).to(DEVICE)
+    critic2 = CriticLSTM(r_dim=r_dim, film=film).to(DEVICE)
+    critic1_target = CriticLSTM(r_dim=r_dim, film=film).to(DEVICE)
+    critic2_target = CriticLSTM(r_dim=r_dim, film=film).to(DEVICE)
     critic1_target.load_state_dict(critic1.state_dict())
     critic2_target.load_state_dict(critic2.state_dict())
 
@@ -180,6 +183,7 @@ def train(seed, tag='', control=False):
         print('CONTROL MODE: no r (r_dim=0), no relabeling, MEMORY_SIZE=50000, '
               'reward = red_fraction - green_fraction (v3 reward)')
     else:
+        print(f'Variant: film={film} no_relabel={no_relabel} K_RELABEL={k_relabel} MEMORY_SIZE={memory_size}')
         print('Algorithm: SAC (CNN+LSTM, continuous action, reward-conditioned Q(s,a,r)/pi(a|s,r))')
         print('Reward: sum_k w_k * fraction_k, r resampled per episode (continuous-uniform, L1-normalized)')
     print(f'Episodes: {EPISODES} x {MAX_STEPS} steps')
@@ -286,5 +290,12 @@ if __name__ == '__main__':
     parser.add_argument('--control', action='store_true',
                          help='r-free control run (see train() docstring); '
                               'defaults --tag to "control"')
+    parser.add_argument('--no_relabel', action='store_true',
+                         help='r-conditioned without relabeling, MEMORY_SIZE=50000 '
+                              '(trial-1 recipe, §17.2); defaults --tag to "norelabel"')
+    parser.add_argument('--film', action='store_true',
+                         help='FiLM-modulate the CNN features by r (§17.3); '
+                              'defaults --tag to "film"')
     args = parser.parse_args()
-    train(args.seed, tag=args.tag, control=args.control)
+    train(args.seed, tag=args.tag, control=args.control,
+          no_relabel=args.no_relabel, film=args.film)

@@ -112,6 +112,8 @@ def main():
     parser.add_argument('--tag', default='',
                          help='matches train_rl_v6.py --tag, e.g. "relabel", '
                               'to load/save under that run\'s filenames')
+    parser.add_argument('--film', action='store_true',
+                         help='checkpoints were trained with --film')
     args = parser.parse_args()
 
     os.makedirs(SAVE_DIR, exist_ok=True)
@@ -122,11 +124,11 @@ def main():
     env.init()
     env.off_display()
 
-    actor = ActorLSTM().to(DEVICE)
+    actor = ActorLSTM(film=args.film).to(DEVICE)
     actor.load_state_dict(torch.load(
         os.path.join(MODEL_DIR, f'v6_rl_actor_seed{args.seed}{suffix}.pth'), map_location=DEVICE))
     actor.eval()
-    critic = CriticLSTM().to(DEVICE)
+    critic = CriticLSTM(film=args.film).to(DEVICE)
     critic.load_state_dict(torch.load(
         os.path.join(MODEL_DIR, f'v6_rl_critic_seed{args.seed}{suffix}.pth'), map_location=DEVICE))
     critic.eval()

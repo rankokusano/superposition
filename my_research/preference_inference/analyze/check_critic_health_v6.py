@@ -88,6 +88,8 @@ def main():
     parser.add_argument('--camera', choices=['self', 'other'], required=True)
     parser.add_argument('--scan_self', action='store_true')
     parser.add_argument('--label', default='critic_v6')
+    parser.add_argument('--film', action='store_true',
+                         help='critic was trained with --film (FiLM on CNN features)')
     parser.add_argument('--action-eps', type=float, default=0.05)
     parser.add_argument('--corner-eps', type=float, default=0.05)
     parser.add_argument('--range-ratio-eps', type=float, default=3.0,
@@ -106,7 +108,7 @@ def main():
     else:
         env.self_agent.p = np.array([0.0, 0.0])
 
-    critic = CriticLSTM().to(DEVICE)
+    critic = CriticLSTM(film=args.film).to(DEVICE)
     critic.load_state_dict(torch.load(args.critic_path, map_location=DEVICE))
     critic.eval()
 
