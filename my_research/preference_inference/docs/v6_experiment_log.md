@@ -532,4 +532,52 @@ FiLM実装は相応のコストがあるため、着手前に「そもそも学�
 
 ### 14.4 実施内容
 
-**seed0はリラベリングありで試行2として既に完了済み**（`v6_rl_*_seed0_relabel.pth`）なので再学習しない——本節の判定にそのままseed0の結果を含める。**新規に起動するのはseed1・seed2のみ**：`train_rl_v6.py --seed {1,2} --tag relabel`（`v6_rl_*_seed1_relabel.pth`・`v6_rl_*_seed2_relabel.pth`として保存、既存ファイルとの衝突なし）。K_RELABEL=10、他は試行2と同一設定。各seed完了後、`check_critic_health_v6.py`と`plot_q_map_v6.py`（全グリッド、`--seed {1,2} --tag relabel`）を実行する。
+**seed0はリラベリングありで試行2として既に完了済み**（`v6_rl_*_seed0_relabel.pth`）なので再学習しない——本節の判定にそのままseed0の結果を含める。**新規に起動するのはseed1・seed2のみ**：`train_rl_v6.py --seed {1,2} --tag relabel`（`v6_rl_*_seed1_relabel.pth`・`v6_rl_*_seed2_relabel.pth`として保存、既存ファイルとの衝突なし）。K_RELABEL=10、他は試行2と同一設定。各seed完了後、`check_critic_health_v6.py`と`plot_q_map_v6.py`（全グリッド、`--seed {1,2} --tag relabel`）を実行する。GPU7（seed1）・GPU6（seed2）で並列起動。
+
+## 15. seed0/1/2 判定結果（2026-09-20）：判断保留
+
+### 15.1 健全性（action_std）一覧
+
+| seed | A1 action_std | A2 action_std | unseen action_std | state_std（3条件） | 健全か（3条件ともaction_std>0.05） |
+|---|---|---|---|---|---|
+| 0（試行2 relabel） | 0.0068 | 0.0368 | 0.0361 | 全てPASS | **NO** |
+| 1（relabel） | 0.0087 | 0.0107 | 0.0088 | **全て0.000000（完全崩壊）** | **NO** |
+| 2（relabel） | 0.0110 | 0.0146 | 0.0114 | 全てPASS | **NO** |
+
+**§14.1の定義に照らし、seed0・seed1・seed2のいずれも「健全」ではない。** §14.3の判定表の第3行（「3つとも健全でない」）に該当する。**総合判定：判断保留（inconclusive）。** 事前登録した基準を機械的に適用した結果であり、ここでFiLM実施/不要のどちらかに独断で倒すことはしない。
+
+### 15.2 seed1の崩壊は v4 既知の「定数Q」パターンと完全一致
+
+seed1は3条件すべてで`state_std=0.000000`——**位置を変えても行動を変えてもQ値が完全に同じ値**（A1条件で常に0.8910等）。これは`docs/v4_experiment_log.md` §7.6が警告する「崩壊したcritic（全入力に対しQ≈定数）」と質的に同一の症状であり、**r条件付けとは無関係にv4の頃から存在する既知のSAC崩壊モードがそのまま再現した**と解釈するのが自然。
+
+### 15.3 seed2の観察（参考、正式な合否判定の対象外）
+
+seed2は健全性の閾値を満たさないため§14.3の基準A〜Dは正式には適用しないが、参考情報として記録する：
+- A1: argmax=Cyan（期待Red）——trial1・trial2・seed2の**3つの独立した学習で共通して観察される再現性のあるパターン**（seed1は完全崩壊のため対象外）
+- A2: argmax=Green（期待通り）、unseen: argmax=Green・argmin=Blue（期待通り）——ただしstd=0.093・0.096と非常に小さく、空間マップ（`data/result/v6_baseline/q_map_v6_seed2_relabel.png`）を見るとA2・unseenはほぼ均一な薄い黄色で、事実上「ほとんど何も学習していない」に近い。A1だけが明確な（しかし誤った）勾配を持つ
+
+**全グリッド可視化**（`/home/kusano/superposition/my_research/preference_inference/data/result/v6_baseline/q_map_v6_seed2_relabel.png`）：A1は上（Red・Cyan側）が明るく下（Green・Blue側）が暗いという、trial1・trial2のseed0と**同一の軸・同一の方向のパターン**。A2・unseenはコントラストが弱く、模様と呼べるほどの構造がない。
+
+### 15.4 全体を通した観察：v6のaction_stdはv4の「健全」域に一度も到達していない
+
+v6でこれまでに学習した4本（trial1-seed0、trial2-seed0-relabel、seed1-relabel、seed2-relabel）のaction_stdを全て並べる：
+
+```
+trial1 (no relabel): 0.039 / 0.013 / 0.024
+trial2 (relabel)   : 0.007 / 0.037 / 0.036
+seed1  (relabel)   : 0.009 / 0.011 / 0.009
+seed2  (relabel)   : 0.011 / 0.015 / 0.011
+```
+最大値は0.039（trial1のA1条件）。v3の「健全」だったA-1のaction_std（0.119・0.202）にも、A-2の境界ぎりぎりの健全値（0.060）にも一度も到達していない。
+
+v4のA-1/A-2は「健全 or 崩壊」がほぼ二値的に分かれた（健全時0.119〜0.202、崩壊時0.016〜0.050）のに対し、**v6は4回とも一貫して0.01前後の低い帯に留まっており、v4のような「たまに引く健全な当たり」が一度も出ていない。** これは単純な運（seed分散）だけでは説明しにくく、**r条件付けの追加が、通常のSAC学習が到達できるaction-sensitivityの水準を体系的に押し下げている可能性**を示唆する（例えば：criticがrの違いで出力の分散を「説明」できてしまい、行動への感度を高める勾配圧が相対的に弱まる、など。未検証の仮説）。
+
+### 15.5 次のアクション（ユーザ判断待ち）
+
+§14.3の「判断保留」に対する提案：
+- (a) さらにseedを追加する（例：seed3〜5）。ただしv4は3 seedで2/3・1/3の健全率だったのに対しv6は3/3とも不健全——同じ延長線上でseedを増やすだけで解決するかは不透明
+- (b) episode数を増やす（例：2000〜3000ep、GPU空きなら数時間で可能）。action_stdが一度も0.05に近づいていないことから、単純な追加学習で閾値を超えられるかも不明
+- (c) §15.4の仮説（r条件付けがaction-sensitivityを体系的に妨げている）を検証するため、rを条件付けない素の`CriticLSTM`（v3と同じ、r入力なし）を全く同じ学習量・環境で回し、v6のCNN+LSTM実装自体に退行がないか切り分ける
+- (d) FiLMの実装に進み、その学習過程でaction_stdの推移も併せて観察する（FiLMがこの問題も改善するかは不明だが、r条件付けの機構自体を変えるため無関係ではない）
+
+**まだ何も実施していない。** 判断はユーザに委ねる。

@@ -48,6 +48,21 @@ Q値空間マップ：`data/result/v6_baseline/q_map_v6_seed0_relabel.png`ほか
 
 **総合判定：FAIL**（改善傾向はあるが、視覚検証により5点チェックのPASSの信頼性が低いと判断）。次のアクションとしてFiLM条件付けの実装を提案（ユーザ判断待ち）。
 
+**試行3：seed0/1/2 relabel 比較（2026-09-20、判定基準は`docs/v6_experiment_log.md` §14で事前登録）**：seed0=試行2をそのまま流用、seed1・seed2は`--seed {1,2} --tag relabel`で新規学習（GPU7/GPU6並列、各1000ep、K_RELABEL=10、commit `a879e10`時点のコード）。
+
+| seed | A1 action_std | A2 action_std | unseen action_std | state_std（3条件） | 健全か |
+|---|---|---|---|---|---|
+| 0 | 0.0068 | 0.0368 | 0.0361 | 全PASS | NO |
+| 1 | 0.0087 | 0.0107 | 0.0088 | **全て0.0（完全崩壊、Q=定数）** | NO |
+| 2 | 0.0110 | 0.0146 | 0.0114 | 全PASS | NO |
+
+seed1のQ値は全条件・全位置で完全に同一値（A1=0.8910、A2=-0.3729、unseen=0.1598）。
+seed2：A1はargmax=Cyan（期待Red）、A2はargmax=Green・argmin=Blue、unseenはargmax=Green・argmin=Blue（ただしA2/unseenのグリッドstdは0.093/0.096と極小で、ほぼ一様）。値域の一致（corner-std比）：seed2は1.16x（seed1は両条件0.0のため無意味）。
+
+Q値空間マップ（全グリッド）：`/home/kusano/superposition/my_research/preference_inference/data/result/v6_baseline/q_map_v6_seed{1,2}_relabel.png`（個別・stats.json・grids.npz同ディレクトリ）。
+
+**総合判定：判断保留**（§14.3第3行：3seedとも健全でない）。詳細は`docs/v6_experiment_log.md` §15。
+
 ## S2: base 段（MSE）
 
 （未着手）
