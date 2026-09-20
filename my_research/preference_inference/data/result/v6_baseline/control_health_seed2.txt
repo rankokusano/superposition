@@ -1,0 +1,31 @@
+=== critic health check: control_seed2 (data/model/v6_rl_critic_seed2_control.pth) ===
+
+1) action sensitivity (fixed vision @ Red, 7 probe actions):
+   action=(0, 0)  Q=3.919997
+   action=(1, 0)  Q=3.960741
+   action=(-1, 0)  Q=3.884665
+   action=(0, 1)  Q=3.987592
+   action=(0, -1)  Q=3.779401
+   action=(0.7, 0.7)  Q=3.992727
+   action=(-0.7, -0.7)  Q=3.816952
+   std across actions: 0.077260  (threshold: 0.05)
+
+2) state sensitivity (fixed action=(1,0), 4 corners + center):
+   Red     p=(-9.0, 9.0)  Q=3.960741
+   Green   p=(-9.0, -9.0)  Q=1.046510
+   Blue    p=(9.0, -9.0)  Q=0.764300
+   Yellow  p=(9.0, 9.0)  Q=1.228671
+   Center  p=(0.0, 0.0)  Q=2.409811
+   std across corners: 1.181006  (threshold: 0.05)
+
+3) out-of-distribution sensitivity (fixed action=(1,0)):
+   vision=real(Red)   Q=3.960741
+   vision=zeros       Q=0.827146
+   vision=ones        Q=1.734458
+   vision=random      Q=2.125810
+   std across synthetic(zeros/ones/random): 0.543946
+   |Q(real) - Q(zeros)|: 3.133594
+
+=== VERDICT: HEALTHY ===
+  action-sensitive: True (std=0.077260)
+  state-sensitive:  True (std=1.181006)

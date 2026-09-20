@@ -63,6 +63,16 @@ Q値空間マップ（全グリッド）：`/home/kusano/superposition/my_resear
 
 **総合判定：判断保留**（§14.3第3行：3seedとも健全でない）。詳細は`docs/v6_experiment_log.md` §15。
 
+**対照実験（r関連を全て外す、2026-09-20、`train_rl_v6.py --control`、commit `3bdd1c9`のコード、判定基準は`docs/v6_experiment_log.md` §16.4で事前登録）**：seed0/1/2、各1000ep、GPU5/6/7並列。元の`analyze/check_critic_health.py`で測定（生出力`data/result/v6_baseline/control_health_seed{0,1,2}.txt`）。
+
+| seed | action_std | state_std | 判定 |
+|---|---|---|---|
+| 0 | 0.162258 | 1.078918 | HEALTHY |
+| 1 | 0.105187 | 1.368364 | HEALTHY |
+| 2 | 0.077260 | 1.181006 | HEALTHY |
+
+（参考：v3 A-1の同seed=0.119/0.202/0.025。rありv6の12値は0.007〜0.039）。最大値0.162 ≥ 0.12 → §16.4の行1（実装に退行なし、r条件付け〔またはリラベリング・buffer変更〕が疑わしい）。詳細と留意点は`docs/v6_experiment_log.md` §16.6-16.8。
+
 ## S2: base 段（MSE）
 
 （未着手）
