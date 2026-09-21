@@ -95,6 +95,15 @@ Q値空間マップ（全グリッド）：`/home/kusano/superposition/my_resear
 
 軸1（≥2/3が健全）：**FAIL**（0/3）。軸2（≥2/3がA〜D）：**PASS**（2/3）。→ §17.3：**軸1 FAIL × 軸2 PASS**（rへの応答は直ったがaction感度は低いまま）。全グリッド：`/home/kusano/superposition/my_research/preference_inference/data/result/v6_baseline/q_map_v6_seed{0,1,2}_film.png`。詳細・留意点は`docs/v6_experiment_log.md` §18。
 
+**(c) 8方向プローブQの方向情報（2026-09-22、§19で事前登録、`analyze/probe_q_direction_info_v6.py`）**：c1=r=A-1・r3_stay test self_vision、c2=r=A-2・r2_a1random_a2rl test other_vision（各30,300フレーム）。基準=`v3_rl_critic.pth`（config実使用）。出力`data/result/v6_baseline/probe_dirinfo_v6.{txt,json}`。
+
+| 候補 | ρ_c1 | ρ_c2 | スコア(min) |
+|---|---|---|---|
+| FiLM seed1 | 0.038 | 0.015 | 0.015 |
+| FiLM seed2 | 0.279 | 0.049 | 0.049 |
+
+最良0.049 < 1/5 → §19.4の行2（方向情報が失われている）。c1で√D（方向間の標準偏差）：v3基準0.098、対照0.08〜0.10、リラベリングなしr条件付き0.03〜0.06（向きの相関+0.64〜+0.94）、リラベリングありr条件付き（FiLM含む）0.01〜0.03（相関≈0）。詳細・事後観察・限界は`docs/v6_experiment_log.md` §20。
+
 ## S2: base 段（MSE）
 
 （未着手）
