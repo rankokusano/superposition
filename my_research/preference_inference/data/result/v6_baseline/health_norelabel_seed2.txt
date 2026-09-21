@@ -1,0 +1,37 @@
+=== v6 critic health check: norelabel_seed2 (data/model/v6_rl_critic_seed2_norelabel.pth) ===
+
+--- r = A1(+1,-1,0,0) ---
+  1) action sensitivity (vision@Red): std=0.025160 (threshold 0.05)
+  2) state sensitivity (action=(1,0)): Red=0.5495, Green=0.5495, Blue=0.5495, Cyan(Yellow)=0.5495, Center=0.5495
+     std across corners: 0.000000 (threshold 0.05)
+     argmax=Red  argmin=Red
+  3) OOD sensitivity: zeros=0.5495, ones=0.5495, random=0.5495
+
+--- r = A2(-1,+1,0,0) ---
+  1) action sensitivity (vision@Red): std=0.009908 (threshold 0.05)
+  2) state sensitivity (action=(1,0)): Red=-1.3351, Green=-1.3351, Blue=-1.3351, Cyan(Yellow)=-1.3351, Center=-1.3351
+     std across corners: 0.000000 (threshold 0.05)
+     argmax=Red  argmin=Red
+  3) OOD sensitivity: zeros=-1.3352, ones=-1.3351, random=-1.3351
+
+--- r = unseen(0,+1,-1,0) ---
+  1) action sensitivity (vision@Red): std=0.017248 (threshold 0.05)
+  2) state sensitivity (action=(1,0)): Red=-0.3499, Green=-0.3499, Blue=-0.3499, Cyan(Yellow)=-0.3499, Center=-0.3499
+     std across corners: 0.000000 (threshold 0.05)
+     argmax=Red  argmin=Red
+  3) OOD sensitivity: zeros=-0.3499, ones=-0.3499, random=-0.3499
+
+4) reward-condition response:
+   A1(+1,-1,0,0) peaks at: Red  (expect Red)
+   A2(-1,+1,0,0) peaks at: Red  (expect Green)
+
+5) value-range match: corner-std A1=0.000000 A2=0.000000 ratio=0.00x (threshold 3.0x; v4 had a 0.63/0.009 ~ 70x gap)
+
+6) generalization to unseen r=(0,+1,-1,0): peaks at Red (expect Green), troughs at Red (expect Blue)
+
+=== VERDICT: FAIL ===
+  action-sensitive (all r): False
+  state-sensitive (all r):  False
+  reward-condition response (A1->Red, A2->Green): False
+  value-range match (<= 3.0x): True
+  generalization to unseen r: False

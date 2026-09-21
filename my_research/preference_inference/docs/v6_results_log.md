@@ -73,6 +73,28 @@ Q値空間マップ（全グリッド）：`/home/kusano/superposition/my_resear
 
 （参考：v3 A-1の同seed=0.119/0.202/0.025。rありv6の12値は0.007〜0.039）。最大値0.162 ≥ 0.12 → §16.4の行1（実装に退行なし、r条件付け〔またはリラベリング・buffer変更〕が疑わしい）。詳細と留意点は`docs/v6_experiment_log.md` §16.6-16.8。
 
+**試行4：(i)(ii)並行実施（2026-09-21、コードcommit `3e17de4`、判定基準は`docs/v6_experiment_log.md` §17で事前登録）**：5本とも1000ep（GPU1/2/4/5/6並列）。生出力`data/result/v6_baseline/health_{norelabel,film}_seed*.txt`、全グリッド`q_map_v6_seed{1,2}_norelabel*`・`q_map_v6_seed{0,1,2}_film*`。
+
+(i) rあり・リラベリングなし（seed0=試行1）：
+
+| seed | A1 | A2 | unseen | 平均 |
+|---|---|---|---|---|
+| 0 | 0.0388 | 0.0134 | 0.0241 | 0.0253 |
+| 1 | 0.0199 | 0.0224 | 0.0136 | 0.0186 |
+| 2 | 0.0252 | 0.0099 | 0.0172 | 0.0174（state_std=0、完全崩壊） |
+
+→ §17.2 行1（r単独でaction感度が下がる、非定常性が最有力）。
+
+(ii) FiLM（relabel recipe + FiLM）：
+
+| seed | A1 | A2 | unseen | 健全 | 基準A/B/C | D（目視） | 軸2 |
+|---|---|---|---|---|---|---|---|
+| 0 | 0.2088 | 0.0376 | 0.0324 | NO | NG/NG/NG | NG（ほぼ一様） | NO |
+| 1 | 0.0088 | 0.0190 | 0.0105 | NO | OK/OK/OK | OK（unseenは留意付き） | YES |
+| 2 | 0.0180 | 0.0127 | 0.0194 | NO | OK/OK/OK | OK（unseenは留意付き） | YES |
+
+軸1（≥2/3が健全）：**FAIL**（0/3）。軸2（≥2/3がA〜D）：**PASS**（2/3）。→ §17.3：**軸1 FAIL × 軸2 PASS**（rへの応答は直ったがaction感度は低いまま）。全グリッド：`/home/kusano/superposition/my_research/preference_inference/data/result/v6_baseline/q_map_v6_seed{0,1,2}_film.png`。詳細・留意点は`docs/v6_experiment_log.md` §18。
+
 ## S2: base 段（MSE）
 
 （未着手）

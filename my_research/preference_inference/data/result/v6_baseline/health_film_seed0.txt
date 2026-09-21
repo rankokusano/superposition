@@ -1,0 +1,37 @@
+=== v6 critic health check: film_seed0 (data/model/v6_rl_critic_seed0_film.pth) ===
+
+--- r = A1(+1,-1,0,0) ---
+  1) action sensitivity (vision@Red): std=0.208762 (threshold 0.05)
+  2) state sensitivity (action=(1,0)): Red=-0.6856, Green=-1.5997, Blue=-0.8275, Cyan(Yellow)=-0.7444, Center=-0.7842
+     std across corners: 0.338944 (threshold 0.05)
+     argmax=Red  argmin=Green
+  3) OOD sensitivity: zeros=-0.8496, ones=-0.9047, random=-0.8709
+
+--- r = A2(-1,+1,0,0) ---
+  1) action sensitivity (vision@Red): std=0.037573 (threshold 0.05)
+  2) state sensitivity (action=(1,0)): Red=-2.2567, Green=-2.2640, Blue=-1.8384, Cyan(Yellow)=-1.9802, Center=-1.8400
+     std across corners: 0.190395 (threshold 0.05)
+     argmax=Blue  argmin=Green
+  3) OOD sensitivity: zeros=-1.8748, ones=-1.7499, random=-1.9465
+
+--- r = unseen(0,+1,-1,0) ---
+  1) action sensitivity (vision@Red): std=0.032424 (threshold 0.05)
+  2) state sensitivity (action=(1,0)): Red=-1.9913, Green=-2.2227, Blue=-2.5898, Cyan(Yellow)=-2.2885, Center=-2.1813
+     std across corners: 0.194550 (threshold 0.05)
+     argmax=Red  argmin=Blue
+  3) OOD sensitivity: zeros=-2.2272, ones=-2.3028, random=-2.3364
+
+4) reward-condition response:
+   A1(+1,-1,0,0) peaks at: Red  (expect Red)
+   A2(-1,+1,0,0) peaks at: Blue  (expect Green)
+
+5) value-range match: corner-std A1=0.338944 A2=0.190395 ratio=1.78x (threshold 3.0x; v4 had a 0.63/0.009 ~ 70x gap)
+
+6) generalization to unseen r=(0,+1,-1,0): peaks at Red (expect Green), troughs at Blue (expect Blue)
+
+=== VERDICT: FAIL ===
+  action-sensitive (all r): False
+  state-sensitive (all r):  True
+  reward-condition response (A1->Red, A2->Green): False
+  value-range match (<= 3.0x): True
+  generalization to unseen r: False
