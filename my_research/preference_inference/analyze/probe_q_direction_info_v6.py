@@ -77,9 +77,13 @@ CRITICS = [
     # across states, so S~0 and R/rho are meaningless; D is still shown for completeness)
     ('relabel_s1(state-collapsed)', 'v6', 'v6_rl_critic_seed1_relabel.pth', False, ['c1', 'c2']),
     ('norelabel_s2(state-collapsed)', 'v6', 'v6_rl_critic_seed2_norelabel.pth', False, ['c1', 'c2']),
+    # 2026-09-28, (a'), §21: FiLM + no-relabel
+    ('film_norelabel_s0', 'v6', 'v6_rl_critic_seed0_film_norelabel.pth', True, ['c1', 'c2']),
+    ('film_norelabel_s1', 'v6', 'v6_rl_critic_seed1_film_norelabel.pth', True, ['c1', 'c2']),
+    ('film_norelabel_s2', 'v6', 'v6_rl_critic_seed2_film_norelabel.pth', True, ['c1', 'c2']),
 ]
 REF = 'v3_A1_s0_REF'
-CANDIDATES = ['film_s1', 'film_s2']
+CANDIDATES = ['film_norelabel_s0', 'film_norelabel_s1', 'film_norelabel_s2']
 N_BOOT = 1000
 BOOT_SEED = 0
 
