@@ -51,6 +51,7 @@ import creator
 from util import load_config
 from my_research.preference_inference.model.rl_agent_sac_v6 import (
     ActorLSTM, CriticLSTM, R_DIM, sample_reward_param, reward_from_vision,
+    A1_TRUE_R, A2_TRUE_R,
 )
 
 os.environ['MESA_GL_VERSION_OVERRIDE'] = '3.3'
@@ -70,6 +71,13 @@ TARGET_ENTROPY = -2.0  # kept at v3/v4's validated value -- v4_experiment_log.md
                         # collapse across all conditions, so this is NOT
                         # touched per the 2026-09-18 decision (see
                         # docs/v6_experiment_log.md)
+CURRICULUM_PHASE1_END = 200  # ep<200: r in {A1,A2} only
+CURRICULUM_PHASE2_END = 500  # 200<=ep<500: linear mix of {A1,A2} and full-range;
+                              # ep>=500: full-range uniform (500 episodes, the
+                              # longest phase -- see docs/v6_experiment_log.md §25.1
+                              # for why: S5 needs the critic to handle the continuous
+                              # r VE' will actually output, not just A1/A2)
+
 K_RELABEL = 10  # hindsight relabeling factor (1 real + 9 relabeled r's per transition):
                 # each real env step now pushes 10 transitions, so
                 # MEMORY_SIZE=100000 retains ~100 recent episodes' worth
@@ -98,6 +106,30 @@ def vision_to_tensor(vision_np):
 
 def reward_param_to_tensor(w):
     return torch.tensor(w, dtype=torch.float32).unsqueeze(0).to(DEVICE)
+
+
+def sample_r_curriculum(episode):
+    """docs/v6_experiment_log.md §25.1 (2026-09-28): widen-the-range curriculum,
+    NOT a fixed-order (A1-then-A2-then-random) schedule -- the user rejected that
+    for two reasons: catastrophic forgetting biases toward whichever phase ran
+    last if the final random phase is short, and choosing which agent goes first
+    is itself an uncontrolled confound. This schedule instead keeps both A1 and
+    A2 in the mix at every point in training (each drawn wp 1/2 whenever the
+    "two-point" branch is taken) and is continuous at both phase boundaries
+    (100% two-point on both sides of ep=200; ~100% full-range on both sides of
+    ep=500), so there is no discontinuity in the sampling distribution to
+    confound with the actual widening of difficulty."""
+    two_point = [A1_TRUE_R, A2_TRUE_R]
+    if episode < CURRICULUM_PHASE1_END:
+        return two_point[np.random.randint(2)].copy()
+    elif episode < CURRICULUM_PHASE2_END:
+        t = (episode - CURRICULUM_PHASE1_END) / float(CURRICULUM_PHASE2_END - CURRICULUM_PHASE1_END)
+        if np.random.random() < t:
+            return sample_reward_param()
+        else:
+            return two_point[np.random.randint(2)].copy()
+    else:
+        return sample_reward_param()
 
 
 def get_reward_v3(vision_np):
@@ -130,7 +162,7 @@ class ReplayBuffer:
         return len(self.buffer)
 
 
-def train(seed, tag='', control=False, no_relabel=False, film=False):
+def train(seed, tag='', control=False, no_relabel=False, film=False, curriculum=False):
     """control=True (2026-09-20, docs/v6_experiment_log.md §16): the same
     v6 code path with every r-related element removed, to test whether the
     v6 implementation itself regressed vs v3. r_dim=0 (critic/actor take no
@@ -140,8 +172,11 @@ def train(seed, tag='', control=False, no_relabel=False, film=False):
     Everything else (env, episodes, steps, GAMMA/TAU/LRs/BATCH_SIZE,
     TARGET_ENTROPY, update loop) is untouched."""
     assert not (control and film), '--control and --film are mutually exclusive'
+    assert not (control and curriculum), '--control and --curriculum are mutually exclusive'
     if not tag:
-        tag = 'control' if control else ('film' if film else ('norelabel' if no_relabel else ''))
+        tag = 'control' if control else (
+            'film_norelabel_curriculum' if (film and no_relabel and curriculum) else
+            'film' if film else ('norelabel' if no_relabel else ''))
     r_dim = 0 if control else R_DIM
     # --no_relabel (2026-09-21, §17.2): r-conditioned, K_RELABEL=1, MEMORY_SIZE
     # back to 50000 -- the exact trial-1 recipe, to isolate r from relabeling
@@ -183,14 +218,19 @@ def train(seed, tag='', control=False, no_relabel=False, film=False):
         print('CONTROL MODE: no r (r_dim=0), no relabeling, MEMORY_SIZE=50000, '
               'reward = red_fraction - green_fraction (v3 reward)')
     else:
-        print(f'Variant: film={film} no_relabel={no_relabel} K_RELABEL={k_relabel} MEMORY_SIZE={memory_size}')
+        print(f'Variant: film={film} no_relabel={no_relabel} curriculum={curriculum} '
+              f'K_RELABEL={k_relabel} MEMORY_SIZE={memory_size}')
         print('Algorithm: SAC (CNN+LSTM, continuous action, reward-conditioned Q(s,a,r)/pi(a|s,r))')
         print('Reward: sum_k w_k * fraction_k, r resampled per episode (continuous-uniform, L1-normalized)')
     print(f'Episodes: {EPISODES} x {MAX_STEPS} steps')
 
     for episode in range(EPISODES):
-        r_param_np = (np.zeros(0, dtype=np.float32) if control
-                      else sample_reward_param())
+        if control:
+            r_param_np = np.zeros(0, dtype=np.float32)
+        elif curriculum:
+            r_param_np = sample_r_curriculum(episode)
+        else:
+            r_param_np = sample_reward_param()
         r_param_t = reward_param_to_tensor(r_param_np)
 
         env.reset()
@@ -296,6 +336,10 @@ if __name__ == '__main__':
     parser.add_argument('--film', action='store_true',
                          help='FiLM-modulate the CNN features by r (§17.3); '
                               'defaults --tag to "film"')
+    parser.add_argument('--curriculum', action='store_true',
+                         help='widen-the-range r-sampling curriculum (§25.1): '
+                              'ep<200 two-point {A1,A2}, 200<=ep<500 linear mix, '
+                              'ep>=500 full-range uniform')
     args = parser.parse_args()
     train(args.seed, tag=args.tag, control=args.control,
-          no_relabel=args.no_relabel, film=args.film)
+          no_relabel=args.no_relabel, film=args.film, curriculum=args.curriculum)
