@@ -89,9 +89,13 @@ CRITICS = [
     ('film_norelabel_s0', 'v6', 'v6_rl_critic_seed0_film_norelabel.pth', True, ['c1', 'c2', 'c3', 'c4']),
     ('film_norelabel_s1(state-collapsed)', 'v6', 'v6_rl_critic_seed1_film_norelabel.pth', True, ['c1', 'c2', 'c3', 'c4']),
     ('film_norelabel_s2', 'v6', 'v6_rl_critic_seed2_film_norelabel.pth', True, ['c1', 'c2', 'c3', 'c4']),
+    # 2026-09-28, curriculum, §25
+    ('curriculum_s0', 'v6', 'v6_rl_critic_seed0_film_norelabel_curriculum.pth', True, ['c1', 'c2', 'c3', 'c4']),
+    ('curriculum_s1', 'v6', 'v6_rl_critic_seed1_film_norelabel_curriculum.pth', True, ['c1', 'c2', 'c3', 'c4']),
+    ('curriculum_s2', 'v6', 'v6_rl_critic_seed2_film_norelabel_curriculum.pth', True, ['c1', 'c2', 'c3', 'c4']),
 ]
 REF = 'v3_A1_s0_REF'
-CANDIDATES = ['film_norelabel_s0', 'film_norelabel_s2']  # s1 excluded: state-collapsed
+CANDIDATES = ['curriculum_s0', 'curriculum_s1', 'curriculum_s2']
 STATE_COLLAPSE_EPS = 1e-6  # S below this -> rho is degenerate/meaningless, excluded from verdict
 N_BOOT = 1000
 BOOT_SEED = 0
