@@ -1,0 +1,50 @@
+# v6 S2 (docs/v6_instructions.md §3.0 base(MSE) row, docs/v6_experiment_log.md
+# §21-28). Identical to config/exp/v5_base_mse.yml except the probe critic is
+# v6's reward-conditioned, FiLM-modulated critic (curriculum-trained seed2,
+# docs/v6_experiment_log.md §26-27) called with a FIXED r=A-1's true reward
+# parameter, instead of v3's plain single-purpose A-1 critic.
+#
+# Diff vs config/exp/v5_base_mse.yml (1 line):
+#   model.name : SuperpositionNetworkProbeQ -> SuperpositionNetworkProbeQV6
+# model.config points at config/model/SuperpositionNetworkProbeQV6/default.yml,
+# which differs from SuperpositionNetworkProbeQ/default.yml only in
+# probe_q.critic_path (v6_rl_critic_seed2_film_norelabel_curriculum.pth) and
+# probe_q.mu/sigma (recalibrated for that checkpoint's own r=A1 Q-scale,
+# mu=1.9400, sigma=0.5522 -- see docs/v6_experiment_log.md §28 preamble).
+# Everything else identical: r3_stay data, scratch (pretrain: ~), freeze
+# only probe_critic, 400ep, mse_loss, batch 10, test_interval 10, AdamW,
+# lr 1e-3, weight_decay 1e-2, per_params (bias wd=0, vision_encoder wd=1e-3,
+# share_lns wd=1e-3).
+model:
+  name: SuperpositionNetworkProbeQV6
+  config: default
+  mode: ~
+runner: PredictionFeaturePredictionRunner
+data:
+  name: r3_stay
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+  loss_function: mse_loss
+  pretrain: ~
+  batch_size: 10
+  max_epochs: 400
+  save_interval: 10
+  test_interval: 10
+  optimizer: AdamW
+  optim_config:
+    default:
+      lr: 0.001
+      weight_decay: 0.01
+    freeze:
+      - probe_critic
+    per_params:
+      - name: bias
+        args:
+          weight_decay: 0.0
+      - name: vision_encoder
+        args:
+          weight_decay: 0.001
+      - name: share_lns
+        args:
+          weight_decay: 0.001

@@ -1297,3 +1297,57 @@ c2（r2_a1random_a2rl、r=A2/Green）が弱い理由は、**評価データの�
 **軸1（action_std）の扱い**：カリキュラムで改善しなかった点は想定内として記録済み（§26.3）。ロールアウトで実際に目標へ到達できている以上、現時点で実害の証拠はない。**S2で収束しない場合の原因候補の一つとして残す。**
 
 **未知rの視覚的留保**：S2〜S4では実害がないため、留保のまま進む。S5着手前に改めて確認する。
+
+## 28. S4（オラクル実験）への留保の事前記録（2026-09-28、S2着手前）
+
+### 28.1 留保：r2_a1random_a2rlの90%が「緑の目前」であることのS4への影響
+
+§27.3で確認した通り、S4で使う`r2_a1random_a2rl`データは**フレームの90%がGreenから距離5未満**に集中している（A-2がGreen選好で行動するため）。これはcriticの欠陥ではなくデータの性質だが、**S4のオラクル実験（true_r < zeroの判定）に影響しうる**：
+
+- A-2がGreenの近くにいる状態では、どちらに動いても価値の差が小さい（§27.3で確認：<5ビンでdirCorrが崩れる、特にseed1・2）
+- process-2への入力（8方向プローブQ）が、この90%の領域でほぼ平坦になりうる
+- 正解の報酬（true_r=A-2の真の報酬パラメータ）を与えても、視覚予測への寄与が小さくなる可能性がある——**「原理的に機能する設計」であっても「実データでは効きにくい」という結果になりうる**
+
+**S4の判定（true_r < zero）が不成立でも、これだけでは「設計が破綻している」とは限らない**——§8のFiLM設計自体の欠陥と、データ分布による実効性の限界は区別して解釈する必要がある。
+
+### 28.2 S4評価への追加事項（事前登録、S4着手時に実施）
+
+**距離別アブレーション**：Greenまでの距離でフレームを分け、各ビンで`true_r - zero`（視覚予測損失の差）を計算する。ビンは§27と同じ`<5, 5-10, 10-15, ≥15`を用いる。
+
+**判定（事前登録）**：
+- 全体で`true_r < zero`が不成立でも、**遠い領域（距離≥5）で`true_r < zero`が成立すれば**：「原理的には機能するが、A-2の行動特性（Greenに張り付く）により実データでは効きにくい」と解釈する。§8.4-4通りのアブレーション（true_r/zero/wrong_r/constant）は距離ビンごとに算出する
+- 遠い領域でも不成立なら：設計自体の問題として扱う（従来通りの解釈）
+
+この節はS4着手前の事前登録であり、**結果を見てから追加したものではない**（§25.2以来の運用を踏襲）。
+
+## 29. S2着手前の確認・実装（2026-09-28）
+
+### 29.1 視覚保存パイプラインの事前確認
+
+**other_vision loaderパッチ**：`exp/loader.py`・`exp/runner.py`で実コードを確認、パッチは存在する（v4から分岐時に引き継ぎ済み、変更なし）。
+
+**事前テスト（既存のv5_base_l1チェックポイントで実施、再学習不要）**：`test.py --exp_config v5_base_l1 --test_epoch 200 --test_data_name r3_stay_viz20 --save_targets self_vision other_vision self_position other_position --test_name pretest_viz`を実行し、`saved.h5`の中身を確認：
+
+```
+00200/eval/self_vision/{input, truth, prediction}  (20, 100, 16, 64, 3) float32
+00200/eval/other_vision/{input, truth}             (20, 100, 16, 64, 3) float32
+00200/eval/self_position/{input, truth}
+00200/eval/other_position/{input, truth}
+```
+
+**必要なフィールド（self_vision全て、other_vision/truth）が確認できた。** viz20（`r3_stay_viz20`）データセットは既存のものがそのまま使える。確認後、`pretest_viz`の中間ファイル（118MB）は削除済み（`data/result/v5_base_l1/0/test/`配下、本番の`v5_base_l1`結果自体には影響なし）。
+
+### 29.2 v6 S2モデルの実装
+
+**新規クラス`SuperpositionNetworkProbeQV6`**（`model/model.py`、`SuperpositionNetworkProbeQ`を継承）：v3の素のcriticの代わりに、v6の条件付きFiLM critic（`model/rl_agent_sac_v6.py`）を、**固定r=A-1の真値`(+1,-1,0,0)`**で呼び出す。process-2は零ベクトルのまま（親クラスから変更なし、VE'はS5で追加）。`model/__init__.py`に登録。
+
+**μ・σの再校正**：v3の値（μ=1.9233, σ=0.9466）はv6のcriticには使えないため（§20.5で既に指摘）、**seed2のcuriculum critic自体を、r3_stayのself_vision全体・r=A1固定で評価し直して算出**：μ=1.9400、σ=0.5522（`analyze/probe_q_direction_info_v6.py`の`probe_q()`を再利用、30,300フレーム×8方向）。
+
+**新規config**：`config/model/SuperpositionNetworkProbeQV6/default.yml`（critic_path=`v6_rl_critic_seed2_film_norelabel_curriculum.pth`、mu/sigma上記）、`config/exp/v6_s2_base_mse.yml`（`v5_base_mse.yml`と同一、model.nameのみ差し替え：r3_stayデータ、スクラッチ学習、400ep、probe_criticのみfreeze）。
+
+**動作確認**（Docker内）：
+1. モデル構築・critic読み込み・r bufferの値（`[1,-1,0,0]`）・μ/σが正しい
+2. `compute_probe_q`単体テスト：出力形状(B,8)、tanh範囲内
+3. `train.py`を60秒のタイムアウトで実行し、freeze listに`probe_critic.film.*`を含む全パラメータが正しく凍結されていること、学習ループが約1.3it/s（300 batch/epoch、300/1.3≈230s/epoch——指示書§6.1の224s/epoと同水準）で進むことを確認
+
+**着手前のGPU・disk確認**：GPU全空き、disk 166GB空き（82%）。GPU1を使用。

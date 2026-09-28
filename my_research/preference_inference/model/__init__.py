@@ -8,4 +8,5 @@ from .model import (Autoencoder, SuperpositionNetwork,
                     SuperpositionNetworkApproachBMGVEV3,
                     SuperpositionNetworkProbeQ,
                     SuperpositionNetworkProbeQConcat,
-                    SuperpositionNetworkProbeQValueEstimation)
+                    SuperpositionNetworkProbeQValueEstimation,
+                    SuperpositionNetworkProbeQV6)

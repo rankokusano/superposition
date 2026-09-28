@@ -522,3 +522,64 @@ class SuperpositionNetworkProbeQConcat(SuperpositionNetworkBase):
         pred['self_vision'] = self.vision_decoder_module(so)
 
         return pred
+
+
+class SuperpositionNetworkProbeQV6(SuperpositionNetworkProbeQ):
+    """
+    v6 S2 (docs/v6_instructions.md §3.0 base stage, docs/v6_experiment_log.md
+    §21-28): identical to SuperpositionNetworkProbeQ except the frozen probe
+    critic is v6's reward-conditioned, FiLM-modulated CriticLSTM
+    (model/rl_agent_sac_v6.py) instead of v3's plain CriticLSTM, called with
+    a FIXED r = A-1's true reward parameter (+1,-1,0,0) for every frame (no
+    VE' yet -- that is S5; here r is a constant, matching how the base stage
+    always used A-1's own single-purpose critic). process-2 is still a zero
+    vector (unchanged from the parent class).
+
+    config.probe_q.mu/sigma must be recalibrated for the specific v6 critic
+    checkpoint in use (see docs/v6_experiment_log.md §28 preamble) -- they
+    are NOT the v3 values (1.9233, 0.9466), since the v6 critic's raw Q
+    scale differs. Computed via analyze/probe_q_direction_info_v6.py's
+    probe_q() on the checkpoint's own r=A1 predictions over r3_stay
+    self_vision (the same data/condition this model trains on).
+    """
+    def __init__(self, config):
+        super(SuperpositionNetworkProbeQ, self).__init__(config)
+        add_feature_prediction_module(self, config)
+
+        import sys
+        if '/work' not in sys.path:
+            sys.path.insert(0, '/work')
+        from my_research.preference_inference.model.rl_agent_sac_v6 import (
+            CriticLSTM, A1_TRUE_R,
+        )
+
+        self.probe_critic = CriticLSTM(film=True)
+        self.probe_critic.load_state_dict(
+            torch.load(config.probe_q.critic_path, map_location='cpu'))
+        self.probe_critic.eval()
+        for p in self.probe_critic.parameters():
+            p.requires_grad = False
+
+        import math
+        k = config.probe_q.k
+        angles = [2 * math.pi * i / k for i in range(k)]
+        probes = torch.tensor(
+            [[math.cos(a), math.sin(a)] for a in angles],
+            dtype=torch.float32)
+        self.register_buffer('probe_actions', probes)
+        self.register_buffer('q_mu', torch.tensor(float(config.probe_q.mu)))
+        self.register_buffer('q_sigma', torch.tensor(float(config.probe_q.sigma)))
+        self.register_buffer('probe_r', torch.tensor(A1_TRUE_R, dtype=torch.float32))
+
+    def compute_probe_q(self, sv_raw):
+        """sv_raw: (B, 3, H, W) in [0,1] (critic's native scale)."""
+        b = sv_raw.size(0)
+        k = self.probe_actions.size(0)
+        v_rep = sv_raw.unsqueeze(1).expand(-1, k, -1, -1, -1).reshape(
+            b * k, *sv_raw.shape[1:])
+        a_rep = self.probe_actions.unsqueeze(0).expand(b, -1, -1).reshape(b * k, 2)
+        r_rep = self.probe_r.unsqueeze(0).expand(b * k, -1)
+        with torch.no_grad():
+            q, _ = self.probe_critic(v_rep, a_rep, r_rep, hidden=None)
+        q = q.reshape(b, k)
+        return torch.tanh((q - self.q_mu) / self.q_sigma)
