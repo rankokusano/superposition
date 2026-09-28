@@ -55,11 +55,19 @@ CONDITIONS = {
                r=A1_TRUE_R, landmark=np.array([-9.0, 9.0]), landmark_name='Red'),
     'c2': dict(dataset='r2_a1random_a2rl', vision='other_vision', position='other_position',
                r=A2_TRUE_R, landmark=np.array([-9.0, -9.0]), landmark_name='Green'),
+    # 2x2 deconfound (2026-09-28, user request, docs/v6_experiment_log.md §23):
+    # c1/c2 differ in BOTH dataset and r simultaneously. c3/c4 swap only r within
+    # each row's existing vision/position source, to separate "r is hard" from
+    # "this dataset's vision/position distribution is hard".
+    'c3': dict(dataset='r3_stay', vision='self_vision', position='self_position',
+               r=A2_TRUE_R, landmark=np.array([-9.0, -9.0]), landmark_name='Green'),
+    'c4': dict(dataset='r2_a1random_a2rl', vision='other_vision', position='other_position',
+               r=A1_TRUE_R, landmark=np.array([-9.0, 9.0]), landmark_name='Red'),
 }
 
 # name, kind ('v3' no r | 'ctrl' r_dim=0 | 'v6' r-conditioned), file, film, conditions
 CRITICS = [
-    ('v3_A1_s0_REF', 'v3', 'v3_rl_critic.pth', False, ['c1', 'c2']),
+    ('v3_A1_s0_REF', 'v3', 'v3_rl_critic.pth', False, ['c1', 'c2', 'c3', 'c4']),
     ('v3_A1_s1', 'v3', 'v3_rl_critic_seed1.pth', False, ['c1', 'c2']),
     ('v3_A1_s2(collapsed)', 'v3', 'v3_rl_critic_seed2.pth', False, ['c1', 'c2']),
     ('v3_A2_s0', 'v3', 'v3_rl_a2_critic.pth', False, ['c2']),
@@ -78,12 +86,13 @@ CRITICS = [
     ('relabel_s1(state-collapsed)', 'v6', 'v6_rl_critic_seed1_relabel.pth', False, ['c1', 'c2']),
     ('norelabel_s2(state-collapsed)', 'v6', 'v6_rl_critic_seed2_norelabel.pth', False, ['c1', 'c2']),
     # 2026-09-28, (a'), §21: FiLM + no-relabel
-    ('film_norelabel_s0', 'v6', 'v6_rl_critic_seed0_film_norelabel.pth', True, ['c1', 'c2']),
-    ('film_norelabel_s1', 'v6', 'v6_rl_critic_seed1_film_norelabel.pth', True, ['c1', 'c2']),
-    ('film_norelabel_s2', 'v6', 'v6_rl_critic_seed2_film_norelabel.pth', True, ['c1', 'c2']),
+    ('film_norelabel_s0', 'v6', 'v6_rl_critic_seed0_film_norelabel.pth', True, ['c1', 'c2', 'c3', 'c4']),
+    ('film_norelabel_s1(state-collapsed)', 'v6', 'v6_rl_critic_seed1_film_norelabel.pth', True, ['c1', 'c2', 'c3', 'c4']),
+    ('film_norelabel_s2', 'v6', 'v6_rl_critic_seed2_film_norelabel.pth', True, ['c1', 'c2', 'c3', 'c4']),
 ]
 REF = 'v3_A1_s0_REF'
-CANDIDATES = ['film_norelabel_s0', 'film_norelabel_s1', 'film_norelabel_s2']
+CANDIDATES = ['film_norelabel_s0', 'film_norelabel_s2']  # s1 excluded: state-collapsed
+STATE_COLLAPSE_EPS = 1e-6  # S below this -> rho is degenerate/meaningless, excluded from verdict
 N_BOOT = 1000
 BOOT_SEED = 0
 
@@ -193,6 +202,9 @@ def main():
 
     rho = {}
     for cname in CONDITIONS:
+        if (REF, cname) not in results:
+            print(f'[skip rho for {cname}: reference {REF} was not evaluated on this condition]')
+            continue
         ref = results[(REF, cname)]
         ref_b = boot_R(agg[(REF, cname)], 'raw')
         ref_bt = boot_R(agg[(REF, cname)], 'tanh')
@@ -225,10 +237,26 @@ def main():
     # pre-registered verdict (§19.4)
     lines.append('=== pre-registered verdict (§19.4): best seed of min over conditions of rho ===')
     scores = {}
+    excluded = []
     for name in CANDIDATES:
+        s_c1 = results[(name, 'c1')]['S']
+        s_c2 = results[(name, 'c2')]['S']
+        s_ref1 = results[(REF, 'c1')]['S']
+        s_ref2 = results[(REF, 'c2')]['S']
+        if min(s_c1, s_c2, s_ref1, s_ref2) < STATE_COLLAPSE_EPS:
+            excluded.append(name)
+            lines.append(f'  {name}: EXCLUDED (state-collapsed, S_c1={s_c1:.2e} S_c2={s_c2:.2e} -- '
+                         f'rho would be degenerate/meaningless)')
+            continue
         scores[name] = min(rho[(name, 'c1')]['rho'], rho[(name, 'c2')]['rho'])
         lines.append(f'  {name}: rho_c1={rho[(name, "c1")]["rho"]:.3f} rho_c2={rho[(name, "c2")]["rho"]:.3f} '
                      f'-> score(min)={scores[name]:.3f}')
+    if not scores:
+        lines.append('  ALL CANDIDATES EXCLUDED (state-collapsed) -- no verdict possible, inconclusive by default')
+        with open(os.path.join(SAVE_DIR, 'probe_dirinfo_v6.txt'), 'w') as f:
+            f.write('\n'.join(lines) + '\n')
+        print('\n'.join(lines))
+        return
     best_name = max(scores, key=scores.get)
     best = scores[best_name]
     row = 'row1 (>=1/2): not fatal downstream -> proceed to S2' if best >= 0.5 else \
