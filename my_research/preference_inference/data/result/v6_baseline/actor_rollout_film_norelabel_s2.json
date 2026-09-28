@@ -1,0 +1,28 @@
+{
+  "A1": {
+    "target": "Red",
+    "other": "Green",
+    "init_target": 14.654547015541796,
+    "final_target": 1.035938100404237,
+    "final_target_sd": 1.7990245749705462,
+    "final_other": 17.717195026809883,
+    "min_target": 0.8858923954986563,
+    "min_target_sd": 1.6431285102190232,
+    "min_other": 12.558733125004435
+  },
+  "A2": {
+    "target": "Green",
+    "other": "Red",
+    "init_target": 14.094557059263511,
+    "final_target": 7.924255861939403,
+    "final_target_sd": 2.964287944703995,
+    "final_other": 17.786885179110094,
+    "min_target": 5.50438931875686,
+    "min_target_sd": 2.8527795923138295,
+    "min_other": 11.92376153630536
+  },
+  "actor_health": {
+    "mean_L2_diff": 4.908196194966634,
+    "mean_cos": -0.5194457996866296
+  }
+}
