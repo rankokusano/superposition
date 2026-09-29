@@ -1,0 +1,16 @@
+{
+  "v6_s2_base_mse/seed0": {
+    "total_epochs": 400,
+    "window": 80,
+    "burn_in_epoch": 41,
+    "v_min": 16.098,
+    "m_W": 16.501,
+    "slope_per_epoch": 0.00406,
+    "drift_over_window": 0.321,
+    "cond_i_level": true,
+    "cond_ii_no_rise": true,
+    "CONVERGED": true,
+    "transition_epoch": 55,
+    "log": "data/result/v6_s2_base_mse/0/log/train/feature_prediction_other.log"
+  }
+}

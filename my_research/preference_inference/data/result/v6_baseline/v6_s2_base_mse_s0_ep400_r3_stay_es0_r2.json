@@ -1,0 +1,21 @@
+{
+  "label": "v6_s2_base_mse_s0_ep400_r3_stay_es0",
+  "source_h5": "data/result/v6_s2_base_mse/0/test/r3_stay_canon_es0/save/saved.h5",
+  "epoch": 400,
+  "mode": "eval",
+  "n_data": 3000,
+  "n_steps": 100,
+  "hidden_dim": 128,
+  "n_samples": 300000,
+  "h1_to_self": 0.8219832500470243,
+  "h1_to_other": 0.5387675390703319,
+  "h2_to_self": 0.21188163963128792,
+  "h2_to_other": 0.5187798144483722,
+  "timestamp": "2026-09-29T18:13:34.680048",
+  "git_commit": "f223b272745a16d8205af2a00ce9065892b71c83",
+  "exp_config_name": "v6_s2_base_mse",
+  "config_path": "config/exp/v6_s2_base_mse.yml",
+  "config_content": "# v6 S2 (docs/v6_instructions.md \u00a73.0 base(MSE) row, docs/v6_experiment_log.md\n# \u00a721-28). Identical to config/exp/v5_base_mse.yml except the probe critic is\n# v6's reward-conditioned, FiLM-modulated critic (curriculum-trained seed2,\n# docs/v6_experiment_log.md \u00a726-27) called with a FIXED r=A-1's true reward\n# parameter, instead of v3's plain single-purpose A-1 critic.\n#\n# Diff vs config/exp/v5_base_mse.yml (1 line):\n#   model.name : SuperpositionNetworkProbeQ -> SuperpositionNetworkProbeQV6\n# model.config points at config/model/SuperpositionNetworkProbeQV6/default.yml,\n# which differs from SuperpositionNetworkProbeQ/default.yml only in\n# probe_q.critic_path (v6_rl_critic_seed2_film_norelabel_curriculum.pth) and\n# probe_q.mu/sigma (recalibrated for that checkpoint's own r=A1 Q-scale,\n# mu=1.9400, sigma=0.5522 -- see docs/v6_experiment_log.md \u00a728 preamble).\n# Everything else identical: r3_stay data, scratch (pretrain: ~), freeze\n# only probe_critic, 400ep, mse_loss, batch 10, test_interval 10, AdamW,\n# lr 1e-3, weight_decay 1e-2, per_params (bias wd=0, vision_encoder wd=1e-3,\n# share_lns wd=1e-3).\nmodel:\n  name: SuperpositionNetworkProbeQV6\n  config: default\n  mode: ~\nrunner: PredictionFeaturePredictionRunner\ndata:\n  name: r3_stay\nload_state_dict_strict: False\np_mask_vision: 0.99\ntrain:\n  loss_function: mse_loss\n  pretrain: ~\n  batch_size: 10\n  max_epochs: 400\n  save_interval: 10\n  test_interval: 10\n  optimizer: AdamW\n  optim_config:\n    default:\n      lr: 0.001\n      weight_decay: 0.01\n    freeze:\n      - probe_critic\n    per_params:\n      - name: bias\n        args:\n          weight_decay: 0.0\n      - name: vision_encoder\n        args:\n          weight_decay: 0.001\n      - name: share_lns\n        args:\n          weight_decay: 0.001\n",
+  "seed": 0,
+  "dataset_name": "r3_stay"
+}

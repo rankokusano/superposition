@@ -261,6 +261,7 @@ data/data/r3_stay_viz20/data.h5           同上
 
 - **2026-09-19（§12.3、部分訂正済み）**：試行2のQマップについて「A1はy軸、A2はx軸に軸が切り替わる（符号反転でパターンが回転）」と記述したが、これは目視の印象で、全グリッドの`corr(Q_A1, -Q_A2)=0.83`（§14.2で算出）と整合しなかった。「軸が回転した」という断定は撤回する。ただし「個別ランドマークの順位が誤っている（A1でCyanがRedを上回る等）」という事実は変わらず、判定基準A・Bを主とした（§14.2）。
 - **2026-09-22（運用ルール違反）**：(c)の最初の測定を、`nvidia-smi`で他ユーザが13GBを保持していると表示されたGPU7で実行した（他ユーザが保持しているGPUは避ける、というルールに反する）。測定は数秒・小メモリで、他ユーザへの影響は確認されていない。空きGPU（GPU1）で再実行し、数値が完全に一致することを確認した。以後、`nvidia-smi`の結果からメモリ使用量が小さいGPUを機械的に選ぶ。
+- **2026-09-30（保護対象への誤書き込み、直後に復旧）**：S2完了後、既存の`analyze/check_convergence.py`をv6_s2_base_mseに対して`python analyze/check_convergence.py v6_s2_base_mse --seeds 0`で実行したところ、**`--out`のデフォルトが`data/result/baseline_v4/convergence_check.json`（保護対象）になっており、既存の`v5_r4_move`のエントリを丸ごと上書き・消失させた**（このスクリプトは複数exp_configを1回の呼び出しでまとめて渡す前提で書かれており、マージではなく新規dictでの上書きだった）。**`git diff`で変更を検知し、即座に`git checkout --`で復旧**（バージョン管理のおかげで実害なし、コミット前の一時的な差分のみだった）。以後、`--out data/result/v6_baseline/convergence_check_v6.json`を明示的に指定して再実行。**教訓**：`baseline_v4/`配下に書き込むデフォルト値を持つ既存スクリプトが他にもある可能性があるため、v6で流用する際は毎回`--out`等の出力先引数を確認し、実行後は`git status`/`git diff`で保護対象に差分がないか確認する運用とする。
 
 ## 8. S1 実装（2026-09-13、学習実行前）
 
@@ -1351,3 +1352,53 @@ c2（r2_a1random_a2rl、r=A2/Green）が弱い理由は、**評価データの�
 3. `train.py`を60秒のタイムアウトで実行し、freeze listに`probe_critic.film.*`を含む全パラメータが正しく凍結されていること、学習ループが約1.3it/s（300 batch/epoch、300/1.3≈230s/epoch——指示書§6.1の224s/epoと同水準）で進むことを確認
 
 **着手前のGPU・disk確認**：GPU全空き、disk 166GB空き（82%）。GPU1を使用。
+
+## 30. S2結果（2026-09-30）
+
+400epoch、seed0（学習1系統、§27.4の方針通りcuriculum seed2のcriticを使用）の学習が完了。以下、§4.2〜§4.7の判定を順に記録する。
+
+### 30.1 収束判定（§4.2）
+
+`analyze/check_convergence.py v6_s2_base_mse --seeds 0 --out data/result/v6_baseline/convergence_check_v6.json`（**注**：デフォルト出力先`data/result/baseline_v4/convergence_check.json`は保護対象の共有ファイルで、`--out`省略時に誤って上書きした。`git diff`で即検知→`git checkout --`で復元→`--out`を明示して再実行、という手順を踏んだ。この事故は本節冒頭の§7に記録済み。今後v6で既存スクリプトを流用する際は出力先引数を必ず確認する運用を継続する）。
+
+結果：**CONVERGED**。
+- v_min（post-burn-in, ep≥40の最小値）= 16.098
+- m_W（final 20%平均, ep320-400のfeature_prediction_other）= 16.501
+- 基準(i): m_W ≤ 1.25×v_min → 16.501 ≤ 20.123 **OK**
+- 基準(ii): |OLS slope|×|W| ≤ 0.10×v_min → drift=0.321 ≤ 1.610 **OK**
+- transition epoch（fp_other < 1.3×v_min）= ep55
+
+`analyze/plot_training_curve.py`の副次ヒューリスティック（学習後期の変動チェック）はself_visionについて「+17.0% still moving late」と警告を出したが、これは§4.2の公式基準とは別の簡易チェックであり、学習曲線を目視した結果（`data/result/v6_baseline/v6_s2_base_mse_training_curve.png`）3指標（self_vision, feature_prediction_self, feature_prediction_other）とも滑らかな単調減少で後期の不安定化は見られない。公式基準がクリーンにPASSしていることと合わせ、警告は誤検知と判断した（数値だけで判断せず、曲線を目視した上での判断）。
+
+### 30.2 視覚損失の比較（v5_base_mseとの比較、in-distribution r3_stay, late-5）
+
+`data/result/v6_s2_base_mse/0/log/eval/{self_vision,feature_prediction_other,feature_prediction_self}.log`のep360-400を直接集計：
+
+| 指標 | v6 S2 (late-5 mean±sd) | v5_base_mse閾値 | 判定 |
+|---|---|---|---|
+| self_vision | 8.7759 ± 0.1145 | ≤ 12.05 | **PASS** |
+| feature_prediction_other | 16.5199 ± 0.1440 | ≤ 20.1 | **PASS** |
+| feature_prediction_self | 8.7011 ± 0.1896 | （参考値、閾値なし） | — |
+
+### 30.3 4軸R²（§4.7 dual-report：in-distribution r3_stay + canonical r2_a1random_a2rl）
+
+`analyze/run_eval_lateckpt.sh` → `analyze/regression_baseline_v4.py` → `analyze/aggregate_lateckpt.py`のパイプラインで、ep{400,390,380,370,360}を集計（late-5、単一チェックポイントでは判断しない）。
+
+**① r3_stay（in-distribution、モデル自身の訓練データ）**：h1→self = 0.8215 ± 0.00397（v5参照値0.796以上→**PASS**）、h1→other = 0.5400 ± 0.00151、h2→self = 0.2061 ± 0.00586、h2→other = 0.5176 ± 0.00135。
+
+**② r2_a1random_a2rl（canonical protocol、全条件共通の評価データ）**：h1→self = 0.4878 ± 0.01109、h1→other = 0.4691 ± 0.00346、h2→self = 0.0917 ± 0.00092、h2→other = 0.6713 ± 0.00249。
+
+**インシデント（軽微、非破壊）**：`aggregate_lateckpt.py`の出力ファイル名は`{exp}_s{seed}_late5_aggregate.json`でデータセット名を含まない仕様のため、②のcanonical実行時に①r3_stayの集計jsonが同名ファイルとして上書きされた。r3_stayの数値自体は本実行時のログから直接確認・記録済み（上表①、n=5クリーンに確認済み）であり実害はないが、canonical側のjsonを`v6_s2_base_mse_s0_late5_aggregate_r2_a1random_a2rl.json`にリネームして今後の衝突を回避した。`aggregate_lateckpt.py`自体はv5/v4から流用した既存スクリプト（root非保護、`preference_inference/analyze/`配下）で他実験でも使われているため、今回は変更せず運用でカバーする方針とした。
+
+両データセットの比較を`data/result/v6_baseline/v6_s2_base_mse_r2_bars.png`（新規`analyze/plot_r2_bars_v6.py`）に棒グラフとして可視化。in-distribution（r3_stay）はh1→selfが高く（0.82）、canonical（r2_a1random_a2rl）ではh1→self/otherが同程度に低下する一方h2→otherが上昇する（0.52→0.67）という非対称なパターンが見える。h2→other上昇の解釈は§4.7の趣旨（比較の基準系を揃えるための参考値）を超えるため、現時点では数値の記録にとどめ、深い解釈はS4以降の分析（process-2への実際のVE'出力導入後）に委ねる。
+
+### 30.4 図（4点、すべて目視確認済み）
+
+1. **学習曲線**：`data/result/v6_baseline/v6_s2_base_mse_training_curve.png` — 3指標とも滑らかな単調減少、後期の不安定化なし。
+2. **4軸R²棒グラフ**：`data/result/v6_baseline/v6_s2_base_mse_r2_bars.png`（§30.3参照）。
+3. **PCA状態マップ**：`data/result/v6_baseline/pca_state_v6_s2_base_mse.png`（`analyze/plot_pca_state_v4.py`、viz20データ）。h2（process-2）がA-2位置によって明確にクラスタ化されている（PC-plane R² x=0.785）一方、h1（process-1）はA-1位置に対してなだらかな勾配（PC-plane R² y=0.604）。v4のFig.4c的な「social place cell」構造が部分的に再現されていることを確認。
+4. **予測画像**：`data/result/v6_baseline/v6_s2_base_mse_pred_images_ep400.png`（新規`analyze/plot_pred_images_v6.py`、viz20の4エピソード×4タイムステップ）。self予測は真値の色・位置をぼやけながらも概ね再現（MSE損失らしいぼけ）、self占有領域（黒）は予測から除外される傾向（ぼかしとして現れる）。other_vision truthには他エージェント自身の白い占有マスクと4色ランドマークが正しく含まれていることを確認（§29.1の保存パイプライン事前検証が実際の本番出力でも成立していることの再確認）。
+
+### 30.5 総合判定
+
+§3.0のS2判定基準（視覚損失がv5_base_mse以下、h1→self≥v5参照値、収束）を**すべてPASS**。S3（base段, L1損失）に進んでよいと判断する。

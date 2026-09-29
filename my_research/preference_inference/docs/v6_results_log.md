@@ -163,7 +163,30 @@ Q値空間マップ（全グリッド）：`/home/kusano/superposition/my_resear
 
 ## S2: base 段（MSE）
 
-（未着手）
+**実施（2026-09-28開始, 2026-09-30完了）**：commit `f223b27` + 未コミット更新分。`config/exp/v6_s2_base_mse.yml`（`model=SuperpositionNetworkProbeQV6`, probe critic=seed2 curriculum FiLM critic, r固定=A-1真値, r3_stayデータ, Encoderスクラッチ, 400ep, mse_loss, probe_criticのみfreeze, seed=1seed のみ, GPU1）。
+
+**収束判定**（§4.2基準、`analyze/check_convergence.py` → `data/result/v6_baseline/convergence_check_v6.json`）：**CONVERGED**。trans@55, v_min(B)=16.098, m_W(fp_other)=16.501（基準(i): 16.501 ≤ 1.25×16.098=20.12 → OK）, drift=0.321（基準(ii): |slope|×|W| ≤ 0.10×16.098=1.610 → OK）。
+
+**視覚損失（late-5, ep360-400, r3_stay/eval, in-distribution）**：self_vision = 8.7759 ± 0.1145（閾値 ≤12.05, v5_base_mse比 **PASS**）／feature_prediction_other = 16.5199 ± 0.1440（閾値 ≤20.1 **PASS**）／feature_prediction_self = 8.7011 ± 0.1896（参考値、閾値なし）。
+
+**4軸R²（late-5、`analyze/aggregate_lateckpt.py`）**：
+
+| データセット | h1→self | h1→other | h2→self | h2→other |
+|---|---|---|---|---|
+| r3_stay（in-distribution, §4.7 dual-report①） | 0.8215 ± 0.00397 | 0.5400 ± 0.00151 | 0.2061 ± 0.00586 | 0.5176 ± 0.00135 |
+| r2_a1random_a2rl（canonical protocol, §4.7 dual-report②） | 0.4878 ± 0.01109 | 0.4691 ± 0.00346 | 0.0917 ± 0.00092 | 0.6713 ± 0.00249 |
+
+h1→self（r3_stay, in-distribution）: 0.8215 ≥ v5参照値0.796 → **PASS**。
+
+保存先：`data/result/v6_baseline/v6_s2_base_mse_s0_late5_aggregate_r2_a1random_a2rl.json`（canonicalの集計。r3_stay側の同名集計jsonは`aggregate_lateckpt.py`の出力ファイル名がデータセット名を含まない仕様のため、canonical実行時に上書きされた——数値は本行に記載済みのものが正、インシデントとして`docs/v6_experiment_log.md` §30に記録）。
+
+**図（4点、すべて目視確認済み）**：
+- 学習曲線：`data/result/v6_baseline/v6_s2_base_mse_training_curve.png`
+- PCA状態マップ：`data/result/v6_baseline/pca_state_v6_s2_base_mse.png`
+- 予測画像：`data/result/v6_baseline/v6_s2_base_mse_pred_images_ep400.png`
+- 4軸R²棒グラフ：`data/result/v6_baseline/v6_s2_base_mse_r2_bars.png`
+
+**総合判定：PASS**。詳細は`docs/v6_experiment_log.md` §30。
 
 ## S3: base 段（L1）
 
