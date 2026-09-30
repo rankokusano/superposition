@@ -1,0 +1,46 @@
+# v6 S3 (docs/v6_instructions.md 3.0 "S3: base段(L1)"). Identical to
+# config/exp/v5_base_l1.yml except pretrain points at v6_s2_base_mse
+# (ep400, docs/v6_experiment_log.md SS30) instead of v5_base_mse, and the
+# model is SuperpositionNetworkProbeQV6 (v6's reward-conditioned, FiLM
+# critic called with fixed r=A-1's true value, same as S2).
+#
+# Diff vs config/exp/v5_base_l1.yml (2 lines):
+#   model.name : SuperpositionNetworkProbeQ -> SuperpositionNetworkProbeQV6
+#   train.pretrain.exp_config : v5_base_mse -> v6_s2_base_mse
+# Everything else identical: r3_stay data, decoder-only training (SM/Encoder/
+# FPM/probe_critic frozen), 200ep, l1_loss, batch 10, AdamW lr 1e-3 wd 1e-2.
+model:
+    name: SuperpositionNetworkProbeQV6
+    config: default
+    mode: ~
+runner: PredictionFeaturePredictionRunner
+data:
+    name: r3_stay
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+    loss_function: l1_loss
+    pretrain:
+        exp_config: v6_s2_base_mse
+        seed: 0
+        epoch: 400
+    batch_size: 10
+    max_epochs: 200
+    save_interval: 10
+    test_interval: 10
+    optimizer: AdamW
+    optim_config:
+        default:
+            lr: 0.001
+            weight_decay: 0.01
+        freeze:
+            - superposition_module
+            - vision_encoder_module
+            - integration_module
+            - share_lns
+            - feature_prediction_module
+            - probe_critic
+        per_params:
+            - name: bias
+              args:
+                  weight_decay: 0.0
