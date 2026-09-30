@@ -1,0 +1,7 @@
+=== v6_s3_base_l1_s0_ep200_r2_a1random_a2rl_es0 R^2 (epoch 200, mode eval) ===
+source: data/result/v6_s3_base_l1/0/test/r2_a1random_a2rl_canon_es0/save/saved.h5
+n_samples: 300000 (N=3000 x T=100)
+h1 -> self  pos: 0.4730
+h1 -> other pos: 0.4718
+h2 -> self  pos: 0.0910
+h2 -> other pos: 0.6708

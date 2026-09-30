@@ -1572,6 +1572,39 @@ process-2（オラクル、新規）:
 
 この節はS4着手前（S3完了前）の事前登録であり、結果を見てから追加したものではない。
 
+## 34. S3結果（2026-10-01）
+
+200epoch（decoderのみ学習、`superposition_module`以下は凍結）の学習が完了（§32で起動）。
+
+### 34.1 視覚損失（self_vision L1、late-5、ep160-200）
+
+| | v5_base_l1 | v6 S3 |
+|---|---|---|
+| self_vision L1 | 12.0393±0.0178 | **11.2111±0.0128** |
+
+v6の方が低い（良い）。
+
+### 34.2 学習曲線
+
+`data/result/v6_baseline/v6_s3_base_l1_training_curve.png`を目視確認。self_vision（学習対象、decoderのみ更新）は滑らかに単調減少しep75付近で収束、後期の不安定化なし。feature_prediction_self/other（`superposition_module`・`feature_prediction_module`とも凍結のため実質学習されない）はバッチノイズのみのフラットな推移——想定通り（decoder-only refinementでは変化しないはずの指標）。
+
+### 34.3 4軸R²（v5_base_l1との比較、in-distribution r3_stay・canonical r2_a1random_a2rl）
+
+`superposition_module`が凍結されているため、**late-5の5チェックポイント間でR²は完全に一定**（sd=0.00000）——これはバグではなく、SM側の重みがS3中一切更新されないことの直接の帰結（v5_base_l1も同じ理由で同じくsd=0であることを確認済み）。
+
+| 軸 | v5 in-dist | v5 canonical | v5 Δ | v6 in-dist | v6 canonical | v6 Δ |
+|---|---|---|---|---|---|---|
+| h¹→self | 0.7898 | 0.7175 | -0.072 | 0.8220 | 0.4730 | -0.349 |
+| h¹→other | 0.5917 | 0.4960 | -0.096 | 0.5388 | 0.4718 | -0.067 |
+| h²→self | 0.2275 | 0.0810 | -0.147 | 0.2119 | 0.0910 | -0.122 |
+| h²→other | 0.5292 | 0.6455 | +0.116 | 0.5188 | 0.6708 | +0.152 |
+
+§31.1で確認したS2の非対称パターン（h¹→selfのみ選択的にcanonicalで大きく落ちる、他3軸はv5とほぼ同じ変化幅）が**S3でもそのまま保持されている**（SMが凍結されているため当然だが、念のため確認）。数値はS2とごくわずかに異なる（S2は5チェックポイント平均、S3はS2 ep400固定の単一値のため）。
+
+### 34.4 総合判定
+
+§3.0のS3判定基準（収束、4軸R²がv5_base_l1と同水準以上）：視覚損失はv5以下でPASS。4軸R²はh¹→self（in-dist）・h¹→other（in-dist）でv5を上回るが、h¹→self（canonical）はv5を明確に下回る——**S2で確認された非対称性がS3でも変わらず残っている**（想定通り、SM凍結のため改善しようがない）。§28.3の留保通り、この状態のままS4に進む。
+
 ### 33.4 実装・動作確認（S3完了前、2026-09-30）
 
 `analyze/oracle_eval_v6.py`を実装（§33.1-33.2の設計通り：4条件アブレーション×2 ov_enc源、`r4_ve_eval.py`のstateful superposition_moduleバグ修正パターンを踏襲）。S3のチェックポイントはまだ存在しないため、**既存のv6 S2チェックポイント（`v6_s2_base_mse` ep400、同一モデルクラス）に対して`--n_episodes 4`のドライラン**を実施し、構文・shape・JSON出力が正しいことのみを確認した（GPU3、`--label dryrun_oracle_v6`、確認後`data/result/baseline_v4/dryrun_oracle_v6.json`は削除済み）。**このドライランの数値（true_r−zero等）はS2のチェックポイント・n=4という無意味な設定によるものであり、S4の結果として一切解釈しない。** S3完了後、`--exp_config v6_s3_base_l1 --epoch 200 --n_episodes 3000`で本番を実行する。

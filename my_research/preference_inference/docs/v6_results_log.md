@@ -211,7 +211,18 @@ probe-Q較正診断（`analyze/diag_probeq_calibration_v6.py`、v6 S2 ep400、�
 
 ## S3: base 段（L1）
 
-**起動（2026-09-30）**：`config/exp/v6_s3_base_l1.yml`（`v5_base_l1.yml`同一構成、pretrain=`v6_s2_base_mse` ep400）。GPU2、90秒スモークテストでpretrainロード・freezeリスト（`vision_decoder_module`のみ学習）・学習ループを確認後、本番起動。実測1.76it/s、200ep×300batch ≈ 9.5h見込み。完了待ち（`docs/v6_experiment_log.md` §32）。
+**起動（2026-09-30）**：`config/exp/v6_s3_base_l1.yml`（`v5_base_l1.yml`同一構成、pretrain=`v6_s2_base_mse` ep400）。GPU2、90秒スモークテストでpretrainロード・freezeリスト（`vision_decoder_module`のみ学習）・学習ループを確認後、本番起動。実測1.76it/s、200ep×300batch ≈ 9.5h見込み。
+
+**結果（2026-10-01完了）**：視覚損失 self_vision L1 late-5 = 11.2111±0.0128（v5_base_l1の12.0393±0.0178より良い、PASS）。4軸R²（`superposition_module`凍結のためlate-5 sd=0.00000）：
+
+| 軸 | v5 in-dist | v5 canonical | v6 in-dist | v6 canonical |
+|---|---|---|---|---|
+| h¹→self | 0.7898 | 0.7175 | 0.8220 | 0.4730 |
+| h¹→other | 0.5917 | 0.4960 | 0.5388 | 0.4718 |
+| h²→self | 0.2275 | 0.0810 | 0.2119 | 0.0910 |
+| h²→other | 0.5292 | 0.6455 | 0.5188 | 0.6708 |
+
+S2で確認された非対称性（h¹→selfのみcanonicalで選択的に悪化）がS3でもそのまま残存（SM凍結のため当然）。総合判定：視覚損失PASS、4軸R²は軸によりv5を上回る/下回るが既知のパターンの継続であり許容範囲。詳細`docs/v6_experiment_log.md` §34。図：`data/result/v6_baseline/v6_s3_base_l1_training_curve.png`（目視確認済み、健全）。
 
 ## S4: オラクル実験
 

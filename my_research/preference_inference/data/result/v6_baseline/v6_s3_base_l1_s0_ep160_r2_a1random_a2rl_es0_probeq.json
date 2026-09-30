@@ -1,0 +1,18 @@
+{
+  "label": "v6_s3_base_l1_s0_ep160_r2_a1random_a2rl_es0_probeq",
+  "exp_config": "v6_s3_base_l1",
+  "epoch": 160,
+  "n_episodes": 3000,
+  "n_steps": 100,
+  "note": "no LSTM/recurrence involved -- q1_vec(t) regressed directly onto position(t), same (episode,t) pairs, to test whether h1->self R^2 requires temporal integration or is already achievable from a single timestep's Q vector alone",
+  "q_to_self_position_r2": 0.30376521431354264,
+  "q_to_other_position_r2": 0.07296057323189614,
+  "reference_h1_to_self_r2_with_recurrence": 0.9086,
+  "timestamp": "2026-09-30T16:09:05.655241",
+  "git_commit": "c8b0b6fc233cb6a0edf0a057664798a78384ca72",
+  "exp_config_name": "v6_s3_base_l1",
+  "config_path": "config/exp/v6_s3_base_l1.yml",
+  "config_content": "# v6 S3 (docs/v6_instructions.md 3.0 \"S3: base\u6bb5(L1)\"). Identical to\n# config/exp/v5_base_l1.yml except pretrain points at v6_s2_base_mse\n# (ep400, docs/v6_experiment_log.md SS30) instead of v5_base_mse, and the\n# model is SuperpositionNetworkProbeQV6 (v6's reward-conditioned, FiLM\n# critic called with fixed r=A-1's true value, same as S2).\n#\n# Diff vs config/exp/v5_base_l1.yml (2 lines):\n#   model.name : SuperpositionNetworkProbeQ -> SuperpositionNetworkProbeQV6\n#   train.pretrain.exp_config : v5_base_mse -> v6_s2_base_mse\n# Everything else identical: r3_stay data, decoder-only training (SM/Encoder/\n# FPM/probe_critic frozen), 200ep, l1_loss, batch 10, AdamW lr 1e-3 wd 1e-2.\nmodel:\n    name: SuperpositionNetworkProbeQV6\n    config: default\n    mode: ~\nrunner: PredictionFeaturePredictionRunner\ndata:\n    name: r3_stay\nload_state_dict_strict: False\np_mask_vision: 0.99\ntrain:\n    loss_function: l1_loss\n    pretrain:\n        exp_config: v6_s2_base_mse\n        seed: 0\n        epoch: 400\n    batch_size: 10\n    max_epochs: 200\n    save_interval: 10\n    test_interval: 10\n    optimizer: AdamW\n    optim_config:\n        default:\n            lr: 0.001\n            weight_decay: 0.01\n        freeze:\n            - superposition_module\n            - vision_encoder_module\n            - integration_module\n            - share_lns\n            - feature_prediction_module\n            - probe_critic\n        per_params:\n            - name: bias\n              args:\n                  weight_decay: 0.0\n",
+  "seed": 0,
+  "dataset_name": "r2_a1random_a2rl"
+}
