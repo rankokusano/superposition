@@ -226,7 +226,26 @@ S2で確認された非対称性（h¹→selfのみcanonicalで選択的に悪�
 
 ## S4: オラクル実験
 
-（未着手）
+**結果（2026-10-01）**：`analyze/oracle_eval_v6.py --exp_config v6_s3_base_l1 --epoch 200 --n_episodes 3000`（GPU1、評価のみ・学習なし）。
+
+主判定（全体、ov_enc=other_vision）：true_r=0.2533, wrong_r=0.2519, zero=0.2525, constant=0.2490 → **true_r − zero = +0.0008（不成立、v4/v5と同種の失敗パターン）**。
+
+§28.2の事前登録した距離別アブレーション（Greenまでの距離、self_vision L1差）：
+
+| 距離ビン | n | true_r − zero |
+|---|---|---|
+| <5 | 271,283 (90.4%) | +0.0014 |
+| 5-10 | 13,865 (4.6%) | -0.0016 |
+| 10-15 | 9,279 (3.1%) | -0.0043 |
+| ≥15 | 5,573 (1.9%) | -0.0139 |
+
+距離とともに単調に効果が強まる（全体不成立は90.4%を占める<5ビンに支配されているため）。10-15・≥15ビンではtrue_rが4条件中単独最良。
+
+h²のR²（true_r条件）：h²→self=0.0160、h²→other=0.8797（zeroの0.8227を上回る）。v4の「位置優先」病理（h²→self急上昇）は再現せず。
+
+**判定（§33.3の事前登録基準を適用）：S5に進んでよい**（「遠い領域でのみ成立」の事前登録解釈規則がそのまま当てはまる）。留保：全体判定は不成立のまま、`constant`条件の主効果あり（方向情報と非零シグナルの効果を完全分離できず）、1 seedのみ。詳細`docs/v6_experiment_log.md` §35。
+
+図：`data/result/v6_baseline/v6_s3_base_l1_oracle_ablation_bars.png`（4条件アブレーション）、`v6_s3_base_l1_oracle_r2_by_condition.png`（4軸R²）、`v6_s3_base_l1_oracle_distance_binned.png`（距離別、いずれも目視確認済み）。
 
 ## S5: VE' による推定
 

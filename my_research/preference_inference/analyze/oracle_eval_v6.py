@@ -135,6 +135,10 @@ def main():
     # process-2 output stream ("h2"), collected for the PRIMARY (other_vision) source only,
     # to check the SS33.2 "does h2->self rise" pathology check.
     os_all = {mode: np.zeros((n_use, T, 128), dtype=np.float32) for mode in MODES}
+    # per-frame vision loss, PRIMARY (ov_enc=other_vision) source only, for the
+    # SS28.2 pre-registered distance-binned ablation (bins fixed in SS27:
+    # <5, 5-10, 10-15, >=15, distance to Green=(-9,-9)).
+    vision_l1_frames = {mode: np.zeros((n_use, T), dtype=np.float32) for mode in MODES}
 
     torch.manual_seed(args.eval_seed)
     with torch.no_grad():
@@ -187,9 +191,11 @@ def main():
                     per_cond_state[(src, mode)] = model.superposition_module.state
                     so = model.integration_module(ss, os_)
                     vision_pred = model.vision_decoder_module(so)
-                    vision_l1[(src, mode)] += (vision_pred - sv_t).abs().mean().item() * bsz
+                    per_sample_l1 = (vision_pred - sv_t).abs().mean(dim=(1, 2, 3))  # (bsz,)
+                    vision_l1[(src, mode)] += per_sample_l1.sum().item()
                     if src == 'other_vision':
                         os_all[mode][b0:b1, t] = os_.cpu().numpy()
+                        vision_l1_frames[mode][b0:b1, t] = per_sample_l1.cpu().numpy()
 
                 n_samples += bsz
 
@@ -225,6 +231,29 @@ def main():
         h2_r2[mode] = {'h2_to_self': r2_self, 'h2_to_other': r2_other}
         print(f'  {mode:10s}: h2->self={r2_self:.4f}  h2->other={r2_other:.4f}')
 
+    # --- SS28.2 pre-registered distance-binned ablation (ov_enc=other_vision
+    # primary only): does true_r < zero hold once split by A-2's distance to
+    # Green, even if it fails overall? Bins fixed in SS27 (probe_q_direction_
+    # by_distance_v6.py): <5, 5-10, 10-15, >=15, distance to Green=(-9,-9).
+    GREEN_POS = np.array([-9.0, -9.0])
+    BIN_EDGES = [0.0, 5.0, 10.0, 15.0, 1e9]
+    BIN_LABELS = ['<5', '5-10', '10-15', '>=15']
+    dist_flat = np.linalg.norm(GREEN_POS[None, :] - op_flat, axis=1)
+    print('\n=== SS28.2 distance-binned ablation (ov_enc=other_vision, distance to Green) ===')
+    dist_bins = {}
+    for lo, hi, lbl in zip(BIN_EDGES[:-1], BIN_EDGES[1:], BIN_LABELS):
+        m = (dist_flat >= lo) & (dist_flat < hi)
+        n = int(m.sum())
+        row = {}
+        for mode in MODES:
+            v = vision_l1_frames[mode].reshape(-1)
+            row[mode] = float(v[m].mean()) if n > 0 else float('nan')
+        delta = row['true_r'] - row['zero'] if n > 0 else float('nan')
+        dist_bins[lbl] = {'n': n, **row, 'true_r_minus_zero': delta}
+        print(f'  {lbl:6s} (n={n:6d}): ' + '  '.join(f'{m}={row[m]:.4f}' for m in MODES) +
+              f'   true_r-zero={delta:+.4f}  '
+              f"({'true_r helps' if delta < 0 else 'true_r hurts'})")
+
     result = {
         'label': label,
         'exp_config': args.exp_config,
@@ -237,8 +266,11 @@ def main():
             src: vision_l1[(src, 'true_r')] - vision_l1[(src, 'zero')] for src in OV_ENC_SOURCES
         },
         'h2_r2_by_mode': h2_r2,
+        'distance_binned_ablation': dist_bins,
         'note': 'primary decision uses ov_enc=other_vision (SS33.1 main design); '
-                'ov_enc=self_vision is the SS33.1 secondary robustness check',
+                'ov_enc=self_vision is the SS33.1 secondary robustness check; '
+                'distance_binned_ablation is the SS28.2 pre-registered follow-up '
+                '(ov_enc=other_vision only), distance to Green=(-9,-9)',
     }
     result.update(util.gen_result_metadata(
         exp_config_name=args.exp_config, seed=0,

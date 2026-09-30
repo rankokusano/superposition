@@ -1,0 +1,81 @@
+{
+  "label": "v6_s3_base_l1_oracle",
+  "exp_config": "v6_s3_base_l1",
+  "epoch": 200,
+  "eval_seed": 0,
+  "n_episodes": 3000,
+  "vision_l1_by_condition": {
+    "other_vision__true_r": 0.2532743694559733,
+    "other_vision__wrong_r": 0.25186941299438476,
+    "other_vision__zero": 0.25245868057250975,
+    "other_vision__constant": 0.24904738355000813,
+    "self_vision__true_r": 0.2541915327453613,
+    "self_vision__wrong_r": 0.25179096943537393,
+    "self_vision__zero": 0.25205922715504964,
+    "self_vision__constant": 0.24823891553878785
+  },
+  "true_r_minus_zero": {
+    "other_vision": 0.0008156888834635612,
+    "self_vision": 0.0021323055903116894
+  },
+  "h2_r2_by_mode": {
+    "true_r": {
+      "h2_to_self": 0.016004808678755367,
+      "h2_to_other": 0.8797168723018878
+    },
+    "wrong_r": {
+      "h2_to_self": 0.013133656223762724,
+      "h2_to_other": 0.8601359397946458
+    },
+    "zero": {
+      "h2_to_self": 0.01135008629329981,
+      "h2_to_other": 0.822681609059855
+    },
+    "constant": {
+      "h2_to_self": 0.01048278832155708,
+      "h2_to_other": 0.8754183309397676
+    }
+  },
+  "distance_binned_ablation": {
+    "<5": {
+      "n": 271283,
+      "true_r": 0.25271642208099365,
+      "wrong_r": 0.25095099210739136,
+      "zero": 0.2513023316860199,
+      "constant": 0.24732348322868347,
+      "true_r_minus_zero": 0.0014140903949737549
+    },
+    "5-10": {
+      "n": 13865,
+      "true_r": 0.27272361516952515,
+      "wrong_r": 0.2695872187614441,
+      "zero": 0.27427980303764343,
+      "constant": 0.27825096249580383,
+      "true_r_minus_zero": -0.0015561878681182861
+    },
+    "10-15": {
+      "n": 9279,
+      "true_r": 0.257720023393631,
+      "wrong_r": 0.2636191248893738,
+      "zero": 0.26199331879615784,
+      "constant": 0.26354771852493286,
+      "true_r_minus_zero": -0.0042732954025268555
+    },
+    ">=15": {
+      "n": 5573,
+      "true_r": 0.2246454358100891,
+      "wrong_r": 0.2329346388578415,
+      "zero": 0.2385864406824112,
+      "constant": 0.2361656129360199,
+      "true_r_minus_zero": -0.013941004872322083
+    }
+  },
+  "note": "primary decision uses ov_enc=other_vision (SS33.1 main design); ov_enc=self_vision is the SS33.1 secondary robustness check; distance_binned_ablation is the SS28.2 pre-registered follow-up (ov_enc=other_vision only), distance to Green=(-9,-9)",
+  "timestamp": "2026-09-30T18:05:20.829744",
+  "git_commit": "cc1dd93a7f95bf2dcb8b998067fc6da13de1b8c2",
+  "exp_config_name": "v6_s3_base_l1",
+  "config_path": "config/exp/v6_s3_base_l1.yml",
+  "config_content": "# v6 S3 (docs/v6_instructions.md 3.0 \"S3: base\u6bb5(L1)\"). Identical to\n# config/exp/v5_base_l1.yml except pretrain points at v6_s2_base_mse\n# (ep400, docs/v6_experiment_log.md SS30) instead of v5_base_mse, and the\n# model is SuperpositionNetworkProbeQV6 (v6's reward-conditioned, FiLM\n# critic called with fixed r=A-1's true value, same as S2).\n#\n# Diff vs config/exp/v5_base_l1.yml (2 lines):\n#   model.name : SuperpositionNetworkProbeQ -> SuperpositionNetworkProbeQV6\n#   train.pretrain.exp_config : v5_base_mse -> v6_s2_base_mse\n# Everything else identical: r3_stay data, decoder-only training (SM/Encoder/\n# FPM/probe_critic frozen), 200ep, l1_loss, batch 10, AdamW lr 1e-3 wd 1e-2.\nmodel:\n    name: SuperpositionNetworkProbeQV6\n    config: default\n    mode: ~\nrunner: PredictionFeaturePredictionRunner\ndata:\n    name: r3_stay\nload_state_dict_strict: False\np_mask_vision: 0.99\ntrain:\n    loss_function: l1_loss\n    pretrain:\n        exp_config: v6_s2_base_mse\n        seed: 0\n        epoch: 400\n    batch_size: 10\n    max_epochs: 200\n    save_interval: 10\n    test_interval: 10\n    optimizer: AdamW\n    optim_config:\n        default:\n            lr: 0.001\n            weight_decay: 0.01\n        freeze:\n            - superposition_module\n            - vision_encoder_module\n            - integration_module\n            - share_lns\n            - feature_prediction_module\n            - probe_critic\n        per_params:\n            - name: bias\n              args:\n                  weight_decay: 0.0\n",
+  "seed": 0,
+  "dataset_name": "r2_a1random_a2rl"
+}
