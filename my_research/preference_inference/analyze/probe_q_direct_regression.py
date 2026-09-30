@@ -51,7 +51,7 @@ import model as models  # noqa
 import util  # noqa
 
 DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-DATA_H5 = '/work/my_research/preference_inference/data/data/r2_a1random_a2rl/data.h5'
+DATA_ROOT = '/work/my_research/preference_inference/data/data'
 SAVE_DIR = 'data/result/baseline_v4'
 T = 100
 BATCH = 200
@@ -78,8 +78,15 @@ def main():
     parser.add_argument('--n_episodes', type=int, default=3000)
     parser.add_argument('--label', default=None)
     parser.add_argument('--eval_seed', type=int, default=0)  # P0-0: reproducible eval
+    parser.add_argument('--dataset', default='r2_a1random_a2rl',
+                         help='data/data/<dataset>/data.h5 to read self_vision/position from '
+                              '(default preserves the original hardcoded behaviour)')
     args = parser.parse_args()
-    label = args.label or f'{args.exp_config}_probe_q_direct_regression'
+    DATA_H5 = os.path.join(DATA_ROOT, args.dataset, 'data.h5')
+    default_label = f'{args.exp_config}_probe_q_direct_regression'
+    if args.dataset != 'r2_a1random_a2rl':
+        default_label += f'_{args.dataset}'
+    label = args.label or default_label
 
     import random as _random
     _random.seed(args.eval_seed); np.random.seed(args.eval_seed)
@@ -151,7 +158,7 @@ def main():
         'reference_h1_to_self_r2_with_recurrence': 0.9086,
     }
     result.update(util.gen_result_metadata(
-        exp_config_name=args.exp_config, seed=0, dataset_name='r2_a1random_a2rl'))
+        exp_config_name=args.exp_config, seed=0, dataset_name=args.dataset))
 
     os.makedirs(SAVE_DIR, exist_ok=True)
     out_path = os.path.join(SAVE_DIR, f'{label}.json')
