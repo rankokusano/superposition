@@ -37,6 +37,13 @@ If the two disagree on the true_r<zero verdict, that itself is a finding
 (whether ov_enc's access to real other_vision matters) -- not a reason to
 prefer one over the other after the fact.
 
+run_epoch() does the work for a single checkpoint and returns a plain dict
+(no file I/O) so analyze/oracle_eval_v6_lateckpt.py can call it across the
+late-5 checkpoints and aggregate mean +/- inter-checkpoint sd, matching the
+project's established late-5 convention (never judge by a single
+checkpoint). main() is a thin CLI wrapper preserving the original
+single-epoch usage.
+
 Usage (inside Docker, from /work/my_research/preference_inference):
     python analyze/oracle_eval_v6.py --exp_config v6_s3_base_l1 --epoch 200
 """
@@ -48,6 +55,8 @@ import sys
 import h5py
 import numpy as np
 import torch
+from sklearn.linear_model import Ridge
+from sklearn.metrics import r2_score
 
 _PI_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if '/work' not in sys.path:
@@ -68,12 +77,21 @@ T = 100
 BATCH = 200
 MODES = ['true_r', 'wrong_r', 'zero', 'constant']
 OV_ENC_SOURCES = ['other_vision', 'self_vision']
+GREEN_POS = np.array([-9.0, -9.0])
+BIN_EDGES = [0.0, 5.0, 10.0, 15.0, 1e9]
+BIN_LABELS = ['<5', '5-10', '10-15', '>=15']
 
 
 class Args:
     def __init__(self, exp_config, seed):
         self.exp_config = exp_config
         self.seed = seed
+
+
+def r2(X, Y):
+    reg = Ridge(alpha=1.0)
+    reg.fit(X, Y)
+    return r2_score(Y, reg.predict(X))
 
 
 def compute_q2(model, ov_raw, mode, r_vec, bsz, K):
@@ -89,41 +107,34 @@ def compute_q2(model, ov_raw, mode, r_vec, bsz, K):
     return torch.tanh((q - model.q_mu) / model.q_sigma)
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--exp_config', default='v6_s3_base_l1')
-    parser.add_argument('--epoch', type=int, default=200)
-    parser.add_argument('--seed', type=int, default=0)
-    parser.add_argument('--n_episodes', type=int, default=N_EPISODES)
-    parser.add_argument('--label', default=None)
-    parser.add_argument('--eval_seed', type=int, default=0)
-    parser.add_argument('--data_h5', default=DATA_H5)
-    args = parser.parse_args()
-    label = args.label or f'{args.exp_config}_oracle_eval'
-
+def run_epoch(exp_config_name, seed, epoch, n_episodes=N_EPISODES, eval_seed=0, data_h5=DATA_H5,
+              verbose=True):
+    """Runs the full S4 ablation for one checkpoint. Returns a plain dict
+    (JSON-serialisable) with every quantity used by the SS33/SS28.2
+    pre-registered decision; no file is written here."""
     import random as _random
-    _random.seed(args.eval_seed); np.random.seed(args.eval_seed)
-    torch.manual_seed(args.eval_seed); torch.cuda.manual_seed_all(args.eval_seed)
+    _random.seed(eval_seed); np.random.seed(eval_seed)
+    torch.manual_seed(eval_seed); torch.cuda.manual_seed_all(eval_seed)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
 
-    exp_config = util.gen_exp_config(Args(args.exp_config, args.seed))
+    exp_config = util.gen_exp_config(Args(exp_config_name, seed))
     model_config = util.gen_model_config(exp_config)
-    result_dir, model_dir, log_dir = util.gen_dirs(Args(args.exp_config, args.seed), test=False)
+    result_dir, model_dir, log_dir = util.gen_dirs(Args(exp_config_name, seed), test=False)
 
     model = getattr(models, exp_config.model.name)(model_config)
     model.to(DEVICE)
-    util.load_model(model_dir, args.epoch, model)
+    util.load_model(model_dir, epoch, model)
     model.eval()
 
     p_mask_vision = exp_config.p_mask_vision
     K = model.probe_actions.size(0)
-    r_by_mode = {'true_r': A2_TRUE_R, 'wrong_r': A1_TRUE_R, 'zero': None, 'constant': A2_TRUE_R}
 
-    with h5py.File(args.data_h5, 'r') as f:
+    with h5py.File(data_h5, 'r') as f:
         n_avail = f['train/self_vision'].shape[0]
-        n_use = min(args.n_episodes, n_avail)
-        print(f'Loading {n_use}/{n_avail} episodes ...')
+        n_use = min(n_episodes, n_avail)
+        if verbose:
+            print(f'Loading {n_use}/{n_avail} episodes ...')
         sv_all = f['train/self_vision'][:n_use, :T]
         ov_all = f['train/other_vision'][:n_use, :T]
         sp_all = f['train/self_position'][:n_use, :T]
@@ -132,15 +143,10 @@ def main():
     conditions = [(src, mode) for src in OV_ENC_SOURCES for mode in MODES]
     vision_l1 = {c: 0.0 for c in conditions}
     n_samples = 0
-    # process-2 output stream ("h2"), collected for the PRIMARY (other_vision) source only,
-    # to check the SS33.2 "does h2->self rise" pathology check.
     os_all = {mode: np.zeros((n_use, T, 128), dtype=np.float32) for mode in MODES}
-    # per-frame vision loss, PRIMARY (ov_enc=other_vision) source only, for the
-    # SS28.2 pre-registered distance-binned ablation (bins fixed in SS27:
-    # <5, 5-10, 10-15, >=15, distance to Green=(-9,-9)).
     vision_l1_frames = {mode: np.zeros((n_use, T), dtype=np.float32) for mode in MODES}
 
-    torch.manual_seed(args.eval_seed)
+    torch.manual_seed(eval_seed)
     with torch.no_grad():
         for b0 in range(0, n_use, BATCH):
             b1 = min(b0 + BATCH, n_use)
@@ -202,63 +208,73 @@ def main():
     for c in conditions:
         vision_l1[c] /= n_samples
 
-    print('\n=== S4 primary result: self_vision L1 loss by (ov_enc source, mode) ===')
-    for src in OV_ENC_SOURCES:
-        print(f'  ov_enc = {src}:')
-        for mode in MODES:
-            print(f'    {mode:10s}: {vision_l1[(src, mode)]:.4f}')
-        d = vision_l1[(src, 'true_r')] - vision_l1[(src, 'zero')]
-        print(f'    true_r - zero = {d:+.4f}  '
-              f"({'true_r HELPS (design works)' if d < 0 else 'true_r HURTS (v4/v5-style failure)'})")
+    if verbose:
+        print('\n=== S4 primary result: self_vision L1 loss by (ov_enc source, mode) ===')
+        for src in OV_ENC_SOURCES:
+            print(f'  ov_enc = {src}:')
+            for mode in MODES:
+                print(f'    {mode:10s}: {vision_l1[(src, mode)]:.4f}')
+            d = vision_l1[(src, 'true_r')] - vision_l1[(src, 'zero')]
+            print(f'    true_r - zero = {d:+.4f}  '
+                  f"({'true_r HELPS (design works)' if d < 0 else 'true_r HURTS (v4/v5-style failure)'})")
 
     # --- SS33.2: h2->self / h2->other R^2 per mode (primary ov_enc=other_vision only) ---
-    print('\n=== h2 (process-2 output, ov_enc=other_vision) -> position R^2 by mode ===')
-    from sklearn.linear_model import Ridge
-    from sklearn.metrics import r2_score
-
-    def r2(X, Y):
-        reg = Ridge(alpha=1.0)
-        reg.fit(X, Y)
-        return r2_score(Y, reg.predict(X))
-
-    h2_r2 = {}
     sp_flat = sp_all.reshape(-1, 2)
     op_flat = op_all.reshape(-1, 2)
+    h2_r2 = {}
+    if verbose:
+        print('\n=== h2 (process-2 output, ov_enc=other_vision) -> position R^2 by mode ===')
     for mode in MODES:
         h2_flat = os_all[mode].reshape(-1, 128)
         r2_self = r2(h2_flat, sp_flat)
         r2_other = r2(h2_flat, op_flat)
         h2_r2[mode] = {'h2_to_self': r2_self, 'h2_to_other': r2_other}
-        print(f'  {mode:10s}: h2->self={r2_self:.4f}  h2->other={r2_other:.4f}')
+        if verbose:
+            print(f'  {mode:10s}: h2->self={r2_self:.4f}  h2->other={r2_other:.4f}')
 
     # --- SS28.2 pre-registered distance-binned ablation (ov_enc=other_vision
     # primary only): does true_r < zero hold once split by A-2's distance to
     # Green, even if it fails overall? Bins fixed in SS27 (probe_q_direction_
     # by_distance_v6.py): <5, 5-10, 10-15, >=15, distance to Green=(-9,-9).
-    GREEN_POS = np.array([-9.0, -9.0])
-    BIN_EDGES = [0.0, 5.0, 10.0, 15.0, 1e9]
-    BIN_LABELS = ['<5', '5-10', '10-15', '>=15']
+    # Also bins h2->other R^2 per mode (2026-10-01 user request: is the
+    # distance trend specific to true_r, or does 'constant' show it too?).
     dist_flat = np.linalg.norm(GREEN_POS[None, :] - op_flat, axis=1)
-    print('\n=== SS28.2 distance-binned ablation (ov_enc=other_vision, distance to Green) ===')
+    if verbose:
+        print('\n=== SS28.2 distance-binned ablation (ov_enc=other_vision, distance to Green) ===')
     dist_bins = {}
     for lo, hi, lbl in zip(BIN_EDGES[:-1], BIN_EDGES[1:], BIN_LABELS):
         m = (dist_flat >= lo) & (dist_flat < hi)
         n = int(m.sum())
         row = {}
+        h2_other_row = {}
+        h2_self_row = {}
         for mode in MODES:
             v = vision_l1_frames[mode].reshape(-1)
             row[mode] = float(v[m].mean()) if n > 0 else float('nan')
+            h2_flat = os_all[mode].reshape(-1, 128)
+            if n > 20:  # Ridge needs enough rows to be meaningful
+                h2_other_row[mode] = float(r2(h2_flat[m], op_flat[m]))
+                h2_self_row[mode] = float(r2(h2_flat[m], sp_flat[m]))
+            else:
+                h2_other_row[mode] = float('nan')
+                h2_self_row[mode] = float('nan')
         delta = row['true_r'] - row['zero'] if n > 0 else float('nan')
-        dist_bins[lbl] = {'n': n, **row, 'true_r_minus_zero': delta}
-        print(f'  {lbl:6s} (n={n:6d}): ' + '  '.join(f'{m}={row[m]:.4f}' for m in MODES) +
-              f'   true_r-zero={delta:+.4f}  '
-              f"({'true_r helps' if delta < 0 else 'true_r hurts'})")
+        dist_bins[lbl] = {
+            'n': n, 'vision_l1': row, 'true_r_minus_zero': delta,
+            'h2_to_other': h2_other_row, 'h2_to_self': h2_self_row,
+        }
+        if verbose:
+            print(f'  {lbl:6s} (n={n:6d}): vision_l1 ' +
+                  '  '.join(f'{m}={row[m]:.4f}' for m in MODES) +
+                  f'   true_r-zero={delta:+.4f}')
+            print(f'           h2->other ' +
+                  '  '.join(f'{m}={h2_other_row[m]:.4f}' for m in MODES))
 
-    result = {
-        'label': label,
-        'exp_config': args.exp_config,
-        'epoch': args.epoch,
-        'eval_seed': args.eval_seed,
+    return {
+        'exp_config': exp_config_name,
+        'epoch': epoch,
+        'seed': seed,
+        'eval_seed': eval_seed,
         'n_episodes': n_use,
         'vision_l1_by_condition': {f'{src}__{mode}': vision_l1[(src, mode)]
                                     for src, mode in conditions},
@@ -267,14 +283,31 @@ def main():
         },
         'h2_r2_by_mode': h2_r2,
         'distance_binned_ablation': dist_bins,
-        'note': 'primary decision uses ov_enc=other_vision (SS33.1 main design); '
-                'ov_enc=self_vision is the SS33.1 secondary robustness check; '
-                'distance_binned_ablation is the SS28.2 pre-registered follow-up '
-                '(ov_enc=other_vision only), distance to Green=(-9,-9)',
     }
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--exp_config', default='v6_s3_base_l1')
+    parser.add_argument('--epoch', type=int, default=200)
+    parser.add_argument('--seed', type=int, default=0)
+    parser.add_argument('--n_episodes', type=int, default=N_EPISODES)
+    parser.add_argument('--label', default=None)
+    parser.add_argument('--eval_seed', type=int, default=0)
+    parser.add_argument('--data_h5', default=DATA_H5)
+    args = parser.parse_args()
+    label = args.label or f'{args.exp_config}_oracle_eval'
+
+    result = run_epoch(args.exp_config, args.seed, args.epoch, args.n_episodes,
+                        args.eval_seed, args.data_h5, verbose=True)
+    result['label'] = label
     result.update(util.gen_result_metadata(
         exp_config_name=args.exp_config, seed=0,
         dataset_name=os.path.basename(os.path.dirname(args.data_h5))))
+    result['note'] = ('primary decision uses ov_enc=other_vision (SS33.1 main design); '
+                       'ov_enc=self_vision is the SS33.1 secondary robustness check; '
+                       'distance_binned_ablation is the SS28.2 pre-registered follow-up '
+                       '(ov_enc=other_vision only), distance to Green=(-9,-9)')
 
     os.makedirs(SAVE_DIR, exist_ok=True)
     out_path = os.path.join(SAVE_DIR, f'{label}.json')

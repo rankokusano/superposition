@@ -247,6 +247,17 @@ h²のR²（true_r条件）：h²→self=0.0160、h²→other=0.8797（zeroの0.
 
 図：`data/result/v6_baseline/v6_s3_base_l1_oracle_ablation_bars.png`（4条件アブレーション）、`v6_s3_base_l1_oracle_r2_by_condition.png`（4軸R²）、`v6_s3_base_l1_oracle_distance_binned.png`（距離別、いずれも目視確認済み）。
 
+**追加検証（2026-10-01、late-5集計・全条件の距離別・予測画像）**：`analyze/oracle_eval_v6_lateckpt.py`でS3のlate-5（ep200-160）を集計。
+
+| 距離ビン | true_r−zero (mean±sd) | constant−zero (mean±sd) |
+|---|---|---|
+| <5 | +0.0009±0.0011 | -0.0039±0.0007 |
+| 5-10 | -0.0018±0.0004 | +0.0038±0.0007 |
+| 10-15 | -0.0045±0.0004 | +0.0014±0.0003 |
+| ≥15 | -0.0139±0.0001 | -0.0026±0.0003 |
+
+**`constant`はtrue_rと同じ単調な距離トレンドを示さない**（符号反転を繰り返す）→「価値の情報が効いている」を支持。≥15ビンのsd（0.0001）は効果量（0.0139）より2桁小さく、ノイズではない。h²→otherの距離別比較は複雑（10-15・≥15でwrong_rがtrue_rを上回る、ビン間のR²絶対値比較は値域制限のため無効）。予測画像（S3：`v6_s3_base_l1_pred_images_ep200.png`、S2よりシャープ／S4：`v6_s3_base_l1_oracle_far_pred_images_ep200.png`・`_far_pred_diff_ep200.png`）は目視確認済み——4条件の違いは画像では地味（差分はランドマーク輪郭付近に局所集中）。総合判定変更なし：S5に進んでよい。詳細`docs/v6_experiment_log.md` §36。
+
 ## S5: VE' による推定
 
 （未着手）
