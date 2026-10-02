@@ -1,0 +1,50 @@
+# v6 S5 (docs/v6_instructions.md Sec.3.0 "S5: VE'による推定", design in
+# docs/v6_experiment_log.md Sec.37-38). Identical in spirit to
+# config/exp/v5_r4_move.yml (v5's VE stage: pretrain from base_l1, SM/
+# encoder/decoder/FPM/critic all frozen, only the new estimator module
+# trains, data=r2_a1random_a2rl so A-2 is actually moving and has
+# reward-revealing behavior to observe) except:
+#   model.name  : SuperpositionNetworkProbeQValueEstimation -> SuperpositionNetworkProbeQV6ValueEstimation
+#   train.pretrain.exp_config : v5_base_l1 -> v6_s3_base_l1
+# VE' (model/model.py SuperpositionNetworkProbeQV6ValueEstimation) outputs
+# r_hat (4-dim, tanh) from ov_enc, then feeds r_hat back through the SAME
+# frozen, reward-conditioned probe_critic (using SELF vision, per
+# docs/v6_experiment_log.md Sec.37.2) to get Q_hat2 -- NOT an 8-dim
+# Q_hat2 directly like v4/v5's VE. No supervision on r_hat anywhere;
+# training signal is vision reconstruction loss only.
+model:
+    name: SuperpositionNetworkProbeQV6ValueEstimation
+    config: default
+    mode: ~
+runner: PredictionFeaturePredictionRunner
+data:
+    name: r2_a1random_a2rl
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+    loss_function: l1_loss
+    pretrain:
+        exp_config: v6_s3_base_l1
+        seed: 0
+        epoch: 200
+    batch_size: 10
+    max_epochs: 400
+    save_interval: 10
+    test_interval: 10
+    optimizer: AdamW
+    optim_config:
+        default:
+            lr: 0.001
+            weight_decay: 0.01
+        freeze:
+            - vision_encoder_module
+            - vision_decoder_module
+            - integration_module
+            - feature_prediction_module
+            - share_lns
+            - probe_critic
+            - superposition_module
+        per_params:
+            - name: bias
+              args:
+                  weight_decay: 0.0

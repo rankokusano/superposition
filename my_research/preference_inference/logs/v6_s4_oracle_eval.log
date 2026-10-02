@@ -1,0 +1,23 @@
+Loading 3000/3000 episodes ...
+
+=== S4 primary result: self_vision L1 loss by (ov_enc source, mode) ===
+  ov_enc = other_vision:
+    true_r    : 0.2533
+    wrong_r   : 0.2519
+    zero      : 0.2525
+    constant  : 0.2490
+    true_r - zero = +0.0008  (true_r HURTS (v4/v5-style failure))
+  ov_enc = self_vision:
+    true_r    : 0.2542
+    wrong_r   : 0.2518
+    zero      : 0.2521
+    constant  : 0.2482
+    true_r - zero = +0.0021  (true_r HURTS (v4/v5-style failure))
+
+=== h2 (process-2 output, ov_enc=other_vision) -> position R^2 by mode ===
+  true_r    : h2->self=0.0160  h2->other=0.8797
+  wrong_r   : h2->self=0.0131  h2->other=0.8601
+  zero      : h2->self=0.0114  h2->other=0.8227
+  constant  : h2->self=0.0105  h2->other=0.8754
+
+Saved: data/result/baseline_v4/v6_s3_base_l1_oracle.json

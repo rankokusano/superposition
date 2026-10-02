@@ -260,7 +260,9 @@ h²のR²（true_r条件）：h²→self=0.0160、h²→other=0.8797（zeroの0.
 
 ## S5: VE' による推定
 
-（未着手）
+**着手前確認（2026-10-02）**：未知r（連続値）への汎化をcheckerboard r=(.5,-.5,.5,-.5)で確認——Red・Blueの点対称平均0.735 vs Green・Cyanの点対称平均-0.359（線形モデルならゼロのはずの差が1.094）、座標勾配では説明不可能な色ベース評価を確認、PASS。S5が実際に使う計算（q2をself_visionで計算）でもS4の効果を確認——true_r-zero全体=-0.0083（S4のother_vision版は全体不成立だった）、距離別も単調（-0.0081→-0.0087→-0.0098→-0.0166）、PASS。詳細`docs/v6_experiment_log.md` §37。
+
+**起動（2026-10-02）**：`config/exp/v6_s5_ve.yml`（`v5_r4_move.yml`と同一構成、pretrain=`v6_s3_base_l1` ep200、data=`r2_a1random_a2rl`、`value_estimator_module`以外すべて凍結、l1_loss、400ep）。新規モデルクラス`SuperpositionNetworkProbeQV6ValueEstimation`（VE'→r̂²→同一critic→Q̂²→SM、v4の`ValueEstimatorModuleR4`を再利用）。スモークテストでcuDNN RNN backwardのバグを発見・修正（`probe_critic`を一時的にtrain()に切り替えてforward、直後にeval()へ戻す）。実測1.69it/s、400ep×300batch ≈ 19.7時間見込み。事前登録した判定基準（2段階判定・自己投影指標・§3オリジナル基準）は`docs/v6_experiment_log.md` §38参照。完了待ち。
 
 ## S6: 観察の時間発展
 

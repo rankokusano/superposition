@@ -1,0 +1,233 @@
+
+########## epoch 200 ##########
+Loading 3000/3000 episodes ...
+
+=== S4 primary result: self_vision L1 loss by (ov_enc source, mode) ===
+  ov_enc = other_vision:
+    true_r    : 0.2533
+    wrong_r   : 0.2519
+    zero      : 0.2525
+    constant  : 0.2490
+    true_r - zero = +0.0008  (true_r HURTS (v4/v5-style failure))
+  ov_enc = self_vision:
+    true_r    : 0.2542
+    wrong_r   : 0.2518
+    zero      : 0.2521
+    constant  : 0.2482
+    true_r - zero = +0.0021  (true_r HURTS (v4/v5-style failure))
+
+=== h2 (process-2 output, ov_enc=other_vision) -> position R^2 by mode ===
+  true_r    : h2->self=0.0160  h2->other=0.8797
+  wrong_r   : h2->self=0.0131  h2->other=0.8601
+  zero      : h2->self=0.0114  h2->other=0.8227
+  constant  : h2->self=0.0105  h2->other=0.8754
+
+=== SS28.2 distance-binned ablation (ov_enc=other_vision, distance to Green) ===
+  <5     (n=271283): vision_l1 true_r=0.2527  wrong_r=0.2510  zero=0.2513  constant=0.2473   true_r-zero=+0.0014
+           h2->other true_r=0.1968  wrong_r=0.2007  zero=0.1807  constant=0.1741
+  5-10   (n= 13865): vision_l1 true_r=0.2727  wrong_r=0.2696  zero=0.2743  constant=0.2783   true_r-zero=-0.0016
+           h2->other true_r=0.8031  wrong_r=0.7957  zero=0.7921  constant=0.7883
+  10-15  (n=  9279): vision_l1 true_r=0.2577  wrong_r=0.2636  zero=0.2620  constant=0.2635   true_r-zero=-0.0043
+           h2->other true_r=0.8571  wrong_r=0.8800  zero=0.8719  constant=0.8585
+  >=15   (n=  5573): vision_l1 true_r=0.2246  wrong_r=0.2329  zero=0.2386  constant=0.2362   true_r-zero=-0.0139
+           h2->other true_r=0.8241  wrong_r=0.8512  zero=0.8280  constant=0.8183
+
+########## epoch 190 ##########
+Loading 3000/3000 episodes ...
+
+=== S4 primary result: self_vision L1 loss by (ov_enc source, mode) ===
+  ov_enc = other_vision:
+    true_r    : 0.2533
+    wrong_r   : 0.2517
+    zero      : 0.2520
+    constant  : 0.2498
+    true_r - zero = +0.0013  (true_r HURTS (v4/v5-style failure))
+  ov_enc = self_vision:
+    true_r    : 0.2545
+    wrong_r   : 0.2517
+    zero      : 0.2516
+    constant  : 0.2491
+    true_r - zero = +0.0029  (true_r HURTS (v4/v5-style failure))
+
+=== h2 (process-2 output, ov_enc=other_vision) -> position R^2 by mode ===
+  true_r    : h2->self=0.0160  h2->other=0.8797
+  wrong_r   : h2->self=0.0131  h2->other=0.8601
+  zero      : h2->self=0.0114  h2->other=0.8227
+  constant  : h2->self=0.0105  h2->other=0.8754
+
+=== SS28.2 distance-binned ablation (ov_enc=other_vision, distance to Green) ===
+  <5     (n=271283): vision_l1 true_r=0.2526  wrong_r=0.2507  zero=0.2507  constant=0.2480   true_r-zero=+0.0019
+           h2->other true_r=0.1968  wrong_r=0.2007  zero=0.1807  constant=0.1741
+  5-10   (n= 13865): vision_l1 true_r=0.2742  wrong_r=0.2708  zero=0.2754  constant=0.2803   true_r-zero=-0.0013
+           h2->other true_r=0.8031  wrong_r=0.7957  zero=0.7921  constant=0.7883
+  10-15  (n=  9279): vision_l1 true_r=0.2591  wrong_r=0.2653  zero=0.2634  constant=0.2647   true_r-zero=-0.0043
+           h2->other true_r=0.8571  wrong_r=0.8800  zero=0.8719  constant=0.8585
+  >=15   (n=  5573): vision_l1 true_r=0.2255  wrong_r=0.2340  zero=0.2396  constant=0.2367   true_r-zero=-0.0141
+           h2->other true_r=0.8241  wrong_r=0.8512  zero=0.8280  constant=0.8183
+
+########## epoch 180 ##########
+Loading 3000/3000 episodes ...
+
+=== S4 primary result: self_vision L1 loss by (ov_enc source, mode) ===
+  ov_enc = other_vision:
+    true_r    : 0.2538
+    wrong_r   : 0.2521
+    zero      : 0.2526
+    constant  : 0.2496
+    true_r - zero = +0.0012  (true_r HURTS (v4/v5-style failure))
+  ov_enc = self_vision:
+    true_r    : 0.2548
+    wrong_r   : 0.2521
+    zero      : 0.2521
+    constant  : 0.2488
+    true_r - zero = +0.0026  (true_r HURTS (v4/v5-style failure))
+
+=== h2 (process-2 output, ov_enc=other_vision) -> position R^2 by mode ===
+  true_r    : h2->self=0.0160  h2->other=0.8797
+  wrong_r   : h2->self=0.0131  h2->other=0.8601
+  zero      : h2->self=0.0114  h2->other=0.8227
+  constant  : h2->self=0.0105  h2->other=0.8754
+
+=== SS28.2 distance-binned ablation (ov_enc=other_vision, distance to Green) ===
+  <5     (n=271283): vision_l1 true_r=0.2534  wrong_r=0.2512  zero=0.2515  constant=0.2481   true_r-zero=+0.0019
+           h2->other true_r=0.1968  wrong_r=0.2007  zero=0.1807  constant=0.1741
+  5-10   (n= 13865): vision_l1 true_r=0.2719  wrong_r=0.2691  zero=0.2739  constant=0.2772   true_r-zero=-0.0021
+           h2->other true_r=0.8031  wrong_r=0.7957  zero=0.7921  constant=0.7883
+  10-15  (n=  9279): vision_l1 true_r=0.2569  wrong_r=0.2639  zero=0.2622  constant=0.2631   true_r-zero=-0.0052
+           h2->other true_r=0.8571  wrong_r=0.8800  zero=0.8719  constant=0.8585
+  >=15   (n=  5573): vision_l1 true_r=0.2247  wrong_r=0.2327  zero=0.2385  constant=0.2355   true_r-zero=-0.0137
+           h2->other true_r=0.8241  wrong_r=0.8512  zero=0.8280  constant=0.8183
+
+########## epoch 170 ##########
+Loading 3000/3000 episodes ...
+
+=== S4 primary result: self_vision L1 loss by (ov_enc source, mode) ===
+  ov_enc = other_vision:
+    true_r    : 0.2488
+    wrong_r   : 0.2491
+    zero      : 0.2494
+    constant  : 0.2457
+    true_r - zero = -0.0006  (true_r HELPS (design works))
+  ov_enc = self_vision:
+    true_r    : 0.2499
+    wrong_r   : 0.2490
+    zero      : 0.2490
+    constant  : 0.2450
+    true_r - zero = +0.0009  (true_r HURTS (v4/v5-style failure))
+
+=== h2 (process-2 output, ov_enc=other_vision) -> position R^2 by mode ===
+  true_r    : h2->self=0.0160  h2->other=0.8797
+  wrong_r   : h2->self=0.0131  h2->other=0.8601
+  zero      : h2->self=0.0114  h2->other=0.8227
+  constant  : h2->self=0.0105  h2->other=0.8754
+
+=== SS28.2 distance-binned ablation (ov_enc=other_vision, distance to Green) ===
+  <5     (n=271283): vision_l1 true_r=0.2477  wrong_r=0.2478  zero=0.2479  constant=0.2436   true_r-zero=-0.0001
+           h2->other true_r=0.1968  wrong_r=0.2007  zero=0.1807  constant=0.1741
+  5-10   (n= 13865): vision_l1 true_r=0.2720  wrong_r=0.2691  zero=0.2738  constant=0.2778   true_r-zero=-0.0017
+           h2->other true_r=0.8031  wrong_r=0.7957  zero=0.7921  constant=0.7883
+  10-15  (n=  9279): vision_l1 true_r=0.2591  wrong_r=0.2653  zero=0.2636  constant=0.2649   true_r-zero=-0.0045
+           h2->other true_r=0.8571  wrong_r=0.8800  zero=0.8719  constant=0.8585
+  >=15   (n=  5573): vision_l1 true_r=0.2262  wrong_r=0.2345  zero=0.2401  constant=0.2375   true_r-zero=-0.0140
+           h2->other true_r=0.8241  wrong_r=0.8512  zero=0.8280  constant=0.8183
+
+########## epoch 160 ##########
+Loading 3000/3000 episodes ...
+
+=== S4 primary result: self_vision L1 loss by (ov_enc source, mode) ===
+  ov_enc = other_vision:
+    true_r    : 0.2463
+    wrong_r   : 0.2468
+    zero      : 0.2474
+    constant  : 0.2432
+    true_r - zero = -0.0011  (true_r HELPS (design works))
+  ov_enc = self_vision:
+    true_r    : 0.2473
+    wrong_r   : 0.2467
+    zero      : 0.2470
+    constant  : 0.2425
+    true_r - zero = +0.0002  (true_r HURTS (v4/v5-style failure))
+
+=== h2 (process-2 output, ov_enc=other_vision) -> position R^2 by mode ===
+  true_r    : h2->self=0.0160  h2->other=0.8797
+  wrong_r   : h2->self=0.0131  h2->other=0.8601
+  zero      : h2->self=0.0114  h2->other=0.8227
+  constant  : h2->self=0.0105  h2->other=0.8754
+
+=== SS28.2 distance-binned ablation (ov_enc=other_vision, distance to Green) ===
+  <5     (n=271283): vision_l1 true_r=0.2451  wrong_r=0.2455  zero=0.2458  constant=0.2410   true_r-zero=-0.0007
+           h2->other true_r=0.1968  wrong_r=0.2007  zero=0.1807  constant=0.1741
+  5-10   (n= 13865): vision_l1 true_r=0.2704  wrong_r=0.2681  zero=0.2726  constant=0.2755   true_r-zero=-0.0022
+           h2->other true_r=0.8031  wrong_r=0.7957  zero=0.7921  constant=0.7883
+  10-15  (n=  9279): vision_l1 true_r=0.2568  wrong_r=0.2625  zero=0.2609  constant=0.2628   true_r-zero=-0.0041
+           h2->other true_r=0.8571  wrong_r=0.8800  zero=0.8719  constant=0.8585
+  >=15   (n=  5573): vision_l1 true_r=0.2243  wrong_r=0.2327  zero=0.2380  constant=0.2360   true_r-zero=-0.0137
+           h2->other true_r=0.8241  wrong_r=0.8512  zero=0.8280  constant=0.8183
+
+=== Aggregate (mean +/- inter-checkpoint sd over epochs [200, 190, 180, 170, 160]) ===
+-- overall self_vision L1 (ov_enc=other_vision) --
+  true_r    : 0.2511 +/- 0.0030
+  wrong_r   : 0.2503 +/- 0.0021
+  zero      : 0.2508 +/- 0.0020
+  constant  : 0.2475 +/- 0.0026
+  true_r - zero: +0.0003 +/- 0.0010
+
+-- distance-binned self_vision L1 (mean +/- inter-checkpoint sd) --
+  <5     (n~271283):
+    true_r    : 0.2503 +/- 0.0033
+    wrong_r   : 0.2492 +/- 0.0022
+    zero      : 0.2494 +/- 0.0022
+    constant  : 0.2456 +/- 0.0028
+    true_r-zero : +0.0009 +/- 0.0011
+    constant-zero: -0.0039 +/- 0.0007
+  5-10   (n~13865):
+    true_r    : 0.2722 +/- 0.0012
+    wrong_r   : 0.2693 +/- 0.0009
+    zero      : 0.2740 +/- 0.0009
+    constant  : 0.2778 +/- 0.0016
+    true_r-zero : -0.0018 +/- 0.0004
+    constant-zero: +0.0038 +/- 0.0007
+  10-15  (n~9279):
+    true_r    : 0.2579 +/- 0.0010
+    wrong_r   : 0.2641 +/- 0.0011
+    zero      : 0.2624 +/- 0.0010
+    constant  : 0.2638 +/- 0.0008
+    true_r-zero : -0.0045 +/- 0.0004
+    constant-zero: +0.0014 +/- 0.0003
+  >=15   (n~5573):
+    true_r    : 0.2251 +/- 0.0007
+    wrong_r   : 0.2334 +/- 0.0007
+    zero      : 0.2390 +/- 0.0008
+    constant  : 0.2364 +/- 0.0007
+    true_r-zero : -0.0139 +/- 0.0001
+    constant-zero: -0.0026 +/- 0.0003
+
+-- distance-binned h2->other R^2 (mean +/- inter-checkpoint sd) --
+  <5    :
+    true_r    : 0.1968 +/- 0.0000
+    wrong_r   : 0.2007 +/- 0.0000
+    zero      : 0.1807 +/- 0.0000
+    constant  : 0.1741 +/- 0.0000
+  5-10  :
+    true_r    : 0.8031 +/- 0.0000
+    wrong_r   : 0.7957 +/- 0.0000
+    zero      : 0.7921 +/- 0.0000
+    constant  : 0.7883 +/- 0.0000
+  10-15 :
+    true_r    : 0.8571 +/- 0.0000
+    wrong_r   : 0.8800 +/- 0.0000
+    zero      : 0.8719 +/- 0.0000
+    constant  : 0.8585 +/- 0.0000
+  >=15  :
+    true_r    : 0.8241 +/- 0.0000
+    wrong_r   : 0.8512 +/- 0.0000
+    zero      : 0.8280 +/- 0.0000
+    constant  : 0.8183 +/- 0.0000
+
+-- overall h2->self / h2->other R^2 (mean +/- inter-checkpoint sd) --
+  true_r    : h2->self=0.0160+/-0.0000  h2->other=0.8797+/-0.0000
+  wrong_r   : h2->self=0.0131+/-0.0000  h2->other=0.8601+/-0.0000
+  zero      : h2->self=0.0114+/-0.0000  h2->other=0.8227+/-0.0000
+  constant  : h2->self=0.0105+/-0.0000  h2->other=0.8754+/-0.0000
+
+Saved: data/result/baseline_v4/v6_s3_base_l1_oracle_lateckpt.json

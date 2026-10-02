@@ -1,0 +1,37 @@
+{
+  "exp_config": "v6_s3_base_l1",
+  "epoch": 200,
+  "n_episodes": 3000,
+  "note": "q2 computed from SELF vision (S5s real convention), not other_vision (SS33.1 oracle)",
+  "vision_l1": {
+    "true_r": 0.2277110231145223,
+    "zero": 0.23601173796335856
+  },
+  "true_r_minus_zero_overall": -0.008300714848836266,
+  "distance_binned": {
+    "<5": {
+      "n": 271283,
+      "true_r": 0.22700700163841248,
+      "zero": 0.23506556451320648,
+      "true_r_minus_zero": -0.008058562874794006
+    },
+    "5-10": {
+      "n": 13865,
+      "true_r": 0.2599192261695862,
+      "zero": 0.268581748008728,
+      "true_r_minus_zero": -0.008662521839141846
+    },
+    "10-15": {
+      "n": 9279,
+      "true_r": 0.23472394049167633,
+      "zero": 0.24456986784934998,
+      "true_r_minus_zero": -0.009845927357673645
+    },
+    ">=15": {
+      "n": 5573,
+      "true_r": 0.17017409205436707,
+      "zero": 0.1867900788784027,
+      "true_r_minus_zero": -0.016615986824035645
+    }
+  }
+}

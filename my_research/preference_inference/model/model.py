@@ -583,3 +583,107 @@ class SuperpositionNetworkProbeQV6(SuperpositionNetworkProbeQ):
             q, _ = self.probe_critic(v_rep, a_rep, r_rep, hidden=None)
         q = q.reshape(b, k)
         return torch.tanh((q - self.q_mu) / self.q_sigma)
+
+
+class SuperpositionNetworkProbeQV6ValueEstimation(SuperpositionNetworkProbeQV6):
+    """
+    v6 S5 (docs/v6_instructions.md §2.1/§2.7/§3.0 "S5"; design finalised in
+    docs/v6_experiment_log.md §37-38): VE' estimates A-2's reward parameter
+    r_hat (4-dim, tanh-bounded) from ov_enc, then r_hat is fed back into the
+    SAME frozen, reward-conditioned probe_critic to compute Q_hat2 (8-dim),
+    which becomes process-2's SM input. This is the two-stage structure
+    that is v6's entire point (§2.1):
+
+        VE' -> r_hat (4) -> conditioned critic Q(s,a,r_hat) -> Q_hat2 (8) -> SM
+
+    as opposed to v4/v5's VE, which outputs an 8-dim Q_hat2 directly with
+    no reward-parameter stage in between.
+
+    VE' itself is ValueEstimatorModuleR4 reused verbatim (LSTMCell over
+    ov_enc, tanh-bounded output) with output=4 instead of v4's output=8 --
+    no new module class was needed for the estimator itself, only for the
+    "feed its output back through the critic" wiring, which lives here.
+
+    ov_enc is `other_vision_encoder_module(self_vision)` -- i.e. VE' only
+    ever sees SELF vision, never real other_vision, matching S2/S3's own
+    convention and the paper's "self-vision/self-value only" premise.
+    Critically, the r_hat -> critic -> Q_hat2 step ALSO uses SELF vision
+    (sv_raw), not real other_vision: docs/v6_experiment_log.md §37.2 found
+    this is in fact the better-performing configuration (not merely the
+    more principled one) when compared against S4's oracle (which used
+    real other_vision as a deliberately generous ceiling test).
+
+    No direct supervision on r_hat anywhere -- training signal is vision
+    reconstruction loss only (docs/v6_instructions.md §3 S5: "教師信号は視覚
+    予測損失のみ"), exactly like v4's VE. For this loss to reach VE' at all,
+    the r_hat -> critic -> Q_hat2 computation must NOT be wrapped in
+    torch.no_grad() (unlike compute_probe_q's q1, where r is a fixed
+    non-trainable buffer and no gradient needs to flow through it) --
+    probe_critic's own parameters stay frozen via requires_grad=False
+    (set in the parent class __init__), but autograd still backpropagates
+    the loss through its (frozen-weight) forward computation to reach
+    r_hat and, from there, VE's own trainable parameters.
+    """
+    def __init__(self, config):
+        super().__init__(config)
+        self.value_estimator_module = ValueEstimatorModuleR4(config.value_estimator_module)
+        self.rnn_modules.append(self.value_estimator_module)
+
+    def compute_probe_q2_from_r_hat(self, sv_raw, r_hat):
+        """Like compute_probe_q, but for a BATCH-VARYING, trainable r_hat
+        (one per sample) instead of the fixed self.probe_r buffer, and
+        WITHOUT torch.no_grad() so gradients reach r_hat (see class
+        docstring). sv_raw: (B,3,H,W) in [0,1]; r_hat: (B,4).
+
+        cudnn's RNN backward refuses to run when the module is in eval()
+        mode (probe_critic is permanently .eval() -- it has no BatchNorm/
+        Dropout, so toggling train()/eval() makes no numerical difference
+        here, only cudnn's backward-pass bookkeeping cares about the flag)
+        -- flip it to train() for just this call so cudnn's accelerated
+        LSTM backward is allowed to run, then restore eval() immediately
+        after (globally disabling cudnn instead, via
+        torch.backends.cudnn.flags(enabled=False), also works but is much
+        slower since it also de-accelerates the CNN encoder's conv layers
+        inside the critic)."""
+        b = sv_raw.size(0)
+        k = self.probe_actions.size(0)
+        v_rep = sv_raw.unsqueeze(1).expand(-1, k, -1, -1, -1).reshape(
+            b * k, *sv_raw.shape[1:])
+        a_rep = self.probe_actions.unsqueeze(0).expand(b, -1, -1).reshape(b * k, 2)
+        r_rep = r_hat.unsqueeze(1).expand(-1, k, -1).reshape(b * k, -1)
+        self.probe_critic.train()
+        q, _ = self.probe_critic(v_rep, a_rep, r_rep, hidden=None)
+        self.probe_critic.eval()
+        q = q.reshape(b, k)
+        return torch.tanh((q - self.q_mu) / self.q_sigma)
+
+    def forward(self, x, p_mask_vision_self, p_mask_vision_other):
+        sv = x['self_vision']  # already scaled to [-1, 1] by the data loader
+
+        sv_enc = self.self_vision_encoder_module(sv)
+        ov_enc = self.other_vision_encoder_module(sv)  # self-vision derived, S2/S3's own convention
+
+        sv_raw = (sv + 1) / 2  # back to the critic's native [0,1] scale
+        q1_vec = self.compute_probe_q(sv_raw)
+
+        r_hat = self.value_estimator_module(ov_enc)  # (B,4), tanh-bounded, UNMASKED ov_enc as input
+        q2_vec = self.compute_probe_q2_from_r_hat(sv_raw, r_hat)
+
+        sv_enc = util.mask(sv_enc, p_mask_vision_self)
+        ov_enc = util.mask(ov_enc, p_mask_vision_other)
+
+        ss, os = self.superposition_module(sv_enc, q1_vec, ov_enc, q2_vec)
+
+        so = self.integration_module(
+            F.dropout(ss, p=0.5, training=self.training),
+            F.dropout(os, p=0.5, training=self.training),
+        )
+
+        pred = {}
+        pred['self_vision'] = self.vision_decoder_module(so)
+        # exposed for analysis only (matches v4 VE's 'q2_hat' save-hook
+        # convention in exp/runner.py) -- not used by any loss.
+        pred['r_hat'] = r_hat
+        pred['q2_hat'] = q2_vec
+
+        return pred
