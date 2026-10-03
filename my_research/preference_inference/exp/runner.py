@@ -63,6 +63,12 @@ class PredictionRunnerBase(RunnerBase):
                 if "q2_hat" in pred:
                     _data["q2_hat"] = {"prediction": pred["q2_hat"]}
 
+                # v6 S5: VE' estimated reward parameter r_hat (4-dim), for
+                # the r_hat<->true-r correlation / self-projection analysis
+                # (docs/v6_experiment_log.md Sec.38.2)
+                if "r_hat" in pred:
+                    _data["r_hat"] = {"prediction": pred["r_hat"]}
+
                 _data["state"] = model_state
 
                 data.append((t, _data))

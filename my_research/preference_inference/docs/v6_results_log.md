@@ -262,7 +262,18 @@ h²のR²（true_r条件）：h²→self=0.0160、h²→other=0.8797（zeroの0.
 
 **着手前確認（2026-10-02）**：未知r（連続値）への汎化をcheckerboard r=(.5,-.5,.5,-.5)で確認——Red・Blueの点対称平均0.735 vs Green・Cyanの点対称平均-0.359（線形モデルならゼロのはずの差が1.094）、座標勾配では説明不可能な色ベース評価を確認、PASS。S5が実際に使う計算（q2をself_visionで計算）でもS4の効果を確認——true_r-zero全体=-0.0083（S4のother_vision版は全体不成立だった）、距離別も単調（-0.0081→-0.0087→-0.0098→-0.0166）、PASS。詳細`docs/v6_experiment_log.md` §37。
 
-**起動（2026-10-02）**：`config/exp/v6_s5_ve.yml`（`v5_r4_move.yml`と同一構成、pretrain=`v6_s3_base_l1` ep200、data=`r2_a1random_a2rl`、`value_estimator_module`以外すべて凍結、l1_loss、400ep）。新規モデルクラス`SuperpositionNetworkProbeQV6ValueEstimation`（VE'→r̂²→同一critic→Q̂²→SM、v4の`ValueEstimatorModuleR4`を再利用）。スモークテストでcuDNN RNN backwardのバグを発見・修正（`probe_critic`を一時的にtrain()に切り替えてforward、直後にeval()へ戻す）。実測1.69it/s、400ep×300batch ≈ 19.7時間見込み。事前登録した判定基準（2段階判定・自己投影指標・§3オリジナル基準）は`docs/v6_experiment_log.md` §38参照。完了待ち。
+**起動（2026-10-02）**：`config/exp/v6_s5_ve.yml`（`v5_r4_move.yml`と同一構成、pretrain=`v6_s3_base_l1` ep200、data=`r2_a1random_a2rl`、`value_estimator_module`以外すべて凍結、l1_loss、400ep）。新規モデルクラス`SuperpositionNetworkProbeQV6ValueEstimation`（VE'→r̂²→同一critic→Q̂²→SM、v4の`ValueEstimatorModuleR4`を再利用）。スモークテストでcuDNN RNN backwardのバグを発見・修正（`probe_critic`を一時的にtrain()に切り替えてforward、直後にeval()へ戻す）。実測1.69it/s、400ep×300batch ≈ 19.7時間見込み。事前登録した判定基準（2段階判定・自己投影指標・§3オリジナル基準）は`docs/v6_experiment_log.md` §38参照。
+
+**結果（2026-10-03完了、ep400、eval split/r2_a1random_a2rl、n=300,000フレーム）**：指標ごとに結果が割れており、単純な合否判定は下さずユーザに提示（詳細`docs/v6_experiment_log.md` §39）。
+
+| 指標 | 全体 | 距離別（2段階判定） | 判定 |
+|---|---|---|---|
+| 自己投影：cos_sim(r̂², A2真値) | +0.27（A2寄り、自己投影なし） | **弱まる**（<5:+0.29 → ≥15:-0.02、逆転） | 不確定 |
+| 方向一致度：45°以内の割合 | 9.9%（偶然25%未満） | **改善**（<5:7.0% → ≥15:54.7%、偶然の2倍超） | S4型PASS |
+| Q̂²→A-2位置 R² vs →A-1位置 | 0.024 vs 0.272（NO、v4型逆転） | **改善せず**（非単調、5-10ビンのみ一時的にYES） | 不成立 |
+| h²→self（病理監視） | 0.343（S4のzero基準0.011から大幅上昇） | — | 懸念材料 |
+
+r̂²散布図（論文の核心図）：A-1・A-2どちらの真値にも収束せず、独自の偏った領域（green優位、red中立）に分布。PCA状態マップ：h1（自己）は明瞭な空間構造を持つが、h2（他者）はA-2位置のy座標についてほぼ一様で空間構造が乏しい（PC-plane R²=0.034/0.018）。収束は概ね良好（ep100までに収束、ep130-380で安定）だが、ep380-400にかけて軽微な再上昇あり。図はすべて目視確認済み：`v6_s5_ve_training_curve.png`、`v6_s5_ve_r_hat_scatter_ep400.png`、`v6_s5_ve_direction_heatmap_ep400.png`、`pca_state_v6_s5_ve.png`。標準パイプライン（4軸R²・収束判定）は実行中、完了後追記。
 
 ## S6: 観察の時間発展
 

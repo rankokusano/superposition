@@ -35,7 +35,7 @@ python -u test.py \
     --test_epoch "${EPOCH}" --test_data_name "${DATASET}" --test_name "${TESTNAME}" \
     --test_batch_size "${BATCH}" --test_modes "${MODE}" \
     --eval_seed "${ESEED}" --cudnn_deterministic \
-    --save_targets self_position other_position state q2_hat a2_target_landmark
+    --save_targets self_position other_position state q2_hat r_hat a2_target_landmark
 
 echo "=== [2/5] regression_baseline_v4.py -> 4-axis R^2 ==="
 python analyze/regression_baseline_v4.py \
@@ -46,7 +46,7 @@ echo "=== [3/5] probe_q_direct_regression.py (single-timestep Q -> position) ===
 python analyze/probe_q_direct_regression.py --exp_config "${EXP}" --epoch "${EPOCH}" --seed "${SEED}" \
     --eval_seed "${ESEED}" --label "${LABEL}_probeq" || echo "(skipped: not a ProbeQ model or no probe_actions)"
 
-if python -c "import yaml,sys; c=yaml.safe_load(open('config/exp/${EXP}.yml')); sys.exit(0 if 'ValueEstimation' in c['model']['name'] else 1)"; then
+if python -c "import yaml,sys; c=yaml.safe_load(open('config/exp/${EXP}.yml')); n=c['model']['name']; sys.exit(0 if ('ValueEstimation' in n and 'V6' not in n) else 1)"; then
   echo "=== [4/5] r4_ve_eval.py (real/zero/true_q2/constant_mean + Q2hat stats + direction) ==="
   python analyze/r4_ve_eval.py --exp_config "${EXP}" --epoch "${EPOCH}" --seed "${SEED}" \
       --eval_seed "${ESEED}" --label "${LABEL}_r4ve"
