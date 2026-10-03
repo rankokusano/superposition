@@ -1,0 +1,21 @@
+{
+  "label": "v6_s5_ve_s0_ep390_r2_a1random_a2rl_es0",
+  "source_h5": "data/result/v6_s5_ve/0/test/r2_a1random_a2rl_canon_es0/save/saved.h5",
+  "epoch": 390,
+  "mode": "eval",
+  "n_data": 3000,
+  "n_steps": 100,
+  "hidden_dim": 128,
+  "n_samples": 300000,
+  "h1_to_self": 0.472978128864591,
+  "h1_to_other": 0.47182913485827277,
+  "h2_to_self": 0.3596482196728218,
+  "h2_to_other": 0.5285950091059286,
+  "timestamp": "2026-10-03T11:51:32.832722",
+  "git_commit": "645491acd7060f0b8ab4c892dcdf0b9c58fb5625",
+  "exp_config_name": "v6_s5_ve",
+  "config_path": "config/exp/v6_s5_ve.yml",
+  "config_content": "# v6 S5 (docs/v6_instructions.md Sec.3.0 \"S5: VE'\u306b\u3088\u308b\u63a8\u5b9a\", design in\n# docs/v6_experiment_log.md Sec.37-38). Identical in spirit to\n# config/exp/v5_r4_move.yml (v5's VE stage: pretrain from base_l1, SM/\n# encoder/decoder/FPM/critic all frozen, only the new estimator module\n# trains, data=r2_a1random_a2rl so A-2 is actually moving and has\n# reward-revealing behavior to observe) except:\n#   model.name  : SuperpositionNetworkProbeQValueEstimation -> SuperpositionNetworkProbeQV6ValueEstimation\n#   train.pretrain.exp_config : v5_base_l1 -> v6_s3_base_l1\n# VE' (model/model.py SuperpositionNetworkProbeQV6ValueEstimation) outputs\n# r_hat (4-dim, tanh) from ov_enc, then feeds r_hat back through the SAME\n# frozen, reward-conditioned probe_critic (using SELF vision, per\n# docs/v6_experiment_log.md Sec.37.2) to get Q_hat2 -- NOT an 8-dim\n# Q_hat2 directly like v4/v5's VE. No supervision on r_hat anywhere;\n# training signal is vision reconstruction loss only.\nmodel:\n    name: SuperpositionNetworkProbeQV6ValueEstimation\n    config: default\n    mode: ~\nrunner: PredictionFeaturePredictionRunner\ndata:\n    name: r2_a1random_a2rl\nload_state_dict_strict: False\np_mask_vision: 0.99\ntrain:\n    loss_function: l1_loss\n    pretrain:\n        exp_config: v6_s3_base_l1\n        seed: 0\n        epoch: 200\n    batch_size: 10\n    max_epochs: 400\n    save_interval: 10\n    test_interval: 10\n    optimizer: AdamW\n    optim_config:\n        default:\n            lr: 0.001\n            weight_decay: 0.01\n        freeze:\n            - vision_encoder_module\n            - vision_decoder_module\n            - integration_module\n            - feature_prediction_module\n            - share_lns\n            - probe_critic\n            - superposition_module\n        per_params:\n            - name: bias\n              args:\n                  weight_decay: 0.0\n",
+  "seed": 0,
+  "dataset_name": "r2_a1random_a2rl"
+}

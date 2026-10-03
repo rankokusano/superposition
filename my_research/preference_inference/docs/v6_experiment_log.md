@@ -1911,6 +1911,18 @@ VE'（LSTMCell、入力=ov_enc）→ r̂²（4次元、tanh拘束）
 3. 方向ヒートマップ：`data/result/v6_baseline/v6_s5_ve_direction_heatmap_ep400.png`
 4. PCA状態マップ：`data/result/v6_baseline/pca_state_v6_s5_ve.png`
 
-### 39.9 未実施（標準パイプラインの4軸R²・収束判定は実行中）
+### 39.9 標準パイプラインの4軸R²・収束判定（完了、2026-10-04）
 
-`analyze/run_eval_lateckpt.sh v6_s5_ve 400 0 r2_a1random_a2rl`による標準4軸R²・late-5集計・§4.2収束判定は実行中（r4_ve_eval.py・q2_position_regression.pyはv4アーキテクチャ専用のためv6では`analyze/run_eval_v4v5.sh`をスキップするよう修正済み——`analyze/analyze_r_hat_v6.py`が代替の分析を提供する）。完了後に追記する。
+`analyze/run_eval_lateckpt.sh v6_s5_ve 400 0 r2_a1random_a2rl`完了（r4_ve_eval.py・q2_position_regression.pyはv4アーキテクチャ専用のため`analyze/run_eval_v4v5.sh`でスキップするよう修正済み——`analyze/analyze_r_hat_v6.py`が代替の分析を提供）。
+
+**4軸R²（late-5、ep360-400）**：
+
+| | h¹→self | h¹→other | h²→self | h²→other |
+|---|---|---|---|---|
+| mean±sd | 0.4730±0.0000 | 0.4718±0.0000 | **0.4075±0.0379** | 0.5377±0.0066 |
+
+h¹→self/h¹→otherは全5チェックポイントで完全に同一（sd=0）——process-1はS3から一切変更されていないため当然（S5は`value_estimator_module`以外すべて凍結）。**h²→selfは0.41（0.36〜0.45の範囲でチェックポイント間変動あり）——§39.5で単一チェックポイント（ep400、別の抽出パイプライン）から得た0.34という値と同じオーダーで、独立した評価パイプラインによって同じ病理傾向（S4のzero基準0.011からの大幅な上昇）が再確認された。** h²→otherは0.538±0.007で、こちらも§39.5のep400単体推定0.529と整合。
+
+**収束**：副次ヒューリスティックは「変化-0.4%、収束」と判定（§39.1で確認した通り、目視でもep130-380は安定、ep380-400にかけて軽微な再上昇）。
+
+この独立した確認により、§39.7の総括（方向一致度はS4型のPASS、Q̂²→位置R²は不成立、h²→selfの病理的上昇は複数の評価パイプラインで再現）は変更しない。
