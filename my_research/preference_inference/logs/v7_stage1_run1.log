@@ -1,0 +1,15 @@
+test: N=300 T=101, goals=[100 100 100]
+trunk/head split vs CriticLSTM.forward: max|diff|=0.00e+00
+frames with |a|<0.1 (excluded): 0.0000
+GATE: {"irl_acc_t50": 1.0, "colour_acc_t50": 0.78, "irl_acc_t20": 0.9933333333333333, "moving_only_acc": 0.9366666666666666, "pass": true}
+Saved: /work/my_research/preference_inference/data/result/v7_irl/stage1/stage1_results.json
+irl_main                     t=1:0.820  t=5:0.890  t=10:0.920  t=20:0.993  t=50:1.000  t=100:1.000
+irl_beta_ext                 t=1:0.807  t=5:0.850  t=10:0.897  t=20:0.953  t=50:1.000  t=100:1.000
+irl_4cand_with_blue          t=1:0.813  t=5:0.890  t=10:0.920  t=20:0.993  t=50:1.000  t=100:1.000
+self_projection_prior        t=1:0.347  t=5:0.673  t=10:0.877  t=20:1.000  t=50:1.000  t=100:1.000
+colour_cumulative            t=1:0.317  t=5:0.457  t=10:0.630  t=20:0.947  t=50:0.780  t=100:0.253
+v_slope                      t=1:0.367  t=5:0.673  t=10:0.690  t=20:0.617  t=50:0.283  t=100:0.297
+position_baseline            t=1:0.400  t=5:0.923  t=10:0.987  t=20:1.000  t=50:1.000  t=100:1.000
+self_projection_always_r1    acc=0.333
+moving_only                  acc=0.937 k_mean=9.3 by_k={'0': {'n': 16, 'acc': 0.5}, '1-4': {'n': 51, 'acc': 1.0}, '5-9': {'n': 85, 'acc': 0.9764705882352941}, '10-19': {'n': 141, 'acc': 0.9361702127659575}, '>=20': {'n': 7, 'acc': 1.0}}
+moving_only_label_free       acc=0.940 k_mean=8.6 by_k={'0': {'n': 16, 'acc': 0.5}, '1-4': {'n': 51, 'acc': 1.0}, '5-9': {'n': 102, 'acc': 0.9607843137254902}, '10-19': {'n': 129, 'acc': 0.9534883720930233}, '>=20': {'n': 2, 'acc': 1.0}}
