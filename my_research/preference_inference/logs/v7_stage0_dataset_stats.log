@@ -1,0 +1,9 @@
+[train] Red   n=1000  init=13.83+-5.71 bins={'<5': 80, '5-10': 192, '10-15': 258, '>=15': 470}  final=1.41+-0.00  min=0.94+-0.21  ep_final<=5=1.000  frames<=5=0.899  |a|<0.1=0.0000
+[train] Green n=1000  init=14.02+-5.48 bins={'<5': 69, '5-10': 172, '10-15': 281, '>=15': 478}  final=1.41+-0.03  min=0.97+-0.19  ep_final<=5=1.000  frames<=5=0.912  |a|<0.1=0.0000
+[train] Cyan  n=1000  init=14.04+-5.68 bins={'<5': 81, '5-10': 174, '10-15': 254, '>=15': 491}  final=1.41+-0.01  min=0.99+-0.16  ep_final<=5=1.000  frames<=5=0.913  |a|<0.1=0.0000
+[test] Red   n= 100  init=14.37+-4.87 bins={'<5': 4, '5-10': 18, '10-15': 25, '>=15': 53}  final=1.41+-0.00  min=0.92+-0.25  ep_final<=5=1.000  frames<=5=0.892  |a|<0.1=0.0000
+[test] Green n= 100  init=12.65+-5.38 bins={'<5': 7, '5-10': 23, '10-15': 31, '>=15': 39}  final=1.41+-0.02  min=0.98+-0.17  ep_final<=5=1.000  frames<=5=0.922  |a|<0.1=0.0000
+[test] Cyan  n= 100  init=14.77+-5.68 bins={'<5': 5, '5-10': 18, '10-15': 25, '>=15': 52}  final=1.41+-0.00  min=1.01+-0.11  ep_final<=5=1.000  frames<=5=0.909  |a|<0.1=0.0000
+Cyan reaches goal in collected data (mean final <= 5.0): {'train': True, 'test': True}
+Saved: /work/my_research/preference_inference/data/result/v7_irl/stage0/dataset_stats_v7_a1random_a2goal3.json
+Saved: /work/my_research/preference_inference/data/result/v7_irl/stage0/dataset_stats_v7_a1random_a2goal3.png

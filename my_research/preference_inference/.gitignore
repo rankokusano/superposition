@@ -6,6 +6,11 @@ data/result/*/0/model/
 data/result/*/0/test/*/save/
 data/result/*/0/test/
 
+# v7: never track new binary outputs (existing tracked .pth/.h5 are left as is)
+data/result/v7_irl/**/*.h5
+data/result/v7_irl/**/*.npz
+data/result/v7_irl/**/*.pth
+
 # RL model files (keep data/model/ — it's 30MB and needed to reproduce)
 # data/model/
 

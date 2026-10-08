@@ -1,0 +1,26 @@
+Device: cuda
+Dataset: v7_a1random_a2goal3
+Seed key: 'v7_a1random_a2goal3' -> seed: 25712908
+Estimated dataset size: 2.06 GB  (x1.5 safety margin: 3.09 GB)
+Free disk space: 170.81 GB
+Collecting [train]: 3000 episodes x 101 steps
+  train: 200/3000 episodes done
+  train: 400/3000 episodes done
+  train: 600/3000 episodes done
+  train: 800/3000 episodes done
+  train: 1000/3000 episodes done
+  train: 1200/3000 episodes done
+  train: 1400/3000 episodes done
+  train: 1600/3000 episodes done
+  train: 1800/3000 episodes done
+  train: 2000/3000 episodes done
+  train: 2200/3000 episodes done
+  train: 2400/3000 episodes done
+  train: 2600/3000 episodes done
+  train: 2800/3000 episodes done
+  train: 3000/3000 episodes done
+  [train] done.
+Collecting [test]: 300 episodes x 101 steps
+  test: 200/300 episodes done
+  [test] done.
+Saved: /work/my_research/preference_inference/data/data/v7_a1random_a2goal3/data.h5

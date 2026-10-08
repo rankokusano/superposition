@@ -1,0 +1,11 @@
+=== landmark sanity (fractions red, green, blue, cyan) ===
+  near Red  : [0.0879 0.0127 0.     0.0127]  argmax=Red
+  near Green: [0.0127 0.0879 0.0127 0.    ]  argmax=Green
+  near Blue : [0.     0.0127 0.0879 0.0127]  argmax=Blue
+  near Cyan : [0.0127 0.     0.0127 0.0879]  argmax=Cyan
+=== actor rollout: seed1_film_norelabel_curriculum (data/model/v6_rl_actor_seed1_film_norelabel_curriculum.pth) ===
+  goal=Red  : init=13.82  final=2.31+-3.53  min=1.96+-3.43  final_all={'Red': 2.31, 'Green': 17.02, 'Blue': 23.96, 'Cyan': 17.14}  pass=True
+  goal=Green: init=13.76  final=2.67+-3.68  min=2.39+-3.51  final_all={'Red': 17.31, 'Green': 2.67, 'Blue': 16.77, 'Cyan': 23.98}  pass=True
+  goal=Blue : init=13.70  final=17.03+-2.41  min=11.70+-4.21  final_all={'Red': 17.25, 'Green': 2.28, 'Blue': 17.03, 'Cyan': 23.91}  pass=False
+  goal=Cyan : init=13.91  final=1.95+-2.69  min=1.43+-2.34  final_all={'Red': 17.13, 'Green': 24.39, 'Blue': 17.45, 'Cyan': 1.95}  pass=True
+Saved: /work/my_research/preference_inference/data/result/v7_irl/stage0/actor_rollout_seed1_film_norelabel_curriculum.json

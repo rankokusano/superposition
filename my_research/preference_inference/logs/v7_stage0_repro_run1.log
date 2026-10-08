@@ -1,0 +1,10 @@
+Device: cuda
+Dataset: v7_repro_check
+Seed key: 'v7_repro_check' -> seed: 2561999681
+Estimated dataset size: 0.01 GB  (x1.5 safety margin: 0.01 GB)
+Free disk space: 170.82 GB
+Collecting [train]: 6 episodes x 101 steps
+  [train] done.
+Collecting [test]: 3 episodes x 101 steps
+  [test] done.
+Saved: /work/my_research/preference_inference/data/result/v7_irl/stage0/repro/run1/data.h5

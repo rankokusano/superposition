@@ -1,0 +1,131 @@
+{
+  "actor_path": "data/model/v6_rl_actor_seed1_film_norelabel_curriculum.pth",
+  "n_episodes": 50,
+  "max_steps": 100,
+  "seed": 0,
+  "gate_dist": 5.0,
+  "landmark_sanity": {
+    "Red": {
+      "fractions": [
+        0.087890625,
+        0.0126953125,
+        0.0,
+        0.0126953125
+      ],
+      "argmax": "Red"
+    },
+    "Green": {
+      "fractions": [
+        0.0126953125,
+        0.087890625,
+        0.0126953125,
+        0.0
+      ],
+      "argmax": "Green"
+    },
+    "Blue": {
+      "fractions": [
+        0.0,
+        0.0126953125,
+        0.087890625,
+        0.0126953125
+      ],
+      "argmax": "Blue"
+    },
+    "Cyan": {
+      "fractions": [
+        0.0126953125,
+        0.0,
+        0.0126953125,
+        0.087890625
+      ],
+      "argmax": "Cyan"
+    }
+  },
+  "goals": {
+    "Red": {
+      "r": [
+        1.0,
+        -1.0,
+        0.0,
+        0.0
+      ],
+      "init_target": 13.823697835586731,
+      "final_target": 2.3111938324372043,
+      "final_target_sd": 3.528002474031316,
+      "min_target": 1.9575795161399245,
+      "min_target_sd": 3.4280465216867118,
+      "final_all": {
+        "Red": 2.3111938324372043,
+        "Green": 17.02100605169481,
+        "Blue": 23.95871905318394,
+        "Cyan": 17.14087591929642
+      },
+      "frac_episodes_final_within_gate": 0.84,
+      "pass": true
+    },
+    "Green": {
+      "r": [
+        -1.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "init_target": 13.759967651655035,
+      "final_target": 2.674366152961172,
+      "final_target_sd": 3.676827673933624,
+      "min_target": 2.387006193975447,
+      "min_target_sd": 3.5123193724619175,
+      "final_all": {
+        "Red": 17.31462325459403,
+        "Green": 2.674366152961172,
+        "Blue": 16.769868804445206,
+        "Cyan": 23.982669139635604
+      },
+      "frac_episodes_final_within_gate": 0.8,
+      "pass": true
+    },
+    "Blue": {
+      "r": [
+        0.0,
+        0.0,
+        1.0,
+        -1.0
+      ],
+      "init_target": 13.704740263994845,
+      "final_target": 17.03304242633066,
+      "final_target_sd": 2.4125053229493942,
+      "min_target": 11.6993170193136,
+      "min_target_sd": 4.210567328070389,
+      "final_all": {
+        "Red": 17.250912209922433,
+        "Green": 2.2764881415463614,
+        "Blue": 17.03304242633066,
+        "Cyan": 23.91189692461056
+      },
+      "frac_episodes_final_within_gate": 0.0,
+      "pass": false
+    },
+    "Cyan": {
+      "r": [
+        0.0,
+        0.0,
+        -1.0,
+        1.0
+      ],
+      "init_target": 13.909375974475452,
+      "final_target": 1.954975872743678,
+      "final_target_sd": 2.6854519736291196,
+      "min_target": 1.4295607270497674,
+      "min_target_sd": 2.341438719846614,
+      "final_all": {
+        "Red": 17.133936408274057,
+        "Green": 24.39455386491989,
+        "Blue": 17.454600536271254,
+        "Cyan": 1.954975872743678
+      },
+      "frac_episodes_final_within_gate": 0.86,
+      "pass": true
+    }
+  }
+}
