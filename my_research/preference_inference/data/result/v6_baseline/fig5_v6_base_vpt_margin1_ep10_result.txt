@@ -1,0 +1,21 @@
+self_true_and_self_rec: mean: 0.072866, std: 0.031236
+other_true_and_other_rec: mean: 0.141631, std: 0.046204
+self_true_and_other_rec: mean: 0.137529, std: 0.051620
+other_true_and_self_rec: mean: 0.154947, std: 0.041116
+
+self_true_and_self_rec - self_true_and_self_rec: t: 0.000000, p: 1.000000
+self_true_and_self_rec - other_true_and_other_rec: t: -445.096626, p: 0.000000
+self_true_and_self_rec - self_true_and_other_rec: t: -386.897849, p: 0.000000
+self_true_and_self_rec - other_true_and_self_rec: t: -573.852578, p: 0.000000
+other_true_and_other_rec - self_true_and_self_rec: t: 445.096626, p: 0.000000
+other_true_and_other_rec - other_true_and_other_rec: t: 0.000000, p: 1.000000
+other_true_and_other_rec - self_true_and_other_rec: t: 21.370878, p: 0.000000
+other_true_and_other_rec - other_true_and_self_rec: t: -77.721032, p: 0.000000
+self_true_and_other_rec - self_true_and_self_rec: t: 386.897849, p: 0.000000
+self_true_and_other_rec - other_true_and_other_rec: t: -21.370878, p: 0.000000
+self_true_and_other_rec - self_true_and_other_rec: t: 0.000000, p: 1.000000
+self_true_and_other_rec - other_true_and_self_rec: t: -95.275319, p: 0.000000
+other_true_and_self_rec - self_true_and_self_rec: t: 573.852578, p: 0.000000
+other_true_and_self_rec - other_true_and_other_rec: t: 77.721032, p: 0.000000
+other_true_and_self_rec - self_true_and_other_rec: t: 95.275319, p: 0.000000
+other_true_and_self_rec - other_true_and_self_rec: t: 0.000000, p: 1.000000

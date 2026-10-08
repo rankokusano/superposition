@@ -290,3 +290,24 @@ r̂²散布図（論文の核心図）：A-1・A-2どちらの真値にも収束
 ## S6: 観察の時間発展
 
 （未着手）
+
+## 追加：Fig.5相当（VPT、Encoder段の自他分離）——fig5_v6_base（2026-10-08）
+
+`config/exp/fig5_v6_base.yml`（`fig5_v5_base.yml` と pretrain 参照先のみ差：`v6_s3_base_l1` ep200）。Autoencoder 100ep（Encoder・share_lns 凍結、decoder のみ学習）→ grid で `analyze_vpt.py --margin 1`。手順は v5（`docs/results_log.md` §(13)）と同一。
+
+**Encoder 重み確認**：学習前の load_pretrain 後、および保存 ckpt ep0/10/100 で、Encoder・share_lns の22テンソルすべてが `v6_s3_base_l1` ep200・`v6_s2_base_mse` ep400 と `torch.equal` で一致（S2=S3 も一致）。ランダム初期化からは 22/22 変化。
+
+| 条件 | epoch | self_self | other_other | self_other | other_self | マージン | other_other < other_self |
+|---|---|---|---|---|---|---|---|
+| v5 | 10 | 0.0710 | 0.1360 | 0.1318 | 0.1564 | 0.020 | ✅ |
+| v5 | 100 | 0.0722 | 0.1335 | 0.1298 | 0.1584 | 0.025 | ✅ |
+| **v6** | 10 | 0.0729 | 0.1416 | 0.1375 | 0.1549 | **0.013** | ✅（t=−77.72, p<1e-6） |
+| **v6** | 100 | 0.0765 | 0.1370 | 0.1328 | 0.1601 | **0.023** | ✅（t=−140.86, p<1e-6） |
+
+（t は `other_other − other_self` の Welch t 検定、n=194,481 ずつ。元論文 exp2 0.034、v4 0.091 は `docs/results_log.md` §(15) の表を参照）
+
+**Encoder 出力 cos 類似度**：v6 +0.241（自フレーム）/ +0.305（他フレーム）。v5 +0.259/+0.272、v4・元論文 +0.482/+0.662（同一実行で再測定）。
+
+**判定**：v6 でも Encoder 段の自他分離は成立。マージンは v5 と同程度（ep10 ではやや小さい）、v4 よりは大幅に小さい。
+
+図：`data/result/v6_baseline/fig5c_recon_montage_v6_ep{10,100}.png`（目視確認済み、v4/v5 は同一サンプル位置の `data/result/baseline_v4/fig5c_recon_montage_ep{10,100}.png`）、`fig5_v6_base_vpt_margin1_ep100_histogram.png`。数値ファイル：`fig5_v6_base_vpt_margin1_ep{10,100}_result.txt`。

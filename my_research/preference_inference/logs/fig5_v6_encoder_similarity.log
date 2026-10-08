@@ -1,0 +1,22 @@
+device=cuda:0  frames: 200 ep x 100 t  from r3_stay (self_vision & other_vision)
+
+== v6_s2_base_mse ep400 ==
+  on A-1 (self) frames        cos_sim mean=+0.241 sd=0.121  |per-dim r| mean=0.085  frac|r|>0.8=0%  (sv‖ mean=4.41 ov‖ mean=4.92)
+  on A-2 (other) frames       cos_sim mean=+0.305 sd=0.110  |per-dim r| mean=0.133  frac|r|>0.8=0%  (sv‖ mean=4.47 ov‖ mean=5.03)
+
+== v6_s3_base_l1 ep200 ==
+  on A-1 (self) frames        cos_sim mean=+0.241 sd=0.121  |per-dim r| mean=0.085  frac|r|>0.8=0%  (sv‖ mean=4.41 ov‖ mean=4.92)
+  on A-2 (other) frames       cos_sim mean=+0.305 sd=0.110  |per-dim r| mean=0.133  frac|r|>0.8=0%  (sv‖ mean=4.47 ov‖ mean=5.03)
+
+== v5_base_mse ep400 ==
+  on A-1 (self) frames        cos_sim mean=+0.259 sd=0.118  |per-dim r| mean=0.106  frac|r|>0.8=0%  (sv‖ mean=4.87 ov‖ mean=5.41)
+  on A-2 (other) frames       cos_sim mean=+0.272 sd=0.122  |per-dim r| mean=0.132  frac|r|>0.8=0%  (sv‖ mean=4.89 ov‖ mean=5.29)
+
+== r3_stay_400/0 ep400 (v4) ==
+  on A-1 (self) frames        cos_sim mean=+0.482 sd=0.193  |per-dim r| mean=0.108  frac|r|>0.8=0%  (sv‖ mean=4.94 ov‖ mean=5.96)
+  on A-2 (other) frames       cos_sim mean=+0.662 sd=0.080  |per-dim r| mean=0.363  frac|r|>0.8=8%  (sv‖ mean=5.23 ov‖ mean=5.75)
+
+== exp1_l1_1000/0 ep200 (paper) ==
+  on A-1 (self) frames        cos_sim mean=+0.482 sd=0.193  |per-dim r| mean=0.108  frac|r|>0.8=0%  (sv‖ mean=4.94 ov‖ mean=5.96)
+  on A-2 (other) frames       cos_sim mean=+0.662 sd=0.080  |per-dim r| mean=0.363  frac|r|>0.8=8%  (sv‖ mean=5.23 ov‖ mean=5.75)
+

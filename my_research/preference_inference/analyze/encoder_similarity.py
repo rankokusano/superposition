@@ -103,6 +103,8 @@ def main():
     ov_frames = frames_from(r3, 'other_vision')
 
     for label, cfg, ep in [
+        ('v6_s2_base_mse ep400', 'v6_s2_base_mse', 400),
+        ('v6_s3_base_l1 ep200', 'v6_s3_base_l1', 200),
         ('v5_base_mse ep400', 'v5_base_mse', 400),
         ('r3_stay_400/0 ep400 (v4)', 'r3_stay_400', 400),
         ('exp1_l1_1000/0 ep200 (paper)', 'exp1_l1_1000', 200),

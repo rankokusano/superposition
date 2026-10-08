@@ -1,0 +1,12 @@
+v6_s3_base_l1 ep200 vs v6_s2_base_mse ep400 encoder/share_lns: ALL EQUAL (22 tensors)
+--- fig5_v6_base saved ep0: 22 encoder/share_lns tensors ---
+  vs v6_s3_base_l1 ep200: 22/22 torch.equal, ref has 22 keys, missing-in-ref=0 -> ALL EQUAL
+  vs v6_s2_base_mse ep400: 22/22 torch.equal, ref has 22 keys, missing-in-ref=0 -> ALL EQUAL
+--- fig5_v6_base saved ep10: 22 encoder/share_lns tensors ---
+  vs v6_s3_base_l1 ep200: 22/22 torch.equal, ref has 22 keys, missing-in-ref=0 -> ALL EQUAL
+  vs v6_s2_base_mse ep400: 22/22 torch.equal, ref has 22 keys, missing-in-ref=0 -> ALL EQUAL
+--- fig5_v6_base saved ep100: 22 encoder/share_lns tensors ---
+  vs v6_s3_base_l1 ep200: 22/22 torch.equal, ref has 22 keys, missing-in-ref=0 -> ALL EQUAL
+  vs v6_s2_base_mse ep400: 22/22 torch.equal, ref has 22 keys, missing-in-ref=0 -> ALL EQUAL
+
+RESULT: PASS

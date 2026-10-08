@@ -740,3 +740,56 @@ late-5 saved.h5（4.7GB）は JSON 抽出確認後に削除（54GB 空き）。
 → P0-4 で真Q が +2.1%（害）→ P1.75 で +0.1%（値域を揃えると害消滅）→ P2-a で +1.4%（Encoder を直しても害は残る）。P2-a では real（VE 出力そのもの）が +3.2% と最悪＝収束したのに VE 出力が視覚予測を能動的に悪化。
 
 **論文図 F1〜F9 すべて完成。素材の中間 saved.h5 は全削除（54GB 空き）。骨子は `docs/thesis_skeleton.md`（確定版）。執筆に移行可。**
+
+---
+
+#### (15) Fig.5（VPT）v6 —— fig5_v6_base（2026-10-08、追記）
+
+**目的**：v6 も Encoder を価値入力でスクラッチ学習（S2）しているため、Encoder 段で自他分離（`other_other < other_self`）が成立しているかを、fig5_v5_base と同じ手順・同じ条件で確認する。測定のみ（再学習・設計変更なし）。
+
+**構成**：`config/exp/fig5_v6_base.yml` は `fig5_v5_base.yml` と pretrain 参照先の1行のみ差（`v5_base_l1` → `v6_s3_base_l1`、epoch 200）。Autoencoder・weight_decay 3.0・batch 100・max_epochs 100・freeze（vision_encoder, share_lns）・データ（self_random_other_stay_1000）は同一。評価も §(13) と同一（grid、`test_batch_size 100`、`--test_modes eval`、`analyze_vpt.py --epoch E --margin 1`）。実行：`logs/fig5_v6_chain.sh`（GPU3、学習 約4h）。
+
+**Encoder 重みの読み込み確認（`analyze/verify_fig5_v6_encoder_load.py`）**：
+- 学習前（train.py と同じ `gen_exp_config → Autoencoder 構築 → util.load_pretrain`）：`self_vision_encoder_module` / `other_vision_encoder_module` / `share_lns` の 22 テンソル全てが `v6_s3_base_l1` ep200 と `v6_s2_base_mse` ep400 の両方に `torch.equal` で一致。ランダム初期化から 22/22 変化（照合が空振りでないことを確認）。
+- `v6_s3_base_l1` ep200 と `v6_s2_base_mse` ep400 の Encoder は 22/22 一致（S3 で凍結されていたことを確認）。
+- 学習後：保存チェックポイント ep0 / ep10 / ep100 の Encoder も全て S3・S2 と一致（Autoencoder 学習中も凍結）。
+- `load_pretrain` がスキップしたのは Encoder 以外（critic・SM・S3 decoder 等）のみ。学習対象は `ae_vision_decoder_module` だけ（v5 と同じ）。
+
+**結果（grid、n=441×441=194,481 サンプル/指標）**：
+
+| 条件 | epoch | self_self | other_other | self_other | other_self | マージン（other_self − other_other） | other_other < other_self |
+|---|---|---|---|---|---|---|---|
+| 元論文 exp2 | 10 | 0.0513 | 0.1125 | 0.1393 | 0.1465 | 0.034 | ✅ |
+| v4 R3-stay_400 | 10 | 0.0469 | 0.0580 | 0.1363 | 0.1485 | 0.091 | ✅ |
+| v5 | 10 | 0.0710 | 0.1360 | 0.1318 | 0.1564 | 0.020 | ✅ |
+| v5 | 100 | 0.0722 | 0.1335 | 0.1298 | 0.1584 | 0.025 | ✅ |
+| **v6** | **10** | **0.0729** | **0.1416** | **0.1375** | **0.1549** | **0.013** | ✅ |
+| **v6** | **100** | **0.0765** | **0.1370** | **0.1328** | **0.1601** | **0.023** | ✅ |
+
+**t 検定（v5 と同じ `analyze_vpt.py` 内の Welch の t 検定、`scipy.stats.ttest_ind(equal_var=False)`）**、`other_true_and_other_rec − other_true_and_self_rec`：
+- v6 ep10：t = −77.72、p < 1e-6（出力表示 0.000000）
+- v6 ep100：t = −140.86、p < 1e-6
+- 参考 v5 ep100：t = −154.10（v5 ep10 の t は当時 ep100 実行で result.txt が上書きされ未保存。今回は epoch 別に保存）
+
+**Encoder 出力の cos 類似度（`analyze/encoder_similarity.py`、r3_stay 200ep×100t、同一実行で再測定）**：
+
+| model | 自フレーム上 | 他フレーム上 |
+|---|---|---|
+| **v6（S2 ep400 = S3 ep200）** | **+0.241** | **+0.305** |
+| v5_base_mse ep400 | +0.259 | +0.272 |
+| r3_stay_400（v4）／exp1_l1_1000（元論文） | +0.482 | +0.662 |
+
+（v5・v4・元論文の値は §(4) の記録値 +0.26/+0.27、+0.48/+0.66 を再現）
+
+**図（目視確認済み）**：
+- `data/result/v6_baseline/fig5c_recon_montage_v6_ep10.png`、`fig5c_recon_montage_v6_ep100.png`：§(13) の montage と同じ4サンプル位置・同じ列構成（コードは 2026-09-09 のセッション記録から復元し `analyze/plot_fig5c_recon_montage_v6.py` として保存）。行は元論文 exp2 ep10（読み取りのみ）と v6。v4/v5 の grid saved.h5 は削除済みのため同一図には入れられない——同一サンプル位置の `data/result/baseline_v4/fig5c_recon_montage_ep{10,100}.png` と並べて比較する。
+- `data/result/v6_baseline/fig5_v6_base_vpt_margin1_ep100_histogram.png`（analyze_vpt の誤差分布）。数値は `fig5_v6_base_vpt_margin1_ep{10,100}_result.txt`。
+
+**解釈（短く）**：
+- **v6 でも Encoder 段の自他分離は成立**（ep10・ep100 とも `other_other < other_self`、t 有意）。
+- マージンは ep10 で 0.013、ep100 で 0.023。v5（0.020 / 0.025）と同程度かやや小さく、v4（0.091）より大幅に小さい。v4・v5 と異なり ep10 と ep100 でマージンに差がある（0.013 → 0.023、Autoencoder decoder の学習量で変わる部分）。
+- 2つの Encoder の出力は v5 と同程度に分化している（cos +0.24/+0.31）。
+- 観察：v5 と同様、`self_other < other_other`（other_rec が A-2 の真の視界より A-1 の真の視界に近い、t = +21.4 / +23.5）。元論文・v4 では逆。
+- 目視：v6 の other_rec（Enc-2 経路）は元論文 exp2 より不鮮明で、一部サンプルで黒い塊状のアーティファクトが出る（self_rec にも一部出る。v5 の montage にも同種のものがある）。
+
+grid の saved.h5（14GB）は result_ep10/ep100.txt と montage の出力を確認してから削除。既存の `data/result/` 配下（fig5_v4_*、fig5_v5_base、grid データ、元論文 exp2）への書き込みなし。
