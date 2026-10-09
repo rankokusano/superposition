@@ -1,0 +1,16 @@
+GATE: {"irl_acc_t50": 1.0, "wilson95_lower": 0.9873570285785233, "chance": 0.3333333333333333, "always_r1_acc": 0.3333333333333333, "irl_acc_t20": 1.0, "moving_only_acc": 0.9466666666666667, "pass": true}
+Saved: /work/my_research/preference_inference/data/result/v7_irl/stage2/stage2_a_results.json
+irl_main                     t=1:0.823  t=5:0.907  t=10:0.950  t=20:1.000  t=50:1.000  t=100:1.000
+irl_beta_ext                 t=1:0.797  t=5:0.843  t=10:0.887  t=20:0.943  t=50:1.000  t=100:1.000
+irl_4cand_with_blue          t=1:0.810  t=5:0.893  t=10:0.950  t=20:1.000  t=50:1.000  t=100:1.000
+self_projection_prior        t=1:0.367  t=5:0.667  t=10:0.783  t=20:1.000  t=50:1.000  t=100:1.000
+colour_cumulative            t=1:0.343  t=5:0.463  t=10:0.613  t=20:0.910  t=50:1.000  t=100:1.000
+v_slope                      t=1:0.367  t=5:0.710  t=10:0.820  t=20:0.940  t=50:0.943  t=100:0.897
+position_baseline            t=1:0.400  t=5:0.923  t=10:0.987  t=20:1.000  t=50:1.000  t=100:1.000
+moving_only                  acc=0.947
+moving_only_label_free       acc=0.960
+margin sign agreement: {'0.5': 0.849, '1': 0.861, '2': 0.881, '4': 0.911, '8': 0.968, '16': 0.997}
+q_corr: {'Red': {'raw': 0.7301105923954139, 'action_centred': 0.9967785762863729, 'near_action_centred': 0.9972215575477221, 'far_action_centred': 0.9965739956851846}, 'Green': {'raw': -0.11870792021784564, 'action_centred': 0.9366048149732668, 'near_action_centred': 0.941527488666844, 'far_action_centred': 0.9790718929104923}, 'Cyan': {'raw': 0.04606020337499621, 'action_centred': 0.9829553606641586, 'near_action_centred': 0.9827222941773942, 'far_action_centred': 0.9890567399621653}}
+best_dir: {'Red': {'exact_match': 0.9928712871287129, 'mean_abs_angle_deg': 0.057363861386138616, 'near_mean_abs_angle_deg': 0.03370880035512152, 'far_mean_abs_angle_deg': 0.253099173553719}, 'Green': {'exact_match': 0.05287128712871287, 'mean_abs_angle_deg': 19.378960396039602, 'near_mean_abs_angle_deg': 20.329106280193237, 'far_mean_abs_angle_deg': 8.104299363057326}, 'Cyan': {'exact_match': 0.12217821782178218, 'mean_abs_angle_deg': 7.658910891089109, 'near_mean_abs_angle_deg': 7.8306179163034, 'far_mean_abs_angle_deg': 5.953733766233766}}
+colour: {'red': -0.020814727808273262, 'green': 0.11875476048391387, 'blue': 0.6922025345675703, 'cyan': 0.05316446155849168} {'true_vision': 0.0, 'vhat2': 0.0}
+confusion t50: [[100, 0, 0], [0, 100, 0], [0, 0, 100]] mean_post_r1 t50: 0.3334438563103098

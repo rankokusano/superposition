@@ -1,0 +1,4 @@
+z1_gray                    t=1:0.827  t=5:0.910  t=10:0.977  t=20:1.000  t=50:0.887  t=100:0.773
+z2_shuffled_true_vision    t=1:0.827  t=5:0.910  t=10:0.943  t=20:0.983  t=50:1.000  t=100:1.000
+z3_geometric_direction     t=1:0.857  t=5:0.927  t=10:0.953  t=20:1.000  t=50:1.000  t=100:1.000
+Saved: /work/my_research/preference_inference/data/result/v7_irl/stage2/stage2_state_controls.json

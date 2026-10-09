@@ -1,0 +1,3 @@
+(a) encoder check: 22/22 equal
+(a) Fig.5-style errors on v7 test: {'other_other': 0.13435785472393036, 'other_self': 0.15092776715755463, 'self_self': 0.052529722452163696, 'self_other': 0.1784830242395401}
+Saved: /work/my_research/preference_inference/data/result/v7_irl/stage2/vhat2_a_test.h5

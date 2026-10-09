@@ -1,0 +1,28 @@
+{
+ "cond": "a",
+ "spec": {
+  "exp_config": "fig5_v4_exp1l1000",
+  "epoch": 100,
+  "pretrain": [
+   "exp1_l1_1000",
+   200
+  ]
+ },
+ "encoder_check": {
+  "n_encoder_tensors": 22,
+  "n_equal_to_pretrain": 22,
+  "checkpoint": "/work/my_research/preference_inference/data/result/fig5_v4_exp1l1000/0/model/00100.pth",
+  "pretrain": "/work/my_research/preference_inference/data/result/exp1_l1_1000/0/model/00200.pth"
+ },
+ "fig5_errors_test": {
+  "other_other": 0.13435785472393036,
+  "other_self": 0.15092776715755463,
+  "self_self": 0.052529722452163696,
+  "self_other": 0.1784830242395401
+ },
+ "dataset": "v7_a1random_a2goal3",
+ "split": "test",
+ "input": "A-1 self_vision only",
+ "vhat2_file": "/work/my_research/preference_inference/data/result/v7_irl/stage2/vhat2_a_test.h5",
+ "dtype": "float16"
+}
