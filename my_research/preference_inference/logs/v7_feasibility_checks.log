@@ -1,0 +1,24 @@
+[check1] Red      pass=True  {"end_within5": {"red": 1.0, "green": 0.0, "blue": 0.0, "cyan": 0.0}, "mean_final_dist": 1.4142135623730956, "pass": true}
+[check1] Green    pass=True  {"end_within5": {"red": 0.0, "green": 1.0, "blue": 0.0, "cyan": 0.0}, "mean_final_dist": 1.4123091781344845, "pass": true}
+[check1] Cyan     pass=True  {"end_within5": {"red": 0.0, "green": 0.0, "blue": 0.0, "cyan": 1.0}, "mean_final_dist": 1.4132322058375701, "pass": true}
+[check1] Blue     pass=False  {"end_within5": {"red": 0.0, "green": 1.0, "blue": 0.0, "cyan": 0.0}, "mean_final_dist": 19.026297590440443, "pass": false}
+[check1] Mtop     pass=False  {"end_within5": {"red": 0.21, "green": 0.0, "blue": 0.0, "cyan": 0.345}, "n_eligible": 163, "frac_end_near": 0.4662576687116564, "frac_end_far": 0.1165644171779141, "frac_end_neither": 0.4171779141104294, "pass": false}
+[check1] Mleft    pass=False  {"end_within5": {"red": 1.0, "green": 0.0, "blue": 0.0, "cyan": 0.0}, "n_eligible": 167, "frac_end_near": 0.5089820359281437, "frac_end_far": 0.49101796407185627, "frac_end_neither": 0.0, "pass": false}
+[check1] Mbottom  pass=False  {"end_within5": {"red": 0.0, "green": 1.0, "blue": 0.0, "cyan": 0.0}, "n_eligible": 162, "frac_end_near": 0.5432098765432098, "frac_end_far": 0.4567901234567901, "frac_end_neither": 0.0, "pass": false}
+[check1] Mright   pass=False  {"end_within5": {"red": 0.0, "green": 0.0, "blue": 0.0, "cyan": 1.0}, "n_eligible": 161, "frac_end_near": 0.5714285714285714, "frac_end_far": 0.42857142857142855, "frac_end_neither": 0.0, "pass": false}
+[check1] Agreen   pass=True  {"end_within5": {"red": 0.0, "green": 0.0, "blue": 0.0, "cyan": 1.0}, "frac_end_ge20_from_avoided": 1.0, "mean_final_pos": [10.0, 10.0], "pass": true}
+[check1] Acyan    pass=True  {"end_within5": {"red": 0.0, "green": 1.0, "blue": 0.0, "cyan": 0.0}, "frac_end_ge20_from_avoided": 1.0, "mean_final_pos": [-10.0, -10.0], "pass": true}
+[check2] Red      pass=True  {"circ_var": 0.0002457231927637249, "mean_cos_to_goal": 0.8969809499309868, "pass": true}
+[check2] Green    pass=True  {"circ_var": 0.04416194713138588, "mean_cos_to_goal": 0.9138608152550975, "pass": true}
+[check2] Cyan     pass=True  {"circ_var": 0.00911290882853022, "mean_cos_to_goal": 0.48322831679565853, "pass": true}
+[check2] Blue     pass=True  {"circ_var": 0.5133379259465711, "mean_cos_to_goal": -0.36699621376444896, "pass": true}
+[check2] Mtop     pass=False  {"circ_var": 0.07186437783437993, "n_grid": 280, "near_corner_agreement": 0.6428571428571429, "pass": false}
+[check2] Mleft    pass=False  {"circ_var": 0.4111887882983607, "n_grid": 280, "near_corner_agreement": 0.5428571428571428, "pass": false}
+[check2] Mbottom  pass=False  {"circ_var": 0.03171209044310497, "n_grid": 280, "near_corner_agreement": 0.6964285714285714, "pass": false}
+[check2] Mright   pass=False  {"circ_var": 0.4302563028032378, "n_grid": 280, "near_corner_agreement": 0.6214285714285714, "pass": false}
+[check2] Agreen   pass=False  {"circ_var": 0.5233026069597372, "mean_cos_to_away": 0.4178553296529477, "pass": false}
+[check2] Acyan    pass=True  {"circ_var": 0.1430058200867027, "mean_cos_to_away": 0.7552671501286011, "pass": true}
+[check3] S1 not evaluated (failing goals: ['Mtop'])
+[check3] S2 not evaluated (failing goals: ['Mtop', 'Mleft', 'Mbottom', 'Mright'])
+[check3] S3 not evaluated (failing goals: ['Agreen'])
+Saved: /work/my_research/preference_inference/data/result/v7_irl/feasibility/feasibility_results.json

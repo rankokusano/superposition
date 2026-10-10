@@ -1,0 +1,407 @@
+{
+ "git_commit": "4e754fa",
+ "goals": {
+  "Red": [
+   1,
+   -1,
+   0,
+   0
+  ],
+  "Green": [
+   -1,
+   1,
+   0,
+   0
+  ],
+  "Cyan": [
+   0,
+   0,
+   -1,
+   1
+  ],
+  "Blue": [
+   0,
+   0,
+   1,
+   -1
+  ],
+  "Mtop": [
+   1,
+   0,
+   0,
+   1
+  ],
+  "Mleft": [
+   1,
+   1,
+   0,
+   0
+  ],
+  "Mbottom": [
+   0,
+   1,
+   1,
+   0
+  ],
+  "Mright": [
+   0,
+   0,
+   1,
+   1
+  ],
+  "Agreen": [
+   0,
+   -2,
+   0,
+   0
+  ],
+  "Acyan": [
+   0,
+   0,
+   0,
+   -2
+  ]
+ },
+ "n_episodes": 200,
+ "n_train": 150,
+ "rollout_seed": 1213756307,
+ "true_values_used": "rollout quantities only (A-2 position/action/vision/goal); goal labels for evaluation and for training the naive-Bayes references",
+ "check1": {
+  "Red": {
+   "end_within5": {
+    "red": 1.0,
+    "green": 0.0,
+    "blue": 0.0,
+    "cyan": 0.0
+   },
+   "mean_final_dist": 1.4142135623730956,
+   "pass": true
+  },
+  "Green": {
+   "end_within5": {
+    "red": 0.0,
+    "green": 1.0,
+    "blue": 0.0,
+    "cyan": 0.0
+   },
+   "mean_final_dist": 1.4123091781344845,
+   "pass": true
+  },
+  "Cyan": {
+   "end_within5": {
+    "red": 0.0,
+    "green": 0.0,
+    "blue": 0.0,
+    "cyan": 1.0
+   },
+   "mean_final_dist": 1.4132322058375701,
+   "pass": true
+  },
+  "Blue": {
+   "end_within5": {
+    "red": 0.0,
+    "green": 1.0,
+    "blue": 0.0,
+    "cyan": 0.0
+   },
+   "mean_final_dist": 19.026297590440443,
+   "pass": false
+  },
+  "Mtop": {
+   "end_within5": {
+    "red": 0.21,
+    "green": 0.0,
+    "blue": 0.0,
+    "cyan": 0.345
+   },
+   "n_eligible": 163,
+   "frac_end_near": 0.4662576687116564,
+   "frac_end_far": 0.1165644171779141,
+   "frac_end_neither": 0.4171779141104294,
+   "by_split_coord": {
+    "[-10,-6)": {
+     "n": 37,
+     "end_red": 0.5675675675675675,
+     "end_cyan": 0.08108108108108109
+    },
+    "[-6,-2)": {
+     "n": 39,
+     "end_red": 0.23076923076923078,
+     "end_cyan": 0.28205128205128205
+    },
+    "[-2,2)": {
+     "n": 37,
+     "end_red": 0.1891891891891892,
+     "end_cyan": 0.24324324324324326
+    },
+    "[2,6)": {
+     "n": 47,
+     "end_red": 0.10638297872340426,
+     "end_cyan": 0.5106382978723404
+    },
+    "[6,10)": {
+     "n": 40,
+     "end_red": 0.0,
+     "end_cyan": 0.55
+    }
+   },
+   "pass": false
+  },
+  "Mleft": {
+   "end_within5": {
+    "red": 1.0,
+    "green": 0.0,
+    "blue": 0.0,
+    "cyan": 0.0
+   },
+   "n_eligible": 167,
+   "frac_end_near": 0.5089820359281437,
+   "frac_end_far": 0.49101796407185627,
+   "frac_end_neither": 0.0,
+   "by_split_coord": {
+    "[-10,-6)": {
+     "n": 40,
+     "end_green": 0.0,
+     "end_red": 1.0
+    },
+    "[-6,-2)": {
+     "n": 42,
+     "end_green": 0.0,
+     "end_red": 1.0
+    },
+    "[-2,2)": {
+     "n": 33,
+     "end_green": 0.0,
+     "end_red": 1.0
+    },
+    "[2,6)": {
+     "n": 38,
+     "end_green": 0.0,
+     "end_red": 1.0
+    },
+    "[6,10)": {
+     "n": 47,
+     "end_green": 0.0,
+     "end_red": 1.0
+    }
+   },
+   "pass": false
+  },
+  "Mbottom": {
+   "end_within5": {
+    "red": 0.0,
+    "green": 1.0,
+    "blue": 0.0,
+    "cyan": 0.0
+   },
+   "n_eligible": 162,
+   "frac_end_near": 0.5432098765432098,
+   "frac_end_far": 0.4567901234567901,
+   "frac_end_neither": 0.0,
+   "by_split_coord": {
+    "[-10,-6)": {
+     "n": 40,
+     "end_green": 1.0,
+     "end_blue": 0.0
+    },
+    "[-6,-2)": {
+     "n": 48,
+     "end_green": 1.0,
+     "end_blue": 0.0
+    },
+    "[-2,2)": {
+     "n": 38,
+     "end_green": 1.0,
+     "end_blue": 0.0
+    },
+    "[2,6)": {
+     "n": 45,
+     "end_green": 1.0,
+     "end_blue": 0.0
+    },
+    "[6,10)": {
+     "n": 29,
+     "end_green": 1.0,
+     "end_blue": 0.0
+    }
+   },
+   "pass": false
+  },
+  "Mright": {
+   "end_within5": {
+    "red": 0.0,
+    "green": 0.0,
+    "blue": 0.0,
+    "cyan": 1.0
+   },
+   "n_eligible": 161,
+   "frac_end_near": 0.5714285714285714,
+   "frac_end_far": 0.42857142857142855,
+   "frac_end_neither": 0.0,
+   "by_split_coord": {
+    "[-10,-6)": {
+     "n": 33,
+     "end_blue": 0.0,
+     "end_cyan": 1.0
+    },
+    "[-6,-2)": {
+     "n": 36,
+     "end_blue": 0.0,
+     "end_cyan": 1.0
+    },
+    "[-2,2)": {
+     "n": 39,
+     "end_blue": 0.0,
+     "end_cyan": 1.0
+    },
+    "[2,6)": {
+     "n": 52,
+     "end_blue": 0.0,
+     "end_cyan": 1.0
+    },
+    "[6,10)": {
+     "n": 40,
+     "end_blue": 0.0,
+     "end_cyan": 1.0
+    }
+   },
+   "pass": false
+  },
+  "Agreen": {
+   "end_within5": {
+    "red": 0.0,
+    "green": 0.0,
+    "blue": 0.0,
+    "cyan": 1.0
+   },
+   "frac_end_ge20_from_avoided": 1.0,
+   "mean_final_pos": [
+    10.0,
+    10.0
+   ],
+   "pass": true
+  },
+  "Acyan": {
+   "end_within5": {
+    "red": 0.0,
+    "green": 1.0,
+    "blue": 0.0,
+    "cyan": 0.0
+   },
+   "frac_end_ge20_from_avoided": 1.0,
+   "mean_final_pos": [
+    -10.0,
+    -10.0
+   ],
+   "pass": true
+  }
+ },
+ "check2": {
+  "Red": {
+   "circ_var": 0.0002457231927637249,
+   "mean_cos_to_goal": 0.8969809499309868,
+   "pass": true
+  },
+  "Green": {
+   "circ_var": 0.04416194713138588,
+   "mean_cos_to_goal": 0.9138608152550975,
+   "pass": true
+  },
+  "Cyan": {
+   "circ_var": 0.00911290882853022,
+   "mean_cos_to_goal": 0.48322831679565853,
+   "pass": true
+  },
+  "Blue": {
+   "circ_var": 0.5133379259465711,
+   "mean_cos_to_goal": -0.36699621376444896,
+   "pass": true
+  },
+  "Mtop": {
+   "circ_var": 0.07186437783437993,
+   "n_grid": 280,
+   "near_corner_agreement": 0.6428571428571429,
+   "pass": false
+  },
+  "Mleft": {
+   "circ_var": 0.4111887882983607,
+   "n_grid": 280,
+   "near_corner_agreement": 0.5428571428571428,
+   "pass": false
+  },
+  "Mbottom": {
+   "circ_var": 0.03171209044310497,
+   "n_grid": 280,
+   "near_corner_agreement": 0.6964285714285714,
+   "pass": false
+  },
+  "Mright": {
+   "circ_var": 0.4302563028032378,
+   "n_grid": 280,
+   "near_corner_agreement": 0.6214285714285714,
+   "pass": false
+  },
+  "Agreen": {
+   "circ_var": 0.5233026069597372,
+   "mean_cos_to_away": 0.4178553296529477,
+   "pass": false
+  },
+  "Acyan": {
+   "circ_var": 0.1430058200867027,
+   "mean_cos_to_away": 0.7552671501286011,
+   "pass": true
+  }
+ },
+ "eligible": {
+  "Red": true,
+  "Green": true,
+  "Cyan": true,
+  "Blue": false,
+  "Mtop": false,
+  "Mleft": false,
+  "Mbottom": false,
+  "Mright": false,
+  "Agreen": false,
+  "Acyan": true
+ },
+ "check3": {
+  "S1": {
+   "goals": [
+    "Red",
+    "Cyan",
+    "Mtop"
+   ],
+   "evaluated": false,
+   "failing": [
+    "Mtop"
+   ]
+  },
+  "S2": {
+   "goals": [
+    "Mtop",
+    "Mleft",
+    "Mbottom",
+    "Mright"
+   ],
+   "evaluated": false,
+   "failing": [
+    "Mtop",
+    "Mleft",
+    "Mbottom",
+    "Mright"
+   ]
+  },
+  "S3": {
+   "goals": [
+    "Cyan",
+    "Agreen",
+    "Green",
+    "Acyan"
+   ],
+   "evaluated": false,
+   "failing": [
+    "Agreen"
+   ]
+  }
+ }
+}
