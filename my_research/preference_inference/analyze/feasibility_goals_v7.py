@@ -64,6 +64,17 @@ GRID = np.linspace(-9.0, 9.0, 20)
 N_DIR_BINS = 16
 
 
+def import_creator():
+    # irl_common_v7 puts /work first on sys.path, which makes `simulation`
+    # resolve to /work/simulation/ instead of /work/simulation/simulation/;
+    # creator needs the latter (see collect_data_v7.py's path order).
+    if sys.path[0] != '/work/simulation':
+        sys.path.insert(0, '/work/simulation')
+    import creator
+    from util import load_config
+    return creator, load_config
+
+
 def get_seed(key):
     return int(hashlib.md5(key.encode('utf-8')).hexdigest()[:8], 16)
 
@@ -74,8 +85,7 @@ def npz_path(goal):
 
 # ---------------------------------------------------------------- rollout
 def rollout():
-    import creator
-    from util import load_config
+    creator, load_config = import_creator()
     from my_research.preference_inference.model.rl_agent_sac_v6 import ActorLSTM
     seed = get_seed('v7_feasibility')
     random.seed(seed); np.random.seed(seed); torch.manual_seed(seed)
@@ -182,8 +192,7 @@ def critic_best_dirs(critic, vis01, r, device, batch=1024):
 
 
 def grid_visions():
-    import creator
-    from util import load_config
+    creator, load_config = import_creator()
     env = creator.create_environment(load_config(ENV_CONFIG).environment)
     env.init(); env.off_display()
     env.world.set_camera('self')
