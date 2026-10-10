@@ -11,6 +11,8 @@ data/result/v7_irl/**/*.h5
 data/result/v7_irl/**/*.npz
 data/result/v7_irl/**/*.pth
 
+data/model/v7/
+
 # RL model files (keep data/model/ — it's 30MB and needed to reproduce)
 # data/model/
 
