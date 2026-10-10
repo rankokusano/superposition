@@ -62,6 +62,7 @@ Z3_DEG = {'Red': 135, 'Green': 225, 'Cyan': 45, 'Blue': 315, 'Mtop': 90, 'Mleft'
           'Mbottom': 270, 'Mright': 0, 'Agreen': 45, 'Acyan': 225}
 GRID = np.linspace(-9.0, 9.0, 20)
 N_DIR_BINS = 16
+ROLLOUT_KEY = 'v7_feasibility'
 
 
 def import_creator():
@@ -87,7 +88,7 @@ def npz_path(goal):
 def rollout():
     creator, load_config = import_creator()
     from my_research.preference_inference.model.rl_agent_sac_v6 import ActorLSTM
-    seed = get_seed('v7_feasibility')
+    seed = get_seed(ROLLOUT_KEY)
     random.seed(seed); np.random.seed(seed); torch.manual_seed(seed)
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     env = creator.create_environment(load_config(ENV_CONFIG).environment)
@@ -216,7 +217,9 @@ def check2(critic, device):
         maps[goal] = deg
         e = dict(circ_var=circ_var(deg))
         if goal in SINGLE:
-            e['mean_cos_to_goal'] = float(np.cos(np.radians(ang_diff(deg, ang_deg(LM[SINGLE[goal]] - xy)))).mean())
+            dgoal = ang_diff(deg, ang_deg(LM[SINGLE[goal]] - xy))
+            e['mean_cos_to_goal'] = float(np.cos(np.radians(dgoal)).mean())
+            e['mean_abs_angle_to_goal_deg'] = float(dgoal.mean())  # §2.11 vector-field criterion
             e['pass'] = True  # reference only
         elif goal in MIXED:
             neg, posc, ax = MIXED[goal]
@@ -234,6 +237,7 @@ def check2(critic, device):
             e['pass'] = e['mean_cos_to_away'] >= 0.7
         out[goal] = e
         print(f'[check2] {goal:8s} pass={e["pass"]}  ' + json.dumps(e))
+    np.savez(os.path.join(SAVE_DIR, 'check2_maps.npz'), xy=xy, **{g: maps[g] for g in GOALS})
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
@@ -246,7 +250,7 @@ def check2(critic, device):
             ax.scatter(*p, s=160, c={'red': 'r', 'green': 'g', 'blue': 'b', 'cyan': 'c'}[name], edgecolors='k')
         ax.set(xlim=(-10.5, 10.5), ylim=(-10.5, 10.5), aspect='equal',
                title=f'{goal} r={GOALS[goal]}\ncircvar={out[goal]["circ_var"]:.2f} pass={out[goal]["pass"]}')
-    fig.suptitle('seed2 critic: best direction argmax_k Q(s, a_k, r) on a 20x20 grid (self camera, other at (0,0))')
+    fig.suptitle(f'{os.path.basename(C.CRITIC_PATH)}: best direction argmax_k Q(s, a_k, r) on a 20x20 grid (self camera, other at (0,0))')
     fig.tight_layout()
     fig.savefig(os.path.join(SAVE_DIR, 'check2_best_direction_maps.png'), dpi=100)
     return out
@@ -348,6 +352,38 @@ def check3(critic, device, eligible):
     return out
 
 
+def compare(pairs):
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    show = ['Red', 'Green', 'Cyan', 'Blue', 'Mtop', 'Mleft', 'Mbottom', 'Mright']
+    rows = [p.split('=', 1) for p in pairs]
+    fig, axs = plt.subplots(len(rows), len(show), figsize=(3.1 * len(show), 3.2 * len(rows)))
+    for i, (label, d) in enumerate(rows):
+        m = np.load(os.path.join(C.PI_ROOT, d, 'check2_maps.npz'))
+        res = json.load(open(os.path.join(C.PI_ROOT, d, 'feasibility_results.json')))['check2']
+        xy = m['xy']
+        for j, goal in enumerate(show):
+            ax = axs[i, j]
+            deg = m[goal]
+            ax.quiver(xy[:, 0], xy[:, 1], np.cos(np.radians(deg)), np.sin(np.radians(deg)), deg,
+                      cmap='hsv', clim=(0, 360), scale=28, width=0.007)
+            for name, p in LM.items():
+                ax.scatter(*p, s=70, c={'red': 'r', 'green': 'g', 'blue': 'b', 'cyan': 'c'}[name], edgecolors='k')
+            e = res[goal]
+            stat = (f'angle {e["mean_abs_angle_to_goal_deg"]:.0f}°' if 'mean_abs_angle_to_goal_deg' in e
+                    else f'near {e.get("near_corner_agreement", float("nan")):.2f}')
+            ax.set(xlim=(-10.5, 10.5), ylim=(-10.5, 10.5), aspect='equal', xticks=[], yticks=[],
+                   title=f'{goal}: {stat}', )
+            if j == 0:
+                ax.set_ylabel(label, fontsize=11)
+    fig.suptitle('critic best direction argmax_k Q(s, a_k, r), 20x20 grid (same script and grid for all rows)')
+    fig.tight_layout()
+    out = os.path.join(SAVE_DIR, 'compare_best_direction_maps.png')
+    fig.savefig(out, dpi=100)
+    print('Saved:', out)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--rollout', action='store_true')
@@ -355,7 +391,25 @@ def main():
     ap.add_argument('--check2', action='store_true')
     ap.add_argument('--check3', action='store_true')
     ap.add_argument('--git_commit', default=None)
+    ap.add_argument('--actor_path', default=None, help='default: v6 seed1 actor (original feasibility run)')
+    ap.add_argument('--critic_path', default=None, help='default: v6 seed2 critic (original feasibility run)')
+    ap.add_argument('--out_dir', default=None, help='relative to preference_inference/; default v7_irl/feasibility')
+    ap.add_argument('--rollout_key', default='v7_feasibility')
+    ap.add_argument('--compare', nargs='*', default=None,
+                    help='label=out_dir pairs: draw single-goal + Mtop best-direction maps side by side')
     args = ap.parse_args()
+    global SAVE_DIR, A2_ACTOR_PATH, ROLLOUT_KEY
+    if args.out_dir:
+        SAVE_DIR = os.path.join(C.PI_ROOT, args.out_dir)
+    if args.actor_path:
+        A2_ACTOR_PATH = os.path.join(C.PI_ROOT, args.actor_path)
+    if args.critic_path:
+        C.CRITIC_PATH = os.path.join(C.PI_ROOT, args.critic_path)
+    ROLLOUT_KEY = args.rollout_key
+    os.makedirs(SAVE_DIR, exist_ok=True)
+    if args.compare:
+        compare(args.compare)
+        return
     if args.rollout:
         rollout()
     if args.check1 or args.check2 or args.check3:
@@ -363,14 +417,18 @@ def main():
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         critic = C.load_critic(device)
         res = dict(git_commit=args.git_commit, goals=GOALS, n_episodes=N_EP, n_train=N_TRAIN,
-                   rollout_seed=get_seed('v7_feasibility'),
+                   actor_path=A2_ACTOR_PATH, critic_path=C.CRITIC_PATH,
+                   rollout_seed=get_seed(ROLLOUT_KEY),
                    true_values_used='rollout quantities only (A-2 position/action/vision/goal); '
                                     'goal labels for evaluation and for training the naive-Bayes references')
-        res['check1'] = check1()
-        res['check2'] = check2(critic, device)
-        eligible = {g: res['check1'][g]['pass'] and res['check2'][g]['pass'] for g in GOALS}
-        res['eligible'] = eligible
+        if args.check1:
+            res['check1'] = check1()
+        if args.check2:
+            res['check2'] = check2(critic, device)
+        if args.check1 and args.check2:
+            res['eligible'] = {g: res['check1'][g]['pass'] and res['check2'][g]['pass'] for g in GOALS}
         if args.check3:
+            eligible = res['eligible']
             res['check3'] = check3(critic, device, eligible)
         with open(os.path.join(SAVE_DIR, 'feasibility_results.json'), 'w') as fp:
             json.dump(res, fp, indent=1, default=lambda o: o.tolist() if hasattr(o, 'tolist') else str(o))
