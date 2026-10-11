@@ -1,0 +1,60 @@
+{
+ "round": "r1",
+ "models": {
+  "critic": "seed3_condA_r1",
+  "actor": "seed4_condA_r1",
+  "B": "seed2_condB_r1"
+ },
+ "critic_collapsed": false,
+ "critic_corner_std": [
+  0.821184,
+  0.720799,
+  1.126231
+ ],
+ "actor_collapsed": true,
+ "actor_corner_std": [
+  0.0,
+  0.0,
+  0.0
+ ],
+ "B_collapsed": false,
+ "B_corner_std": [
+  1.623437,
+  1.155951,
+  1.248517
+ ],
+ "A_check1_critic_seed": {
+  "Red": true,
+  "Cyan": true,
+  "Mtop": false
+ },
+ "A_check2_critic": {
+  "Red": true,
+  "Cyan": true,
+  "Mtop": false
+ },
+ "A_pass": false,
+ "vector_field": {
+  "v6_seed2": {
+   "Red": false,
+   "Green": false,
+   "Cyan": false
+  },
+  "seed3_condA_r1": {
+   "Red": false,
+   "Green": false,
+   "Cyan": false
+  },
+  "seed2_condB_r1": {
+   "Red": false,
+   "Green": false,
+   "Cyan": false
+  }
+ },
+ "B_hypothesis": {
+  "old_criterion": false,
+  "new_criterion": false,
+  "supported": false
+ }
+}
+Saved: /work/my_research/preference_inference/data/result/v7_irl/retrain/summary_r1.json

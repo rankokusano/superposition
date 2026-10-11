@@ -1,0 +1,131 @@
+{
+ "git_commit": "11bc611",
+ "goals": {
+  "Red": [
+   1,
+   -1,
+   0,
+   0
+  ],
+  "Green": [
+   -1,
+   1,
+   0,
+   0
+  ],
+  "Cyan": [
+   0,
+   0,
+   -1,
+   1
+  ],
+  "Blue": [
+   0,
+   0,
+   1,
+   -1
+  ],
+  "Mtop": [
+   1,
+   0,
+   0,
+   1
+  ],
+  "Mleft": [
+   1,
+   1,
+   0,
+   0
+  ],
+  "Mbottom": [
+   0,
+   1,
+   1,
+   0
+  ],
+  "Mright": [
+   0,
+   0,
+   1,
+   1
+  ],
+  "Agreen": [
+   0,
+   -2,
+   0,
+   0
+  ],
+  "Acyan": [
+   0,
+   0,
+   0,
+   -2
+  ]
+ },
+ "n_episodes": 200,
+ "n_train": 150,
+ "actor_path": "/work/my_research/preference_inference/data/model/v6_rl_actor_seed1_film_norelabel_curriculum.pth",
+ "critic_path": "/work/my_research/preference_inference/data/model/v7/v7_rl_critic_seed2_condB_r1.pth",
+ "rollout_seed": 1213756307,
+ "true_values_used": "rollout quantities only (A-2 position/action/vision/goal); goal labels for evaluation and for training the naive-Bayes references",
+ "check2": {
+  "Red": {
+   "circ_var": 0.12845203645444425,
+   "mean_cos_to_goal": 0.8914297834971388,
+   "mean_abs_angle_to_goal_deg": 22.826680515032002,
+   "pass": true
+  },
+  "Green": {
+   "circ_var": 0.11128341650894358,
+   "mean_cos_to_goal": 0.9296170529569104,
+   "mean_abs_angle_to_goal_deg": 15.649873294361212,
+   "pass": true
+  },
+  "Cyan": {
+   "circ_var": 0.21481635842570612,
+   "mean_cos_to_goal": -0.5925800277705732,
+   "mean_abs_angle_to_goal_deg": 131.09086549260815,
+   "pass": true
+  },
+  "Blue": {
+   "circ_var": 0.38689998218610133,
+   "mean_cos_to_goal": -0.14464613694354223,
+   "mean_abs_angle_to_goal_deg": 102.65240867508484,
+   "pass": true
+  },
+  "Mtop": {
+   "circ_var": 0.30327783380089357,
+   "n_grid": 280,
+   "near_corner_agreement": 0.475,
+   "pass": false
+  },
+  "Mleft": {
+   "circ_var": 0.05164602331935597,
+   "n_grid": 280,
+   "near_corner_agreement": 0.5642857142857143,
+   "pass": false
+  },
+  "Mbottom": {
+   "circ_var": 0.16910173712650933,
+   "n_grid": 280,
+   "near_corner_agreement": 0.4857142857142857,
+   "pass": false
+  },
+  "Mright": {
+   "circ_var": 0.8048719803642422,
+   "n_grid": 280,
+   "near_corner_agreement": 0.4607142857142857,
+   "pass": false
+  },
+  "Agreen": {
+   "circ_var": 0.04578229040475312,
+   "mean_cos_to_away": 0.8027135505621769,
+   "pass": true
+  },
+  "Acyan": {
+   "circ_var": 0.1655983057567043,
+   "mean_cos_to_away": 0.5905160772002475,
+   "pass": false
+  }
+ }
+}

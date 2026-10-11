@@ -1,0 +1,26 @@
+Device: cuda  Seed: 2  sampling=v6  episodes=1000  tag=condB_r1
+Env: learner = env.other_agent (own action only, clip +-10, no random step); env.self_agent random-walks in view (collect_data_v7.py layout)
+FiLM=True  relabel=False  MEMORY_SIZE=50000  TARGET_ENTROPY=-2.0  alpha_min=0.002
+  ep    0 | avg_reward(50ep): -4.049 | alpha: 0.9931 | named/two-point share(50ep): 1.00 | last r=[ 1. -1.  0.  0.] (two_point)
+  ep   50 | avg_reward(50ep): -1.007 | alpha: 0.6022 | named/two-point share(50ep): 1.00 | last r=[ 1. -1.  0.  0.] (two_point)
+  ep  100 | avg_reward(50ep): -0.427 | alpha: 0.3653 | named/two-point share(50ep): 1.00 | last r=[ 1. -1.  0.  0.] (two_point)
+  ep  150 | avg_reward(50ep): -0.492 | alpha: 0.2216 | named/two-point share(50ep): 1.00 | last r=[ 1. -1.  0.  0.] (two_point)
+  ep  200 | avg_reward(50ep): 0.197 | alpha: 0.1345 | named/two-point share(50ep): 1.00 | last r=[ 1. -1.  0.  0.] (two_point)
+  ep  250 | avg_reward(50ep): 0.288 | alpha: 0.0817 | named/two-point share(50ep): 0.96 | last r=[-1.  1.  0.  0.] (two_point)
+  ep  300 | avg_reward(50ep): 1.817 | alpha: 0.0500 | named/two-point share(50ep): 0.88 | last r=[-0.471 -0.345  0.763 -0.421] (range)
+  ep  350 | avg_reward(50ep): 2.654 | alpha: 0.0306 | named/two-point share(50ep): 0.54 | last r=[0.127 0.539 0.872 0.462] (range)
+  ep  400 | avg_reward(50ep): 1.732 | alpha: 0.0188 | named/two-point share(50ep): 0.36 | last r=[ 1. -1.  0.  0.] (two_point)
+  ep  450 | avg_reward(50ep): 1.780 | alpha: 0.0116 | named/two-point share(50ep): 0.20 | last r=[-1.061  0.369 -0.038 -0.531] (range)
+  ep  500 | avg_reward(50ep): 1.610 | alpha: 0.0072 | named/two-point share(50ep): 0.08 | last r=[-0.38  -0.47   0.516  0.634] (range)
+  ep  550 | avg_reward(50ep): 2.536 | alpha: 0.0047 | named/two-point share(50ep): 0.00 | last r=[ 0.086 -0.648  0.819  0.446] (range)
+  ep  600 | avg_reward(50ep): 2.817 | alpha: 0.0031 | named/two-point share(50ep): 0.00 | last r=[-0.644  0.155 -0.674  0.527] (range)
+  ep  650 | avg_reward(50ep): 2.503 | alpha: 0.0020 | named/two-point share(50ep): 0.00 | last r=[ 0.039 -0.913  0.245  0.803] (range)
+  ep  700 | avg_reward(50ep): 3.154 | alpha: 0.0021 | named/two-point share(50ep): 0.00 | last r=[ 0.259 -0.731  0.466  0.545] (range)
+  ep  750 | avg_reward(50ep): 5.161 | alpha: 0.0022 | named/two-point share(50ep): 0.00 | last r=[-0.039  0.129  0.771 -1.061] (range)
+  ep  800 | avg_reward(50ep): 2.564 | alpha: 0.0021 | named/two-point share(50ep): 0.00 | last r=[ 0.274  0.505 -0.229 -0.993] (range)
+  ep  850 | avg_reward(50ep): 3.966 | alpha: 0.0020 | named/two-point share(50ep): 0.00 | last r=[ 0.768  0.319  0.822 -0.09 ] (range)
+  ep  900 | avg_reward(50ep): 5.992 | alpha: 0.0020 | named/two-point share(50ep): 0.00 | last r=[-0.738  0.383 -0.254  0.626] (range)
+  ep  950 | avg_reward(50ep): 3.993 | alpha: 0.0020 | named/two-point share(50ep): 0.00 | last r=[-0.379  0.148  0.58   0.894] (range)
+r label counts over training: {'range': 648, 'two_point': 352}
+Saved: /work/my_research/preference_inference/data/model/v7/v7_rl_actor_seed2_condB_r1.pth
+Saved: /work/my_research/preference_inference/data/model/v7/v7_rl_critic_seed2_condB_r1.pth

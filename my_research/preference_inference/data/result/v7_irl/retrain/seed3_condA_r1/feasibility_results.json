@@ -1,0 +1,373 @@
+{
+ "git_commit": "11bc611",
+ "goals": {
+  "Red": [
+   1,
+   -1,
+   0,
+   0
+  ],
+  "Green": [
+   -1,
+   1,
+   0,
+   0
+  ],
+  "Cyan": [
+   0,
+   0,
+   -1,
+   1
+  ],
+  "Blue": [
+   0,
+   0,
+   1,
+   -1
+  ],
+  "Mtop": [
+   1,
+   0,
+   0,
+   1
+  ],
+  "Mleft": [
+   1,
+   1,
+   0,
+   0
+  ],
+  "Mbottom": [
+   0,
+   1,
+   1,
+   0
+  ],
+  "Mright": [
+   0,
+   0,
+   1,
+   1
+  ],
+  "Agreen": [
+   0,
+   -2,
+   0,
+   0
+  ],
+  "Acyan": [
+   0,
+   0,
+   0,
+   -2
+  ]
+ },
+ "n_episodes": 200,
+ "n_train": 150,
+ "actor_path": "/work/my_research/preference_inference/data/model/v7/v7_rl_actor_seed3_condA_r1.pth",
+ "critic_path": "/work/my_research/preference_inference/data/model/v7/v7_rl_critic_seed3_condA_r1.pth",
+ "rollout_seed": 429991175,
+ "true_values_used": "rollout quantities only (A-2 position/action/vision/goal); goal labels for evaluation and for training the naive-Bayes references",
+ "check1": {
+  "Red": {
+   "end_within5": {
+    "red": 1.0,
+    "green": 0.0,
+    "blue": 0.0,
+    "cyan": 0.0
+   },
+   "mean_final_dist": 1.3628576305457716,
+   "pass": true
+  },
+  "Green": {
+   "end_within5": {
+    "red": 0.0,
+    "green": 1.0,
+    "blue": 0.0,
+    "cyan": 0.0
+   },
+   "mean_final_dist": 2.821991857320521,
+   "pass": true
+  },
+  "Cyan": {
+   "end_within5": {
+    "red": 0.0,
+    "green": 0.0,
+    "blue": 0.0,
+    "cyan": 1.0
+   },
+   "mean_final_dist": 1.8114393912225488,
+   "pass": true
+  },
+  "Blue": {
+   "end_within5": {
+    "red": 0.0,
+    "green": 0.0,
+    "blue": 1.0,
+    "cyan": 0.0
+   },
+   "mean_final_dist": 3.14655065942532,
+   "pass": true
+  },
+  "Mtop": {
+   "end_within5": {
+    "red": 0.0,
+    "green": 0.0,
+    "blue": 0.0,
+    "cyan": 0.985
+   },
+   "n_eligible": 160,
+   "frac_end_near": 0.45625,
+   "frac_end_far": 0.525,
+   "frac_end_neither": 0.01875,
+   "by_split_coord": {
+    "[-10,-6)": {
+     "n": 43,
+     "end_red": 0.0,
+     "end_cyan": 0.9534883720930233
+    },
+    "[-6,-2)": {
+     "n": 43,
+     "end_red": 0.0,
+     "end_cyan": 1.0
+    },
+    "[-2,2)": {
+     "n": 40,
+     "end_red": 0.0,
+     "end_cyan": 1.0
+    },
+    "[2,6)": {
+     "n": 43,
+     "end_red": 0.0,
+     "end_cyan": 1.0
+    },
+    "[6,10)": {
+     "n": 31,
+     "end_red": 0.0,
+     "end_cyan": 0.967741935483871
+    }
+   },
+   "pass": false
+  },
+  "Mleft": {
+   "end_within5": {
+    "red": 1.0,
+    "green": 0.0,
+    "blue": 0.0,
+    "cyan": 0.0
+   },
+   "n_eligible": 151,
+   "frac_end_near": 0.39072847682119205,
+   "frac_end_far": 0.609271523178808,
+   "frac_end_neither": 0.0,
+   "by_split_coord": {
+    "[-10,-6)": {
+     "n": 44,
+     "end_green": 0.0,
+     "end_red": 1.0
+    },
+    "[-6,-2)": {
+     "n": 48,
+     "end_green": 0.0,
+     "end_red": 1.0
+    },
+    "[-2,2)": {
+     "n": 49,
+     "end_green": 0.0,
+     "end_red": 1.0
+    },
+    "[2,6)": {
+     "n": 25,
+     "end_green": 0.0,
+     "end_red": 1.0
+    },
+    "[6,10)": {
+     "n": 34,
+     "end_green": 0.0,
+     "end_red": 1.0
+    }
+   },
+   "pass": false
+  },
+  "Mbottom": {
+   "end_within5": {
+    "red": 0.0,
+    "green": 0.0,
+    "blue": 1.0,
+    "cyan": 0.0
+   },
+   "n_eligible": 157,
+   "frac_end_near": 0.5095541401273885,
+   "frac_end_far": 0.49044585987261147,
+   "frac_end_neither": 0.0,
+   "by_split_coord": {
+    "[-10,-6)": {
+     "n": 39,
+     "end_green": 0.0,
+     "end_blue": 1.0
+    },
+    "[-6,-2)": {
+     "n": 38,
+     "end_green": 0.0,
+     "end_blue": 1.0
+    },
+    "[-2,2)": {
+     "n": 43,
+     "end_green": 0.0,
+     "end_blue": 1.0
+    },
+    "[2,6)": {
+     "n": 35,
+     "end_green": 0.0,
+     "end_blue": 1.0
+    },
+    "[6,10)": {
+     "n": 45,
+     "end_green": 0.0,
+     "end_blue": 1.0
+    }
+   },
+   "pass": false
+  },
+  "Mright": {
+   "end_within5": {
+    "red": 0.0,
+    "green": 0.0,
+    "blue": 0.0,
+    "cyan": 0.995
+   },
+   "n_eligible": 163,
+   "frac_end_near": 0.49693251533742333,
+   "frac_end_far": 0.49693251533742333,
+   "frac_end_neither": 0.006134969325153374,
+   "by_split_coord": {
+    "[-10,-6)": {
+     "n": 28,
+     "end_blue": 0.0,
+     "end_cyan": 1.0
+    },
+    "[-6,-2)": {
+     "n": 54,
+     "end_blue": 0.0,
+     "end_cyan": 0.9814814814814815
+    },
+    "[-2,2)": {
+     "n": 37,
+     "end_blue": 0.0,
+     "end_cyan": 1.0
+    },
+    "[2,6)": {
+     "n": 38,
+     "end_blue": 0.0,
+     "end_cyan": 1.0
+    },
+    "[6,10)": {
+     "n": 43,
+     "end_blue": 0.0,
+     "end_cyan": 1.0
+    }
+   },
+   "pass": false
+  },
+  "Agreen": {
+   "end_within5": {
+    "red": 0.66,
+    "green": 0.0,
+    "blue": 0.0,
+    "cyan": 0.335
+   },
+   "frac_end_ge20_from_avoided": 0.34,
+   "mean_final_pos": [
+    -3.5365607738494873,
+    10.0
+   ],
+   "pass": false
+  },
+  "Acyan": {
+   "end_within5": {
+    "red": 0.035,
+    "green": 0.57,
+    "blue": 0.375,
+    "cyan": 0.0
+   },
+   "frac_end_ge20_from_avoided": 0.585,
+   "mean_final_pos": [
+    -3.852565050125122,
+    -8.48001480102539
+   ],
+   "pass": false
+  }
+ },
+ "check2": {
+  "Red": {
+   "circ_var": 0.02994381055024975,
+   "mean_cos_to_goal": 0.8669860039368963,
+   "mean_abs_angle_to_goal_deg": 24.83126566251565,
+   "pass": true
+  },
+  "Green": {
+   "circ_var": 0.08309902260723334,
+   "mean_cos_to_goal": 0.6382041230753329,
+   "mean_abs_angle_to_goal_deg": 42.79178591931652,
+   "pass": true
+  },
+  "Cyan": {
+   "circ_var": 0.0772324240466945,
+   "mean_cos_to_goal": 0.9171632260237575,
+   "mean_abs_angle_to_goal_deg": 18.40973883824795,
+   "pass": true
+  },
+  "Blue": {
+   "circ_var": 0.026951085855577595,
+   "mean_cos_to_goal": 0.38736414680665393,
+   "mean_abs_angle_to_goal_deg": 63.5203125,
+   "pass": true
+  },
+  "Mtop": {
+   "circ_var": 0.025069672870130733,
+   "n_grid": 280,
+   "near_corner_agreement": 0.6321428571428571,
+   "pass": false
+  },
+  "Mleft": {
+   "circ_var": 0.05395060825663378,
+   "n_grid": 280,
+   "near_corner_agreement": 0.5,
+   "pass": false
+  },
+  "Mbottom": {
+   "circ_var": 0.09054869348205796,
+   "n_grid": 280,
+   "near_corner_agreement": 0.725,
+   "pass": true
+  },
+  "Mright": {
+   "circ_var": 0.22699362770696663,
+   "n_grid": 280,
+   "near_corner_agreement": 0.5892857142857143,
+   "pass": false
+  },
+  "Agreen": {
+   "circ_var": 0.0058378833339375324,
+   "mean_cos_to_away": 0.6799550699987432,
+   "pass": false
+  },
+  "Acyan": {
+   "circ_var": 0.07478087132221711,
+   "mean_cos_to_away": 0.7781460983588684,
+   "pass": true
+  }
+ },
+ "eligible": {
+  "Red": true,
+  "Green": true,
+  "Cyan": true,
+  "Blue": true,
+  "Mtop": false,
+  "Mleft": false,
+  "Mbottom": false,
+  "Mright": false,
+  "Agreen": false,
+  "Acyan": false
+ }
+}

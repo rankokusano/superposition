@@ -1,0 +1,22 @@
+v6_seed2   Mtop    agree 0.6428571428571429  critic   33.8  const-flow   25.0  circvar 0.076  old=False new=False check2=False
+v6_seed2   Mleft   agree 0.5428571428571428  critic   59.7  const-flow   25.6  circvar 0.411  old=False new=False check2=False
+v6_seed2   Mbottom agree 0.6964285714285714  critic   33.9  const-flow   25.0  circvar 0.038  old=False new=False check2=False
+v6_seed2   Mright  agree 0.6214285714285714  critic   74.0  const-flow   24.3  circvar 0.555  old=False new=False check2=False
+v6_seed2   Red     critic   21.9  const-flow   21.4 (dir 134.9)  circvar 0.000  old=True new=False vector_field=False
+v6_seed2   Green   critic   20.1  const-flow   21.4 (dir 225.1)  circvar 0.044  old=True new=False vector_field=False
+v6_seed2   Cyan    critic   58.6  const-flow   21.2 (dir  44.9)  circvar 0.009  old=False new=False vector_field=False
+seed3_condA_r1 Mtop    agree 0.6321428571428571  critic   33.7  const-flow   25.0  circvar 0.027  old=False new=False check2=False
+seed3_condA_r1 Mleft   agree 0.5  critic   59.1  const-flow   25.6  circvar 0.059  old=False new=False check2=False
+seed3_condA_r1 Mbottom agree 0.725  critic   37.3  const-flow   25.0  circvar 0.104  old=True new=False check2=False
+seed3_condA_r1 Mright  agree 0.5892857142857143  critic   51.2  const-flow   24.3  circvar 0.231  old=False new=False check2=False
+seed3_condA_r1 Red     critic   24.8  const-flow   21.4 (dir 134.9)  circvar 0.030  old=True new=False vector_field=False
+seed3_condA_r1 Green   critic   42.8  const-flow   21.4 (dir 225.1)  circvar 0.083  old=False new=False vector_field=False
+seed3_condA_r1 Cyan    critic   18.4  const-flow   21.2 (dir  44.9)  circvar 0.077  old=True new=False vector_field=False
+seed2_condB_r1 Mtop    agree 0.475  critic   61.2  const-flow   25.0  circvar 0.340  old=False new=False check2=False
+seed2_condB_r1 Mleft   agree 0.5642857142857143  critic   39.4  const-flow   25.6  circvar 0.051  old=False new=False check2=False
+seed2_condB_r1 Mbottom agree 0.4857142857142857  critic   53.4  const-flow   25.0  circvar 0.187  old=False new=False check2=False
+seed2_condB_r1 Mright  agree 0.4607142857142857  critic   92.1  const-flow   24.3  circvar 0.921  old=False new=False check2=False
+seed2_condB_r1 Red     critic   22.8  const-flow   21.4 (dir 134.9)  circvar 0.128  old=True new=False vector_field=False
+seed2_condB_r1 Green   critic   15.6  const-flow   21.4 (dir 225.1)  circvar 0.111  old=True new=False vector_field=False
+seed2_condB_r1 Cyan    critic  131.1  const-flow   21.2 (dir  44.9)  circvar 0.215  old=False new=False vector_field=False
+Saved: data/result/v7_irl/retrain/vector_field_criterion_r1.json
