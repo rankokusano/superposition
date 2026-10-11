@@ -63,6 +63,9 @@ Z3_DEG = {'Red': 135, 'Green': 225, 'Cyan': 45, 'Blue': 315, 'Mtop': 90, 'Mleft'
 GRID = np.linspace(-9.0, 9.0, 20)
 N_DIR_BINS = 16
 ROLLOUT_KEY = 'v7_feasibility'
+POLICY = 'actor'        # 'actor' or 'fixed' (§2.14 check A)
+FIXED_DEG = {}           # goal -> direction (deg) for POLICY == 'fixed'
+HIDDEN_RESET = False     # §2.14 check B: actor hidden reset to None every step
 
 
 def import_creator():
@@ -114,12 +117,18 @@ def rollout():
                 env.world.draw(env.self_agent, env.other_agent)
                 ov = env.world.capture()
                 v_t = torch.tensor(np.transpose(ov.astype(np.float32), (2, 0, 1))).unsqueeze(0).to(device)
-                with torch.no_grad():
-                    a_t, _, hidden = actor.sample(v_t, r_t, hidden)
-                om = a_t.squeeze(0).cpu().numpy()
+                if POLICY == 'fixed':
+                    th = np.radians(FIXED_DEG[goal])
+                    om = np.array([np.cos(th), np.sin(th)]) / max(abs(np.cos(th)), abs(np.sin(th)))
+                    om = om.astype(np.float32)
+                else:
+                    with torch.no_grad():
+                        a_t, _, hidden = actor.sample(v_t, r_t, None if HIDDEN_RESET else hidden)
+                    om = a_t.squeeze(0).cpu().numpy()
                 env.other_agent.p = np.clip(op + om, lo, hi)
                 pos[n, t], act[n, t], vis[n, t] = op, om, np.round(ov * 255).astype(np.uint8)
-        np.savez_compressed(npz_path(goal), pos=pos, act=act, vis=vis, r=np.asarray(w, np.float32), seed=seed)
+        np.savez_compressed(npz_path(goal), pos=pos, act=act, vis=vis, r=np.asarray(w, np.float32), seed=seed,
+                            policy=POLICY, hidden_reset=HIDDEN_RESET, fixed_deg=FIXED_DEG.get(goal, np.nan))
         print(f'rollout {goal}: saved', flush=True)
 
 
@@ -395,10 +404,25 @@ def main():
     ap.add_argument('--critic_path', default=None, help='default: v6 seed2 critic (original feasibility run)')
     ap.add_argument('--out_dir', default=None, help='relative to preference_inference/; default v7_irl/feasibility')
     ap.add_argument('--rollout_key', default='v7_feasibility')
+    ap.add_argument('--policy', choices=['actor', 'fixed'], default='actor')
+    ap.add_argument('--fixed_dirs', default=None,
+                    help="'corner' or a check2_maps.npz path (relative to PI root) whose per-goal circular mean is used")
+    ap.add_argument('--actor_hidden_reset', action='store_true')
     ap.add_argument('--compare', nargs='*', default=None,
                     help='label=out_dir pairs: draw single-goal + Mtop best-direction maps side by side')
     args = ap.parse_args()
-    global SAVE_DIR, A2_ACTOR_PATH, ROLLOUT_KEY
+    global SAVE_DIR, A2_ACTOR_PATH, ROLLOUT_KEY, POLICY, FIXED_DEG, HIDDEN_RESET
+    POLICY, HIDDEN_RESET = args.policy, args.actor_hidden_reset
+    if POLICY == 'fixed':
+        if args.fixed_dirs == 'corner':
+            FIXED_DEG = {g: float(Z3_DEG[g]) for g in GOALS}
+        else:
+            m = np.load(os.path.join(C.PI_ROOT, args.fixed_dirs))
+            FIXED_DEG = {}
+            for g in GOALS:
+                rad = np.radians(m[g])
+                FIXED_DEG[g] = float(np.degrees(np.arctan2(np.sin(rad).mean(), np.cos(rad).mean())) % 360)
+        print('fixed directions (deg):', {g: round(v, 1) for g, v in FIXED_DEG.items()}, flush=True)
     if args.out_dir:
         SAVE_DIR = os.path.join(C.PI_ROOT, args.out_dir)
     if args.actor_path:
