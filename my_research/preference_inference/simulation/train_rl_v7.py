@@ -23,6 +23,9 @@ things change:
            Mright; uniform) mixed with full-range sample_reward_param().
            ep<300 named only; 300<=ep<700 named share falls linearly 1 -> 0.5;
            ep>=700 named share 0.5.                      (condition A)
+   named_mixheavy (remake 1, §2.13): same 8 named goals, mixed goals 2/3
+           of the named mass; named only for ep<500, share 1 -> 0.7 over
+           500-1000, then 0.7.  --alpha_min clamps alpha from below.
    v6    : v6's curriculum unchanged (ep<200 {A1,A2}, 200-500 linear mix,
            ep>=500 full-range).                          (condition B)
 
@@ -80,6 +83,9 @@ NAMED_R = np.array(list(NAMED_GOALS.values()), dtype=np.float32)
 NAMED_ONLY_END = 300
 NAMED_RAMP_END = 700
 NAMED_SHARE_FINAL = 0.5
+# remake 1 (docs/v7_experiment_log.md §2.13): mixed goals weighted 2/3 within the named goals
+MIXHEAVY_P = np.array([1, 1, 1, 1, 2, 2, 2, 2], dtype=np.float64) / 12.0  # order of NAMED_GOALS
+MIXHEAVY_ONLY_END, MIXHEAVY_RAMP_END, MIXHEAVY_SHARE_FINAL = 500, 1000, 0.7
 V6_PHASE1_END, V6_PHASE2_END = 200, 500
 
 
@@ -104,8 +110,22 @@ def named_share(episode):
     return NAMED_SHARE_FINAL
 
 
+def mixheavy_share(episode):
+    if episode < MIXHEAVY_ONLY_END:
+        return 1.0
+    if episode < MIXHEAVY_RAMP_END:
+        t = (episode - MIXHEAVY_ONLY_END) / float(MIXHEAVY_RAMP_END - MIXHEAVY_ONLY_END)
+        return 1.0 - t * (1.0 - MIXHEAVY_SHARE_FINAL)
+    return MIXHEAVY_SHARE_FINAL
+
+
 def sample_r(episode, sampling):
     """Returns (r, label) where label names the named goal or 'range'."""
+    if sampling == 'named_mixheavy':
+        if np.random.random() < mixheavy_share(episode):
+            k = np.random.choice(len(NAMED_R), p=MIXHEAVY_P)
+            return NAMED_R[k].copy(), list(NAMED_GOALS)[k]
+        return sample_reward_param(), 'range'
     if sampling == 'named':
         if np.random.random() < named_share(episode):
             k = np.random.randint(len(NAMED_R))
@@ -148,7 +168,7 @@ def capture_learner(env):
     return env.world.capture()
 
 
-def train(seed, sampling, episodes, tag):
+def train(seed, sampling, episodes, tag, alpha_min=None):
     os.makedirs(SAVE_DIR, exist_ok=True)
     seed_all(seed)
     name = f'seed{seed}_{tag}'
@@ -183,7 +203,7 @@ def train(seed, sampling, episodes, tag):
     print(f'Device: {DEVICE}  Seed: {seed}  sampling={sampling}  episodes={episodes}  tag={tag}')
     print('Env: learner = env.other_agent (own action only, clip +-10, no random step); '
           'env.self_agent random-walks in view (collect_data_v7.py layout)')
-    print(f'FiLM=True  relabel=False  MEMORY_SIZE={MEMORY_SIZE}  TARGET_ENTROPY={TARGET_ENTROPY}')
+    print(f'FiLM=True  relabel=False  MEMORY_SIZE={MEMORY_SIZE}  TARGET_ENTROPY={TARGET_ENTROPY}  alpha_min={alpha_min}')
 
     for episode in range(episodes):
         r_np, label = sample_r(episode, sampling)
@@ -245,6 +265,9 @@ def train(seed, sampling, episodes, tag):
                 alpha_opt.zero_grad()
                 (-(log_alpha * (lp2 + TARGET_ENTROPY).detach())).mean().backward()
                 alpha_opt.step()
+                if alpha_min is not None:  # remake 1 (§2.13): alpha >= alpha_min
+                    with torch.no_grad():
+                        log_alpha.clamp_(min=float(np.log(alpha_min)))
                 alpha = log_alpha.exp()
 
                 soft_update(critic1_target, critic1, TAU)
@@ -272,8 +295,9 @@ def train(seed, sampling, episodes, tag):
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     ap.add_argument('--seed', type=int, required=True)
-    ap.add_argument('--sampling', choices=['named', 'v6'], required=True)
+    ap.add_argument('--sampling', choices=['named', 'named_mixheavy', 'v6'], required=True)
     ap.add_argument('--episodes', type=int, required=True)
     ap.add_argument('--tag', required=True)
+    ap.add_argument('--alpha_min', type=float, default=None, help='remake 1: lower bound on alpha (0.002)')
     a = ap.parse_args()
-    train(a.seed, a.sampling, a.episodes, a.tag)
+    train(a.seed, a.sampling, a.episodes, a.tag, alpha_min=a.alpha_min)

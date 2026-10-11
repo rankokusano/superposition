@@ -1,0 +1,278 @@
+{
+ "v6_seed2": {
+  "Mtop": {
+   "near_corner_agreement": 0.6428571428571429,
+   "critic_angle_to_near_deg": 33.80414690787178,
+   "constant_flow_deg": 25.042517551369937,
+   "constant_flow_direction_deg": 89.51066089351097,
+   "circ_var": 0.07625238947230129,
+   "old_criterion_pass": false,
+   "new_criterion_pass": false,
+   "check2_pass": false
+  },
+  "Mleft": {
+   "near_corner_agreement": 0.5428571428571428,
+   "critic_angle_to_near_deg": 59.699450639847214,
+   "constant_flow_deg": 25.622459666249924,
+   "constant_flow_direction_deg": 180.0,
+   "circ_var": 0.4105279488499469,
+   "old_criterion_pass": false,
+   "new_criterion_pass": false,
+   "check2_pass": false
+  },
+  "Mbottom": {
+   "near_corner_agreement": 0.6964285714285714,
+   "critic_angle_to_near_deg": 33.85700859281682,
+   "constant_flow_deg": 25.04251755136994,
+   "constant_flow_direction_deg": 270.489339106489,
+   "circ_var": 0.038384001040333016,
+   "old_criterion_pass": false,
+   "new_criterion_pass": false,
+   "check2_pass": false
+  },
+  "Mright": {
+   "near_corner_agreement": 0.6214285714285714,
+   "critic_angle_to_near_deg": 74.04129275840097,
+   "constant_flow_deg": 24.336745380535636,
+   "constant_flow_direction_deg": 0.0,
+   "circ_var": 0.5549640477312505,
+   "old_criterion_pass": false,
+   "new_criterion_pass": false,
+   "check2_pass": false
+  },
+  "Red": {
+   "critic_angle_deg": 21.866457160302318,
+   "constant_flow_deg": 21.388238776722172,
+   "constant_flow_direction_deg": 134.8875935757178,
+   "circ_var": 0.0002457231927637249,
+   "old_criterion_pass": true,
+   "new_criterion_pass": false,
+   "vector_field": false
+  },
+  "Green": {
+   "critic_angle_deg": 20.140745563476603,
+   "constant_flow_deg": 21.38823877672217,
+   "constant_flow_direction_deg": 225.11240642428217,
+   "circ_var": 0.04416194713138588,
+   "old_criterion_pass": true,
+   "new_criterion_pass": false,
+   "vector_field": false
+  },
+  "Cyan": {
+   "critic_angle_deg": 58.584375,
+   "constant_flow_deg": 21.163219006986054,
+   "constant_flow_direction_deg": 44.88803290318705,
+   "circ_var": 0.00911290882853022,
+   "old_criterion_pass": false,
+   "new_criterion_pass": false,
+   "vector_field": false
+  }
+ },
+ "B_seed1_collapsed": {
+  "Mtop": {
+   "near_corner_agreement": 0.5,
+   "critic_angle_to_near_deg": 73.55940358464305,
+   "constant_flow_deg": 25.042517551369937,
+   "constant_flow_direction_deg": 89.51066089351097,
+   "circ_var": -4.440892098500626e-16,
+   "old_criterion_pass": false,
+   "new_criterion_pass": false,
+   "check2_pass": false
+  },
+  "Mleft": {
+   "near_corner_agreement": 0.9571428571428572,
+   "critic_angle_to_near_deg": 26.454481950319952,
+   "constant_flow_deg": 25.622459666249924,
+   "constant_flow_direction_deg": 180.0,
+   "circ_var": 5.551115123125783e-16,
+   "old_criterion_pass": true,
+   "new_criterion_pass": false,
+   "check2_pass": false
+  },
+  "Mbottom": {
+   "near_corner_agreement": 0.5,
+   "critic_angle_to_near_deg": 100.11223087291448,
+   "constant_flow_deg": 25.04251755136994,
+   "constant_flow_direction_deg": 270.489339106489,
+   "circ_var": 0.0,
+   "old_criterion_pass": false,
+   "new_criterion_pass": false,
+   "check2_pass": false
+  },
+  "Mright": {
+   "near_corner_agreement": 0.8821428571428571,
+   "critic_angle_to_near_deg": 26.816068113054456,
+   "constant_flow_deg": 24.336745380535636,
+   "constant_flow_direction_deg": 0.0,
+   "circ_var": 0.0,
+   "old_criterion_pass": true,
+   "new_criterion_pass": false,
+   "check2_pass": false
+  },
+  "Red": {
+   "critic_angle_deg": 61.903125,
+   "constant_flow_deg": 21.388238776722172,
+   "constant_flow_direction_deg": 134.8875935757178,
+   "circ_var": -4.440892098500626e-16,
+   "old_criterion_pass": false,
+   "new_criterion_pass": false,
+   "vector_field": false
+  },
+  "Green": {
+   "critic_angle_deg": 101.08125,
+   "constant_flow_deg": 21.38823877672217,
+   "constant_flow_direction_deg": 225.11240642428217,
+   "circ_var": 2.220446049250313e-16,
+   "old_criterion_pass": false,
+   "new_criterion_pass": false,
+   "vector_field": false
+  },
+  "Cyan": {
+   "critic_angle_deg": 25.254950221422614,
+   "constant_flow_deg": 21.163219006986054,
+   "constant_flow_direction_deg": 44.88803290318705,
+   "circ_var": 0.0,
+   "old_criterion_pass": true,
+   "new_criterion_pass": false,
+   "vector_field": false
+  }
+ },
+ "r1_A_seed2": {
+  "Mtop": {
+   "near_corner_agreement": 0.5285714285714286,
+   "critic_angle_to_near_deg": 48.413916415292434,
+   "constant_flow_deg": 25.042517551369937,
+   "constant_flow_direction_deg": 89.51066089351097,
+   "circ_var": 0.18563226227840557,
+   "old_criterion_pass": false,
+   "new_criterion_pass": false,
+   "check2_pass": false
+  },
+  "Mleft": {
+   "near_corner_agreement": 0.7285714285714285,
+   "critic_angle_to_near_deg": 36.15267359178833,
+   "constant_flow_deg": 25.622459666249924,
+   "constant_flow_direction_deg": 180.0,
+   "circ_var": 0.13568313873100757,
+   "old_criterion_pass": true,
+   "new_criterion_pass": false,
+   "check2_pass": false
+  },
+  "Mbottom": {
+   "near_corner_agreement": 0.6285714285714286,
+   "critic_angle_to_near_deg": 44.97677806895939,
+   "constant_flow_deg": 25.04251755136994,
+   "constant_flow_direction_deg": 270.489339106489,
+   "circ_var": 0.2130646548658438,
+   "old_criterion_pass": false,
+   "new_criterion_pass": false,
+   "check2_pass": false
+  },
+  "Mright": {
+   "near_corner_agreement": 0.6107142857142858,
+   "critic_angle_to_near_deg": 43.989752658623836,
+   "constant_flow_deg": 24.336745380535636,
+   "constant_flow_direction_deg": 0.0,
+   "circ_var": 0.08447458114414852,
+   "old_criterion_pass": false,
+   "new_criterion_pass": false,
+   "check2_pass": false
+  },
+  "Red": {
+   "critic_angle_deg": 17.48687684513133,
+   "constant_flow_deg": 21.388238776722172,
+   "constant_flow_direction_deg": 134.8875935757178,
+   "circ_var": 0.08479233174634793,
+   "old_criterion_pass": true,
+   "new_criterion_pass": false,
+   "vector_field": false
+  },
+  "Green": {
+   "critic_angle_deg": 46.16776103486713,
+   "constant_flow_deg": 21.38823877672217,
+   "constant_flow_direction_deg": 225.11240642428217,
+   "circ_var": 0.08196638939964185,
+   "old_criterion_pass": false,
+   "new_criterion_pass": false,
+   "vector_field": false
+  },
+  "Cyan": {
+   "critic_angle_deg": 33.68428641244619,
+   "constant_flow_deg": 21.163219006986054,
+   "constant_flow_direction_deg": 44.88803290318705,
+   "circ_var": 0.30897773942851814,
+   "old_criterion_pass": false,
+   "new_criterion_pass": false,
+   "vector_field": false
+  }
+ },
+ "r1_A_seed1": {
+  "Mtop": {
+   "near_corner_agreement": 0.7857142857142857,
+   "critic_angle_to_near_deg": 34.16569366916098,
+   "constant_flow_deg": 25.042517551369937,
+   "constant_flow_direction_deg": 89.51066089351097,
+   "circ_var": 0.20562084144244397,
+   "old_criterion_pass": true,
+   "new_criterion_pass": false,
+   "check2_pass": false
+  },
+  "Mleft": {
+   "near_corner_agreement": 0.7428571428571429,
+   "critic_angle_to_near_deg": 35.42824558191305,
+   "constant_flow_deg": 25.622459666249924,
+   "constant_flow_direction_deg": 180.0,
+   "circ_var": 0.13686928081825656,
+   "old_criterion_pass": true,
+   "new_criterion_pass": false,
+   "check2_pass": false
+  },
+  "Mbottom": {
+   "near_corner_agreement": 0.41785714285714287,
+   "critic_angle_to_near_deg": 84.39946506114934,
+   "constant_flow_deg": 25.04251755136994,
+   "constant_flow_direction_deg": 270.489339106489,
+   "circ_var": 0.2593280309301961,
+   "old_criterion_pass": false,
+   "new_criterion_pass": false,
+   "check2_pass": false
+  },
+  "Mright": {
+   "near_corner_agreement": 0.55,
+   "critic_angle_to_near_deg": 41.62332692821431,
+   "constant_flow_deg": 24.336745380535636,
+   "constant_flow_direction_deg": 0.0,
+   "circ_var": 0.04599916843673124,
+   "old_criterion_pass": false,
+   "new_criterion_pass": false,
+   "check2_pass": false
+  },
+  "Red": {
+   "critic_angle_deg": 25.340679117928484,
+   "constant_flow_deg": 21.388238776722172,
+   "constant_flow_direction_deg": 134.8875935757178,
+   "circ_var": 0.20155574426119005,
+   "old_criterion_pass": true,
+   "new_criterion_pass": false,
+   "vector_field": false
+  },
+  "Green": {
+   "critic_angle_deg": 51.75782719649944,
+   "constant_flow_deg": 21.38823877672217,
+   "constant_flow_direction_deg": 225.11240642428217,
+   "circ_var": 0.484726837231109,
+   "old_criterion_pass": false,
+   "new_criterion_pass": false,
+   "vector_field": false
+  },
+  "Cyan": {
+   "critic_angle_deg": 30.14496999941123,
+   "constant_flow_deg": 21.163219006986054,
+   "constant_flow_direction_deg": 44.88803290318705,
+   "circ_var": 0.04498751778029331,
+   "old_criterion_pass": false,
+   "new_criterion_pass": false,
+   "vector_field": false
+  }
+ }
+}
