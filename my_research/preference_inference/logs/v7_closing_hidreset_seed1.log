@@ -1,0 +1,21 @@
+rollout Red: saved
+rollout Green: saved
+rollout Cyan: saved
+rollout Blue: saved
+rollout Mtop: saved
+rollout Mleft: saved
+rollout Mbottom: saved
+rollout Mright: saved
+rollout Agreen: saved
+rollout Acyan: saved
+[check1] Red      pass=True  {"end_within5": {"red": 1.0, "green": 0.0, "blue": 0.0, "cyan": 0.0}, "mean_final_dist": 1.169742332192398, "pass": true}
+[check1] Green    pass=True  {"end_within5": {"red": 0.0, "green": 1.0, "blue": 0.0, "cyan": 0.0}, "mean_final_dist": 1.9790943971768908, "pass": true}
+[check1] Cyan     pass=True  {"end_within5": {"red": 0.0, "green": 0.0, "blue": 0.0, "cyan": 1.0}, "mean_final_dist": 1.0722125277553904, "pass": true}
+[check1] Blue     pass=False  {"end_within5": {"red": 0.0, "green": 1.0, "blue": 0.0, "cyan": 0.0}, "mean_final_dist": 19.018411286514294, "pass": false}
+[check1] Mtop     pass=False  {"end_within5": {"red": 0.18, "green": 0.0, "blue": 0.0, "cyan": 0.82}, "n_eligible": 161, "frac_end_near": 0.7701863354037267, "frac_end_far": 0.22981366459627328, "frac_end_neither": 0.0, "pass": false}
+[check1] Mleft    pass=False  {"end_within5": {"red": 0.0, "green": 1.0, "blue": 0.0, "cyan": 0.0}, "n_eligible": 160, "frac_end_near": 0.49375, "frac_end_far": 0.50625, "frac_end_neither": 0.0, "pass": false}
+[check1] Mbottom  pass=False  {"end_within5": {"red": 0.0, "green": 1.0, "blue": 0.0, "cyan": 0.0}, "n_eligible": 159, "frac_end_near": 0.5849056603773585, "frac_end_far": 0.41509433962264153, "frac_end_neither": 0.0, "pass": false}
+[check1] Mright   pass=False  {"end_within5": {"red": 0.0, "green": 0.0, "blue": 0.0, "cyan": 1.0}, "n_eligible": 168, "frac_end_near": 0.44642857142857145, "frac_end_far": 0.5535714285714286, "frac_end_neither": 0.0, "pass": false}
+[check1] Agreen   pass=False  {"end_within5": {"red": 0.39, "green": 0.005, "blue": 0.0, "cyan": 0.49}, "frac_end_ge20_from_avoided": 0.6, "mean_final_pos": [-0.5500847101211548, 9.134095191955566], "pass": false}
+[check1] Acyan    pass=True  {"end_within5": {"red": 0.0, "green": 1.0, "blue": 0.0, "cyan": 0.0}, "frac_end_ge20_from_avoided": 1.0, "mean_final_pos": [-10.0, -8.081249237060547], "pass": true}
+Saved: /work/my_research/preference_inference/data/result/v7_irl/retrain/closing/hidreset_seed1/feasibility_results.json

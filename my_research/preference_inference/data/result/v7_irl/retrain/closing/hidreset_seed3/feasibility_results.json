@@ -1,0 +1,301 @@
+{
+ "git_commit": null,
+ "goals": {
+  "Red": [
+   1,
+   -1,
+   0,
+   0
+  ],
+  "Green": [
+   -1,
+   1,
+   0,
+   0
+  ],
+  "Cyan": [
+   0,
+   0,
+   -1,
+   1
+  ],
+  "Blue": [
+   0,
+   0,
+   1,
+   -1
+  ],
+  "Mtop": [
+   1,
+   0,
+   0,
+   1
+  ],
+  "Mleft": [
+   1,
+   1,
+   0,
+   0
+  ],
+  "Mbottom": [
+   0,
+   1,
+   1,
+   0
+  ],
+  "Mright": [
+   0,
+   0,
+   1,
+   1
+  ],
+  "Agreen": [
+   0,
+   -2,
+   0,
+   0
+  ],
+  "Acyan": [
+   0,
+   0,
+   0,
+   -2
+  ]
+ },
+ "n_episodes": 200,
+ "n_train": 150,
+ "actor_path": "/work/my_research/preference_inference/data/model/v7/v7_rl_actor_seed3_condA_r1.pth",
+ "critic_path": "/work/my_research/preference_inference/data/model/v6_rl_critic_seed2_film_norelabel_curriculum.pth",
+ "rollout_seed": 429991175,
+ "true_values_used": "rollout quantities only (A-2 position/action/vision/goal); goal labels for evaluation and for training the naive-Bayes references",
+ "check1": {
+  "Red": {
+   "end_within5": {
+    "red": 1.0,
+    "green": 0.0,
+    "blue": 0.0,
+    "cyan": 0.0
+   },
+   "mean_final_dist": 1.1525856447058649,
+   "pass": true
+  },
+  "Green": {
+   "end_within5": {
+    "red": 0.0,
+    "green": 1.0,
+    "blue": 0.0,
+    "cyan": 0.0
+   },
+   "mean_final_dist": 2.5234005592419546,
+   "pass": true
+  },
+  "Cyan": {
+   "end_within5": {
+    "red": 0.0,
+    "green": 0.0,
+    "blue": 0.0,
+    "cyan": 1.0
+   },
+   "mean_final_dist": 1.5868211560297678,
+   "pass": true
+  },
+  "Blue": {
+   "end_within5": {
+    "red": 0.0,
+    "green": 0.0,
+    "blue": 1.0,
+    "cyan": 0.0
+   },
+   "mean_final_dist": 3.165083439893559,
+   "pass": true
+  },
+  "Mtop": {
+   "end_within5": {
+    "red": 0.0,
+    "green": 0.0,
+    "blue": 0.0,
+    "cyan": 0.99
+   },
+   "n_eligible": 160,
+   "frac_end_near": 0.4625,
+   "frac_end_far": 0.525,
+   "frac_end_neither": 0.0125,
+   "by_split_coord": {
+    "[-10,-6)": {
+     "n": 43,
+     "end_red": 0.0,
+     "end_cyan": 0.9534883720930233
+    },
+    "[-6,-2)": {
+     "n": 43,
+     "end_red": 0.0,
+     "end_cyan": 1.0
+    },
+    "[-2,2)": {
+     "n": 40,
+     "end_red": 0.0,
+     "end_cyan": 1.0
+    },
+    "[2,6)": {
+     "n": 43,
+     "end_red": 0.0,
+     "end_cyan": 1.0
+    },
+    "[6,10)": {
+     "n": 31,
+     "end_red": 0.0,
+     "end_cyan": 1.0
+    }
+   },
+   "pass": false
+  },
+  "Mleft": {
+   "end_within5": {
+    "red": 1.0,
+    "green": 0.0,
+    "blue": 0.0,
+    "cyan": 0.0
+   },
+   "n_eligible": 151,
+   "frac_end_near": 0.39072847682119205,
+   "frac_end_far": 0.609271523178808,
+   "frac_end_neither": 0.0,
+   "by_split_coord": {
+    "[-10,-6)": {
+     "n": 44,
+     "end_green": 0.0,
+     "end_red": 1.0
+    },
+    "[-6,-2)": {
+     "n": 48,
+     "end_green": 0.0,
+     "end_red": 1.0
+    },
+    "[-2,2)": {
+     "n": 49,
+     "end_green": 0.0,
+     "end_red": 1.0
+    },
+    "[2,6)": {
+     "n": 25,
+     "end_green": 0.0,
+     "end_red": 1.0
+    },
+    "[6,10)": {
+     "n": 34,
+     "end_green": 0.0,
+     "end_red": 1.0
+    }
+   },
+   "pass": false
+  },
+  "Mbottom": {
+   "end_within5": {
+    "red": 0.0,
+    "green": 0.0,
+    "blue": 1.0,
+    "cyan": 0.0
+   },
+   "n_eligible": 157,
+   "frac_end_near": 0.5095541401273885,
+   "frac_end_far": 0.49044585987261147,
+   "frac_end_neither": 0.0,
+   "by_split_coord": {
+    "[-10,-6)": {
+     "n": 39,
+     "end_green": 0.0,
+     "end_blue": 1.0
+    },
+    "[-6,-2)": {
+     "n": 38,
+     "end_green": 0.0,
+     "end_blue": 1.0
+    },
+    "[-2,2)": {
+     "n": 43,
+     "end_green": 0.0,
+     "end_blue": 1.0
+    },
+    "[2,6)": {
+     "n": 35,
+     "end_green": 0.0,
+     "end_blue": 1.0
+    },
+    "[6,10)": {
+     "n": 45,
+     "end_green": 0.0,
+     "end_blue": 1.0
+    }
+   },
+   "pass": false
+  },
+  "Mright": {
+   "end_within5": {
+    "red": 0.0,
+    "green": 0.0,
+    "blue": 0.0,
+    "cyan": 1.0
+   },
+   "n_eligible": 163,
+   "frac_end_near": 0.49693251533742333,
+   "frac_end_far": 0.5030674846625767,
+   "frac_end_neither": 0.0,
+   "by_split_coord": {
+    "[-10,-6)": {
+     "n": 28,
+     "end_blue": 0.0,
+     "end_cyan": 1.0
+    },
+    "[-6,-2)": {
+     "n": 54,
+     "end_blue": 0.0,
+     "end_cyan": 1.0
+    },
+    "[-2,2)": {
+     "n": 37,
+     "end_blue": 0.0,
+     "end_cyan": 1.0
+    },
+    "[2,6)": {
+     "n": 38,
+     "end_blue": 0.0,
+     "end_cyan": 1.0
+    },
+    "[6,10)": {
+     "n": 43,
+     "end_blue": 0.0,
+     "end_cyan": 1.0
+    }
+   },
+   "pass": false
+  },
+  "Agreen": {
+   "end_within5": {
+    "red": 0.895,
+    "green": 0.0,
+    "blue": 0.0,
+    "cyan": 0.04
+   },
+   "frac_end_ge20_from_avoided": 0.105,
+   "mean_final_pos": [
+    -8.133135795593262,
+    10.0
+   ],
+   "pass": false
+  },
+  "Acyan": {
+   "end_within5": {
+    "red": 0.035,
+    "green": 0.515,
+    "blue": 0.375,
+    "cyan": 0.0
+   },
+   "frac_end_ge20_from_avoided": 0.58,
+   "mean_final_pos": [
+    -3.667706251144409,
+    -7.558483123779297
+   ],
+   "pass": false
+  }
+ }
+}

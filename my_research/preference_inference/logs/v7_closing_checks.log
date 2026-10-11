@@ -1,0 +1,30 @@
+[A] A_seed3  Red     actor   13.98  fixed_critic    0.06 (129.8°)  fixed_corner   -0.07  ratio 0.004161695432609969  same_starts=True
+[A] A_seed3  Green   actor   11.68  fixed_critic    5.45 (265.6°)  fixed_corner   -0.09  ratio 0.46616828321490356  same_starts=True
+[A] A_seed3  Cyan    actor   14.23  fixed_critic    0.06 ( 50.9°)  fixed_corner   -0.09  ratio 0.004330729198840838  same_starts=True
+[A] A_seed3  Mtop    actor   16.27  fixed_critic    4.87 ( 73.6°)  fixed_corner   12.64  ratio 0.776897653112073  same_starts=True
+[A] A_seed3  Mleft   actor   16.41  fixed_critic    2.43 (123.4°)  fixed_corner   12.46  ratio 0.7593894712981365  same_starts=True
+[A] A_seed3  Mbottom actor   16.91  fixed_critic    9.27 (264.0°)  fixed_corner   12.45  ratio 0.7364493807126532  same_starts=True
+[A] A_seed3  Mright  actor   15.38  fixed_critic    3.91 ( 19.3°)  fixed_corner   12.69  ratio 0.8252169097169075  same_starts=True
+[A] v6_seed1 Red     actor    0.02  fixed_critic    0.07 (129.2°)  fixed_corner   -0.06  ratio 3.8908531898539587  same_starts=True
+[A] v6_seed1 Green   actor    0.14  fixed_critic    0.38 (238.3°)  fixed_corner   -0.09  ratio 2.726734498528734  same_starts=True
+[A] v6_seed1 Cyan    actor    0.07  fixed_critic    1.30 (103.5°)  fixed_corner   -0.09  ratio 17.754272363150868  same_starts=True
+[A] v6_seed1 Mtop    actor    9.15  fixed_critic    3.07 (117.5°)  fixed_corner   12.69  ratio 1.3867797149279635  same_starts=True
+[A] v6_seed1 Mleft   actor    2.43  fixed_critic    4.65 (196.6°)  fixed_corner   13.17  ratio 5.416988013753656  same_starts=True
+[A] v6_seed1 Mbottom actor    2.10  fixed_critic    2.92 (242.7°)  fixed_corner   12.57  ratio 5.997530645619691  same_starts=True
+[A] v6_seed1 Mright  actor    2.16  fixed_critic    3.14 ( 68.4°)  fixed_corner   12.65  ratio 5.8476765132122495  same_starts=True
+check A: hypothesis supported = False
+[B] A_seed1 Red     carried {'mean_final_dist': 1.1605581457620204}  reset {'mean_final_dist': 1.169742332192398}
+[B] A_seed1 Green   carried {'mean_final_dist': 2.146677209397357}  reset {'mean_final_dist': 1.9790943971768908}
+[B] A_seed1 Cyan    carried {'mean_final_dist': 1.1288342170707961}  reset {'mean_final_dist': 1.0722125277553904}
+[B] A_seed1 Mtop    carried {'frac_end_near': 0.6645962732919255, 'end_within5': {'red': 0.09, 'green': 0.0, 'blue': 0.0, 'cyan': 0.91}}  reset {'frac_end_near': 0.7701863354037267, 'end_within5': {'red': 0.18, 'green': 0.0, 'blue': 0.0, 'cyan': 0.82}}
+[B] A_seed1 Mleft   carried {'frac_end_near': 0.49375, 'end_within5': {'red': 0.0, 'green': 1.0, 'blue': 0.0, 'cyan': 0.0}}  reset {'frac_end_near': 0.49375, 'end_within5': {'red': 0.0, 'green': 1.0, 'blue': 0.0, 'cyan': 0.0}}
+[B] A_seed1 Mbottom carried {'frac_end_near': 0.5849056603773585, 'end_within5': {'red': 0.0, 'green': 1.0, 'blue': 0.0, 'cyan': 0.0}}  reset {'frac_end_near': 0.5849056603773585, 'end_within5': {'red': 0.0, 'green': 1.0, 'blue': 0.0, 'cyan': 0.0}}
+[B] A_seed1 Mright  carried {'frac_end_near': 0.44642857142857145, 'end_within5': {'red': 0.0, 'green': 0.0, 'blue': 0.0, 'cyan': 1.0}}  reset {'frac_end_near': 0.44642857142857145, 'end_within5': {'red': 0.0, 'green': 0.0, 'blue': 0.0, 'cyan': 1.0}}
+[B] A_seed3 Red     carried {'mean_final_dist': 1.3628576305457716}  reset {'mean_final_dist': 1.1525856447058649}
+[B] A_seed3 Green   carried {'mean_final_dist': 2.821991857320521}  reset {'mean_final_dist': 2.5234005592419546}
+[B] A_seed3 Cyan    carried {'mean_final_dist': 1.8114393912225488}  reset {'mean_final_dist': 1.5868211560297678}
+[B] A_seed3 Mtop    carried {'frac_end_near': 0.45625, 'end_within5': {'red': 0.0, 'green': 0.0, 'blue': 0.0, 'cyan': 0.985}}  reset {'frac_end_near': 0.4625, 'end_within5': {'red': 0.0, 'green': 0.0, 'blue': 0.0, 'cyan': 0.99}}
+[B] A_seed3 Mleft   carried {'frac_end_near': 0.39072847682119205, 'end_within5': {'red': 1.0, 'green': 0.0, 'blue': 0.0, 'cyan': 0.0}}  reset {'frac_end_near': 0.39072847682119205, 'end_within5': {'red': 1.0, 'green': 0.0, 'blue': 0.0, 'cyan': 0.0}}
+[B] A_seed3 Mbottom carried {'frac_end_near': 0.5095541401273885, 'end_within5': {'red': 0.0, 'green': 0.0, 'blue': 1.0, 'cyan': 0.0}}  reset {'frac_end_near': 0.5095541401273885, 'end_within5': {'red': 0.0, 'green': 0.0, 'blue': 1.0, 'cyan': 0.0}}
+[B] A_seed3 Mright  carried {'frac_end_near': 0.49693251533742333, 'end_within5': {'red': 0.0, 'green': 0.0, 'blue': 0.0, 'cyan': 0.995}}  reset {'frac_end_near': 0.49693251533742333, 'end_within5': {'red': 0.0, 'green': 0.0, 'blue': 0.0, 'cyan': 1.0}}
+Saved: /work/my_research/preference_inference/data/result/v7_irl/retrain/closing/closing_checks.json
