@@ -1,0 +1,11 @@
+[check2] Red      pass=True  {"circ_var": -4.440892098500626e-16, "mean_cos_to_goal": 0.42631796806902783, "mean_abs_angle_to_goal_deg": 61.903125, "pass": true}
+[check2] Green    pass=True  {"circ_var": 2.220446049250313e-16, "mean_cos_to_goal": -0.1740551933841787, "mean_abs_angle_to_goal_deg": 101.08125, "pass": true}
+[check2] Cyan     pass=True  {"circ_var": 0.0, "mean_cos_to_goal": 0.8651352503117457, "mean_abs_angle_to_goal_deg": 25.254950221422614, "pass": true}
+[check2] Blue     pass=True  {"circ_var": 5.551115123125783e-16, "mean_cos_to_goal": -0.7003868595984745, "mean_abs_angle_to_goal_deg": 140.09883440115098, "pass": true}
+[check2] Mtop     pass=False  {"circ_var": -4.440892098500626e-16, "n_grid": 280, "near_corner_agreement": 0.5, "pass": false}
+[check2] Mleft    pass=True  {"circ_var": 5.551115123125783e-16, "n_grid": 280, "near_corner_agreement": 0.9571428571428572, "pass": true}
+[check2] Mbottom  pass=False  {"circ_var": 0.0, "n_grid": 280, "near_corner_agreement": 0.5, "pass": false}
+[check2] Mright   pass=True  {"circ_var": 0.0, "n_grid": 280, "near_corner_agreement": 0.8821428571428571, "pass": true}
+[check2] Agreen   pass=True  {"circ_var": 0.0, "mean_cos_to_away": 0.9004175606014835, "pass": true}
+[check2] Acyan    pass=False  {"circ_var": 0.0, "mean_cos_to_away": 0.6358989259878131, "pass": false}
+Saved: /work/my_research/preference_inference/data/result/v7_irl/retrain/seed1_condB/feasibility_results.json

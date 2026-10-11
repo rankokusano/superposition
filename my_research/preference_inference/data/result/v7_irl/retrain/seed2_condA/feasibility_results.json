@@ -1,0 +1,373 @@
+{
+ "git_commit": "76fe5de",
+ "goals": {
+  "Red": [
+   1,
+   -1,
+   0,
+   0
+  ],
+  "Green": [
+   -1,
+   1,
+   0,
+   0
+  ],
+  "Cyan": [
+   0,
+   0,
+   -1,
+   1
+  ],
+  "Blue": [
+   0,
+   0,
+   1,
+   -1
+  ],
+  "Mtop": [
+   1,
+   0,
+   0,
+   1
+  ],
+  "Mleft": [
+   1,
+   1,
+   0,
+   0
+  ],
+  "Mbottom": [
+   0,
+   1,
+   1,
+   0
+  ],
+  "Mright": [
+   0,
+   0,
+   1,
+   1
+  ],
+  "Agreen": [
+   0,
+   -2,
+   0,
+   0
+  ],
+  "Acyan": [
+   0,
+   0,
+   0,
+   -2
+  ]
+ },
+ "n_episodes": 200,
+ "n_train": 150,
+ "actor_path": "/work/my_research/preference_inference/data/model/v7/v7_rl_actor_seed2_condA.pth",
+ "critic_path": "/work/my_research/preference_inference/data/model/v7/v7_rl_critic_seed2_condA.pth",
+ "rollout_seed": 3618992325,
+ "true_values_used": "rollout quantities only (A-2 position/action/vision/goal); goal labels for evaluation and for training the naive-Bayes references",
+ "check1": {
+  "Red": {
+   "end_within5": {
+    "red": 0.96,
+    "green": 0.0,
+    "blue": 0.0,
+    "cyan": 0.0
+   },
+   "mean_final_dist": 2.061606486858115,
+   "pass": true
+  },
+  "Green": {
+   "end_within5": {
+    "red": 0.0,
+    "green": 0.0,
+    "blue": 0.0,
+    "cyan": 0.0
+   },
+   "mean_final_dist": 9.978727652513937,
+   "pass": false
+  },
+  "Cyan": {
+   "end_within5": {
+    "red": 0.005,
+    "green": 0.0,
+    "blue": 0.0,
+    "cyan": 0.995
+   },
+   "mean_final_dist": 1.1168779939572164,
+   "pass": true
+  },
+  "Blue": {
+   "end_within5": {
+    "red": 0.0,
+    "green": 0.0,
+    "blue": 1.0,
+    "cyan": 0.0
+   },
+   "mean_final_dist": 1.2921993233599833,
+   "pass": true
+  },
+  "Mtop": {
+   "end_within5": {
+    "red": 0.925,
+    "green": 0.0,
+    "blue": 0.0,
+    "cyan": 0.075
+   },
+   "n_eligible": 149,
+   "frac_end_near": 0.5973154362416108,
+   "frac_end_far": 0.40268456375838924,
+   "frac_end_neither": 0.0,
+   "by_split_coord": {
+    "[-10,-6)": {
+     "n": 39,
+     "end_red": 1.0,
+     "end_cyan": 0.0
+    },
+    "[-6,-2)": {
+     "n": 35,
+     "end_red": 1.0,
+     "end_cyan": 0.0
+    },
+    "[-2,2)": {
+     "n": 51,
+     "end_red": 1.0,
+     "end_cyan": 0.0
+    },
+    "[2,6)": {
+     "n": 37,
+     "end_red": 0.972972972972973,
+     "end_cyan": 0.02702702702702703
+    },
+    "[6,10)": {
+     "n": 38,
+     "end_red": 0.631578947368421,
+     "end_cyan": 0.3684210526315789
+    }
+   },
+   "pass": false
+  },
+  "Mleft": {
+   "end_within5": {
+    "red": 1.0,
+    "green": 0.0,
+    "blue": 0.0,
+    "cyan": 0.0
+   },
+   "n_eligible": 162,
+   "frac_end_near": 0.46296296296296297,
+   "frac_end_far": 0.5370370370370371,
+   "frac_end_neither": 0.0,
+   "by_split_coord": {
+    "[-10,-6)": {
+     "n": 45,
+     "end_green": 0.0,
+     "end_red": 1.0
+    },
+    "[-6,-2)": {
+     "n": 42,
+     "end_green": 0.0,
+     "end_red": 1.0
+    },
+    "[-2,2)": {
+     "n": 38,
+     "end_green": 0.0,
+     "end_red": 1.0
+    },
+    "[2,6)": {
+     "n": 35,
+     "end_green": 0.0,
+     "end_red": 1.0
+    },
+    "[6,10)": {
+     "n": 40,
+     "end_green": 0.0,
+     "end_red": 1.0
+    }
+   },
+   "pass": false
+  },
+  "Mbottom": {
+   "end_within5": {
+    "red": 0.0,
+    "green": 0.0,
+    "blue": 1.0,
+    "cyan": 0.0
+   },
+   "n_eligible": 157,
+   "frac_end_near": 0.47770700636942676,
+   "frac_end_far": 0.5222929936305732,
+   "frac_end_neither": 0.0,
+   "by_split_coord": {
+    "[-10,-6)": {
+     "n": 47,
+     "end_green": 0.0,
+     "end_blue": 1.0
+    },
+    "[-6,-2)": {
+     "n": 35,
+     "end_green": 0.0,
+     "end_blue": 1.0
+    },
+    "[-2,2)": {
+     "n": 43,
+     "end_green": 0.0,
+     "end_blue": 1.0
+    },
+    "[2,6)": {
+     "n": 35,
+     "end_green": 0.0,
+     "end_blue": 1.0
+    },
+    "[6,10)": {
+     "n": 40,
+     "end_green": 0.0,
+     "end_blue": 1.0
+    }
+   },
+   "pass": false
+  },
+  "Mright": {
+   "end_within5": {
+    "red": 0.0,
+    "green": 0.0,
+    "blue": 1.0,
+    "cyan": 0.0
+   },
+   "n_eligible": 151,
+   "frac_end_near": 0.4503311258278146,
+   "frac_end_far": 0.5496688741721855,
+   "frac_end_neither": 0.0,
+   "by_split_coord": {
+    "[-10,-6)": {
+     "n": 29,
+     "end_blue": 1.0,
+     "end_cyan": 0.0
+    },
+    "[-6,-2)": {
+     "n": 39,
+     "end_blue": 1.0,
+     "end_cyan": 0.0
+    },
+    "[-2,2)": {
+     "n": 49,
+     "end_blue": 1.0,
+     "end_cyan": 0.0
+    },
+    "[2,6)": {
+     "n": 45,
+     "end_blue": 1.0,
+     "end_cyan": 0.0
+    },
+    "[6,10)": {
+     "n": 38,
+     "end_blue": 1.0,
+     "end_cyan": 0.0
+    }
+   },
+   "pass": false
+  },
+  "Agreen": {
+   "end_within5": {
+    "red": 0.005,
+    "green": 0.65,
+    "blue": 0.0,
+    "cyan": 0.0
+   },
+   "frac_end_ge20_from_avoided": 0.065,
+   "mean_final_pos": [
+    -6.854830741882324,
+    -3.9669289588928223
+   ],
+   "pass": false
+  },
+  "Acyan": {
+   "end_within5": {
+    "red": 0.12,
+    "green": 0.47,
+    "blue": 0.395,
+    "cyan": 0.0
+   },
+   "frac_end_ge20_from_avoided": 0.48,
+   "mean_final_pos": [
+    -2.7593133449554443,
+    -7.444587230682373
+   ],
+   "pass": false
+  }
+ },
+ "check2": {
+  "Red": {
+   "circ_var": 0.08479233174634793,
+   "mean_cos_to_goal": 0.9253210237051733,
+   "mean_abs_angle_to_goal_deg": 17.48687684513133,
+   "pass": true
+  },
+  "Green": {
+   "circ_var": 0.08196638939964185,
+   "mean_cos_to_goal": 0.5862926530005239,
+   "mean_abs_angle_to_goal_deg": 46.16776103486713,
+   "pass": true
+  },
+  "Cyan": {
+   "circ_var": 0.30897773942851814,
+   "mean_cos_to_goal": 0.7372841837833147,
+   "mean_abs_angle_to_goal_deg": 33.68428641244619,
+   "pass": true
+  },
+  "Blue": {
+   "circ_var": 0.1354527205781607,
+   "mean_cos_to_goal": 0.8866333514263914,
+   "mean_abs_angle_to_goal_deg": 20.023688658115756,
+   "pass": true
+  },
+  "Mtop": {
+   "circ_var": 0.1553046310952605,
+   "n_grid": 280,
+   "near_corner_agreement": 0.5285714285714286,
+   "pass": false
+  },
+  "Mleft": {
+   "circ_var": 0.1309368157656482,
+   "n_grid": 280,
+   "near_corner_agreement": 0.7285714285714285,
+   "pass": true
+  },
+  "Mbottom": {
+   "circ_var": 0.17616052418912242,
+   "n_grid": 280,
+   "near_corner_agreement": 0.6285714285714286,
+   "pass": false
+  },
+  "Mright": {
+   "circ_var": 0.08305402451825383,
+   "n_grid": 280,
+   "near_corner_agreement": 0.6107142857142858,
+   "pass": false
+  },
+  "Agreen": {
+   "circ_var": 0.1833746508429709,
+   "mean_cos_to_away": 0.6685740604528323,
+   "pass": false
+  },
+  "Acyan": {
+   "circ_var": 0.48392500897061663,
+   "mean_cos_to_away": 0.5523469501275805,
+   "pass": false
+  }
+ },
+ "eligible": {
+  "Red": true,
+  "Green": false,
+  "Cyan": true,
+  "Blue": true,
+  "Mtop": false,
+  "Mleft": false,
+  "Mbottom": false,
+  "Mright": false,
+  "Agreen": false,
+  "Acyan": false
+ }
+}

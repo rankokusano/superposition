@@ -1,0 +1,13 @@
+v6_seed2   Red   critic   21.9  const-flow   21.4 (dir 134.9)  circvar 0.000  old=True new=False vector_field=False
+v6_seed2   Green critic   20.1  const-flow   21.4 (dir 225.1)  circvar 0.044  old=True new=False vector_field=False
+v6_seed2   Cyan  critic   58.6  const-flow   21.2 (dir  44.9)  circvar 0.009  old=False new=False vector_field=False
+A_seed2    Red   critic   17.5  const-flow   21.4 (dir 134.9)  circvar 0.085  old=True new=False vector_field=False
+A_seed2    Green critic   46.2  const-flow   21.4 (dir 225.1)  circvar 0.082  old=False new=False vector_field=False
+A_seed2    Cyan  critic   33.7  const-flow   21.2 (dir  44.9)  circvar 0.309  old=False new=False vector_field=False
+A_seed1    Red   critic   25.3  const-flow   21.4 (dir 134.9)  circvar 0.202  old=True new=False vector_field=False
+A_seed1    Green critic   51.8  const-flow   21.4 (dir 225.1)  circvar 0.485  old=False new=False vector_field=False
+A_seed1    Cyan  critic   30.1  const-flow   21.2 (dir  44.9)  circvar 0.045  old=False new=False vector_field=False
+B_seed1    Red   critic   61.9  const-flow   21.4 (dir 134.9)  circvar -0.000  old=False new=False vector_field=False
+B_seed1    Green critic  101.1  const-flow   21.4 (dir 225.1)  circvar 0.000  old=False new=False vector_field=False
+B_seed1    Cyan  critic   25.3  const-flow   21.2 (dir  44.9)  circvar 0.000  old=True new=False vector_field=False
+Saved: /work/my_research/preference_inference/data/result/v7_irl/retrain/vector_field_criterion.json

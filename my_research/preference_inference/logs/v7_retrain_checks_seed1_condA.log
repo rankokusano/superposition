@@ -1,0 +1,31 @@
+rollout Red: saved
+rollout Green: saved
+rollout Cyan: saved
+rollout Blue: saved
+rollout Mtop: saved
+rollout Mleft: saved
+rollout Mbottom: saved
+rollout Mright: saved
+rollout Agreen: saved
+rollout Acyan: saved
+[check1] Red      pass=True  {"end_within5": {"red": 1.0, "green": 0.0, "blue": 0.0, "cyan": 0.0}, "mean_final_dist": 1.1605581457620204, "pass": true}
+[check1] Green    pass=True  {"end_within5": {"red": 0.0, "green": 0.995, "blue": 0.005, "cyan": 0.0}, "mean_final_dist": 2.146677209397357, "pass": true}
+[check1] Cyan     pass=True  {"end_within5": {"red": 0.0, "green": 0.0, "blue": 0.0, "cyan": 1.0}, "mean_final_dist": 1.1288342170707961, "pass": true}
+[check1] Blue     pass=False  {"end_within5": {"red": 0.0, "green": 1.0, "blue": 0.0, "cyan": 0.0}, "mean_final_dist": 19.01685050569886, "pass": false}
+[check1] Mtop     pass=False  {"end_within5": {"red": 0.09, "green": 0.0, "blue": 0.0, "cyan": 0.91}, "n_eligible": 161, "frac_end_near": 0.6645962732919255, "frac_end_far": 0.33540372670807456, "frac_end_neither": 0.0, "pass": false}
+[check1] Mleft    pass=False  {"end_within5": {"red": 0.0, "green": 1.0, "blue": 0.0, "cyan": 0.0}, "n_eligible": 160, "frac_end_near": 0.49375, "frac_end_far": 0.50625, "frac_end_neither": 0.0, "pass": false}
+[check1] Mbottom  pass=False  {"end_within5": {"red": 0.0, "green": 1.0, "blue": 0.0, "cyan": 0.0}, "n_eligible": 159, "frac_end_near": 0.5849056603773585, "frac_end_far": 0.41509433962264153, "frac_end_neither": 0.0, "pass": false}
+[check1] Mright   pass=False  {"end_within5": {"red": 0.0, "green": 0.0, "blue": 0.0, "cyan": 1.0}, "n_eligible": 168, "frac_end_near": 0.44642857142857145, "frac_end_far": 0.5535714285714286, "frac_end_neither": 0.0, "pass": false}
+[check1] Agreen   pass=False  {"end_within5": {"red": 0.48, "green": 0.01, "blue": 0.0, "cyan": 0.37}, "frac_end_ge20_from_avoided": 0.505, "mean_final_pos": [-2.131819248199463, 9.132868766784668], "pass": false}
+[check1] Acyan    pass=True  {"end_within5": {"red": 0.0, "green": 0.985, "blue": 0.0, "cyan": 0.0}, "frac_end_ge20_from_avoided": 1.0, "mean_final_pos": [-10.0, -8.49087142944336], "pass": true}
+[check2] Red      pass=True  {"circ_var": 0.20155574426119005, "mean_cos_to_goal": 0.8590965131760803, "mean_abs_angle_to_goal_deg": 25.340679117928484, "pass": true}
+[check2] Green    pass=True  {"circ_var": 0.484726837231109, "mean_cos_to_goal": 0.5464973998737133, "mean_abs_angle_to_goal_deg": 51.75782719649944, "pass": true}
+[check2] Cyan     pass=True  {"circ_var": 0.04498751778029331, "mean_cos_to_goal": 0.8261370119255426, "mean_abs_angle_to_goal_deg": 30.14496999941123, "pass": true}
+[check2] Blue     pass=True  {"circ_var": 0.18308489109142523, "mean_cos_to_goal": 0.06964424173900237, "mean_abs_angle_to_goal_deg": 85.84976306899692, "pass": true}
+[check2] Mtop     pass=True  {"circ_var": 0.18402535756644334, "n_grid": 280, "near_corner_agreement": 0.7857142857142857, "pass": true}
+[check2] Mleft    pass=True  {"circ_var": 0.13123808944095294, "n_grid": 280, "near_corner_agreement": 0.7428571428571429, "pass": true}
+[check2] Mbottom  pass=False  {"circ_var": 0.2780071678461036, "n_grid": 280, "near_corner_agreement": 0.41785714285714287, "pass": false}
+[check2] Mright   pass=False  {"circ_var": 0.04261833053753983, "n_grid": 280, "near_corner_agreement": 0.55, "pass": false}
+[check2] Agreen   pass=True  {"circ_var": 0.057762382532284495, "mean_cos_to_away": 0.7614844702125274, "pass": true}
+[check2] Acyan    pass=False  {"circ_var": 0.2298679846395575, "mean_cos_to_away": 0.12596161564989836, "pass": false}
+Saved: /work/my_research/preference_inference/data/result/v7_irl/retrain/seed1_condA/feasibility_results.json
