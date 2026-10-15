@@ -1,0 +1,51 @@
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/0/model/00360.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_baseline/r3_a_direct_1000pretrain_400/s0/ep360/r2_a1random_a2rl/
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/0/model/00360.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_baseline/r3_a_direct_1000pretrain_400/s0/ep360/v10_swap_r2/
+{"h1": {"1": 0.71, "5": 0.56, "10": 0.5216666666666666, "20": 0.5116666666666667, "50": 0.5233333333333333, "100": 0.525}, "probe_q": {"1": 0.5116666666666667, "5": 0.5133333333333333, "10": 0.5183333333333333, "20": 0.5333333333333333, "50": 0.5316666666666666, "100": 0.535}, "sv_enc": {"1": 0.745, "5": 0.795, "10": 0.825, "20": 0.7883333333333333, "50": 0.8266666666666667, "100": 0.7933333333333333}}
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/0/model/00370.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_baseline/r3_a_direct_1000pretrain_400/s0/ep370/r2_a1random_a2rl/
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/0/model/00370.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_baseline/r3_a_direct_1000pretrain_400/s0/ep370/v10_swap_r2/
+{"h1": {"1": 0.7066666666666667, "5": 0.5616666666666666, "10": 0.52, "20": 0.515, "50": 0.5516666666666666, "100": 0.5233333333333333}, "probe_q": {"1": 0.5116666666666667, "5": 0.5133333333333333, "10": 0.5183333333333333, "20": 0.5333333333333333, "50": 0.5316666666666666, "100": 0.535}, "sv_enc": {"1": 0.745, "5": 0.795, "10": 0.825, "20": 0.7883333333333333, "50": 0.8266666666666667, "100": 0.7933333333333333}}
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/0/model/00380.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_baseline/r3_a_direct_1000pretrain_400/s0/ep380/r2_a1random_a2rl/
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/0/model/00380.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_baseline/r3_a_direct_1000pretrain_400/s0/ep380/v10_swap_r2/
+{"h1": {"1": 0.7, "5": 0.5583333333333333, "10": 0.5166666666666667, "20": 0.53, "50": 0.5333333333333333, "100": 0.5283333333333333}, "probe_q": {"1": 0.5116666666666667, "5": 0.5133333333333333, "10": 0.5183333333333333, "20": 0.5333333333333333, "50": 0.5316666666666666, "100": 0.535}, "sv_enc": {"1": 0.745, "5": 0.795, "10": 0.825, "20": 0.7883333333333333, "50": 0.8266666666666667, "100": 0.7933333333333333}}
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/0/model/00390.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_baseline/r3_a_direct_1000pretrain_400/s0/ep390/r2_a1random_a2rl/
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/0/model/00390.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_baseline/r3_a_direct_1000pretrain_400/s0/ep390/v10_swap_r2/
+{"h1": {"1": 0.695, "5": 0.5566666666666666, "10": 0.5283333333333333, "20": 0.5233333333333333, "50": 0.5383333333333333, "100": 0.53}, "probe_q": {"1": 0.5116666666666667, "5": 0.5133333333333333, "10": 0.5183333333333333, "20": 0.5333333333333333, "50": 0.5316666666666666, "100": 0.535}, "sv_enc": {"1": 0.745, "5": 0.795, "10": 0.825, "20": 0.7883333333333333, "50": 0.8266666666666667, "100": 0.7933333333333333}}
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/0/model/00400.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_baseline/r3_a_direct_1000pretrain_400/s0/ep400/r2_a1random_a2rl/
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/0/model/00400.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_baseline/r3_a_direct_1000pretrain_400/s0/ep400/v10_swap_r2/
+{"h1": {"1": 0.7, "5": 0.5583333333333333, "10": 0.5333333333333333, "20": 0.52, "50": 0.5283333333333333, "100": 0.525}, "probe_q": {"1": 0.5116666666666667, "5": 0.5133333333333333, "10": 0.5183333333333333, "20": 0.5333333333333333, "50": 0.5316666666666666, "100": 0.535}, "sv_enc": {"1": 0.745, "5": 0.795, "10": 0.825, "20": 0.7883333333333333, "50": 0.8266666666666667, "100": 0.7933333333333333}}
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/1/model/00360.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_baseline/r3_a_direct_1000pretrain_400/s1/ep360/r2_a1random_a2rl/
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/1/model/00360.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_baseline/r3_a_direct_1000pretrain_400/s1/ep360/v10_swap_r2/
+{"h1": {"1": 0.72, "5": 0.5516666666666666, "10": 0.54, "20": 0.5133333333333333, "50": 0.5166666666666667, "100": 0.5283333333333333}, "probe_q": {"1": 0.5116666666666667, "5": 0.5133333333333333, "10": 0.5183333333333333, "20": 0.5333333333333333, "50": 0.5316666666666666, "100": 0.535}, "sv_enc": {"1": 0.745, "5": 0.795, "10": 0.825, "20": 0.7883333333333333, "50": 0.8266666666666667, "100": 0.7933333333333333}}
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/1/model/00370.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_baseline/r3_a_direct_1000pretrain_400/s1/ep370/r2_a1random_a2rl/
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/1/model/00370.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_baseline/r3_a_direct_1000pretrain_400/s1/ep370/v10_swap_r2/
+{"h1": {"1": 0.7066666666666667, "5": 0.5583333333333333, "10": 0.5333333333333333, "20": 0.5166666666666667, "50": 0.5383333333333333, "100": 0.56}, "probe_q": {"1": 0.5116666666666667, "5": 0.5133333333333333, "10": 0.5183333333333333, "20": 0.5333333333333333, "50": 0.5316666666666666, "100": 0.535}, "sv_enc": {"1": 0.745, "5": 0.795, "10": 0.825, "20": 0.7883333333333333, "50": 0.8266666666666667, "100": 0.7933333333333333}}
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/1/model/00380.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_baseline/r3_a_direct_1000pretrain_400/s1/ep380/r2_a1random_a2rl/
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/1/model/00380.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_baseline/r3_a_direct_1000pretrain_400/s1/ep380/v10_swap_r2/
+{"h1": {"1": 0.6966666666666667, "5": 0.5383333333333333, "10": 0.5266666666666666, "20": 0.51, "50": 0.5333333333333333, "100": 0.5433333333333333}, "probe_q": {"1": 0.5116666666666667, "5": 0.5133333333333333, "10": 0.5183333333333333, "20": 0.5333333333333333, "50": 0.5316666666666666, "100": 0.535}, "sv_enc": {"1": 0.745, "5": 0.795, "10": 0.825, "20": 0.7883333333333333, "50": 0.8266666666666667, "100": 0.7933333333333333}}
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/1/model/00390.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_baseline/r3_a_direct_1000pretrain_400/s1/ep390/r2_a1random_a2rl/
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/1/model/00390.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_baseline/r3_a_direct_1000pretrain_400/s1/ep390/v10_swap_r2/
+{"h1": {"1": 0.6933333333333334, "5": 0.5466666666666666, "10": 0.5366666666666666, "20": 0.54, "50": 0.5233333333333333, "100": 0.53}, "probe_q": {"1": 0.5116666666666667, "5": 0.5133333333333333, "10": 0.5183333333333333, "20": 0.5333333333333333, "50": 0.5316666666666666, "100": 0.535}, "sv_enc": {"1": 0.745, "5": 0.795, "10": 0.825, "20": 0.7883333333333333, "50": 0.8266666666666667, "100": 0.7933333333333333}}
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/1/model/00400.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_baseline/r3_a_direct_1000pretrain_400/s1/ep400/r2_a1random_a2rl/
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/1/model/00400.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_baseline/r3_a_direct_1000pretrain_400/s1/ep400/v10_swap_r2/
+{"h1": {"1": 0.7183333333333334, "5": 0.56, "10": 0.5266666666666666, "20": 0.5116666666666667, "50": 0.5116666666666667, "100": 0.5516666666666666}, "probe_q": {"1": 0.5116666666666667, "5": 0.5133333333333333, "10": 0.5183333333333333, "20": 0.5333333333333333, "50": 0.5316666666666666, "100": 0.535}, "sv_enc": {"1": 0.745, "5": 0.795, "10": 0.825, "20": 0.7883333333333333, "50": 0.8266666666666667, "100": 0.7933333333333333}}
+B4_BASELINE_DONE

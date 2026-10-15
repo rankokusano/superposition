@@ -1,0 +1,255 @@
+"""
+v10 B1 (docs/v10_experiment_log.md Sec.5.3): copy of train_rl_v3.py whose ONLY
+training change is the landmark layout: at the start of every episode the
+red/green layout is swapped with probability 1/2 (sim_v10, 'original' |
+'swap_rg'), drawn from a dedicated RandomState(md5('v10_rl_a1_seed<N>/layout'))
+so the environment / numpy / torch random streams are consumed exactly as
+in v3. Reward, preference, networks, learning rates, episode count/length,
+target entropy, clipping, and the RandomAgent step inside env.step()
+are unchanged. Additional logging only (no effect on training): per-episode
+layout, reward, mean critic-1 loss and alpha -> CSV next to the checkpoint.
+Checkpoints go to data/model/v10/.
+
+--- original docstring follows ---
+v3 RL agent training: A-1 learns red-preference + green-aversion via SAC.
+
+Changes from v2:
+    - MAX_STEPS: 200 → 100  (matches original paper seq_length=101)
+    - EPISODES:  2000 → 1000 (matches mg7)
+    - Environment: explicit self_random_other_stay config (A-2 present and stationary)
+    - Save path: v3_rl_actor_seed{N}.pth / v3_rl_critic_seed{N}.pth (--seed, default 0)
+
+Reward design (v4 Sec.5.2 revision, 2026-08-12):
+    reward = red_fraction - green_fraction   (continuous, no threshold)
+    Thresholded reward (red>50px:+1, green>50px:-1) made Q(s,·) locally
+    constant across the whole region satisfying both conditions -- once
+    "enough" red is visible, there is no further gradient toward the
+    landmark itself, so Q stops carrying spatial information exactly
+    where R4/R5 need it most (VE has to predict a real value, not a
+    constant). Continuous pixel fraction restores a spatial gradient.
+    This is orthogonal to coverage: coverage is restored by keeping
+    action generation stochastic (SAC sampling / epsilon-greedy) at
+    rollout/collection time, not by the reward shape.
+
+Run inside Docker:
+    xvfb-run --auto-servernum --server-args='-screen 0 1024x768x24' \
+        python -u my_research/preference_inference/simulation/train_rl_v3.py \
+        > /tmp/train_rl_v3.log 2>&1
+"""
+
+import argparse
+import os
+import sys
+
+sys.path.insert(0, '/work')
+sys.path.insert(0, '/work/my_research/preference_inference')
+
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import numpy as np
+from collections import deque
+import random
+
+import hashlib
+import csv
+from sim_v10 import creator, layout
+from sim_v10.util import load_config
+from my_research.rl_agent_sac import ActorLSTM, CriticLSTM
+
+os.environ['MESA_GL_VERSION_OVERRIDE'] = '3.3'
+
+DEVICE       = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+EPISODES     = 1000
+MAX_STEPS    = 100
+GAMMA        = 0.99
+TAU          = 0.005
+LR_ACTOR     = 0.0001
+LR_CRITIC    = 0.0001
+LR_ALPHA     = 0.0001
+BATCH_SIZE   = 32
+MEMORY_SIZE  = 50000
+TARGET_ENTROPY = -2.0  # SAC entropy coefficient target; tune here if coverage needs adjusting
+
+ENV_CONFIG = '/work/my_research/preference_inference/sim_v10/config/collect/self_random_other_stay.yml'
+
+SAVE_DIR = '/work/my_research/preference_inference/data/model/v10'
+
+
+def seed_all(seed):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+
+
+def get_reward(vision_np):
+    r, g, b = vision_np[:, :, 0], vision_np[:, :, 1], vision_np[:, :, 2]
+    red_pixels   = int(((r > 0.9) & (g < 0.1) & (b < 0.1)).sum())
+    green_pixels = int(((g > 0.9) & (r < 0.1) & (b < 0.1)).sum())
+    total_pixels = vision_np.shape[0] * vision_np.shape[1]
+    red_fraction = red_pixels / total_pixels
+    green_fraction = green_pixels / total_pixels
+    return red_fraction - green_fraction
+
+
+def vision_to_tensor(vision_np):
+    """Float32 [0,1] HWC → 1×3×H×W tensor."""
+    v = vision_np.astype(np.float32)
+    v = np.transpose(v, (2, 0, 1))
+    return torch.tensor(v, dtype=torch.float32).unsqueeze(0).to(DEVICE)
+
+
+def soft_update(target, source, tau):
+    for tp, sp in zip(target.parameters(), source.parameters()):
+        tp.data.copy_(tau * sp.data + (1 - tau) * tp.data)
+
+
+class ReplayBuffer:
+    def __init__(self, capacity):
+        self.buffer = deque(maxlen=capacity)
+
+    def push(self, s, a, r, ns, done):
+        self.buffer.append((s, a, r, ns, done))
+
+    def sample(self, n):
+        return random.sample(self.buffer, n)
+
+    def __len__(self):
+        return len(self.buffer)
+
+
+def train(seed):
+    os.makedirs(SAVE_DIR, exist_ok=True)
+    seed_all(seed)
+    actor_save = os.path.join(SAVE_DIR, f'v10_rl_actor_seed{seed}.pth')
+    critic_save = os.path.join(SAVE_DIR, f'v10_rl_critic_seed{seed}.pth')
+    layout_rng = np.random.RandomState(
+        int(hashlib.md5(f'v10_rl_a1_seed{seed}/layout'.encode()).hexdigest()[:8], 16))
+    log_path = critic_save.replace('.pth', '_log.csv')
+
+    config = load_config(ENV_CONFIG)
+    env = creator.create_environment(config.environment)
+    env.init()
+    env.off_display()
+
+    actor          = ActorLSTM().to(DEVICE)
+    critic1        = CriticLSTM().to(DEVICE)
+    critic2        = CriticLSTM().to(DEVICE)
+    critic1_target = CriticLSTM().to(DEVICE)
+    critic2_target = CriticLSTM().to(DEVICE)
+    critic1_target.load_state_dict(critic1.state_dict())
+    critic2_target.load_state_dict(critic2.state_dict())
+
+    log_alpha = torch.zeros(1, requires_grad=True, device=DEVICE)
+    alpha = log_alpha.exp()
+
+    actor_opt   = optim.Adam(actor.parameters(),   lr=LR_ACTOR)
+    critic1_opt = optim.Adam(critic1.parameters(), lr=LR_CRITIC)
+    critic2_opt = optim.Adam(critic2.parameters(), lr=LR_CRITIC)
+    alpha_opt   = optim.Adam([log_alpha],           lr=LR_ALPHA)
+
+    memory = ReplayBuffer(MEMORY_SIZE)
+    episode_rewards = []
+
+    print(f'Device: {DEVICE}')
+    print(f'Seed: {seed}')
+    print(f'Algorithm: SAC (CNN+LSTM, continuous action)')
+    print(f'Reward: red_fraction - green_fraction (continuous)')
+    print(f'Episodes: {EPISODES} × {MAX_STEPS} steps')
+
+    log_f = open(log_path, 'w', newline='')
+    log_w = csv.writer(log_f)
+    log_w.writerow(['episode', 'layout', 'total_reward', 'critic1_loss_mean', 'alpha'])
+    for episode in range(EPISODES):
+        ep_layout = layout.SWAP_RG if layout_rng.rand() < 0.5 else layout.ORIGINAL
+        env.set_layout(ep_layout)
+        c1_losses = []
+        env.reset()
+        v_raw, _, _, _, _ = env.step()
+        state = vision_to_tensor(v_raw)
+        hidden = None
+        total_reward = 0.0
+
+        for step in range(MAX_STEPS):
+            with torch.no_grad():
+                action_t, _, hidden = actor.sample(state, hidden)
+            action_np = action_t.squeeze(0).cpu().numpy()
+
+            env.self_agent.p = np.clip(
+                env.self_agent.p + action_np, -9.5, 9.5
+            )
+            v_next_raw, _, _, _, _ = env.step()
+            next_state = vision_to_tensor(v_next_raw)
+
+            reward = get_reward(v_next_raw)
+            total_reward += reward
+            done = (step == MAX_STEPS - 1)
+
+            memory.push(state, action_t, reward, next_state, done)
+            state = next_state
+
+            if len(memory) >= BATCH_SIZE:
+                batch = memory.sample(BATCH_SIZE)
+                states, actions, rewards_b, next_states, dones = zip(*batch)
+
+                states      = torch.cat(states)
+                actions     = torch.cat(actions)
+                rewards_b   = torch.FloatTensor(rewards_b).unsqueeze(1).to(DEVICE)
+                next_states = torch.cat(next_states)
+                dones       = torch.FloatTensor(dones).unsqueeze(1).to(DEVICE)
+
+                with torch.no_grad():
+                    na, nlp, _ = actor.sample(next_states)
+                    q1n, _ = critic1_target(next_states, na)
+                    q2n, _ = critic2_target(next_states, na)
+                    target_q = rewards_b + GAMMA * (1 - dones) * (
+                        torch.min(q1n, q2n) - alpha * nlp)
+
+                q1, _ = critic1(states, actions)
+                q2, _ = critic2(states, actions)
+                critic1_opt.zero_grad()
+                c1_loss = nn.MSELoss()(q1, target_q)
+                c1_loss.backward()
+                c1_losses.append(c1_loss.item())
+                critic1_opt.step()
+
+                critic2_opt.zero_grad()
+                nn.MSELoss()(q2, target_q).backward()
+                critic2_opt.step()
+
+                na2, lp2, _ = actor.sample(states)
+                q1a, _ = critic1(states, na2)
+                q2a, _ = critic2(states, na2)
+                actor_opt.zero_grad()
+                (alpha * lp2 - torch.min(q1a, q2a)).mean().backward()
+                actor_opt.step()
+
+                alpha_opt.zero_grad()
+                (-(log_alpha * (lp2 + TARGET_ENTROPY).detach())).mean().backward()
+                alpha_opt.step()
+                alpha = log_alpha.exp()
+
+                soft_update(critic1_target, critic1, TAU)
+                soft_update(critic2_target, critic2, TAU)
+
+        episode_rewards.append(total_reward)
+        log_w.writerow([episode, ep_layout, total_reward,
+                        float(np.mean(c1_losses)) if c1_losses else '', alpha.item()])
+        log_f.flush()
+
+        if episode % 50 == 0:
+            avg = np.mean(episode_rewards[-50:])
+            print(f'  ep {episode:4d} | avg_reward(50ep): {avg:.3f} | alpha: {alpha.item():.4f}')
+
+    torch.save(actor.state_dict(), actor_save)
+    torch.save(critic1.state_dict(), critic_save)
+    print(f'Saved: {actor_save}')
+    print(f'Saved: {critic_save}')
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--seed', type=int, default=0)
+    args = parser.parse_args()
+    train(args.seed)
