@@ -1,0 +1,30 @@
+{
+  "label": "fig5_v4_exp1l1000_ep100_A0_original_grid",
+  "epoch": 100,
+  "margin": 1,
+  "mode": "eval",
+  "data_h5": "data/data/grid/data.h5",
+  "saved_h5": "data/result/v10_swap/stageA/fig5/fig5_v4_exp1l1000_ep100/A0/save/saved.h5",
+  "git_commit": "ad029a001ac2f7dc1d29e3110bef879cf197590d",
+  "self_self": {
+    "mean": 0.045718736946582794,
+    "std": 0.014476994052529335,
+    "n": 130321
+  },
+  "other_other": {
+    "mean": 0.05805644765496254,
+    "std": 0.0252744872123003,
+    "n": 130321
+  },
+  "self_other": {
+    "mean": 0.13570673763751984,
+    "std": 0.047094475477933884,
+    "n": 130321
+  },
+  "other_self": {
+    "mean": 0.14914825558662415,
+    "std": 0.052688438445329666,
+    "n": 130321
+  },
+  "margin_other_self_minus_other_other": 0.0910918079316616
+}

@@ -1,0 +1,122 @@
+{
+  "git_commit": "ad029a001ac2f7dc1d29e3110bef879cf197590d",
+  "terminal": "other_position at t=100",
+  "splits": {
+    "train": {
+      "original": {
+        "n_episodes": 3000,
+        "terminal_mean_xy": [
+          -6.713782787322998,
+          -10.0
+        ],
+        "terminal_dist_to_top_left(-9,9)": {
+          "mean": 19.13878106033154,
+          "median": 19.131785696832047
+        },
+        "terminal_dist_to_bottom_left(-9,-9)": {
+          "mean": 2.4974562168171093,
+          "median": 2.454633158042517
+        },
+        "frac_terminal_closer_to_top_left": 0.0,
+        "frac_terminal_within5_top_left": 0.0,
+        "frac_terminal_within5_bottom_left": 1.0,
+        "frac_frames_within5_top_left": 0.002250825082508251,
+        "frac_frames_within5_bottom_left": 0.9052244224422442,
+        "green_here": [
+          -9.0,
+          -9.0
+        ]
+      },
+      "swap_rg": {
+        "n_episodes": 3000,
+        "terminal_mean_xy": [
+          -7.192844390869141,
+          -10.0
+        ],
+        "terminal_dist_to_top_left(-9,9)": {
+          "mean": 19.089669088819328,
+          "median": 19.078215912563195
+        },
+        "terminal_dist_to_bottom_left(-9,-9)": {
+          "mean": 2.073310616527257,
+          "median": 1.9945732387352781
+        },
+        "frac_terminal_closer_to_top_left": 0.0,
+        "frac_terminal_within5_top_left": 0.0,
+        "frac_terminal_within5_bottom_left": 1.0,
+        "frac_frames_within5_top_left": 0.0023663366336633663,
+        "frac_frames_within5_bottom_left": 0.9045379537953795,
+        "green_here": [
+          -9.0,
+          9.0
+        ]
+      },
+      "paired": {
+        "start_positions_identical": true,
+        "terminal_distance_original_vs_swap": {
+          "mean": 0.4831167757511139,
+          "median": 0.5095772743225098
+        },
+        "mean_framewise_distance": 0.42191746830940247
+      }
+    },
+    "test": {
+      "original": {
+        "n_episodes": 300,
+        "terminal_mean_xy": [
+          -6.7428388595581055,
+          -10.0
+        ],
+        "terminal_dist_to_top_left(-9,9)": {
+          "mean": 19.135066976200097,
+          "median": 19.129331326001953
+        },
+        "terminal_dist_to_bottom_left(-9,-9)": {
+          "mean": 2.470704880925504,
+          "median": 2.435429520371567
+        },
+        "frac_terminal_closer_to_top_left": 0.0,
+        "frac_terminal_within5_top_left": 0.0,
+        "frac_terminal_within5_bottom_left": 1.0,
+        "frac_frames_within5_top_left": 0.002376237623762376,
+        "frac_frames_within5_bottom_left": 0.9033993399339934,
+        "green_here": [
+          -9.0,
+          -9.0
+        ]
+      },
+      "swap_rg": {
+        "n_episodes": 300,
+        "terminal_mean_xy": [
+          -7.235872268676758,
+          -10.0
+        ],
+        "terminal_dist_to_top_left(-9,9)": {
+          "mean": 19.085083372271427,
+          "median": 19.075357455394773
+        },
+        "terminal_dist_to_bottom_left(-9,-9)": {
+          "mean": 2.0349295062627584,
+          "median": 1.9670435300941809
+        },
+        "frac_terminal_closer_to_top_left": 0.0,
+        "frac_terminal_within5_top_left": 0.0,
+        "frac_terminal_within5_bottom_left": 1.0,
+        "frac_frames_within5_top_left": 0.0024092409240924094,
+        "frac_frames_within5_bottom_left": 0.9026402640264026,
+        "green_here": [
+          -9.0,
+          9.0
+        ]
+      },
+      "paired": {
+        "start_positions_identical": true,
+        "terminal_distance_original_vs_swap": {
+          "mean": 0.49865782260894775,
+          "median": 0.520521879196167
+        },
+        "mean_framewise_distance": 0.4246427118778229
+      }
+    }
+  }
+}

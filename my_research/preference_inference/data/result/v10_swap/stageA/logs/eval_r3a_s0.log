@@ -1,0 +1,32 @@
+=== r3_a_direct_1000pretrain_400 s0 ep360 A0 (r2_a1random_a2rl) ===
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/0/model/00360.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/stageA/eval/r3_a_direct_1000pretrain_400/s0/ep360/A0/
+=== r3_a_direct_1000pretrain_400 s0 ep360 A1 (v10_swap_r2) ===
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/0/model/00360.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/stageA/eval/r3_a_direct_1000pretrain_400/s0/ep360/A1/
+done ep360: data/result/v10_swap/stageA/eval/r3_a_direct_1000pretrain_400/s0/ep360/stageA_regression.json (saved.h5 removed)
+=== r3_a_direct_1000pretrain_400 s0 ep370 A0 (r2_a1random_a2rl) ===
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/0/model/00370.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/stageA/eval/r3_a_direct_1000pretrain_400/s0/ep370/A0/
+=== r3_a_direct_1000pretrain_400 s0 ep370 A1 (v10_swap_r2) ===
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/0/model/00370.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/stageA/eval/r3_a_direct_1000pretrain_400/s0/ep370/A1/
+done ep370: data/result/v10_swap/stageA/eval/r3_a_direct_1000pretrain_400/s0/ep370/stageA_regression.json (saved.h5 removed)
+=== r3_a_direct_1000pretrain_400 s0 ep380 A0 (r2_a1random_a2rl) ===
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/0/model/00380.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/stageA/eval/r3_a_direct_1000pretrain_400/s0/ep380/A0/
+=== r3_a_direct_1000pretrain_400 s0 ep380 A1 (v10_swap_r2) ===
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/0/model/00380.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/stageA/eval/r3_a_direct_1000pretrain_400/s0/ep380/A1/
+done ep380: data/result/v10_swap/stageA/eval/r3_a_direct_1000pretrain_400/s0/ep380/stageA_regression.json (saved.h5 removed)
+=== r3_a_direct_1000pretrain_400 s0 ep390 A0 (r2_a1random_a2rl) ===
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/0/model/00390.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/stageA/eval/r3_a_direct_1000pretrain_400/s0/ep390/A0/
+=== r3_a_direct_1000pretrain_400 s0 ep390 A1 (v10_swap_r2) ===
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/0/model/00390.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/stageA/eval/r3_a_direct_1000pretrain_400/s0/ep390/A1/
+done ep390: data/result/v10_swap/stageA/eval/r3_a_direct_1000pretrain_400/s0/ep390/stageA_regression.json (saved.h5 removed)
+=== r3_a_direct_1000pretrain_400 s0 ep400 A1 (v10_swap_r2) ===
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/0/model/00400.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/stageA/eval/r3_a_direct_1000pretrain_400/s0/ep400/A1/
+done ep400: data/result/v10_swap/stageA/eval/r3_a_direct_1000pretrain_400/s0/ep400/stageA_regression.json (saved.h5 removed)

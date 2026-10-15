@@ -60,10 +60,23 @@ DATASET_CONFIGS = {
         'save_path': os.path.join(DATA_ROOT, 'result', 'v10_swap', 'gate60',
                                   'bitcheck_original.h5'),
     },
+    # stage A, pairing check: swap layout with r2's seed key (3 episodes)
+    'v10_pairseed_check_swap': {
+        'seq_length': 101, 'n_data': {'train': 3},
+        'layout': layout.SWAP_RG, 'seed_key': 'r2_a1random_a2rl',
+        'a2_actor': V3_A2_ACTOR,
+        'save_path': os.path.join(DATA_ROOT, 'result', 'v10_swap', 'stageA',
+                                  'pairseed_check_swap.h5'),
+    },
     # stage A
+    # Seeded with r2_a1random_a2rl's key (not md5 of its own name; user's
+    # decision 2026-10-15, v10_experiment_log Sec.5.11) so A-1's path and both
+    # initial positions are identical episode by episode to r2_a1random_a2rl
+    # (A0 and A1 pair up per episode). Verified on 3 episodes beforehand.
     'v10_swap_r2': {
         'seq_length': 101, 'n_data': {'train': 3000, 'test': 300},
         'layout': layout.SWAP_RG, 'a2_actor': V3_A2_ACTOR,
+        'seed_key': 'r2_a1random_a2rl',
     },
     # stage B2 (A-2 actor fixed after B1, passed with --a2_actor)
     'v10_swapmix_r2': {

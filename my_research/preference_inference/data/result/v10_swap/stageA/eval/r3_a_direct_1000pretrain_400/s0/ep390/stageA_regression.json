@@ -1,0 +1,76 @@
+{
+  "refit_in_sample": {
+    "A0": {
+      "h1_to_self": 0.9059995060864037,
+      "h1_to_other": 0.5752983916273411,
+      "h2_to_self": 0.08903522841142608,
+      "h2_to_other": 0.9592459624324723
+    },
+    "A1": {
+      "h1_to_self": 0.8920370998508117,
+      "h1_to_other": 0.5857837543128837,
+      "h2_to_self": 0.09255910581013671,
+      "h2_to_other": 0.86525342195252
+    }
+  },
+  "A0_regressor_on_A1_train": {
+    "h1_to_self": 0.8873620617052127,
+    "h1_to_other": 0.5597141282343772,
+    "h2_to_self": 0.05165049738935512,
+    "h2_to_other": 0.7657417598450644
+  },
+  "heldout_A0_regressor": {
+    "A0_test": {
+      "h1_to_self": 0.89350369392062,
+      "h1_to_other": 0.5559616724999394,
+      "h2_to_self": 0.09300211175021211,
+      "h2_to_other": 0.9538685294779146
+    },
+    "A1_test": {
+      "h1_to_self": 0.8799878372500336,
+      "h1_to_other": 0.5406090467650081,
+      "h2_to_self": 0.05514623929003548,
+      "h2_to_other": 0.7502105262158125
+    }
+  },
+  "self_vision_loss": {
+    "A0": {
+      "eval": 9.597279,
+      "test": 9.954137
+    },
+    "A1": {
+      "eval": 14.422661,
+      "test": 14.521197
+    }
+  },
+  "feature_prediction_loss": {
+    "A0": {
+      "eval/feature_prediction_self": 12.10624,
+      "eval/feature_prediction_other": 9.608515,
+      "test/feature_prediction_self": 12.281094,
+      "test/feature_prediction_other": 9.672605
+    },
+    "A1": {
+      "eval/feature_prediction_self": 13.30655,
+      "eval/feature_prediction_other": 19.990261,
+      "test/feature_prediction_self": 13.427129,
+      "test/feature_prediction_other": 20.046549
+    }
+  },
+  "meta": {
+    "exp_config": "r3_a_direct_1000pretrain_400",
+    "seed": 0,
+    "epoch": 390,
+    "eval_seed": 0,
+    "mask": "on (config p_mask_vision), cudnn deterministic",
+    "A0_dataset": "r2_a1random_a2rl",
+    "A1_dataset": "v10_swap_r2",
+    "train_split": "eval group (train split, 3000 ep, unshuffled)",
+    "test_split": "test group (300 ep)",
+    "n_train_episodes": 3000,
+    "n_steps": 100,
+    "git_commit": "ad029a001ac2f7dc1d29e3110bef879cf197590d",
+    "a0_dir": "data/result/v10_swap/stageA/eval/r3_a_direct_1000pretrain_400/s0/ep390/A0",
+    "a1_dir": "data/result/v10_swap/stageA/eval/r3_a_direct_1000pretrain_400/s0/ep390/A1"
+  }
+}

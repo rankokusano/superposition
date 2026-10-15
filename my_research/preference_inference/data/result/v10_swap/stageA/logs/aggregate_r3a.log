@@ -1,0 +1,130 @@
+{
+ "refit_in_sample/A0/h1_to_self": {
+  "mean_over_seeds": 0.9064684281728355,
+  "sd_between_seeds": 0.0006079367405314188
+ },
+ "refit_in_sample/A0/h1_to_other": {
+  "mean_over_seeds": 0.5777213572699493,
+  "sd_between_seeds": 0.006035797078543633
+ },
+ "refit_in_sample/A0/h2_to_self": {
+  "mean_over_seeds": 0.08793965923122235,
+  "sd_between_seeds": 0.0009298444046279597
+ },
+ "refit_in_sample/A0/h2_to_other": {
+  "mean_over_seeds": 0.9588440913757402,
+  "sd_between_seeds": 4.054822714644179e-05
+ },
+ "refit_in_sample/A1/h1_to_self": {
+  "mean_over_seeds": 0.8937930867050393,
+  "sd_between_seeds": 0.0006622586046889906
+ },
+ "refit_in_sample/A1/h1_to_other": {
+  "mean_over_seeds": 0.5821416460747519,
+  "sd_between_seeds": 0.013116895478177163
+ },
+ "refit_in_sample/A1/h2_to_self": {
+  "mean_over_seeds": 0.08960494154174681,
+  "sd_between_seeds": 0.003246447003233719
+ },
+ "refit_in_sample/A1/h2_to_other": {
+  "mean_over_seeds": 0.8650963311787399,
+  "sd_between_seeds": 1.3495489386006734e-05
+ },
+ "A0_regressor_on_A1_train/h1_to_self": {
+  "mean_over_seeds": 0.8895942685752121,
+  "sd_between_seeds": 0.0009057915339423171
+ },
+ "A0_regressor_on_A1_train/h1_to_other": {
+  "mean_over_seeds": 0.5550780013347212,
+  "sd_between_seeds": 0.01452524855982563
+ },
+ "A0_regressor_on_A1_train/h2_to_self": {
+  "mean_over_seeds": 0.04775877144247449,
+  "sd_between_seeds": 0.0009321323926441472
+ },
+ "A0_regressor_on_A1_train/h2_to_other": {
+  "mean_over_seeds": 0.7670117587484506,
+  "sd_between_seeds": 0.0006600003455106982
+ },
+ "heldout_A0_regressor/A0_test/h1_to_self": {
+  "mean_over_seeds": 0.891582286714414,
+  "sd_between_seeds": 0.00023707592395497086
+ },
+ "heldout_A0_regressor/A0_test/h1_to_other": {
+  "mean_over_seeds": 0.5582960558961334,
+  "sd_between_seeds": 0.003264218372308373
+ },
+ "heldout_A0_regressor/A0_test/h2_to_self": {
+  "mean_over_seeds": 0.09108796512047365,
+  "sd_between_seeds": 0.0030348300695261254
+ },
+ "heldout_A0_regressor/A0_test/h2_to_other": {
+  "mean_over_seeds": 0.9532677077723792,
+  "sd_between_seeds": 0.00044603041159555054
+ },
+ "heldout_A0_regressor/A1_test/h1_to_self": {
+  "mean_over_seeds": 0.8813243557482022,
+  "sd_between_seeds": 0.0015707098741648683
+ },
+ "heldout_A0_regressor/A1_test/h1_to_other": {
+  "mean_over_seeds": 0.5373690781228673,
+  "sd_between_seeds": 0.00939916051857024
+ },
+ "heldout_A0_regressor/A1_test/h2_to_self": {
+  "mean_over_seeds": 0.054169213635040236,
+  "sd_between_seeds": 0.00427554630675914
+ },
+ "heldout_A0_regressor/A1_test/h2_to_other": {
+  "mean_over_seeds": 0.7518217207865707,
+  "sd_between_seeds": 0.0011524470194171279
+ },
+ "self_vision_loss/A0/eval": {
+  "mean_over_seeds": 9.616268999999999,
+  "sd_between_seeds": 0.010873605238374797
+ },
+ "self_vision_loss/A0/test": {
+  "mean_over_seeds": 9.9993583,
+  "sd_between_seeds": 0.014297840536947458
+ },
+ "self_vision_loss/A1/eval": {
+  "mean_over_seeds": 14.3648311,
+  "sd_between_seeds": 0.018526056245731698
+ },
+ "self_vision_loss/A1/test": {
+  "mean_over_seeds": 14.4777902,
+  "sd_between_seeds": 0.03380196688241719
+ },
+ "feature_prediction_loss/A0/eval/feature_prediction_self": {
+  "mean_over_seeds": 12.3760968,
+  "sd_between_seeds": 0.4282513024296841
+ },
+ "feature_prediction_loss/A0/eval/feature_prediction_other": {
+  "mean_over_seeds": 10.4339113,
+  "sd_between_seeds": 0.7636033402111457
+ },
+ "feature_prediction_loss/A0/test/feature_prediction_self": {
+  "mean_over_seeds": 12.5357245,
+  "sd_between_seeds": 0.41134621776914565
+ },
+ "feature_prediction_loss/A0/test/feature_prediction_other": {
+  "mean_over_seeds": 10.4631443,
+  "sd_between_seeds": 0.7612096423354753
+ },
+ "feature_prediction_loss/A1/eval/feature_prediction_self": {
+  "mean_over_seeds": 13.4566038,
+  "sd_between_seeds": 0.29519360520024795
+ },
+ "feature_prediction_loss/A1/eval/feature_prediction_other": {
+  "mean_over_seeds": 21.0557563,
+  "sd_between_seeds": 0.7860180594893382
+ },
+ "feature_prediction_loss/A1/test/feature_prediction_self": {
+  "mean_over_seeds": 13.5891019,
+  "sd_between_seeds": 0.3098393422735376
+ },
+ "feature_prediction_loss/A1/test/feature_prediction_other": {
+  "mean_over_seeds": 21.1015876,
+  "sd_between_seeds": 0.764921811515347
+ }
+}

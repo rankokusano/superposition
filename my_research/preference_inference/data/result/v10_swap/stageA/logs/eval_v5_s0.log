@@ -1,0 +1,35 @@
+=== v5_base_l1 s0 ep160 A0 (r2_a1random_a2rl) ===
+Loaded (read-only): /work/my_research/preference_inference/data/result/v5_base_l1/0/model/00160.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/stageA/eval/v5_base_l1/s0/ep160/A0/
+=== v5_base_l1 s0 ep160 A1 (v10_swap_r2) ===
+Loaded (read-only): /work/my_research/preference_inference/data/result/v5_base_l1/0/model/00160.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/stageA/eval/v5_base_l1/s0/ep160/A1/
+done ep160: data/result/v10_swap/stageA/eval/v5_base_l1/s0/ep160/stageA_regression.json (saved.h5 removed)
+=== v5_base_l1 s0 ep170 A0 (r2_a1random_a2rl) ===
+Loaded (read-only): /work/my_research/preference_inference/data/result/v5_base_l1/0/model/00170.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/stageA/eval/v5_base_l1/s0/ep170/A0/
+=== v5_base_l1 s0 ep170 A1 (v10_swap_r2) ===
+Loaded (read-only): /work/my_research/preference_inference/data/result/v5_base_l1/0/model/00170.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/stageA/eval/v5_base_l1/s0/ep170/A1/
+done ep170: data/result/v10_swap/stageA/eval/v5_base_l1/s0/ep170/stageA_regression.json (saved.h5 removed)
+=== v5_base_l1 s0 ep180 A0 (r2_a1random_a2rl) ===
+Loaded (read-only): /work/my_research/preference_inference/data/result/v5_base_l1/0/model/00180.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/stageA/eval/v5_base_l1/s0/ep180/A0/
+=== v5_base_l1 s0 ep180 A1 (v10_swap_r2) ===
+Loaded (read-only): /work/my_research/preference_inference/data/result/v5_base_l1/0/model/00180.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/stageA/eval/v5_base_l1/s0/ep180/A1/
+done ep180: data/result/v10_swap/stageA/eval/v5_base_l1/s0/ep180/stageA_regression.json (saved.h5 removed)
+=== v5_base_l1 s0 ep190 A0 (r2_a1random_a2rl) ===
+Loaded (read-only): /work/my_research/preference_inference/data/result/v5_base_l1/0/model/00190.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/stageA/eval/v5_base_l1/s0/ep190/A0/
+=== v5_base_l1 s0 ep190 A1 (v10_swap_r2) ===
+Loaded (read-only): /work/my_research/preference_inference/data/result/v5_base_l1/0/model/00190.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/stageA/eval/v5_base_l1/s0/ep190/A1/
+done ep190: data/result/v10_swap/stageA/eval/v5_base_l1/s0/ep190/stageA_regression.json (saved.h5 removed)
+=== v5_base_l1 s0 ep200 A0 (r2_a1random_a2rl) ===
+Loaded (read-only): /work/my_research/preference_inference/data/result/v5_base_l1/0/model/00200.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/stageA/eval/v5_base_l1/s0/ep200/A0/
+=== v5_base_l1 s0 ep200 A1 (v10_swap_r2) ===
+Loaded (read-only): /work/my_research/preference_inference/data/result/v5_base_l1/0/model/00200.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/stageA/eval/v5_base_l1/s0/ep200/A1/
+done ep200: data/result/v10_swap/stageA/eval/v5_base_l1/s0/ep200/stageA_regression.json (saved.h5 removed)

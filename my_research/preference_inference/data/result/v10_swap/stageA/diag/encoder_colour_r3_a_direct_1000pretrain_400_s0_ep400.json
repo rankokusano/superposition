@@ -1,0 +1,38 @@
+{
+  "exp_config": "r3_a_direct_1000pretrain_400",
+  "seed": 0,
+  "epoch": 400,
+  "git_commit": "ad029a001ac2f7dc1d29e3110bef879cf197590d",
+  "n_frames_per_layout": 2020,
+  "note": "exploratory, not pre-registered",
+  "features": {
+    "sv_enc": {
+      "dim": 64,
+      "paired_distance_A0_vs_A1": 0.45350444316864014,
+      "random_pair_distance_within_A0": 3.763232469558716,
+      "ratio_paired_over_random": 0.12050928175449371,
+      "layout_decoding_accuracy_5fold_by_episode": 0.8787128712871286
+    },
+    "ov_enc": {
+      "dim": 64,
+      "paired_distance_A0_vs_A1": 2.9241724014282227,
+      "random_pair_distance_within_A0": 2.648719072341919,
+      "ratio_paired_over_random": 1.1039949655532837,
+      "layout_decoding_accuracy_5fold_by_episode": 0.9829207920792079
+    },
+    "probe_q": {
+      "dim": 8,
+      "paired_distance_A0_vs_A1": 0.21392224729061127,
+      "random_pair_distance_within_A0": 2.0950992107391357,
+      "ratio_paired_over_random": 0.1021060198545456,
+      "layout_decoding_accuracy_5fold_by_episode": 0.5242574257425743
+    },
+    "pixels": {
+      "dim": 3072,
+      "paired_distance_A0_vs_A1": 9.229010581970215,
+      "random_pair_distance_within_A0": 14.71711540222168,
+      "ratio_paired_over_random": 0.6270937323570251,
+      "layout_decoding_accuracy_5fold_by_episode": 1.0
+    }
+  }
+}

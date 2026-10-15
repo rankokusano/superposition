@@ -1,0 +1,22 @@
+{
+  "label": "v5_base_l1 s0 ep200 + fig5_v5_base ep100",
+  "model_epoch": 200,
+  "ae_epoch": 100,
+  "git_commit": "ad029a001ac2f7dc1d29e3110bef879cf197590d",
+  "layouts": {
+    "original": {
+      "self_pred_mean_abs_error_all20ep": 0.10670418292284012,
+      "other_fig5_mean_abs_error_all20ep": 0.2054973542690277,
+      "model_h5": "data/result/v10_swap/stageA/pred_images/v5_base_l1_s0_ep200/model_original/save/saved.h5",
+      "ae_h5": "data/result/v10_swap/stageA/pred_images/ae_fig5_v5_base_ep100/original/save/saved.h5",
+      "data_h5": "data/data/r2_a1random_a2rl_viz20/data.h5"
+    },
+    "swap_rg": {
+      "self_pred_mean_abs_error_all20ep": 0.13732761144638062,
+      "other_fig5_mean_abs_error_all20ep": 0.1942434012889862,
+      "model_h5": "data/result/v10_swap/stageA/pred_images/v5_base_l1_s0_ep200/model_swap_rg/save/saved.h5",
+      "ae_h5": "data/result/v10_swap/stageA/pred_images/ae_fig5_v5_base_ep100/swap_rg/save/saved.h5",
+      "data_h5": "data/data/v10_swap_r2_viz20/data.h5"
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "refit_in_sample": {
+    "A0": {
+      "h1_to_self": 0.7175039629412997,
+      "h1_to_other": 0.496030623864117,
+      "h2_to_self": 0.08102061268723548,
+      "h2_to_other": 0.6454509407970618
+    },
+    "A1": {
+      "h1_to_self": 0.7215752905258483,
+      "h1_to_other": 0.5075736768669614,
+      "h2_to_self": 0.07674293242630215,
+      "h2_to_other": 0.5910467008319439
+    }
+  },
+  "A0_regressor_on_A1_train": {
+    "h1_to_self": 0.71529302484193,
+    "h1_to_other": 0.47182203780288046,
+    "h2_to_self": 0.06323938642893007,
+    "h2_to_other": 0.5142317296907615
+  },
+  "heldout_A0_regressor": {
+    "A0_test": {
+      "h1_to_self": 0.7121396118255517,
+      "h1_to_other": 0.4828739293934289,
+      "h2_to_self": 0.08041770707617829,
+      "h2_to_other": 0.6255586188373331
+    },
+    "A1_test": {
+      "h1_to_self": 0.711569861443289,
+      "h1_to_other": 0.45873839541181327,
+      "h2_to_self": 0.06118450251233276,
+      "h2_to_other": 0.5087413214236334
+    }
+  },
+  "self_vision_loss": {
+    "A0": {
+      "eval": 21.641144,
+      "test": 21.893293
+    },
+    "A1": {
+      "eval": 26.246371,
+      "test": 26.403769
+    }
+  },
+  "feature_prediction_loss": {
+    "A0": {
+      "eval/feature_prediction_self": 37.157687,
+      "eval/feature_prediction_other": 34.193445,
+      "test/feature_prediction_self": 37.802737,
+      "test/feature_prediction_other": 33.864389
+    },
+    "A1": {
+      "eval/feature_prediction_self": 37.09193,
+      "eval/feature_prediction_other": 35.82678,
+      "test/feature_prediction_self": 37.473441,
+      "test/feature_prediction_other": 35.173439
+    }
+  },
+  "meta": {
+    "exp_config": "v5_base_l1",
+    "seed": 0,
+    "epoch": 170,
+    "eval_seed": 0,
+    "mask": "on (config p_mask_vision), cudnn deterministic",
+    "A0_dataset": "r2_a1random_a2rl",
+    "A1_dataset": "v10_swap_r2",
+    "train_split": "eval group (train split, 3000 ep, unshuffled)",
+    "test_split": "test group (300 ep)",
+    "n_train_episodes": 3000,
+    "n_steps": 100,
+    "git_commit": "ad029a001ac2f7dc1d29e3110bef879cf197590d",
+    "a0_dir": "data/result/v10_swap/stageA/eval/v5_base_l1/s0/ep170/A0",
+    "a1_dir": "data/result/v10_swap/stageA/eval/v5_base_l1/s0/ep170/A1"
+  }
+}

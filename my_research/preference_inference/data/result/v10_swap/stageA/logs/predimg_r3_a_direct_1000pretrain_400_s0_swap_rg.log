@@ -1,0 +1,3 @@
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/0/model/00400.pth
+epoch: 400:   0%|          | 0/2 [00:00<?, ?it/s]epoch: 400:  50%|█████     | 1/2 [00:04<00:04,  4.53s/it]epoch: 400: 100%|██████████| 2/2 [00:05<00:00,  2.38s/it]epoch: 400: 100%|██████████| 2/2 [00:05<00:00,  2.71s/it]
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/stageA/pred_images/r3_a_direct_1000pretrain_400_s0_ep400/model_swap_rg/

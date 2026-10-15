@@ -1,0 +1,76 @@
+{
+  "refit_in_sample": {
+    "A0": {
+      "h1_to_self": 0.9042930453259642,
+      "h1_to_other": 0.5877657811185544,
+      "h2_to_self": 0.08759472237832161,
+      "h2_to_other": 0.9571324035912023
+    },
+    "A1": {
+      "h1_to_self": 0.8931210884623546,
+      "h1_to_other": 0.5971081540030475,
+      "h2_to_self": 0.09235464970912804,
+      "h2_to_other": 0.8670517891307109
+    }
+  },
+  "A0_regressor_on_A1_train": {
+    "h1_to_self": 0.8889152546099541,
+    "h1_to_other": 0.5714888229152095,
+    "h2_to_self": 0.04315350573476168,
+    "h2_to_other": 0.7694800633313521
+  },
+  "heldout_A0_regressor": {
+    "A0_test": {
+      "h1_to_self": 0.8917605567084909,
+      "h1_to_other": 0.5668932011712025,
+      "h2_to_self": 0.09180266190369807,
+      "h2_to_other": 0.9523234470713084
+    },
+    "A1_test": {
+      "h1_to_self": 0.8813667389830688,
+      "h1_to_other": 0.5495083229479839,
+      "h2_to_self": 0.045821490182532565,
+      "h2_to_other": 0.7541025751187338
+    }
+  },
+  "self_vision_loss": {
+    "A0": {
+      "eval": 9.713381,
+      "test": 10.020837
+    },
+    "A1": {
+      "eval": 14.366447,
+      "test": 14.482151
+    }
+  },
+  "feature_prediction_loss": {
+    "A0": {
+      "eval/feature_prediction_self": 11.919265,
+      "eval/feature_prediction_other": 10.080388,
+      "test/feature_prediction_self": 12.047615,
+      "test/feature_prediction_other": 10.053528
+    },
+    "A1": {
+      "eval/feature_prediction_self": 13.039835,
+      "eval/feature_prediction_other": 20.693692,
+      "test/feature_prediction_self": 13.141487,
+      "test/feature_prediction_other": 20.741965
+    }
+  },
+  "meta": {
+    "exp_config": "r3_a_direct_1000pretrain_400",
+    "seed": 0,
+    "epoch": 370,
+    "eval_seed": 0,
+    "mask": "on (config p_mask_vision), cudnn deterministic",
+    "A0_dataset": "r2_a1random_a2rl",
+    "A1_dataset": "v10_swap_r2",
+    "train_split": "eval group (train split, 3000 ep, unshuffled)",
+    "test_split": "test group (300 ep)",
+    "n_train_episodes": 3000,
+    "n_steps": 100,
+    "git_commit": "ad029a001ac2f7dc1d29e3110bef879cf197590d",
+    "a0_dir": "data/result/v10_swap/stageA/eval/r3_a_direct_1000pretrain_400/s0/ep370/A0",
+    "a1_dir": "data/result/v10_swap/stageA/eval/r3_a_direct_1000pretrain_400/s0/ep370/A1"
+  }
+}

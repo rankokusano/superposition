@@ -1,0 +1,22 @@
+{
+  "label": "r3_a_direct_1000pretrain_400 s0 ep400 + fig5_v4_exp1l1000 ep100",
+  "model_epoch": 400,
+  "ae_epoch": 100,
+  "git_commit": "ad029a001ac2f7dc1d29e3110bef879cf197590d",
+  "layouts": {
+    "original": {
+      "self_pred_mean_abs_error_all20ep": 0.04546016454696655,
+      "other_fig5_mean_abs_error_all20ep": 0.11503264307975769,
+      "model_h5": "data/result/v10_swap/stageA/pred_images/r3_a_direct_1000pretrain_400_s0_ep400/model_original/save/saved.h5",
+      "ae_h5": "data/result/v10_swap/stageA/pred_images/ae_fig5_v4_exp1l1000_ep100/original/save/saved.h5",
+      "data_h5": "data/data/r2_a1random_a2rl_viz20/data.h5"
+    },
+    "swap_rg": {
+      "self_pred_mean_abs_error_all20ep": 0.07370302081108093,
+      "other_fig5_mean_abs_error_all20ep": 0.18785050511360168,
+      "model_h5": "data/result/v10_swap/stageA/pred_images/r3_a_direct_1000pretrain_400_s0_ep400/model_swap_rg/save/saved.h5",
+      "ae_h5": "data/result/v10_swap/stageA/pred_images/ae_fig5_v4_exp1l1000_ep100/swap_rg/save/saved.h5",
+      "data_h5": "data/data/v10_swap_r2_viz20/data.h5"
+    }
+  }
+}

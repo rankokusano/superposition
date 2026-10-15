@@ -1,0 +1,3 @@
+Loaded (read-only): /work/my_research/preference_inference/data/result/v5_base_l1/0/model/00200.pth
+epoch: 200:   0%|          | 0/2 [00:00<?, ?it/s]epoch: 200:  50%|█████     | 1/2 [00:05<00:05,  5.12s/it]epoch: 200: 100%|██████████| 2/2 [00:05<00:00,  2.62s/it]epoch: 200: 100%|██████████| 2/2 [00:05<00:00,  2.99s/it]
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/stageA/pred_images/v5_base_l1_s0_ep200/model_swap_rg/
