@@ -47,6 +47,7 @@ DATA_ROOT = os.path.join(_PI_DIR, 'data')
 ENV_CONFIG = os.path.join(_PI_DIR, 'sim_v10', 'config', 'collect',
                           'self_random_other_stay.yml')
 V3_A2_ACTOR = os.path.join(DATA_ROOT, 'model', 'v3_rl_a2_actor.pth')
+V10_A2_ACTOR = os.path.join(DATA_ROOT, 'model', 'v10', 'v10_rl_a2_actor_tem2p0_eps0p0_seed0.pth')
 
 VISION_CHANNELS = 3
 MOTION_DIM = 2
@@ -78,10 +79,17 @@ DATASET_CONFIGS = {
         'layout': layout.SWAP_RG, 'a2_actor': V3_A2_ACTOR,
         'seed_key': 'r2_a1random_a2rl',
     },
-    # stage B2 (A-2 actor fixed after B1, passed with --a2_actor)
+    # stage B2. A-2 actor fixed after B1 (v10_experiment_log Sec.5.16, a post-hoc
+    # decision): B1's A-2 seed0 actor.
     'v10_swapmix_r2': {
         'seq_length': 101, 'n_data': {'train': 3000, 'test': 300},
-        'layout': 'mix', 'a2_actor': None,
+        'layout': 'mix', 'a2_actor': V10_A2_ACTOR,
+    },
+    # B2 reproducibility check: first 3 episodes of v10_swapmix_r2 (same seed key)
+    'v10_swapmix_check': {
+        'seq_length': 101, 'n_data': {'train': 3},
+        'layout': 'mix', 'a2_actor': V10_A2_ACTOR, 'seed_key': 'v10_swapmix_r2',
+        'save_path': os.path.join(DATA_ROOT, 'result', 'v10_swap', 'b2', 'swapmix_check_a.h5'),
     },
 }
 

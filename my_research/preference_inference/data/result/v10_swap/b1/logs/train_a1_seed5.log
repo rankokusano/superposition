@@ -1,0 +1,27 @@
+Device: cuda
+Seed: 5
+Algorithm: SAC (CNN+LSTM, continuous action)
+Reward: red_fraction - green_fraction (continuous)
+Episodes: 1000 × 100 steps
+  ep    0 | avg_reward(50ep): -0.282 | alpha: 0.9931
+  ep   50 | avg_reward(50ep): 0.058 | alpha: 0.6023
+  ep  100 | avg_reward(50ep): -0.023 | alpha: 0.3653
+  ep  150 | avg_reward(50ep): 0.118 | alpha: 0.2216
+  ep  200 | avg_reward(50ep): -0.215 | alpha: 0.1344
+  ep  250 | avg_reward(50ep): -0.090 | alpha: 0.0816
+  ep  300 | avg_reward(50ep): 0.088 | alpha: 0.0495
+  ep  350 | avg_reward(50ep): -0.036 | alpha: 0.0301
+  ep  400 | avg_reward(50ep): -0.157 | alpha: 0.0183
+  ep  450 | avg_reward(50ep): -0.204 | alpha: 0.0111
+  ep  500 | avg_reward(50ep): 0.237 | alpha: 0.0068
+  ep  550 | avg_reward(50ep): 3.004 | alpha: 0.0043
+  ep  600 | avg_reward(50ep): 6.711 | alpha: 0.0029
+  ep  650 | avg_reward(50ep): 7.434 | alpha: 0.0024
+  ep  700 | avg_reward(50ep): 6.648 | alpha: 0.0021
+  ep  750 | avg_reward(50ep): 7.492 | alpha: 0.0020
+  ep  800 | avg_reward(50ep): 8.119 | alpha: 0.0021
+  ep  850 | avg_reward(50ep): 6.901 | alpha: 0.0021
+  ep  900 | avg_reward(50ep): 6.059 | alpha: 0.0021
+  ep  950 | avg_reward(50ep): 6.327 | alpha: 0.0023
+Saved: /work/my_research/preference_inference/data/model/v10/v10_rl_actor_seed5.pth
+Saved: /work/my_research/preference_inference/data/model/v10/v10_rl_critic_seed5.pth

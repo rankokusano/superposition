@@ -1,0 +1,29 @@
+Device: cuda
+Seed: 3
+Algorithm: SAC (CNN+LSTM, continuous action)
+Reward: green_fraction - red_fraction (continuous)
+Episodes: 1000 × 100 steps
+Target entropy: -2.0
+Epsilon (training-rollout exploration only, not used by collect_data_r2.py): 0.0
+  ep    0 | avg_reward(50ep): -2.083 | alpha: 0.9931
+  ep   50 | avg_reward(50ep): 0.105 | alpha: 0.6024
+  ep  100 | avg_reward(50ep): 0.620 | alpha: 0.3654
+  ep  150 | avg_reward(50ep): 0.323 | alpha: 0.2216
+  ep  200 | avg_reward(50ep): 0.577 | alpha: 0.1344
+  ep  250 | avg_reward(50ep): -0.084 | alpha: 0.0815
+  ep  300 | avg_reward(50ep): 0.262 | alpha: 0.0495
+  ep  350 | avg_reward(50ep): 0.083 | alpha: 0.0300
+  ep  400 | avg_reward(50ep): -0.241 | alpha: 0.0182
+  ep  450 | avg_reward(50ep): 0.380 | alpha: 0.0111
+  ep  500 | avg_reward(50ep): 0.330 | alpha: 0.0067
+  ep  550 | avg_reward(50ep): -0.563 | alpha: 0.0041
+  ep  600 | avg_reward(50ep): -0.187 | alpha: 0.0027
+  ep  650 | avg_reward(50ep): 0.010 | alpha: 0.0020
+  ep  700 | avg_reward(50ep): 0.247 | alpha: 0.0013
+  ep  750 | avg_reward(50ep): 6.642 | alpha: 0.0013
+  ep  800 | avg_reward(50ep): 9.807 | alpha: 0.0022
+  ep  850 | avg_reward(50ep): 9.664 | alpha: 0.0032
+  ep  900 | avg_reward(50ep): 10.044 | alpha: 0.0036
+  ep  950 | avg_reward(50ep): 9.922 | alpha: 0.0034
+Saved: /work/my_research/preference_inference/data/model/v10/v10_rl_a2_actor_tem2p0_eps0p0_seed3.pth
+Saved: /work/my_research/preference_inference/data/model/v10/v10_rl_a2_critic_tem2p0_eps0p0_seed3.pth
