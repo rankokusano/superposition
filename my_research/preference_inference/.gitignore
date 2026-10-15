@@ -25,3 +25,5 @@ data/result/v10_swap/**/*.h5
 data/result/v10_swap/**/*.npz
 data/result/v10_swap/**/*.pth
 data/result/v10_swapmix_*/
+data/result/v10_b3_*/*/model/
+data/result/v10_b3_*/*/test/

@@ -1,0 +1,36 @@
+# v10 B3-ft (docs/v10_experiment_log.md Sec.5.18-5.22): copy of v10_b3_frozen.yml;
+# the ONLY difference is that vision_encoder_module, share_lns and
+# vision_decoder_module are removed from the freeze list (trained together
+# with the superposition module). Optimiser settings identical to R3-A.
+model:
+    name: SuperpositionNetworkProbeQ
+    config: v10_swapmix
+    mode: ~
+runner: PredictionFeaturePredictionRunner
+data:
+    name: v10_swapmix_r2
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+    loss_function: l1_loss
+    pretrain:
+        exp_config: exp1_l1_1000
+        seed: 0
+        epoch: 200
+    batch_size: 10
+    max_epochs: 400
+    save_interval: 10
+    test_interval: 10
+    optimizer: AdamW
+    optim_config:
+        default:
+            lr: 0.001
+            weight_decay: 0.01
+        freeze:
+            - integration_module
+            - feature_prediction_module
+            - probe_critic
+        per_params:
+            - name: bias
+              args:
+                  weight_decay: 0.0

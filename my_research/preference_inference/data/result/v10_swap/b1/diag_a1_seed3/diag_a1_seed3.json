@@ -1,0 +1,94 @@
+{
+  "git_commit": "f77d64c2abb323032ce555f42ddbd98aeaac604a",
+  "note": "exploratory, not pre-registered",
+  "corr_reward_original_vs_swap": -0.9999999999999999,
+  "critics": {
+    "v3 A-1 critic": {
+      "corr_V_between_layouts": 0.9961945085790791,
+      "corr_A_between_layouts": 0.9983844458974814,
+      "corr_Q_between_layouts": 0.9962158419810738,
+      "V_sd_over_grid": [
+        0.9541911140208467,
+        0.9459628251804056
+      ],
+      "A_sd_over_grid": [
+        0.09554517112852844,
+        0.09581687715898818
+      ],
+      "layouts": {
+        "original": {
+          "corr_qmax_with_reward_map_same_layout": 0.7166774282461537,
+          "corr_V_with_reward_map_same_layout": 0.7171649123410204,
+          "best_dir_mean_angle_to_red_here": 27.122727569625603,
+          "best_dir_mean_angle_to_red_original_place(-9,9)": 27.122727569625603,
+          "best_dir_mean_angle_to_(-9,-9)": 111.29849700972817
+        },
+        "swap_rg": {
+          "corr_qmax_with_reward_map_same_layout": -0.698694615127284,
+          "corr_V_with_reward_map_same_layout": -0.6993323878865579,
+          "best_dir_mean_angle_to_red_here": 110.89575237965657,
+          "best_dir_mean_angle_to_red_original_place(-9,9)": 26.49330249601224,
+          "best_dir_mean_angle_to_(-9,-9)": 110.89575237965657
+        }
+      }
+    },
+    "B1 A-1 seed0": {
+      "corr_V_between_layouts": -0.8089503562865902,
+      "corr_A_between_layouts": -0.45872978827662875,
+      "corr_Q_between_layouts": -0.8075257734856924,
+      "V_sd_over_grid": [
+        1.2304071766896758,
+        1.049324510831907
+      ],
+      "A_sd_over_grid": [
+        0.06728348348196876,
+        0.07328812847068561
+      ],
+      "layouts": {
+        "original": {
+          "corr_qmax_with_reward_map_same_layout": 0.6541072137866967,
+          "corr_V_with_reward_map_same_layout": 0.6578570903602456,
+          "best_dir_mean_angle_to_red_here": 40.259428849616256,
+          "best_dir_mean_angle_to_red_original_place(-9,9)": 40.259428849616256,
+          "best_dir_mean_angle_to_(-9,-9)": 106.2826457761326
+        },
+        "swap_rg": {
+          "corr_qmax_with_reward_map_same_layout": 0.798314682273712,
+          "corr_V_with_reward_map_same_layout": 0.8052434489277485,
+          "best_dir_mean_angle_to_red_here": 34.87533324540659,
+          "best_dir_mean_angle_to_red_original_place(-9,9)": 95.14620495114758,
+          "best_dir_mean_angle_to_(-9,-9)": 34.87533324540659
+        }
+      }
+    },
+    "B1 A-1 seed3": {
+      "corr_V_between_layouts": -0.9056594169976,
+      "corr_A_between_layouts": 0.9965911963648687,
+      "corr_Q_between_layouts": -0.5537832481337057,
+      "V_sd_over_grid": [
+        0.11163829373999921,
+        0.10624411770273892
+      ],
+      "A_sd_over_grid": [
+        0.052409302066693274,
+        0.05135808583927162
+      ],
+      "layouts": {
+        "original": {
+          "corr_qmax_with_reward_map_same_layout": 0.8127103835767322,
+          "corr_V_with_reward_map_same_layout": 0.8154010828980125,
+          "best_dir_mean_angle_to_red_here": 70.8713369731406,
+          "best_dir_mean_angle_to_red_original_place(-9,9)": 70.8713369731406,
+          "best_dir_mean_angle_to_(-9,-9)": 26.71181487993353
+        },
+        "swap_rg": {
+          "corr_qmax_with_reward_map_same_layout": 0.8095055735709437,
+          "corr_V_with_reward_map_same_layout": 0.8131072197147815,
+          "best_dir_mean_angle_to_red_here": 26.778539007752336,
+          "best_dir_mean_angle_to_red_original_place(-9,9)": 71.62910571384263,
+          "best_dir_mean_angle_to_(-9,-9)": 26.778539007752336
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,38 @@
+# v10 B3-frozen (docs/v10_experiment_log.md Sec.5.5, 5.22): copy of
+# r3_a_direct_1000pretrain_400.yml; only data (v10_swapmix_r2) and the model
+# config (v10_swapmix: B1 seed0 A-1 critic + its mu/sigma) differ.
+model:
+    name: SuperpositionNetworkProbeQ
+    config: v10_swapmix
+    mode: ~
+runner: PredictionFeaturePredictionRunner
+data:
+    name: v10_swapmix_r2
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+    loss_function: l1_loss
+    pretrain:
+        exp_config: exp1_l1_1000
+        seed: 0
+        epoch: 200
+    batch_size: 10
+    max_epochs: 400
+    save_interval: 10
+    test_interval: 10
+    optimizer: AdamW
+    optim_config:
+        default:
+            lr: 0.001
+            weight_decay: 0.01
+        freeze:
+            - vision_encoder_module
+            - vision_decoder_module
+            - integration_module
+            - feature_prediction_module
+            - share_lns
+            - probe_critic
+        per_params:
+            - name: bias
+              args:
+                  weight_decay: 0.0

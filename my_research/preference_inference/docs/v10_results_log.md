@@ -255,3 +255,14 @@ viz20 の対のフレーム（各配置 2020 フレーム）。「対の距離�
 
 - **A-1 の「赤までの距離」と「左上 (−9,9) までの距離」の相関**（train 全フレーム）：**r = +0.495**（test +0.492）。配置別：元の配置 +1.000（赤＝左上なので同一）、入れ替え −0.017（test −0.005）。
 - 図：`data/result/v10_swap/b2/b2_gate.png`（**目視確認済み**：A-2 は元では左下の壁際、入れ替えでは左の壁の (−10, 6.8) 付近（緑の下）に着く。散布図は元の配置のフレームが対角線上、入れ替えのフレームは相関なしの雲）。数値 `b2_gate.json`。
+
+## 6. B3（共有モジュールの学習）
+
+### 6.1 run 登録簿
+
+| 日付 | exp_config | シード | GPU | 起動 | 速度（実測） | 出力 |
+|---|---|---|---|---|---|---|
+| 2026-10-16 | `v10_b3_frozen` | 0 / 1 / 2 | 1 / 2 / 3 | 03:27 | 約 2.15 it/s（約 140 s/ep） | `data/result/v10_b3_frozen/<seed>/`、ログ `data/result/v10_b3_frozen/train_seed<seed>.log` |
+| 2026-10-16 | `v10_b3_ft` | 0 / 1 / 2 | 4 / 5 / 6 | 03:27 | 約 1.5 it/s（約 200 s/ep） | `data/result/v10_b3_ft/<seed>/` |
+
+- 設定：R3-A_400 と同じ（400ep、batch 10、L1、AdamW lr 1e-3 wd 1e-2、pretrain `exp1_l1_1000` ep200、`p_mask_vision` 0.99）。データ `v10_swapmix_r2`。probe-Q：B1 seed0 の A-1 critic、μ 2.124917、σ 0.787905。B3-ft は Encoder・share_lns・Decoder も学習。HEAD `f77d64c` + 未コミットの config（次のコミットに含む）。
