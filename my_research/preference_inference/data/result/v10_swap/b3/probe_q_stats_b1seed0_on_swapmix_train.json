@@ -1,0 +1,12 @@
+{
+  "label": "b1seed0_on_swapmix_train",
+  "critic": "data/model/v10/v10_rl_critic_seed0.pth",
+  "dataset": "v10_swapmix_r2",
+  "split": "train",
+  "n_frames": 303000,
+  "n_values": 2424000,
+  "mu": 2.1249173126937144,
+  "sigma": 0.7879050772138464,
+  "git_commit": "4ad76e4843d6550728520c77fc0e996429560896",
+  "method": "mean / population std of raw Q over all frames x 8 probes, hidden=None"
+}

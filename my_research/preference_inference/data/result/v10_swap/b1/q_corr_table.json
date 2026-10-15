@@ -1,0 +1,276 @@
+{
+  "git_commit": "4ad76e4843d6550728520c77fc0e996429560896",
+  "placement": "21x21 grid, other agent at (0,0)",
+  "reward_reference": {
+    "a1": {
+      "corr_reward_original_vs_swap": -0.9999999999999999,
+      "reward_range": [
+        -0.1640625,
+        0.1640625
+      ]
+    },
+    "a2": {
+      "corr_reward_original_vs_swap": -0.9999999999999999,
+      "reward_range": [
+        -0.1640625,
+        0.1640625
+      ]
+    }
+  },
+  "critics": [
+    {
+      "agent": "a1",
+      "critic": "v3 (stage A)",
+      "gate": "n/a (trained in the original layout only)",
+      "corr_q8": 0.9962158419810738,
+      "corr_qmax": 0.9961734525918458
+    },
+    {
+      "agent": "a1",
+      "critic": "B1 seed0",
+      "gate": {
+        "check1_health": true,
+        "check2_rollout": true,
+        "check3_direction": true,
+        "pass_all": true
+      },
+      "action_std": [
+        0.05081542018041618,
+        0.08070894951745863
+      ],
+      "state_std": [
+        1.0368810172054836,
+        1.0727410268636433
+      ],
+      "corr_q8": -0.8075257734856924,
+      "corr_qmax": -0.8087742121748354
+    },
+    {
+      "agent": "a1",
+      "critic": "B1 seed1",
+      "gate": {
+        "check1_health": false,
+        "check2_rollout": false,
+        "check3_direction": true,
+        "pass_all": false
+      },
+      "action_std": [
+        0.03158824817344335,
+        0.12139792954403472
+      ],
+      "state_std": [
+        1.6678362620947842,
+        1.2510996196278423
+      ],
+      "corr_q8": -0.6110970806812183,
+      "corr_qmax": -0.6058837768710247
+    },
+    {
+      "agent": "a1",
+      "critic": "B1 seed2",
+      "gate": {
+        "check1_health": false,
+        "check2_rollout": false,
+        "check3_direction": false,
+        "pass_all": false
+      },
+      "action_std": [
+        0.003925307282441971,
+        0.0037497539934200257
+      ],
+      "state_std": [
+        0.05394393464497633,
+        0.050717073749519254
+      ],
+      "corr_q8": -0.9131736397325457,
+      "corr_qmax": -0.9003384876524152
+    },
+    {
+      "agent": "a1",
+      "critic": "B1 seed3",
+      "gate": {
+        "check1_health": true,
+        "check2_rollout": false,
+        "check3_direction": false,
+        "pass_all": false
+      },
+      "action_std": [
+        0.05378973437274943,
+        0.0556921195177963
+      ],
+      "state_std": [
+        0.11912818464732458,
+        0.11740128908308206
+      ],
+      "corr_q8": -0.5537832481337057,
+      "corr_qmax": -0.9011975745686079
+    },
+    {
+      "agent": "a1",
+      "critic": "B1 seed4",
+      "gate": {
+        "check1_health": false,
+        "check2_rollout": false,
+        "check3_direction": false,
+        "pass_all": false
+      },
+      "action_std": [
+        0.0004120561119528569,
+        0.0004120561119528569
+      ],
+      "state_std": [
+        0.0,
+        0.0
+      ],
+      "corr_q8": 1.0,
+      "corr_qmax": NaN
+    },
+    {
+      "agent": "a1",
+      "critic": "B1 seed5",
+      "gate": {
+        "check1_health": false,
+        "check2_rollout": false,
+        "check3_direction": true,
+        "pass_all": false
+      },
+      "action_std": [
+        0.04356596244648071,
+        0.04026049193296685
+      ],
+      "state_std": [
+        1.3325717714820473,
+        1.3014264604945704
+      ],
+      "corr_q8": -0.7030396433841061,
+      "corr_qmax": -0.6901254818432159
+    },
+    {
+      "agent": "a2",
+      "critic": "v3 (stage A)",
+      "gate": "n/a (trained in the original layout only)",
+      "corr_q8": 0.904465704009122,
+      "corr_qmax": 0.9069157804097955
+    },
+    {
+      "agent": "a2",
+      "critic": "B1 seed0",
+      "gate": {
+        "check1_health": false,
+        "check2_rollout": true,
+        "check3_direction": true,
+        "pass_all": false
+      },
+      "action_std": [
+        0.08478907162330088,
+        0.019477210625412866
+      ],
+      "state_std": [
+        0.6525188018648963,
+        0.6206608969243395
+      ],
+      "corr_q8": -0.5517628125961304,
+      "corr_qmax": -0.5556129569101149
+    },
+    {
+      "agent": "a2",
+      "critic": "B1 seed1",
+      "gate": {
+        "check1_health": false,
+        "check2_rollout": true,
+        "check3_direction": true,
+        "pass_all": false
+      },
+      "action_std": [
+        0.09458709262943553,
+        0.023371788909879957
+      ],
+      "state_std": [
+        0.4749796710343313,
+        0.589497994220543
+      ],
+      "corr_q8": -0.34221323399523373,
+      "corr_qmax": -0.26485608621824835
+    },
+    {
+      "agent": "a2",
+      "critic": "B1 seed2",
+      "gate": {
+        "check1_health": true,
+        "check2_rollout": true,
+        "check3_direction": false,
+        "pass_all": false
+      },
+      "action_std": [
+        0.12305544626580212,
+        0.10951210857850414
+      ],
+      "state_std": [
+        0.48015627867400834,
+        0.6578993794313294
+      ],
+      "corr_q8": -0.1619234568468279,
+      "corr_qmax": -0.15007048816039495
+    },
+    {
+      "agent": "a2",
+      "critic": "B1 seed3",
+      "gate": {
+        "check1_health": false,
+        "check2_rollout": true,
+        "check3_direction": true,
+        "pass_all": false
+      },
+      "action_std": [
+        0.10163975045187708,
+        0.016821170783515815
+      ],
+      "state_std": [
+        1.1344305643878896,
+        0.850571763338591
+      ],
+      "corr_q8": -0.40012318118098844,
+      "corr_qmax": -0.3611692517077923
+    },
+    {
+      "agent": "a2",
+      "critic": "B1 seed4",
+      "gate": {
+        "check1_health": false,
+        "check2_rollout": false,
+        "check3_direction": false,
+        "pass_all": false
+      },
+      "action_std": [
+        0.024630640037445188,
+        0.024630640037445188
+      ],
+      "state_std": [
+        0.0,
+        0.0
+      ],
+      "corr_q8": 1.0,
+      "corr_qmax": NaN
+    },
+    {
+      "agent": "a2",
+      "critic": "B1 seed5",
+      "gate": {
+        "check1_health": false,
+        "check2_rollout": false,
+        "check3_direction": true,
+        "pass_all": false
+      },
+      "action_std": [
+        0.016125358722841595,
+        0.008967737400346293
+      ],
+      "state_std": [
+        0.1970279303435106,
+        0.1730902957501655
+      ],
+      "corr_q8": -0.6540155936393977,
+      "corr_qmax": -0.6938837282330685
+    }
+  ]
+}

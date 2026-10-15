@@ -1,0 +1,12 @@
+{
+  "label": "v3_on_r2_check",
+  "critic": "data/model/v3_rl_critic.pth",
+  "dataset": "r2_a1random_a2rl",
+  "split": "train",
+  "n_frames": 303000,
+  "n_values": 2424000,
+  "mu": 1.9260139789891124,
+  "sigma": 0.9480252420108323,
+  "git_commit": "4ad76e4843d6550728520c77fc0e996429560896",
+  "method": "mean / population std of raw Q over all frames x 8 probes, hidden=None"
+}
