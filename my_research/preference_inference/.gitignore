@@ -18,3 +18,10 @@ data/model/v7/
 
 __pycache__/
 *.pyc
+
+# v10: never track binary outputs
+data/model/v10/
+data/result/v10_swap/**/*.h5
+data/result/v10_swap/**/*.npz
+data/result/v10_swap/**/*.pth
+data/result/v10_swapmix_*/

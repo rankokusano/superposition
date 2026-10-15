@@ -1,0 +1,36 @@
+{
+  "gate": "6.0 checks 2 and 4 (v10_experiment_log Sec.5.1)",
+  "git_commit": "f63b69bc9f226215d15d8e10c9146c93be65bde3",
+  "grid": "x,y in -10..10 step 1 (21x21), A-2 at (50,50), self camera",
+  "max_abs_fraction_error": {
+    "red_swap_vs_green_orig": 0.0,
+    "green_swap_vs_red_orig": 0.0,
+    "blue_swap_vs_blue_orig": 0.0,
+    "cyan_swap_vs_cyan_orig": 0.0
+  },
+  "max_abs_pixel_count_error": {
+    "red_swap_vs_green_orig": 0,
+    "green_swap_vs_red_orig": 0,
+    "blue_swap_vs_blue_orig": 0,
+    "cyan_swap_vs_cyan_orig": 0
+  },
+  "check2_pass": true,
+  "layout_toggle_back_bit_identical": true,
+  "mirror_check": {
+    "what": "swap view at (x,y) vs original view at (x,-y)",
+    "n_grid_points_identical": 0,
+    "min_differing_pixels": 18,
+    "mean_differing_pixels": 359.44897959183675,
+    "max_red_green_fraction_error": 0.0029296875
+  },
+  "reward_A1_range": {
+    "original": [
+      -0.1640625,
+      0.1640625
+    ],
+    "swap_rg": [
+      -0.1640625,
+      0.1640625
+    ]
+  }
+}
