@@ -1,0 +1,233 @@
+{
+  "git_commit": "b6b4f7ae58022c8e7a1d5390ce8896137fae6c04",
+  "runs": {
+    "v10_b3_frozen/s0": {
+      "v4_fp_other": {
+        "E": 400,
+        "W": [
+          321,
+          400
+        ],
+        "min_B": 26.778605,
+        "mean_W": 37.1582257,
+        "ratio_level": 1.3876087159880062,
+        "net_drift_over_W": 1.590275033333336,
+        "ratio_drift": 0.059386029755221975,
+        "signed_slope": 0.020130063713080203,
+        "cond_level": false,
+        "cond_drift": true,
+        "converged": false,
+        "transition_epoch": 76
+      },
+      "self_vision": {
+        "E": 400,
+        "W": [
+          321,
+          400
+        ],
+        "min_B": 0.12481033,
+        "mean_W": 0.12644657312500002,
+        "ratio_level": 1.0131098373427907,
+        "net_drift_over_W": 0.0009714382129629675,
+        "ratio_drift": 0.007783315795759594,
+        "signed_slope": -1.2296686240037564e-05,
+        "cond_level": true,
+        "cond_drift": true,
+        "converged": true,
+        "transition_epoch": 56
+      },
+      "primary": "v4_fp_other",
+      "converged_primary": false
+    },
+    "v10_b3_frozen/s1": {
+      "v4_fp_other": {
+        "E": 400,
+        "W": [
+          321,
+          400
+        ],
+        "min_B": 31.415064,
+        "mean_W": 37.24677705,
+        "ratio_level": 1.1856342883783397,
+        "net_drift_over_W": 0.1120795703703552,
+        "ratio_drift": 0.0035677014813770614,
+        "signed_slope": -0.0014187287388652556,
+        "cond_level": true,
+        "cond_drift": true,
+        "converged": true,
+        "transition_epoch": 4
+      },
+      "self_vision": {
+        "E": 400,
+        "W": [
+          321,
+          400
+        ],
+        "min_B": 0.13006071,
+        "mean_W": 0.13356995700000002,
+        "ratio_level": 1.0269816072817073,
+        "net_drift_over_W": 0.006909504314814819,
+        "ratio_drift": 0.05312522371140999,
+        "signed_slope": -8.746207993436479e-05,
+        "cond_level": true,
+        "cond_drift": false,
+        "converged": false,
+        "transition_epoch": 54
+      },
+      "primary": "v4_fp_other",
+      "converged_primary": true
+    },
+    "v10_b3_frozen/s2": {
+      "v4_fp_other": {
+        "E": 400,
+        "W": [
+          321,
+          400
+        ],
+        "min_B": 39.817808,
+        "mean_W": 61.191121537499995,
+        "ratio_level": 1.5367777537502816,
+        "net_drift_over_W": 0.04077123611110672,
+        "ratio_drift": 0.0010239447663996652,
+        "signed_slope": -0.0005160915963431231,
+        "cond_level": false,
+        "cond_drift": true,
+        "converged": false,
+        "transition_epoch": 1
+      },
+      "self_vision": {
+        "E": 400,
+        "W": [
+          321,
+          400
+        ],
+        "min_B": 0.15714043,
+        "mean_W": 0.15791426375,
+        "ratio_level": 1.0049244726516275,
+        "net_drift_over_W": 0.0008375360370370369,
+        "ratio_drift": 0.0053298571032104015,
+        "signed_slope": -1.0601721987810593e-05,
+        "cond_level": true,
+        "cond_drift": true,
+        "converged": true,
+        "transition_epoch": 4
+      },
+      "primary": "v4_fp_other",
+      "converged_primary": false
+    },
+    "v10_b3_ft/s0": {
+      "v4_fp_other": {
+        "E": 400,
+        "W": [
+          321,
+          400
+        ],
+        "min_B": 36.212406,
+        "mean_W": 37.5652849875,
+        "ratio_level": 1.037359544336822,
+        "net_drift_over_W": 0.5339897324074059,
+        "ratio_drift": 0.01474604400512371,
+        "signed_slope": -0.0067593637013595685,
+        "cond_level": true,
+        "cond_drift": true,
+        "converged": true,
+        "transition_epoch": 1
+      },
+      "self_vision": {
+        "E": 400,
+        "W": [
+          321,
+          400
+        ],
+        "min_B": 0.07731455999999999,
+        "mean_W": 0.079204739625,
+        "ratio_level": 1.0244479128510855,
+        "net_drift_over_W": 0.00180788445370371,
+        "ratio_drift": 0.023383492756134296,
+        "signed_slope": -2.2884613338021647e-05,
+        "cond_level": true,
+        "cond_drift": true,
+        "converged": true,
+        "transition_epoch": 67
+      },
+      "primary": "self_vision",
+      "converged_primary": true
+    },
+    "v10_b3_ft/s1": {
+      "v4_fp_other": {
+        "E": 400,
+        "W": [
+          321,
+          400
+        ],
+        "min_B": 42.183919,
+        "mean_W": 43.630861249999995,
+        "ratio_level": 1.0343008019240696,
+        "net_drift_over_W": 1.5310372074074126,
+        "ratio_drift": 0.03629433309426306,
+        "signed_slope": -0.019380217815283703,
+        "cond_level": true,
+        "cond_drift": true,
+        "converged": true,
+        "transition_epoch": 1
+      },
+      "self_vision": {
+        "E": 400,
+        "W": [
+          321,
+          400
+        ],
+        "min_B": 0.07790963,
+        "mean_W": 0.080319672375,
+        "ratio_level": 1.0309338187718258,
+        "net_drift_over_W": 0.002065315250000003,
+        "ratio_drift": 0.026509113828418942,
+        "signed_slope": -2.6143231012658266e-05,
+        "cond_level": true,
+        "cond_drift": true,
+        "converged": true,
+        "transition_epoch": 63
+      },
+      "primary": "self_vision",
+      "converged_primary": true
+    },
+    "v10_b3_ft/s2": {
+      "v4_fp_other": {
+        "E": 400,
+        "W": [
+          321,
+          400
+        ],
+        "min_B": 35.748798,
+        "mean_W": 37.7817394625,
+        "ratio_level": 1.056867407471994,
+        "net_drift_over_W": 0.4373854027777764,
+        "ratio_drift": 0.012234968089773994,
+        "signed_slope": 0.005536524085794638,
+        "cond_level": true,
+        "cond_drift": true,
+        "converged": true,
+        "transition_epoch": 1
+      },
+      "self_vision": {
+        "E": 400,
+        "W": [
+          321,
+          400
+        ],
+        "min_B": 0.07878186000000001,
+        "mean_W": 0.08086372625,
+        "ratio_level": 1.0264257057398745,
+        "net_drift_over_W": 0.002783280759259257,
+        "ratio_drift": 0.035328954650972404,
+        "signed_slope": -3.523140201593996e-05,
+        "cond_level": true,
+        "cond_drift": true,
+        "converged": true,
+        "transition_epoch": 69
+      },
+      "primary": "self_vision",
+      "converged_primary": true
+    }
+  }
+}
