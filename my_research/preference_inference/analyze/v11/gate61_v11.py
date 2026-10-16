@@ -100,7 +100,7 @@ def item3():
     for i, p in enumerate(pts):
         for j, code in enumerate((0, 1)):
             ax = axes[i, 2 * j]
-            ax.imshow(views[code][i][:, :, ::-1], aspect='auto', interpolation='nearest')  # BGR -> RGB
+            ax.imshow(views[code][i], aspect='auto', interpolation='nearest')  # array shown as-is (v10 convention)
             for k in range(1, 8):
                 ax.axvline(8 * k - 0.5, color='w', lw=0.5)
             ax.set_xticks(8 * np.arange(8) + 3.5)
@@ -115,7 +115,7 @@ def item3():
             ax.set_xticks(range(8))
             ax.set_xticklabels([str(k) for k in range(8)], fontsize=6)
             ax.set_title('P (bins 0-7)', fontsize=8)
-    fig.suptitle('v11 gate 6.1-3: view (displayed as RGB; project Red = red) and 8-bin pleasure '
+    fig.suptitle('v11 gate 6.1-3: view (array channels shown as RGB, as in v10: project Red/Green look red/green, sky looks brown) and 8-bin pleasure '
                  '(liked Red - disliked Green)/128. Bin k centre = -157.5+45k deg', fontsize=9)
     fig.tight_layout()
     fig.savefig(os.path.join(OUT, 'gate61_pleasure_views.png'), dpi=130)
