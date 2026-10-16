@@ -27,3 +27,11 @@ data/result/v10_swap/**/*.pth
 data/result/v10_swapmix_*/
 data/result/v10_b3_*/*/model/
 data/result/v10_b3_*/*/test/
+
+# v11: never track binary outputs (data/data/ is already ignored above)
+data/result/v11/**/*.h5
+data/result/v11/**/*.npz
+data/result/v11/**/*.pth
+data/result/v11_*/*/model/
+data/result/v11_*/*/test/
+data/result/v11_*/*/save/
