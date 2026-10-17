@@ -44,7 +44,7 @@ _PI_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file
 sys.path.insert(0, _PI_DIR)
 import util  # noqa
 from config_util import load_config  # noqa
-from model.model_v11 import SuperpositionNetworkPleasure  # noqa
+from model import model_v11  # noqa
 from sim_v10 import layout as L  # noqa
 from v11core.pleasure import color_mask  # noqa
 
@@ -58,7 +58,7 @@ T_IMG = (1, 5, 10, 20, 50)
 def load_model(exp, seed, epoch, device):
     cfg = load_config(os.path.join(_PI_DIR, 'config', 'exp', exp + '.yml'))
     mcfg = load_config(os.path.join(_PI_DIR, 'config', 'model', cfg.model.name, cfg.model.config + '.yml'))
-    m = SuperpositionNetworkPleasure(mcfg).to(device)
+    m = getattr(model_v11, cfg.model.name)(mcfg).to(device)
     ck = os.path.join(RES, exp, str(seed), 'model', f'{epoch:05d}.pth')
     m.load_state_dict(torch.load(ck, map_location='cpu')['model'])
     m.eval()
@@ -71,7 +71,7 @@ def run(model, p_mask, h5path, split, n_ep, device, eval_seed=0, batch=50, keep_
     n = min(n_ep, g['layout'].shape[0]) if n_ep else g['layout'].shape[0]
     util.seed_all(eval_seed)
     H, P, ERR, RED_D, RED_T = [], [], [], [], []
-    PRED = []
+    PRED, HID = [], []
     for b0 in range(0, n, batch):
         sv = g['self_vision'][b0:b0 + batch]  # (B, 101, 16, 64, 3) uint8
         x = torch.from_numpy(util.scale_vision(util.transpose_vision(sv))).to(device)
@@ -89,7 +89,9 @@ def run(model, p_mask, h5path, split, n_ep, device, eval_seed=0, batch=50, keep_
             rt = color_mask(sv[:, t + 1], 'Red').sum((1, 2))
             redd.append(color_mask(pr, 'Red').sum((1, 2)) - rt)
             redt.append(rt)
-            if keep_pred:
+            if keep_pred == 'f16':
+                preds.append(pr.astype(np.float16))
+            elif keep_pred:
                 preds.append(np.round(pr * 255).astype(np.uint8))
         H.append(np.stack(hs, 1))
         ERR.append(np.stack(errs, 1))
@@ -97,6 +99,8 @@ def run(model, p_mask, h5path, split, n_ep, device, eval_seed=0, batch=50, keep_
         RED_T.append(np.stack(redt, 1))
         if keep_pred:
             PRED.append(np.stack(preds, 1))
+        if hasattr(model, '_hidden'):
+            HID.append(model._hidden[:, :100].numpy() & bool(getattr(model, 'pleasure_masking', False)))
     out = {
         'h': np.concatenate(H),            # (N, 100, 128): h after input frame t
         'err': np.concatenate(ERR),        # (N, 100)
@@ -107,6 +111,7 @@ def run(model, p_mask, h5path, split, n_ep, device, eval_seed=0, batch=50, keep_
     }
     if keep_pred:
         out['pred'] = np.concatenate(PRED)
+    out['hidden'] = np.concatenate(HID) if HID else np.zeros(out['err'].shape, bool)
     return out
 
 

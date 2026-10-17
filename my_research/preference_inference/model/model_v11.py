@@ -61,3 +61,50 @@ class SuperpositionNetworkPleasure(SuperpositionNetworkBase):
         pred = {}
         pred['self_vision'] = self.vision_decoder_module(so)
         return pred
+
+
+class SuperpositionNetworkPleasureMasked(SuperpositionNetworkPleasure):
+    """
+    v11 supplementary option (i), case B (docs/v11_experiment_log.md Sec.7.9):
+    identical to SuperpositionNetworkPleasure except that, per episode, the
+    pleasure input P_t is zeroed during hidden intervals. From t = 1, visible
+    and hidden intervals alternate (visible first), each of uniform integer
+    length in [len_min, len_max] (5..15); t = 0 is always visible. The schedule
+    is drawn at init_state() from torch's CPU generator (vision masks and
+    dropout use the CUDA generator, so they are unaffected).
+    `self.pleasure_masking` (default from config) can be switched off by the
+    evaluation scripts. p1_override (analysis hook) bypasses the schedule.
+    """
+
+    def __init__(self, config):
+        super().__init__(config)
+        pm = config.pleasure_mask
+        self.len_min, self.len_max = int(pm.len_min), int(pm.len_max)
+        self.pleasure_masking = bool(pm.enabled)
+        self.n_steps = int(pm.n_steps)
+
+    def make_schedule(self, batch_size):
+        hidden = torch.zeros(batch_size, self.n_steps, dtype=torch.bool)
+        for b in range(batch_size):
+            t, vis = 1, True
+            while t < self.n_steps:
+                L = int(torch.randint(self.len_min, self.len_max + 1, (1,)).item())
+                if not vis:
+                    hidden[b, t:t + L] = True
+                t += L
+                vis = not vis
+        return hidden
+
+    def init_state(self, batch_size):
+        super().init_state(batch_size)
+        self._hidden = self.make_schedule(batch_size)
+        self._t = 0
+
+    def forward(self, x, p_mask_vision_self, p_mask_vision_other, p1_override=None):
+        if p1_override is None and self.pleasure_masking:
+            p1 = self.compute_pleasure(x['self_vision'])
+            h = self._hidden[:, self._t].to(p1.device)
+            p1 = torch.where(h[:, None], torch.zeros_like(p1), p1)
+            p1_override = p1
+        self._t += 1
+        return super().forward(x, p_mask_vision_self, p_mask_vision_other, p1_override)

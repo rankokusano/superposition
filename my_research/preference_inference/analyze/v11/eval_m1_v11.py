@@ -72,11 +72,13 @@ def m1a_prime(reg, d):
     return ep, c, b, valid, e, pos
 
 
-def m1c(d, src):
+def m1c(d, src, frame_mask=None):
     pos = d['pos']
     m = pos[:, 1:101] - pos[:, :100]
     p = pos[:, :100]
     awake = (src[:, :100] != 3) & (np.linalg.norm(m, axis=-1) > 1e-6)
+    if frame_mask is not None:
+        awake = awake & frame_mask
     err = d['err']
     delta = {}
     for X in COLORS:
@@ -93,6 +95,31 @@ def m1c(d, src):
         delta[X] = dl
     c = delta['Red'] - (delta['Green'] + delta['Blue'] + delta['Cyan']) / 3
     return delta, c
+
+
+def m1d(d, src, cf, cf_valid, frame_mask=None):
+    """Counterfactual pull (Sec.7.9): s_X = L1(pred, v_t+1) - L1(pred, v_cf^X)
+    on awake frames whose actual step is NOT toward X; S_X episode means;
+    c_cf = S_Red - mean(S_G,B,C)."""
+    pos = d['pos']
+    m = pos[:, 1:101] - pos[:, :100]
+    p = pos[:, :100]
+    ok0 = (src[:, :100] != 3) & (np.linalg.norm(m, axis=-1) > 1e-6)
+    if frame_mask is not None:
+        ok0 = ok0 & frame_mask
+    pred = d['pred'].astype(np.float32)  # (N, 100, 16, 64, 3) in [0,1]
+    err = d['err']
+    S = {}
+    for k, X in enumerate(COLORS):
+        u = refs(d['layout'], X) - p
+        dist = np.linalg.norm(u, axis=-1)
+        cosang = (m * u).sum(-1) / np.maximum(np.linalg.norm(m, axis=-1) * dist, 1e-9)
+        sel = ok0 & cf_valid[:, :, k] & (cosang < np.cos(np.deg2rad(45)))
+        lcf = np.abs(pred - cf[:, :, k].astype(np.float32) / 255.0).mean((2, 3, 4))
+        sx = err - lcf
+        S[X] = np.array([sx[i][sel[i]].mean() if sel[i].any() else np.nan for i in range(len(p))])
+    c = S['Red'] - (S['Green'] + S['Blue'] + S['Cyan']) / 3
+    return S, c
 
 
 @torch.no_grad()
@@ -147,6 +174,9 @@ def main():
     ap.add_argument('--n_train', type=int, default=1000)
     ap.add_argument('--sub', default='trial_m1')
     ap.add_argument('--device', default='cuda:0')
+    ap.add_argument('--pmask', default='off', choices=['off', 'on'],
+                    help='option (i) models only: hide P in intervals during evaluation (Sec.7.9)')
+    ap.add_argument('--no_m1d', action='store_true')
     args = ap.parse_args()
     out = os.path.join(RES, 'v11', args.sub)
     os.makedirs(out, exist_ok=True)
@@ -156,13 +186,21 @@ def main():
 
     rnd = os.path.join(DATA, 'v11_s1_random', 'data.h5')
     src_test = h5py.File(rnd, 'r')['test']['a1_source'][()]
+    cf = cf_valid = None
+    if not args.no_m1d:
+        fcf = h5py.File(os.path.join(RES, 'v11', 'cf', 'cf_views.h5'), 'r')
+        cf, cf_valid = fcf['cf_vision'][()], fcf['valid'][()]
     S, per_ep, maps = {}, {}, {}
     for cond in ('random', 'mixed'):
         exp = args.exp_fmt.format(cond)
         model, p_mask = load_model(exp, args.seed, args.epoch, dev)
+        if hasattr(model, 'pleasure_masking'):
+            model.pleasure_masking = args.pmask == 'on'
+        else:
+            assert args.pmask == 'off'
         own = os.path.join(DATA, f'v11_s1_{cond}', 'data.h5')
         d_tr = run(model, p_mask, rnd, 'train', args.n_train, dev)
-        d_te = run(model, p_mask, rnd, 'test', 0, dev)
+        d_te = run(model, p_mask, rnd, 'test', 0, dev, keep_pred=False if args.no_m1d else 'f16')
         d_own = d_tr if cond == 'random' else run(model, p_mask, own, 'train', args.n_train, dev)
         s = {'exp': exp, 'epoch': args.epoch, 'seed': args.seed}
         h_own = d_own['h'].reshape(-1, 128)
@@ -181,6 +219,21 @@ def main():
         delta, cp = m1c(d_te, src_test)
         s['M1c'] = {'c_pred': summarize_ci(cp), 'Delta': {X: summarize_ci(v) for X, v in delta.items()},
                     'per_layout_c_pred': {LAYNAME[k]: summarize_ci(cp[d_te['layout'] == k]) for k in (0, 1)}}
+        if args.pmask == 'on':
+            hid = d_te['hidden']
+            s['hidden_frac_test'] = float(hid[:, 1:].mean())
+            dlh, cph = m1c(d_te, src_test, hid)
+            s['M1c_hidden_frames'] = {'c_pred': summarize_ci(cph), 'Delta': {X: summarize_ci(v) for X, v in dlh.items()}}
+            dlv, cpv = m1c(d_te, src_test, ~hid)
+            s['M1c_visible_frames'] = {'c_pred': summarize_ci(cpv), 'Delta': {X: summarize_ci(v) for X, v in dlv.items()}}
+        if cf is not None:
+            Sd, cd = m1d(d_te, src_test, cf, cf_valid)
+            s['M1d'] = {'c_cf': summarize_ci(cd), 'S': {X: summarize_ci(v) for X, v in Sd.items()},
+                        'per_layout_c_cf': {LAYNAME[k]: summarize_ci(cd[d_te['layout'] == k]) for k in (0, 1)},
+                        'err_level': float(d_te['err'].mean())}
+            if args.pmask == 'on':
+                Sdh, cdh = m1d(d_te, src_test, cf, cf_valid, d_te['hidden'])
+                s['M1d_hidden_frames'] = {'c_cf': summarize_ci(cdh), 'S': {X: summarize_ci(v) for X, v in Sdh.items()}}
         mb = m1b_prime(model, p_mask, reg, rnd, dev)
         dplus10, dminus10 = mb['plus'][:, :, -1], mb['minus'][:, :, -1]
         contrast = dplus10 - dminus10  # (N, 8)
@@ -226,6 +279,13 @@ def main():
         S[cond] = s
         per_ep[cond] = {'c': c, 'cp': cp, 'b1': contrast.mean(1), 'm2': (ep_b['Red'] - ep_b['Green'])[swap],
                         'b_red': ep_b['Red']}
+        if cf is not None:
+            per_ep[cond]['cd'] = cd
+            if args.pmask == 'on':
+                per_ep[cond]['cdh'] = cdh
+        if args.pmask == 'on':
+            per_ep[cond]['cph'] = cph
+        del d_te
         print(cond, args.epoch, 'R2', round(s['r2_v4conv_insample_own_train'], 4),
               'c', s['M1a_prime']['c_red_specific'], 'c_pred', s['M1c']['c_pred'],
               'b1', s['M1b_prime']['main_mean8'], flush=True)
@@ -237,7 +297,10 @@ def main():
         'M2_proposal': summarize_ci(per_ep['mixed']['m2'] - per_ep['random']['m2']),
         'registered_b_red': summarize_ci(per_ep['mixed']['b_red'] - per_ep['random']['b_red']),
     }
-    tag = f'{args.exp_fmt.format("X")}_s{args.seed}_ep{args.epoch}'
+    for key, name in (('cd', 'M1d_c_cf'), ('cdh', 'M1d_c_cf_hidden_frames'), ('cph', 'M1c_c_pred_hidden_frames')):
+        if key in per_ep['mixed']:
+            S['paired_mixed_minus_random'][name] = summarize_ci(per_ep['mixed'][key] - per_ep['random'][key])
+    tag = f'{args.exp_fmt.format("X")}_s{args.seed}_ep{args.epoch}_pmask{args.pmask}'
     with open(os.path.join(out, f'm1_{tag}.json'), 'w') as f:
         json.dump(S, f, indent=1)
 
