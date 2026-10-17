@@ -1,0 +1,30 @@
+{
+  "label": "v10_fig5_ft_s1_ep100_v10_swap_grid",
+  "epoch": 100,
+  "margin": 1,
+  "mode": "eval",
+  "data_h5": "data/data/v10_swap_grid/data.h5",
+  "saved_h5": "data/result/v10_swap/b4/fig5/run_v10_fig5_ft_s1_v10_swap_grid/save/saved.h5",
+  "git_commit": "0710c67e93d52dbef0e2d1a00f94f25248ab3058",
+  "self_self": {
+    "mean": 0.06456263363361359,
+    "std": 0.01975182257592678,
+    "n": 130321
+  },
+  "other_other": {
+    "mean": 0.15148654580116272,
+    "std": 0.041962914168834686,
+    "n": 130321
+  },
+  "self_other": {
+    "mean": 0.14749334752559662,
+    "std": 0.03641408681869507,
+    "n": 130321
+  },
+  "other_self": {
+    "mean": 0.15043173730373383,
+    "std": 0.04844171553850174,
+    "n": 130321
+  },
+  "margin_other_self_minus_other_other": -0.001054808497428894
+}

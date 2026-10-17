@@ -1,0 +1,33 @@
+# v10 B4 Fig.5 decoder (docs/v10_experiment_log.md Sec.5.22 (3), 5.30): copy of
+# fig5_v4_exp1l1000.yml; only data (v10_swapmix_r2 first 1000 train / 100 test
+# episodes) and pretrain (v10_b3_ft seed1 ep400) differ. 
+model:
+    name: Autoencoder
+    config: default
+    mode: ~
+runner: AutoencoderRunner
+data:
+    name: v10_swapmix_r2_first1000
+load_state_dict_strict: False
+train:
+    loss_function: l1_loss
+    pretrain:
+        exp_config: v10_b3_ft
+        seed: 1
+        epoch: 400
+    batch_size: 100
+    max_epochs: 100
+    save_interval: 1
+    test_interval: 100
+    optimizer: AdamW
+    optim_config:
+        default:
+            lr: 0.001
+            weight_decay: 3.
+        freeze:
+            - vision_encoder
+            - share_lns
+        per_params:
+            - name: bias
+              args:
+                  weight_decay: 0.0

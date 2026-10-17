@@ -1,0 +1,14 @@
+{
+  "dataset": "r2_a1random_a2rl",
+  "split": "train (eval group), in-sample Ridge",
+  "epoch": 360,
+  "git_commit": "0710c67e93d52dbef0e2d1a00f94f25248ab3058",
+  "r2": {
+    "all": {
+      "h1_to_self": 0.8111335602393805,
+      "h1_to_other": 0.5927403316667484,
+      "h2_to_self": 0.09401760559858352,
+      "h2_to_other": 0.9174614606906526
+    }
+  }
+}

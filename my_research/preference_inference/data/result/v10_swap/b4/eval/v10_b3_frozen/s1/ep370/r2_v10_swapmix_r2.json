@@ -1,0 +1,26 @@
+{
+  "dataset": "v10_swapmix_r2",
+  "split": "train (eval group), in-sample Ridge",
+  "epoch": 370,
+  "git_commit": "0710c67e93d52dbef0e2d1a00f94f25248ab3058",
+  "r2": {
+    "all": {
+      "h1_to_self": 0.8776318469349629,
+      "h1_to_other": 0.770129092174912,
+      "h2_to_self": 0.08866106739818763,
+      "h2_to_other": 0.7955644563042437
+    },
+    "original": {
+      "h1_to_self": 0.871581545894893,
+      "h1_to_other": 0.6441497587409171,
+      "h2_to_self": 0.09616896652345425,
+      "h2_to_other": 0.9239376213185417
+    },
+    "swap_rg": {
+      "h1_to_self": 0.8990965804842179,
+      "h1_to_other": 0.5945885690613189,
+      "h2_to_self": 0.09789610869753829,
+      "h2_to_other": 0.8520899539661275
+    }
+  }
+}

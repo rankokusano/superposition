@@ -1,0 +1,15 @@
+{
+  "label": "v10_b3_ft s0 ep400 + v10_fig5_ft_s0 ep100 (viz20 episodes of layout swap_rg)",
+  "model_epoch": 400,
+  "ae_epoch": 100,
+  "git_commit": "0710c67e93d52dbef0e2d1a00f94f25248ab3058",
+  "layouts": {
+    "swap_rg": {
+      "self_pred_mean_abs_error_all20ep": 0.03607533872127533,
+      "other_fig5_mean_abs_error_all20ep": 0.19471509754657745,
+      "model_h5": "data/result/v10_swap/b4/pred_images/v10_b3_ft_s0_ep400/model/save/saved.h5",
+      "ae_h5": "data/result/v10_swap/b4/pred_images/ae_v10_fig5_ft_s0/save/saved.h5",
+      "data_h5": "data/data/v10_swapmix_r2_viz20/data.h5"
+    }
+  }
+}
