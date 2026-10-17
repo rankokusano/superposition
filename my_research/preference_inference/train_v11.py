@@ -26,6 +26,12 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     args_util.add_common_args(parser)
+    # v11 6.2 continuation (docs/v11_experiment_log.md Sec.7.6): resume model
+    # AND optimizer state from <resume_exp>/<seed>/model/<resume_epoch>.pth and
+    # continue at resume_epoch + 1 (load_pretrain restores weights only, which
+    # would reset AdamW's moments). Outputs go to this run's own exp dir.
+    parser.add_argument('--resume_exp', default=None)
+    parser.add_argument('--resume_epoch', type=int, default=None)
     args = parser.parse_args()
 
     util.set_cudnn_config(args)
@@ -57,8 +63,19 @@ if __name__ == '__main__':
 
     train_logger, eval_logger, test_logger = util.gen_logger(log_dir)
 
-    util.save_model_optimizer(model_dir, 0, model, optimizer)
-    for epoch in range(1, exp_config.train.max_epochs + 1):
+    start_epoch = 1
+    if args.resume_exp is not None:
+        assert exp_config.train.pretrain is None
+        ck_path = os.path.join('data', 'result', args.resume_exp, str(args.seed), 'model',
+                               '{:05d}.pth'.format(args.resume_epoch))
+        ck = torch.load(ck_path, map_location=device)
+        model.load_state_dict(ck['model'])
+        optimizer.load_state_dict(ck['optimizer'])
+        start_epoch = args.resume_epoch + 1
+        print(f'Resumed model+optimizer from {args.resume_exp} seed {args.seed} epoch {args.resume_epoch}')
+    else:
+        util.save_model_optimizer(model_dir, 0, model, optimizer)
+    for epoch in range(start_epoch, exp_config.train.max_epochs + 1):
 
         runner.train_epoch(
             model,
