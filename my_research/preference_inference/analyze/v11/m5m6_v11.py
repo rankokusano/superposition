@@ -21,6 +21,9 @@ import os
 import sys
 
 import h5py
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt  # noqa
 import numpy as np
 import torch
 from sklearn.linear_model import LogisticRegression, Ridge
@@ -73,7 +76,7 @@ def main():
     S = {}
     for cond in ('random', 'mixed'):
         model, p_mask = load_model(args.exp_fmt.format(cond), args.seed, args.epoch, dev)
-        d = run(model, p_mask, path, 'test', 0, dev)
+        d = run(model, p_mask, path, 'test', 0, dev, keep_h2=True)
         h = d['h']                                  # (N, 100, 128), index t = after frame t
         pos = d['pos'][:, :100]
         lay = d['layout']
@@ -105,6 +108,29 @@ def main():
                 pred[te] = clf.fit(X[tr], lay[tr]).predict(X[te])
             acc6[f't{t}'] = float((pred == lay).mean())
         s['M6_layout_readout_acc'] = acc6
+        # M6 position read-outs (5-fold GroupKFold by episode, cross-validated R^2 over all held-out frames)
+        g2 = groups.reshape(-1)
+        scat = {}
+        for key, H_, P_ in (('h1_to_self', h, pos), ('h2_to_other', d['h2'], d['other_pos'][:, :100])):
+            X, Y = H_.reshape(-1, 128), P_.reshape(-1, 2)
+            Yh = np.zeros_like(Y)
+            for tr, te in GroupKFold(5).split(X, Y, g2):
+                Yh[te] = Ridge(alpha=1.0).fit(X[tr], Y[tr]).predict(X[te])
+            s[f'M6_{key}_cv_r2'] = float(1 - ((Y - Yh) ** 2).sum() / ((Y - Y.mean(0)) ** 2).sum())
+            scat[key] = (Y, Yh)
+        fig, ax = plt.subplots(1, 4, figsize=(16, 4))
+        for j, (key, (Y, Yh)) in enumerate(scat.items()):
+            for c in (0, 1):
+                a_ = ax[2 * j + c]
+                idx = np.random.RandomState(0).choice(len(Y), 5000, replace=False)
+                a_.scatter(Y[idx, c], Yh[idx, c], s=2, alpha=0.3, rasterized=True)
+                a_.plot([-10, 10], [-10, 10], 'k--', lw=0.8)
+                a_.set_xlabel(f'true {"xy"[c]}'); a_.set_ylabel(f'read-out {"xy"[c]}')
+                a_.set_title(f'{cond}: {key} (CV R^2 {s[f"M6_{key}_cv_r2"]:.3f})', fontsize=9)
+        fig.suptitle(f'M6 read-out vs truth (5000 random frames), {args.exp_fmt.format(cond)} s{args.seed} ep{args.epoch}', fontsize=10)
+        fig.tight_layout()
+        fig.savefig(os.path.join(out, f'm6_scatter_{cond}_s{args.seed}_ep{args.epoch}.png'), dpi=100)
+        plt.close(fig)
         S[cond] = s
         print(cond, json.dumps(s), flush=True)
     with open(os.path.join(out, f'm5m6_{args.exp_fmt.format("X")}_s{args.seed}_ep{args.epoch}.json'), 'w') as f:

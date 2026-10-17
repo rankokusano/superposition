@@ -115,6 +115,11 @@ def main():
                                           np.abs(true_images - srec[s]).mean((1, 2, 3)).reshape(SIZE, SIZE),
                                           orec[s], srec[s], f32(g['other_vision_no_agent'][o][s]),
                                           f32(g['self_vision'][o][s]))
+        # per-A-2-position maps (instructions Sec.7.1): mean over A-1 positions of
+        # |A-2 true view - A-2 view via Fig.5| (other_other) and, for contrast, other_self
+        n1 = len(keep_1d)
+        per_o = {k: np.array([x.mean() for x in errs[k]]).reshape(n1, n1) for k in ('other_other', 'self_other')}
+        maps[lay + '_per_o'] = per_o
         r = {k: {'mean': float(np.concatenate(v).mean()), 'std': float(np.concatenate(v).std()),
                  'n': int(np.concatenate(v).size)} for k, v in errs.items()}
         r['margin_other_self_minus_other_other'] = r['other_self']['mean'] - r['other_other']['mean']
@@ -153,6 +158,23 @@ def main():
     tag = f'{args.ae}_s{args.seed}_ep{args.epoch}'
     fig.savefig(os.path.join(out, f'fig5_maps_{tag}.png'), dpi=100)
     plt.close(fig)
+    # per-A-2-position heatmaps, both layouts (shared colour scale)
+    fig2, ax2 = plt.subplots(1, 4, figsize=(17, 4))
+    allv = np.concatenate([maps[l + '_per_o'][k].ravel() for l in GRIDS for k in ('other_other', 'self_other')])
+    ext = [-10 + m - 0.5, 10 - m + 0.5, -10 + m - 0.5, 10 - m + 0.5]
+    for j, lay in enumerate(GRIDS):
+        for c, (k, title) in enumerate((('other_other', '|A-2 true view - A-2 view via Fig.5|'),
+                                        ('self_other', '|A-1 view - A-2 view via Fig.5| (contrast)'))):
+            a_ = ax2[2 * j + c]
+            im = a_.imshow(maps[lay + '_per_o'][k].T, origin='lower', extent=ext, cmap='jet',
+                           vmin=allv.min(), vmax=allv.max())
+            a_.set_title(f'{lay}: {title}', fontsize=8); a_.set_xlabel('A-2 x'); a_.set_ylabel('A-2 y')
+            plt.colorbar(im, ax=a_)
+            arrays[f'{lay}_per_A2pos_{k}'] = maps[lay + '_per_o'][k]
+    fig2.suptitle(f'v11 Fig.5 per A-2 position (mean over A-1 positions, margin {m}): {args.ae} s{args.seed} ep{args.epoch}', fontsize=10)
+    fig2.tight_layout()
+    fig2.savefig(os.path.join(out, f'fig5_perA2pos_{tag}.png'), dpi=110)
+    plt.close(fig2)
     np.savez_compressed(os.path.join(out, f'fig5_maps_{tag}.npz'), **arrays)
     with open(os.path.join(out, f'fig5_{tag}.json'), 'w') as f:
         json.dump(res, f, indent=1)

@@ -30,6 +30,19 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _HERE)
 from eval_trial_v11 import DATA, LAYNAME, RES, load_model, run  # noqa
 import util  # noqa
+import model.util as model_util  # noqa
+from v11core.pleasure import pleasure_np  # noqa
+
+_MASK_LOG = []
+_orig_mask = model_util.mask
+
+
+def _logged_mask(x, p_mask):
+    # identical to model/util.mask (same torch.rand call -> same masks), but records
+    # which batch elements were masked; calls alternate self, other per step.
+    m = torch.rand((x.size(0), 1), device=x.device) < p_mask
+    _MASK_LOG.append(m[:, 0].cpu().numpy())
+    return torch.where(m, torch.zeros_like(x), x)
 
 T_IMG = (1, 5, 10, 20, 50)
 
@@ -72,8 +85,13 @@ def main():
         ae = load_model(args.ae_fmt.format(cond), args.seed, args.ae_epoch, dev)[0] if args.ae_fmt else None
         dname = 'v11_s1_random_viz20' if args.data == 'common' else f'v11_s1_{cond}_viz20'
         path = os.path.join(DATA, dname, 'data.h5')
+        _MASK_LOG.clear()
+        model_util.mask = _logged_mask
         d = run(model, p_mask, path, 'train', 0, dev, keep_pred=True)
+        model_util.mask = _orig_mask
         g = h5py.File(path, 'r')['train']
+        assert len(_MASK_LOG) == 200, len(_MASK_LOG)  # one batch (viz20 <= 50 episodes), 100 steps x (self, other)
+        vis_masked = np.stack(_MASK_LOG[0::2], 1)        # (N, 100): self vision masked at input t
         sv_all, ov_all, lay = g['self_vision'][()], g['other_vision'][()], g['layout'][()]
         s = {'pred_err_all': float(d['err'].mean())}
         if ae is not None:
@@ -99,14 +117,18 @@ def main():
                 arrays[f'{cond}_{LAYNAME[k]}_ep{ep}_fig5other'] = orr
             else:
                 rows += [('A-2 true view v2_t', lambda t: ov[t])]
-            fig, axes = plt.subplots(len(rows), len(T_IMG), figsize=(3.2 * len(T_IMG), 1.05 * len(rows) + 0.6))
+            P_ep = pleasure_np(sv[:100])
+            arrays[f'{cond}_{LAYNAME[k]}_ep{ep}_vision_masked'] = vis_masked[ep]
+            arrays[f'{cond}_{LAYNAME[k]}_ep{ep}_pleasure'] = P_ep
+            fig, axes = plt.subplots(len(rows), len(T_IMG), figsize=(3.2 * len(T_IMG), 1.05 * len(rows) + 1.0))
             for j, t in enumerate(T_IMG):
                 for i, (name, fn) in enumerate(rows):
                     axes[i, j].imshow(fn(t), aspect='auto', interpolation='nearest')
                     axes[i, j].set_xticks([]); axes[i, j].set_yticks([])
                     if j == 0:
                         axes[i, j].set_ylabel(name, fontsize=7)
-                axes[0, j].set_title(f't={t}', fontsize=9)
+                axes[0, j].set_title(f't={t}  vision {"MASKED" if vis_masked[ep, t] else "SHOWN"}\n'
+                                     f'P(bins 0-7) = ' + ' '.join(f'{x:+.2f}' for x in P_ep[t]), fontsize=7)
             fig.suptitle(f'{args.exp_fmt.format(cond)} s{args.seed} ep{args.epoch}; Fig.5 AE '
                          f'{args.ae_fmt.format(cond) if args.ae_fmt else "-"}; {dname} episode {ep} ({LAYNAME[k]}). '
                          f'Array channels shown as RGB (v10 convention)', fontsize=8)

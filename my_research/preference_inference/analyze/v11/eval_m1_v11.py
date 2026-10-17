@@ -127,7 +127,7 @@ def m1b_prime(model, p_mask, reg, h5path, device, batch=50):
     g = h5py.File(h5path, 'r')['test']
     n = g['layout'].shape[0]
     W = torch.tensor(reg.coef_.T, dtype=torch.float32, device=device)  # (128, 2)
-    out = {'plus': [], 'minus': []}
+    out = {'plus': [], 'minus': [], 'vec_plus': [], 'vec_minus': []}
     for b0 in range(0, n, batch):
         sv = g['self_vision'][b0:b0 + batch]
         x = torch.from_numpy(util.scale_vision(util.transpose_vision(sv))).to(device)
@@ -150,14 +150,16 @@ def m1b_prime(model, p_mask, reg, h5path, device, batch=50):
 
         ctrl = branch(torch.zeros(B, 8, device=device))
         for sign, key in ((1.0, 'plus'), (-1.0, 'minus')):
-            dk = []
+            dk, vk = [], []
             for k in range(8):
                 P = torch.zeros(B, 8, device=device)
                 P[:, k] = sign * A_MANIP
                 diff = branch(P) - ctrl
                 uk = torch.tensor(BIN_UNIT[k], dtype=torch.float32, device=device)
                 dk.append((diff @ uk).cpu().numpy())  # (B, NSTEP)
+                vk.append(diff[:, -1].cpu().numpy())  # (B, 2) displacement after NSTEP steps
             out[key].append(np.stack(dk, 1))  # (B, 8, NSTEP)
+            out['vec_' + key].append(np.stack(vk, 1))  # (B, 8, 2)
     return {k: np.concatenate(v) for k, v in out.items()}  # (N, 8, NSTEP)
 
 
@@ -246,7 +248,9 @@ def main():
             'per_bin_plus': dplus10.mean(0).round(4).tolist(),
             'per_bin_minus': dminus10.mean(0).round(4).tolist(),
             'contrast_curve_steps1_10': (mb['plus'] - mb['minus']).mean((0, 1)).round(4).tolist(),
-            'contrast_slope_per_step': float(sl), 'a': A_MANIP}
+            'contrast_slope_per_step': float(sl), 'a': A_MANIP,
+            'mean_vec_plus_step10': mb['vec_plus'].mean(0).round(4).tolist(),
+            'mean_vec_minus_step10': mb['vec_minus'].mean(0).round(4).tolist()}
         swap = d_te['layout'] == 1
         s['M2_proposal_swap_newRed_minus_oldPlace'] = summarize_ci((ep_b['Red'] - ep_b['Green'])[swap])
         # cell maps (M4) and registered M2 angle criterion
