@@ -44,6 +44,7 @@ _PI_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file
 sys.path.insert(0, _PI_DIR)
 import util  # noqa
 from config_util import load_config  # noqa
+import model as models  # noqa
 from model import model_v11  # noqa
 from sim_v10 import layout as L  # noqa
 from v11core.pleasure import color_mask  # noqa
@@ -55,33 +56,35 @@ LAYNAME = {0: 'original', 1: 'swap_rg'}
 T_IMG = (1, 5, 10, 20, 50)
 
 
-def load_model(exp, seed, epoch, device):
+def load_model(exp, seed, epoch, device, ckpt_root=None):
     cfg = load_config(os.path.join(_PI_DIR, 'config', 'exp', exp + '.yml'))
     mcfg = load_config(os.path.join(_PI_DIR, 'config', 'model', cfg.model.name, cfg.model.config + '.yml'))
-    m = getattr(model_v11, cfg.model.name)(mcfg).to(device)
-    ck = os.path.join(RES, exp, str(seed), 'model', f'{epoch:05d}.pth')
+    m = (getattr(model_v11, cfg.model.name, None) or getattr(models, cfg.model.name))(mcfg).to(device)
+    ck = os.path.join(ckpt_root or RES, exp, str(seed), 'model', f'{epoch:05d}.pth')
     m.load_state_dict(torch.load(ck, map_location='cpu')['model'])
     m.eval()
-    return m, cfg.p_mask_vision
+    return m, cfg.get('p_mask_vision', None)
 
 
 @torch.no_grad()
-def run(model, p_mask, h5path, split, n_ep, device, eval_seed=0, batch=50, keep_pred=False):
+def run(model, p_mask, h5path, split, n_ep, device, eval_seed=0, batch=50, keep_pred=False, keep_h2=False):
     g = h5py.File(h5path, 'r')[split]
     n = min(n_ep, g['layout'].shape[0]) if n_ep else g['layout'].shape[0]
     util.seed_all(eval_seed)
     H, P, ERR, RED_D, RED_T = [], [], [], [], []
-    PRED, HID = [], []
+    PRED, HID, H2 = [], [], []
     for b0 in range(0, n, batch):
         sv = g['self_vision'][b0:b0 + batch]  # (B, 101, 16, 64, 3) uint8
         x = torch.from_numpy(util.scale_vision(util.transpose_vision(sv))).to(device)
         B = x.shape[0]
         model.init_state(B)
-        hs, errs, redd, redt, preds = [], [], [], [], []
+        hs, h2s, errs, redd, redt, preds = [], [], [], [], [], []
         for t in range(100):
             pm = 0 if t == 0 else p_mask
             pred = model({'self_vision': x[:, t]}, pm, pm)['self_vision']
             hs.append(model.superposition_module.state['self'][0].cpu().numpy())
+            if keep_h2:
+                h2s.append(model.superposition_module.state['other'][0].cpu().numpy())
             p01 = ((pred + 1) / 2).clamp(0, 1)
             tr01 = (x[:, t + 1] + 1) / 2
             errs.append((p01 - tr01).abs().mean((1, 2, 3)).cpu().numpy())
@@ -94,6 +97,8 @@ def run(model, p_mask, h5path, split, n_ep, device, eval_seed=0, batch=50, keep_
             elif keep_pred:
                 preds.append(np.round(pr * 255).astype(np.uint8))
         H.append(np.stack(hs, 1))
+        if keep_h2:
+            H2.append(np.stack(h2s, 1))
         ERR.append(np.stack(errs, 1))
         RED_D.append(np.stack(redd, 1))
         RED_T.append(np.stack(redt, 1))
@@ -111,6 +116,9 @@ def run(model, p_mask, h5path, split, n_ep, device, eval_seed=0, batch=50, keep_
     }
     if keep_pred:
         out['pred'] = np.concatenate(PRED)
+    if keep_h2:
+        out['h2'] = np.concatenate(H2)
+        out['other_pos'] = g['other_position'][:n]
     out['hidden'] = np.concatenate(HID) if HID else np.zeros(out['err'].shape, bool)
     return out
 

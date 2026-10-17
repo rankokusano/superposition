@@ -81,6 +81,7 @@ def main():
     ap.add_argument('--epoch', type=int, required=True)
     ap.add_argument('--seed', type=int, default=0)
     ap.add_argument('--device', default='cuda:0')
+    ap.add_argument('--sub', default='trial_m1d')
     args = ap.parse_args()
     dev = torch.device(args.device)
     torch.backends.cudnn.deterministic = True
@@ -107,7 +108,8 @@ def main():
     S['paired_mixed_minus_random'] = {v: summarize_ci(per['mixed'][v]['c_cf'] - per['random'][v]['c_cf'])
                                       for v in ('none', 'rg', 'rg_dil1')}
     tag = f'{args.exp_fmt.format("X")}_s{args.seed}_ep{args.epoch}'
-    with open(os.path.join(RES, 'v11', 'trial_m1d', f'm1d_masked_{tag}.json'), 'w') as f:
+    os.makedirs(os.path.join(RES, 'v11', args.sub), exist_ok=True)
+    with open(os.path.join(RES, 'v11', args.sub, f'm1d_masked_{tag}.json'), 'w') as f:
         json.dump(S, f, indent=1)
     for v in ('none', 'rg', 'rg_dil1'):
         print(args.epoch, v, 'random', S['random'][v]['c_cf']['mean'], 'mixed', S['mixed'][v]['c_cf'],
