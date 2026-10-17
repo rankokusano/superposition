@@ -1,0 +1,42 @@
+Loaded (read-only): /work/my_research/preference_inference/data/result/v10_b3_ft/0/model/00360.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_reeval/a2stay/eval/v10_b3_ft/s0/ep360/run/
+{"readout_t20": {"h1": 0.9833333333333333, "probe_q": 0.86, "sv_enc": 0.9133333333333333}, "distance_r2_swap": {"dist_red": 0.5413022004388853, "dist_top_left": 0.5934555749264523, "corr_dist_red_top_left": -0.0074451319311328555}}
+DONE a2stay v10_b3_ft s0 ep360
+Loaded (read-only): /work/my_research/preference_inference/data/result/v10_b3_ft/0/model/00370.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_reeval/a2stay/eval/v10_b3_ft/s0/ep370/run/
+{"readout_t20": {"h1": 0.9766666666666667, "probe_q": 0.86, "sv_enc": 0.9333333333333333}, "distance_r2_swap": {"dist_red": 0.5453098554469675, "dist_top_left": 0.5977024449667818, "corr_dist_red_top_left": -0.0074451319311328555}}
+DONE a2stay v10_b3_ft s0 ep370
+Loaded (read-only): /work/my_research/preference_inference/data/result/v10_b3_ft/0/model/00380.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_reeval/a2stay/eval/v10_b3_ft/s0/ep380/run/
+{"readout_t20": {"h1": 0.9733333333333334, "probe_q": 0.86, "sv_enc": 0.9266666666666666}, "distance_r2_swap": {"dist_red": 0.5456271818938353, "dist_top_left": 0.5946403194533765, "corr_dist_red_top_left": -0.0074451319311328555}}
+DONE a2stay v10_b3_ft s0 ep380
+Loaded (read-only): /work/my_research/preference_inference/data/result/v10_b3_ft/0/model/00390.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_reeval/a2stay/eval/v10_b3_ft/s0/ep390/run/
+{"readout_t20": {"h1": 0.9766666666666667, "probe_q": 0.86, "sv_enc": 0.92}, "distance_r2_swap": {"dist_red": 0.542812332311132, "dist_top_left": 0.5874192701500038, "corr_dist_red_top_left": -0.0074451319311328555}}
+DONE a2stay v10_b3_ft s0 ep390
+Loaded (read-only): /work/my_research/preference_inference/data/result/v10_b3_ft/0/model/00400.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_reeval/a2stay/eval/v10_b3_ft/s0/ep400/run/
+{"readout_t20": {"h1": 0.9733333333333334, "probe_q": 0.86, "sv_enc": 0.9266666666666666}, "distance_r2_swap": {"dist_red": 0.5387516672815735, "dist_top_left": 0.5945702674080724, "corr_dist_red_top_left": -0.0074451319311328555}}
+DONE a2stay v10_b3_ft s0 ep400
+ALL_DONE a2stay v10_b3_ft s0
+Loaded (read-only): /work/my_research/preference_inference/data/result/v10_b3_ft/0/model/00360.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_reeval/a2v3/eval/v10_b3_ft/s0/ep360/run/
+{"readout_t20": {"h1": 0.99, "probe_q": 0.9133333333333333, "sv_enc": 0.9866666666666667}, "distance_r2_swap": {"dist_red": 0.5170409743365458, "dist_top_left": 0.3108763757094377, "corr_dist_red_top_left": -0.029378202706112955}}
+DONE a2v3 v10_b3_ft s0 ep360
+Loaded (read-only): /work/my_research/preference_inference/data/result/v10_b3_ft/0/model/00370.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_reeval/a2v3/eval/v10_b3_ft/s0/ep370/run/
+{"readout_t20": {"h1": 0.99, "probe_q": 0.9133333333333333, "sv_enc": 0.9933333333333333}, "distance_r2_swap": {"dist_red": 0.5158643505999518, "dist_top_left": 0.3111572355917488, "corr_dist_red_top_left": -0.029378202706112955}}
+DONE a2v3 v10_b3_ft s0 ep370
+Loaded (read-only): /work/my_research/preference_inference/data/result/v10_b3_ft/0/model/00380.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_reeval/a2v3/eval/v10_b3_ft/s0/ep380/run/
+{"readout_t20": {"h1": 0.9866666666666667, "probe_q": 0.9133333333333333, "sv_enc": 0.99}, "distance_r2_swap": {"dist_red": 0.5217733857977742, "dist_top_left": 0.3054141441313907, "corr_dist_red_top_left": -0.029378202706112955}}
+DONE a2v3 v10_b3_ft s0 ep380
+Loaded (read-only): /work/my_research/preference_inference/data/result/v10_b3_ft/0/model/00390.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_reeval/a2v3/eval/v10_b3_ft/s0/ep390/run/
+{"readout_t20": {"h1": 0.99, "probe_q": 0.9133333333333333, "sv_enc": 0.9833333333333333}, "distance_r2_swap": {"dist_red": 0.5192681885972685, "dist_top_left": 0.3110339174875477, "corr_dist_red_top_left": -0.029378202706112955}}
+DONE a2v3 v10_b3_ft s0 ep390
+Loaded (read-only): /work/my_research/preference_inference/data/result/v10_b3_ft/0/model/00400.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_reeval/a2v3/eval/v10_b3_ft/s0/ep400/run/
+{"readout_t20": {"h1": 0.9833333333333333, "probe_q": 0.9133333333333333, "sv_enc": 0.9933333333333333}, "distance_r2_swap": {"dist_red": 0.5153383764823911, "dist_top_left": 0.3052728635894869, "corr_dist_red_top_left": -0.029378202706112955}}
+DONE a2v3 v10_b3_ft s0 ep400
+ALL_DONE a2v3 v10_b3_ft s0

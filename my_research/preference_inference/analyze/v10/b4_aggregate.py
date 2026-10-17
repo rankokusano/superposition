@@ -127,7 +127,19 @@ def main():
             g['reading'] = ('colour-organised internal state' if g['gate1_pass'] and g['gate2_pass'] else
                             'colour info in h1 but indistinguishable from passing probe-Q / Encoder output' if g['gate1_pass'] else
                             'not organised by colour')
+            if TAG:  # Sec.5.34: compare with reading the layout from A-2's TRUE position (t=20)
+                a2c = a2_position_correct(20)
+                g['acc_A2_true_position_t20'] = float(a2c.mean())
+                g['diff_h1_minus_A2_position'] = float((h1 - a2c).mean())
+                g['ci_h1_minus_A2_position'] = boot_ci(h1 - a2c, rng)
+                g['h1_beats_A2_position'] = bool(g['ci_h1_minus_A2_position'][0] > 0)
             gates[name][lab] = g
+    if TAG:
+        a2c = a2_position_correct(20)
+        r3 = r3a
+        gates['R3-A_400'] = {'seeds 0,1': {'acc_h1_t20': float(r3.mean()), 'acc_A2_true_position_t20': float(a2c.mean()),
+                                           'diff_h1_minus_A2_position': float((r3 - a2c).mean()),
+                                           'ci_h1_minus_A2_position': boot_ci(r3 - a2c, rng)}}
     out = {'git_commit': git_hash(), 'epochs': EPOCHS, 'n_boot': N_BOOT, 'n_test_episodes': int(len(layout)),
            'n_original': int((layout == 0).sum()), 'n_swap': int((layout == 1).sum()),
            'gates': gates, 'summary': summary}
@@ -135,6 +147,21 @@ def main():
     json.dump(out, open(os.path.join(B4, 'b4_summary.json'), 'w'), indent=2)
     print(json.dumps(gates, indent=1))
     plots(summary)
+
+
+def a2_position_correct(t):
+    import h5py
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.pipeline import make_pipeline
+    from sklearn.preprocessing import StandardScaler
+    from layout_readout_v10 import folds
+    from common_v10 import PI_DIR
+    f = h5py.File(os.path.join(PI_DIR, 'data', 'data', f'v10_swapmix_eval_{TAG}', 'data.h5'), 'r')['test']
+    lay, X = f['layout'][()].astype(int), f['other_position'][:, t - 1]
+    pred = np.zeros(len(lay))
+    for tr, te in folds(np.arange(len(lay))):
+        pred[te] = make_pipeline(StandardScaler(), LogisticRegression(C=1.0, max_iter=10000)).fit(X[tr], lay[tr]).predict(X[te])
+    return (pred == lay).astype(float)
 
 
 def mean_sd(summary, name, k, conv=False):

@@ -1,0 +1,42 @@
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/1/model/00360.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_reeval/a2stay/eval/r3_a_direct_1000pretrain_400/s1/ep360/run/
+{"readout_t20": {"h1": 0.5566666666666666, "probe_q": 0.52, "sv_enc": 0.7633333333333333}, "distance_r2_swap": {"dist_red": 0.6596253590729326, "dist_top_left": 0.5849275777951537, "corr_dist_red_top_left": -0.0074451319311328555}}
+DONE a2stay r3_a_direct_1000pretrain_400 s1 ep360
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/1/model/00370.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_reeval/a2stay/eval/r3_a_direct_1000pretrain_400/s1/ep370/run/
+{"readout_t20": {"h1": 0.55, "probe_q": 0.52, "sv_enc": 0.7633333333333333}, "distance_r2_swap": {"dist_red": 0.6605765381667824, "dist_top_left": 0.5892631284368384, "corr_dist_red_top_left": -0.0074451319311328555}}
+DONE a2stay r3_a_direct_1000pretrain_400 s1 ep370
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/1/model/00380.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_reeval/a2stay/eval/r3_a_direct_1000pretrain_400/s1/ep380/run/
+{"readout_t20": {"h1": 0.5366666666666666, "probe_q": 0.52, "sv_enc": 0.7633333333333333}, "distance_r2_swap": {"dist_red": 0.6645560009186856, "dist_top_left": 0.5962403385006725, "corr_dist_red_top_left": -0.0074451319311328555}}
+DONE a2stay r3_a_direct_1000pretrain_400 s1 ep380
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/1/model/00390.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_reeval/a2stay/eval/r3_a_direct_1000pretrain_400/s1/ep390/run/
+{"readout_t20": {"h1": 0.5266666666666666, "probe_q": 0.52, "sv_enc": 0.7633333333333333}, "distance_r2_swap": {"dist_red": 0.6684107219460811, "dist_top_left": 0.5857793694941386, "corr_dist_red_top_left": -0.0074451319311328555}}
+DONE a2stay r3_a_direct_1000pretrain_400 s1 ep390
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/1/model/00400.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_reeval/a2stay/eval/r3_a_direct_1000pretrain_400/s1/ep400/run/
+{"readout_t20": {"h1": 0.5433333333333333, "probe_q": 0.52, "sv_enc": 0.7633333333333333}, "distance_r2_swap": {"dist_red": 0.67038096447919, "dist_top_left": 0.5948136746497787, "corr_dist_red_top_left": -0.0074451319311328555}}
+DONE a2stay r3_a_direct_1000pretrain_400 s1 ep400
+ALL_DONE a2stay r3_a_direct_1000pretrain_400 s1
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/1/model/00360.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_reeval/a2v3/eval/r3_a_direct_1000pretrain_400/s1/ep360/run/
+{"readout_t20": {"h1": 0.53, "probe_q": 0.55, "sv_enc": 0.7}, "distance_r2_swap": {"dist_red": 0.9133927535054263, "dist_top_left": 0.870093725107387, "corr_dist_red_top_left": -0.029378202706112955}}
+DONE a2v3 r3_a_direct_1000pretrain_400 s1 ep360
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/1/model/00370.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_reeval/a2v3/eval/r3_a_direct_1000pretrain_400/s1/ep370/run/
+{"readout_t20": {"h1": 0.5433333333333333, "probe_q": 0.55, "sv_enc": 0.7}, "distance_r2_swap": {"dist_red": 0.9130230542940706, "dist_top_left": 0.8697224242631694, "corr_dist_red_top_left": -0.029378202706112955}}
+DONE a2v3 r3_a_direct_1000pretrain_400 s1 ep370
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/1/model/00380.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_reeval/a2v3/eval/r3_a_direct_1000pretrain_400/s1/ep380/run/
+{"readout_t20": {"h1": 0.5133333333333333, "probe_q": 0.55, "sv_enc": 0.7}, "distance_r2_swap": {"dist_red": 0.9120438724963712, "dist_top_left": 0.8678947134340228, "corr_dist_red_top_left": -0.029378202706112955}}
+DONE a2v3 r3_a_direct_1000pretrain_400 s1 ep380
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/1/model/00390.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_reeval/a2v3/eval/r3_a_direct_1000pretrain_400/s1/ep390/run/
+{"readout_t20": {"h1": 0.5333333333333333, "probe_q": 0.55, "sv_enc": 0.7}, "distance_r2_swap": {"dist_red": 0.9093728761057411, "dist_top_left": 0.8627651663634532, "corr_dist_red_top_left": -0.029378202706112955}}
+DONE a2v3 r3_a_direct_1000pretrain_400 s1 ep390
+Loaded (read-only): /work/my_research/preference_inference/data/result/r3_a_direct_1000pretrain_400/1/model/00400.pth
+Outputs: /work/my_research/preference_inference/data/result/v10_swap/b4_reeval/a2v3/eval/r3_a_direct_1000pretrain_400/s1/ep400/run/
+{"readout_t20": {"h1": 0.58, "probe_q": 0.55, "sv_enc": 0.7}, "distance_r2_swap": {"dist_red": 0.911959541354548, "dist_top_left": 0.8663689202866505, "corr_dist_red_top_left": -0.029378202706112955}}
+DONE a2v3 r3_a_direct_1000pretrain_400 s1 ep400
+ALL_DONE a2v3 r3_a_direct_1000pretrain_400 s1
