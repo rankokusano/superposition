@@ -25,7 +25,9 @@ import matplotlib  # noqa
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt  # noqa
 
+import argparse
 B4 = os.path.join(OUT_ROOT, 'b4')
+TAG = ''
 EPOCHS = [360, 370, 380, 390, 400]
 TIMES = [1, 5, 10, 20, 50, 100]
 MODELS = {
@@ -49,14 +51,15 @@ def flat(d, pre=''):
 
 def ckpt_metrics(exp, s, e):
     d = os.path.join(B4, 'eval', exp, f's{s}', f'ep{e}')
-    t = json.load(open(os.path.join(d, 'test_swapmix.json')))
+    t = json.load(open(os.path.join(d, f'test_{TAG or "swapmix"}.json')))
     m = {}
     m.update(flat(t['readout_accuracy'], 'readout/'))
     m.update(flat(t['distance_r2'], 'distance_r2/'))
     m.update(flat(t['vision_error'], 'vision_error/'))
-    for ds, tag in (('v10_swapmix_r2', 'r2_indist'), ('r2_a1random_a2rl', 'r2_common')):
-        m.update(flat(json.load(open(os.path.join(d, f'r2_{ds}.json')))['r2'], f'{tag}/'))
-    corr = np.load(os.path.join(d, 'test_swapmix_correct.npz'))
+    if not TAG:
+        for ds, tag in (('v10_swapmix_r2', 'r2_indist'), ('r2_a1random_a2rl', 'r2_common')):
+            m.update(flat(json.load(open(os.path.join(d, f'r2_{ds}.json')))['r2'], f'{tag}/'))
+    corr = np.load(os.path.join(d, f'test_{TAG or "swapmix"}_correct.npz'))
     return m, corr
 
 
@@ -71,6 +74,12 @@ def ep_correct(store, model, seeds, key):
 
 
 def main():
+    global B4, TAG
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--tag', default='', help="'' = B4 on v10_swapmix_r2; else re-evaluation tag (e.g. a2v3)")
+    TAG = ap.parse_args().tag
+    if TAG:
+        B4 = os.path.join(OUT_ROOT, 'b4_reeval', TAG)
     metrics, store, layout = {}, {}, None
     for name, M in MODELS.items():
         metrics[name], store[name] = {}, {}
@@ -122,6 +131,7 @@ def main():
     out = {'git_commit': git_hash(), 'epochs': EPOCHS, 'n_boot': N_BOOT, 'n_test_episodes': int(len(layout)),
            'n_original': int((layout == 0).sum()), 'n_swap': int((layout == 1).sum()),
            'gates': gates, 'summary': summary}
+    out['dataset'] = f'v10_swapmix_eval_{TAG}' if TAG else 'v10_swapmix_r2'
     json.dump(out, open(os.path.join(B4, 'b4_summary.json'), 'w'), indent=2)
     print(json.dumps(gates, indent=1))
     plots(summary)
@@ -158,13 +168,13 @@ def plots(summary):
         ax.legend(fontsize=8, loc='lower right')
         ax.grid(color='0.93')
     axes[0].set_ylabel('accuracy (test split, 5-fold by episode, late-5)')
-    fig.suptitle('v10 B4: reading the layout (original / swapped) from the shared module; shaded = t=20 (main gates)')
+    fig.suptitle(f'v10 B4{" re-evaluation " + TAG if TAG else ""}: reading the layout from the shared module; shaded = t=20 (main gates)')
     fig.savefig(os.path.join(B4, 'b4_layout_readout.png'), dpi=110)
     plt.close(fig)
 
     # 2. distance R^2 (red vs top-left) per subset
     fig, axes = plt.subplots(1, 3, figsize=(16, 4.4), constrained_layout=True, sharey=True)
-    for ax, sub in zip(axes, ('swap_rg', 'original', 'all')):
+    for ax, sub in zip(axes, ('all', 'swap_rg', 'original') if TAG else ('swap_rg', 'original', 'all')):
         x = np.arange(len(MODELS))
         for i, (k, hatch) in enumerate((('dist_red', ''), ('dist_top_left', '//'))):
             m = [summary[n][f'distance_r2/{sub}/{k}']['all_seeds_mean'] for n in MODELS]
@@ -176,8 +186,9 @@ def plots(summary):
                 ax.text(x[j] + (i - 0.5) * 0.38, m[j] + 0.02, f'{m[j]:.2f}', ha='center', fontsize=8)
         ax.set_xticks(x)
         ax.set_xticklabels(list(MODELS))
-        ax.set_title({'swap_rg': 'swapped episodes (main contrast)', 'original': 'original episodes (identical targets)',
-                      'all': 'all test episodes'}[sub], fontsize=10)
+        ax.set_title({'swap_rg': 'swapped episodes' + (' (reference)' if TAG else ' (main contrast)'),
+                      'original': 'original episodes (identical targets)',
+                      'all': 'all test episodes' + (' (main contrast, reference only; Sec.5.32)' if TAG else '')}[sub], fontsize=10)
         ax.legend(fontsize=8, loc='lower right')
         ax.set_ylim(0, 1.05)
     axes[0].set_ylabel('R^2 from h1 (all seeds mean; dots = seeds)')
@@ -186,6 +197,8 @@ def plots(summary):
     plt.close(fig)
 
     # 3. 4-axis R^2 (common / in-dist all / in-dist per layout) and 4. vision error
+    if TAG:
+        return vision_plot(summary)
     fig, axes = plt.subplots(1, 4, figsize=(20, 4.4), constrained_layout=True, sharey=True)
     ax_names = ['h1_to_self', 'h1_to_other', 'h2_to_self', 'h2_to_other']
     for ax, (pre, ttl) in zip(axes, (('r2_common/all', 'common: r2_a1random_a2rl'), ('r2_indist/all', 'in-dist: v10_swapmix_r2'),
@@ -204,6 +217,10 @@ def plots(summary):
     fig.savefig(os.path.join(B4, 'b4_r2_bars.png'), dpi=110)
     plt.close(fig)
 
+    vision_plot(summary)
+
+
+def vision_plot(summary):
     fig, ax = plt.subplots(figsize=(7, 4.2), constrained_layout=True)
     x = np.arange(len(MODELS))
     for i, sub in enumerate(('original', 'swap_rg')):

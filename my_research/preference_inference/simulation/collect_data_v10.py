@@ -85,6 +85,18 @@ DATASET_CONFIGS = {
         'seq_length': 101, 'n_data': {'train': 3000, 'test': 300},
         'layout': 'mix', 'a2_actor': V10_A2_ACTOR,
     },
+    # Confound-free re-evaluation (v10_experiment_log Sec.5.32): A-2's position must
+    # not reveal the layout. Main (b): A-2 = v3 actor (goes to the same place in
+    # both layouts). Secondary (a): A-2 stationary at its random start. train has
+    # 10 episodes only because the data loader needs a train group (unused).
+    'v10_swapmix_eval_a2v3': {
+        'seq_length': 101, 'n_data': {'train': 10, 'test': 300},
+        'layout': 'mix', 'a2_actor': V3_A2_ACTOR, 'a2_policy': 'actor',
+    },
+    'v10_swapmix_eval_a2stay': {
+        'seq_length': 101, 'n_data': {'train': 10, 'test': 300},
+        'layout': 'mix', 'a2_actor': None, 'a2_policy': 'stay',
+    },
     # B2 reproducibility check: first 3 episodes of v10_swapmix_r2 (same seed key)
     'v10_swapmix_check': {
         'seq_length': 101, 'n_data': {'train': 3},
@@ -156,7 +168,7 @@ def a1_step(env, a1_policy):
     raise ValueError(a1_policy)
 
 
-def collect(env, a2_actor, cfg, layouts, a1_policy, h5_file, device):
+def collect(env, a2_actor, cfg, layouts, a1_policy, h5_file, device, a2_policy='actor'):
     world = env.world
     seq_length = cfg['seq_length']
     cam_h = world.config.camera.agent.height
@@ -206,11 +218,14 @@ def collect(env, a2_actor, cfg, layouts, a1_policy, h5_file, device):
                 env.world.set_camera('other')
                 env.world.draw(env.self_agent, env.other_agent)
                 ov = env.world.capture()
-                ov_t = vision_to_tensor(ov, device)
-                with torch.no_grad():
-                    a2_action_t, _, a2_hidden = a2_actor.sample(ov_t, a2_hidden)
-                om = a2_action_t.squeeze(0).cpu().numpy()
-                env.other_agent.p = np.clip(op + om, clip_lo, clip_hi)
+                if a2_policy == 'actor':
+                    ov_t = vision_to_tensor(ov, device)
+                    with torch.no_grad():
+                        a2_action_t, _, a2_hidden = a2_actor.sample(ov_t, a2_hidden)
+                    om = a2_action_t.squeeze(0).cpu().numpy()
+                    env.other_agent.p = np.clip(op + om, clip_lo, clip_hi)
+                else:  # 'stay': A-2 keeps its random start position (Sec.5.32 (a))
+                    om = np.zeros(MOTION_DIM, dtype=np.float32)
 
                 ds['self_vision'][n, t] = vision_to_uint8(sv)
                 ds['other_vision'][n, t] = vision_to_uint8(ov)
@@ -241,21 +256,22 @@ def main():
     seed = get_seed(seed_key)
     seed_all(seed)
     layout_seed = get_seed(seed_key + '/layout')
+    a2_policy = cfg.get('a2_policy', 'actor')
     a2_path = args.a2_actor or cfg['a2_actor']
-    assert a2_path is not None, 'pass --a2_actor'
+    assert a2_path is not None or a2_policy == 'stay', 'pass --a2_actor'
     save_path = args.save_path or cfg.get('save_path') or os.path.join(
         DATA_ROOT, 'data', args.dataset, 'data.h5')
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(f'Device: {device}  Dataset: {args.dataset}  Seed key: {seed_key!r} -> {seed}')
-    print(f'Layout mode: {cfg["layout"]}  A-2 actor: {a2_path}  A-1 policy: {args.a1_policy}')
+    print(f'Layout mode: {cfg["layout"]}  A-2 policy: {a2_policy}  A-2 actor: {a2_path}  A-1 policy: {args.a1_policy}')
 
     env_cfg = load_config(ENV_CONFIG)
     env = creator.create_environment(env_cfg.environment)
     env.init()
     env.off_display()
 
-    a2_actor = load_a2_actor(a2_path, device)
+    a2_actor = load_a2_actor(a2_path, device) if a2_policy == 'actor' else None
 
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     cam_h = env.world.config.camera.agent.height
@@ -270,12 +286,13 @@ def main():
         h5_file.attrs['seed'] = seed
         h5_file.attrs['dataset'] = args.dataset
         h5_file.attrs['a2_preference'] = 'Green'
-        h5_file.attrs['a2_actor_path'] = a2_path
+        h5_file.attrs['a2_actor_path'] = a2_path if a2_path else 'none'
+        h5_file.attrs['a2_policy'] = a2_policy
         h5_file.attrs['a1_policy'] = args.a1_policy
         h5_file.attrs['layout_mode'] = cfg['layout']
         h5_file.attrs['layout_seed'] = layout_seed
         h5_file.attrs['simulator'] = 'sim_v10'
-        collect(env, a2_actor, cfg, layouts, args.a1_policy, h5_file, device)
+        collect(env, a2_actor, cfg, layouts, args.a1_policy, h5_file, device, a2_policy)
 
     print(f'Saved: {save_path}')
 

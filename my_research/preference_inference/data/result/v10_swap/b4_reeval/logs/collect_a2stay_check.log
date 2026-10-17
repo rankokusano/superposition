@@ -1,0 +1,10 @@
+Device: cuda  Dataset: v10_swapmix_eval_a2stay  Seed key: 'v10_swapmix_eval_a2stay' -> 2480842766
+Layout mode: mix  A-2 policy: stay  A-2 actor: None  A-1 policy: random
+Estimated dataset size: 0.19 GB  (x1.5 safety margin: 0.29 GB)
+Free disk space: 127.63 GB
+Collecting [train]: 10 episodes x 101 steps
+  [train] done.
+Collecting [test]: 300 episodes x 101 steps
+  test: 200/300 episodes done
+  [test] done.
+Saved: data/result/v10_swap/b4_reeval/check_a2stay.h5

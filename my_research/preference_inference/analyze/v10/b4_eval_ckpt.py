@@ -56,6 +56,7 @@ def main():
     ap.add_argument('--run_dir', required=True)
     ap.add_argument('--device', default='cuda:0')
     ap.add_argument('--out_prefix', required=True)
+    ap.add_argument('--dataset', default='v10_swapmix_r2')
     args = ap.parse_args()
     dev = torch.device(args.device)
     m = load_model(args.exp_config, args.seed, args.epoch, dev)
@@ -66,7 +67,7 @@ def main():
         sp = g['self_position/input'][()]               # (N, 100, 2)
         pred = g['self_vision/prediction'][()]
         truth = g['self_vision/truth'][()]
-    with h5py.File(os.path.join(PI_DIR, 'data', 'data', 'v10_swapmix_r2', 'data.h5'), 'r') as f:
+    with h5py.File(os.path.join(PI_DIR, 'data', 'data', args.dataset, 'data.h5'), 'r') as f:
         lay = f['test/layout'][()].astype(int)
         frames = f['test/self_vision'][:, [t - 1 for t in TIMES]]
     N = len(lay)
@@ -77,7 +78,7 @@ def main():
         se = m.self_vision_encoder_module(x).cpu().numpy().reshape(N, len(TIMES), -1)
     feats = {'h1': h1[:, [t - 1 for t in TIMES]], 'probe_q': pq, 'sv_enc': se}
     groups = np.arange(N)
-    res = {'exp_config': args.exp_config, 'seed': args.seed, 'epoch': args.epoch, 'n_episodes': int(N),
+    res = {'dataset': args.dataset, 'exp_config': args.exp_config, 'seed': args.seed, 'epoch': args.epoch, 'n_episodes': int(N),
            'n_original': int((lay == 0).sum()), 'n_swap': int((lay == 1).sum()), 'times': TIMES,
            'git_commit': git_hash(), 'readout_accuracy': {}, 'distance_r2': {}, 'vision_error': {}}
     correct = {}

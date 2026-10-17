@@ -1,5 +1,5 @@
 {
-  "git_commit": "0710c67e93d52dbef0e2d1a00f94f25248ab3058",
+  "git_commit": "c53b2638667d9efa7127392f6266359911755016",
   "epochs": [
     360,
     370,
@@ -3237,5 +3237,6 @@
         ]
       }
     }
-  }
+  },
+  "dataset": "v10_swapmix_r2"
 }

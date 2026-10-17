@@ -384,3 +384,24 @@ t=20、late-5、ブートストラップ 1000 回（エピソード単位、Rand
 
 - `data/result/v10_swap/b4/b4_layout_readout.png`（配置の読み取りの時間変化）、`b4_distance_r2.png`、`b4_vision_error.png`、`b4_r2_bars.png`、`b4_fig5_bars.png`、`b4_pca_state_maps.png`（B3-ft s0、B3-frozen s0・s1、R3-A_400 s0、ep400）。
 - 予測画像：`data/result/v10_swap/b4/pred_images/v10_b3_{ft,frozen}_s{0,1,2}_ep400/{original,swap_rg}/pred_images_*.png`（配列 `.npz`）。目視したのは B3-ft s0 と B3-frozen s1 の入れ替えのエピソード 1。**B3-ft は入れ替えのエピソードで正しい配色（赤が左、緑が右）を描く。B3-frozen は元の配色（緑が左、赤が右）で描く**（段階Aの R3-A_400 と同じ）。viz20 の入れ替えのエピソードでの自己の予測の誤差：B3-ft 0.036〜0.037、B3-frozen 0.059〜0.070。
+
+## 8. 交絡を除いた再評価（§5.32）
+
+### 8.1 評価データの収集（2026-10-17、HEAD `c53b263` + 収集スクリプトへの `a2_policy` の追加）
+
+- `simulation/collect_data_v10.py` に `a2_policy`（`actor` | `stay`）を追加。既定（actor）で、追加前の B2 の 3 エピソードの確認データ（`b2/swapmix_check_a.h5`）と bit-identical であることを確認（2 回）。
+- `v10_swapmix_eval_a2v3`（主 (b)、A-2 = `v3_rl_a2_actor.pth`、シード md5 → 2779793132）、`v10_swapmix_eval_a2stay`（副 (a)、A-2 静止、シード → 2480842766）。各 train 10 / test 300 エピソード。test の配置：(b) 元 146・入れ替え 154、(a) 元 163・入れ替え 137。
+- 再現性：各データを 2 回収集して全配列が bit-identical（確認用の 2 本目は削除）。GPU1〜4。
+
+### 8.2 交絡の確認：本当の位置からの配置の読み取り（`analyze/v10/position_readout_v10.py`、test split、B4 と同じ方法）
+
+| データ | 特徴 | t=1 | t=5 | t=10 | t=20 | t=50 | t=100 |
+|---|---|---|---|---|---|---|---|
+| (b) A-2 = v3 actor | **A-2 の位置** | 0.467 | 0.463 | 0.453 | **0.650** | **0.790** | **0.763** |
+| (b) | A-1 の位置 | 0.533 | 0.483 | 0.423 | 0.527 | 0.493 | 0.520 |
+| (a) A-2 静止 | **A-2 の位置** | 0.493 | 0.493 | 0.493 | 0.493 | 0.493 | 0.493 |
+| (a) | A-1 の位置 | 0.510 | 0.500 | 0.517 | 0.503 | 0.493 | 0.577 |
+
+- (b) の A-2 の終端の平均位置：元 (−6.70, −10.0)、入れ替え (−7.14, −10.0)（両配置とも左下の壁。x がわずかに違う）。
+- 参考：B4 の `v10_swapmix_r2`（A-2 = B1 seed0 の actor）では 0.457 / 0.673 / 0.950 / 1.000 / 1.000 / 1.000（§7.4）。
+- 出力 `data/result/v10_swap/b4_reeval/{a2v3,a2stay}/position_readout.json`。
