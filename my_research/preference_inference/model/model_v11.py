@@ -37,16 +37,16 @@ class SuperpositionNetworkPleasure(SuperpositionNetworkBase):
         sv_raw = (sv + 1) / 2
         return self.pleasure_scale * pleasure_torch(sv_raw, self.liked, self.disliked)
 
-    def forward(self, x, p_mask_vision_self, p_mask_vision_other, p1_override=None):
+    def forward(self, x, p_mask_vision_self, p_mask_vision_other, p1_override=None, p2_override=None):
         sv = x['self_vision']
 
         sv_enc = self.self_vision_encoder_module(sv)
         ov_enc = self.other_vision_encoder_module(sv)
 
-        # p1_override: analysis-only hook (M1(b) input manipulation); never
-        # used in training.
+        # p1_override / p2_override: analysis-only hooks (M1(b) input manipulation,
+        # Sec.7.33 process-2 manipulation); never used in training.
         p1 = self.compute_pleasure(sv) if p1_override is None else p1_override
-        p2 = torch.zeros_like(p1)
+        p2 = torch.zeros_like(p1) if p2_override is None else p2_override
 
         sv_enc = util.mask(sv_enc, p_mask_vision_self)
         ov_enc = util.mask(ov_enc, p_mask_vision_other)
