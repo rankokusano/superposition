@@ -1,0 +1,36 @@
+# v11 stage 1 (docs/v11_experiment_log.md Sec.4.11, 5.3): copy of the paper's exp1_l1_1000.yml
+# with only the model name and data name (and the pretrain exp_config/seed; run with --seed 3) changed.
+model:
+    name: SuperpositionNetworkPleasure
+    config: default
+    mode: ~
+runner: PredictionFeaturePredictionRunner
+data:
+    name: v11_s1_mixed
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+    loss_function: l1_loss
+    pretrain:
+        exp_config: v11_s1_mixed_mse
+        seed: 3
+        epoch: 200
+    batch_size: 10
+    max_epochs: 200
+    save_interval: 10
+    test_interval: 10
+    optimizer: AdamW
+    optim_config:
+        default:
+            lr: 0.001
+            weight_decay: 0.01
+        freeze:
+            - superposition_module
+            - vision_encoder_module
+            - integration_module
+            - share_lns
+            - feature_prediction_module
+        per_params:
+            - name: bias
+              args:
+                  weight_decay: 0.0
