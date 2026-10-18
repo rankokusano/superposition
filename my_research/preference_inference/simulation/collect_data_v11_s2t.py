@@ -47,10 +47,15 @@ DATASET_CONFIGS = {
     'v11_s2t_green': {'liked': 'Green', 'swap': False},
     'v11_s2t_green_swap': {'liked': 'Green', 'swap': True},
     'v11_s2t_red': {'liked': 'Red', 'swap': False},
+    # stage-2 training data (docs/v11_experiment_log.md Sec.7.40): seed key 'v11_s2',
+    # train 3000 / test 300; (1) A-2 always likes Green; (2) A-2's liked colour per
+    # episode Green/Red with prob 1/2 from RandomState(md5('v11_s2/pref')), saved as a2_liked.
+    'v11_s2_green': {'liked': 'Green', 'swap': False, 'key': 'v11_s2', 'splits': {'train': 3000, 'test': 300}},
+    'v11_s2_pref': {'liked': 'per_episode', 'swap': False, 'key': 'v11_s2', 'splits': {'train': 3000, 'test': 300}},
 }
 for _k in list(DATASET_CONFIGS):
     for _rep in ('a', 'b'):
-        DATASET_CONFIGS[f'{_k}_check_{_rep}'] = dict(DATASET_CONFIGS[_k], n=3,
+        DATASET_CONFIGS[f'{_k}_check_{_rep}'] = dict(DATASET_CONFIGS[_k], splits={'train' if 'splits' in DATASET_CONFIGS[_k] else 'test': 3},
                                                      save_path=os.path.join(GATE, f'{_k}_check_{_rep}.h5'))
 
 
@@ -63,7 +68,8 @@ def main():
     ap.add_argument('--dataset', required=True, choices=list(DATASET_CONFIGS))
     args = ap.parse_args()
     cfg = DATASET_CONFIGS[args.dataset]
-    n_data = cfg.get('n', N_TEST)
+    key = cfg.get('key', SEED_KEY)
+    splits = cfg.get('splits', {'test': N_TEST})
     save_path = os.path.realpath(cfg.get('save_path') or os.path.join(DATA_ROOT, 'data', args.dataset, 'data.h5'))
     assert save_path.startswith(os.path.realpath(DATA_ROOT) + os.sep)
     env_cfg = load_config(ENV_CONFIG)
@@ -73,57 +79,70 @@ def main():
     env.off_display()
     world = env.world
     pol1 = AgentPolicy(env.self_agent, 'random')
-    pol2 = AgentPolicy(env.other_agent, 'mixed', p_rule=0.5, liked=cfg['liked'])
-    rng_l = np.random.RandomState(get_seed(SEED_KEY + '/layout'))
-    layouts = [layout.SWAP_RG if rng_l.rand() < 0.5 else layout.ORIGINAL for _ in range(N_TEST)]
+    pol2 = AgentPolicy(env.other_agent, 'mixed', p_rule=0.5, liked='Green')
+    # layout / preference sequences drawn for the full dataset so the check sets reproduce its first episodes
+    base = DATASET_CONFIGS[args.dataset.split('_check')[0]]
+    n_total = sum(base['splits'].values()) if 'splits' in base else N_TEST
+    rng_l = np.random.RandomState(get_seed(key + '/layout'))
+    layouts = [layout.SWAP_RG if rng_l.rand() < 0.5 else layout.ORIGINAL for _ in range(n_total)]
+    rng_p = np.random.RandomState(get_seed(key + '/pref'))
+    prefs = ['Red' if rng_p.rand() < 0.5 else 'Green' for _ in range(n_total)]
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     T = 101
     with h5py.File(save_path, 'w') as f:
-        for k, v in (('dataset', args.dataset), ('seed_key', SEED_KEY), ('a2_liked', cfg['liked']),
+        for k, v in (('dataset', args.dataset), ('seed_key', key), ('a2_liked', cfg['liked']),
                      ('swap', int(cfg['swap'])), ('swap_t', SWAP_T), ('a1_policy', 'random'),
-                     ('a2_policy', 'mixed p_rule 0.5 on A-2 own view'), ('simulator', 'sim_v10')):
+                     ('a2_policy', 'mixed p_rule 0.5 on A-2 own view'), ('simulator', 'sim_v10'),
+                     ('pref_seed', get_seed(key + '/pref'))):
             f.attrs[k] = v
-        g = f.create_group('test')
-        vs = (n_data, T, 16, 64, 3)
-        ds = {k: g.create_dataset(k, vs, dtype='uint8') for k in ('self_vision', 'other_vision')}
-        for k in ('self_motion', 'self_position', 'other_motion', 'other_position'):
-            ds[k] = g.create_dataset(k, (n_data, T, 2), dtype='f')
-        for k in ('a1_source', 'a2_source'):
-            ds[k] = g.create_dataset(k, (n_data, T), dtype='int8')
-        ds['layout'] = g.create_dataset('layout', (n_data,), dtype='uint8')
-        ds['layout_t'] = g.create_dataset('layout_t', (n_data, T), dtype='uint8')
-        for n in range(n_data):
-            lay0 = layouts[n]
-            env.set_layout(lay0)
-            ds['layout'][n] = layout.LAYOUT_CODE[lay0]
-            s = get_seed(f'{SEED_KEY}/test/{n}')
-            random.seed(s)
-            np.random.seed(s)
-            pol2.set_rng(np.random.RandomState(get_seed(f'{SEED_KEY}/test/{n}/a2_mix')))
-            env.reset()
-            buf = {k: [] for k in ds if k != 'layout'}
-            cur = lay0
-            for t in range(T):
-                if cfg['swap'] and t == SWAP_T:
-                    cur = layout.other_layout(lay0)
-                    env.set_layout(cur)
-                sp, op = env.self_agent.p.copy(), env.other_agent.p.copy()
-                world.set_camera('self'); world.draw(env.self_agent, env.other_agent)
-                sv = world.capture()
-                world.set_camera('other'); world.draw(env.self_agent, env.other_agent)
-                ov = world.capture()
-                sm, s1 = pol1.step(sv)
-                om, s2 = pol2.step(ov)
-                for k, v in (('self_vision', np.round(sv * 255).astype(np.uint8)),
-                             ('other_vision', np.round(ov * 255).astype(np.uint8)),
-                             ('self_motion', sm), ('self_position', sp), ('other_motion', om),
-                             ('other_position', op), ('a1_source', s1), ('a2_source', s2),
-                             ('layout_t', layout.LAYOUT_CODE[cur])):
-                    buf[k].append(v)
-            for k, v in buf.items():
-                ds[k][n] = np.array(v)
-            if (n + 1) % 50 == 0:
-                print(f'{n + 1}/{n_data}', flush=True)
+        ep_global = 0
+        for split, n_data in splits.items():
+            g = f.create_group(split)
+            vs = (n_data, T, 16, 64, 3)
+            ds = {k: g.create_dataset(k, vs, dtype='uint8') for k in ('self_vision', 'other_vision')}
+            for k in ('self_motion', 'self_position', 'other_motion', 'other_position'):
+                ds[k] = g.create_dataset(k, (n_data, T, 2), dtype='f')
+            for k in ('a1_source', 'a2_source'):
+                ds[k] = g.create_dataset(k, (n_data, T), dtype='int8')
+            ds['layout'] = g.create_dataset('layout', (n_data,), dtype='uint8')
+            ds['layout_t'] = g.create_dataset('layout_t', (n_data, T), dtype='uint8')
+            ds['a2_liked'] = g.create_dataset('a2_liked', (n_data,), dtype='uint8')  # 0 Green, 1 Red
+            for n in range(n_data):
+                lay0 = layouts[ep_global]
+                liked = prefs[ep_global] if cfg['liked'] == 'per_episode' else cfg['liked']
+                ep_global += 1
+                pol2.liked = liked
+                env.set_layout(lay0)
+                ds['layout'][n] = layout.LAYOUT_CODE[lay0]
+                ds['a2_liked'][n] = 0 if liked == 'Green' else 1
+                sd = get_seed(f'{key}/{split}/{n}')
+                random.seed(sd)
+                np.random.seed(sd)
+                pol2.set_rng(np.random.RandomState(get_seed(f'{key}/{split}/{n}/a2_mix')))
+                env.reset()
+                buf = {k: [] for k in ds if k not in ('layout', 'a2_liked')}
+                cur = lay0
+                for t in range(T):
+                    if cfg['swap'] and t == SWAP_T:
+                        cur = layout.other_layout(lay0)
+                        env.set_layout(cur)
+                    sp, op = env.self_agent.p.copy(), env.other_agent.p.copy()
+                    world.set_camera('self'); world.draw(env.self_agent, env.other_agent)
+                    sv = world.capture()
+                    world.set_camera('other'); world.draw(env.self_agent, env.other_agent)
+                    ov = world.capture()
+                    sm, s1 = pol1.step(sv)
+                    om, s2 = pol2.step(ov)
+                    for k, v in (('self_vision', np.round(sv * 255).astype(np.uint8)),
+                                 ('other_vision', np.round(ov * 255).astype(np.uint8)),
+                                 ('self_motion', sm), ('self_position', sp), ('other_motion', om),
+                                 ('other_position', op), ('a1_source', s1), ('a2_source', s2),
+                                 ('layout_t', layout.LAYOUT_CODE[cur])):
+                        buf[k].append(v)
+                for k, v in buf.items():
+                    ds[k][n] = np.array(v)
+                if (n + 1) % 200 == 0:
+                    print(f'{split} {n + 1}/{n_data}', flush=True)
     print('saved', save_path)
 
 
