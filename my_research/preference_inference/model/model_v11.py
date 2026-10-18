@@ -16,6 +16,7 @@ import torch.nn.functional as F
 
 from . import util
 from .model import SuperpositionNetworkBase, add_feature_prediction_module
+from .modules import MotionGeneratorModule
 
 from v11core.pleasure import pleasure_torch
 
@@ -108,3 +109,37 @@ class SuperpositionNetworkPleasureMasked(SuperpositionNetworkPleasure):
             p1_override = p1
         self._t += 1
         return super().forward(x, p_mask_vision_self, p_mask_vision_other, p1_override)
+
+
+class SuperpositionNetworkPleasureOther(SuperpositionNetworkPleasure):
+    """
+    v11 stage 2 (docs/v11_experiment_log.md Sec.7.42): SuperpositionNetworkPleasure
+    plus the other's module G, built like the paper's MotionGeneratorModule
+    (LSTMCell on the UNMASKED other-encoder output -> fc -> tanh), with an 8-dim
+    output Q2 ("pleasure for A-2") fed to process-2. Trained with the paper's
+    exp3 recipe (only G is trainable). p2_override (analysis only) replaces Q2.
+    """
+
+    def __init__(self, config):
+        super().__init__(config)
+        self.motion_generator_module = MotionGeneratorModule(config.motion_generator_module)
+        self.rnn_modules.append(self.motion_generator_module)
+        assert config.motion_generator_module.output == 8
+
+    def forward(self, x, p_mask_vision_self, p_mask_vision_other, p1_override=None, p2_override=None):
+        sv = x['self_vision']
+        sv_enc = self.self_vision_encoder_module(sv)
+        ov_enc = self.other_vision_encoder_module(sv)
+        p1 = self.compute_pleasure(sv) if p1_override is None else p1_override
+        q2 = self.motion_generator_module(ov_enc)          # G always runs (keeps its LSTM state)
+        p2 = q2 if p2_override is None else p2_override
+        sv_enc = util.mask(sv_enc, p_mask_vision_self)
+        ov_enc = util.mask(ov_enc, p_mask_vision_other)
+        ss, os = self.superposition_module(sv_enc, p1, ov_enc, p2)
+        so = self.integration_module(
+            F.dropout(ss, p=0.5, training=self.training),
+            F.dropout(os, p=0.5, training=self.training),
+        )
+        pred = {'self_vision': self.vision_decoder_module(so)}
+        pred['q2_hat'] = q2   # saved by the runner's existing hook; not used by any loss
+        return pred
