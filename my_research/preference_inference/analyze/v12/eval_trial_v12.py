@@ -55,7 +55,8 @@ def load_v12(exp, seed, epoch, dev):
     m = getattr(model_v12, cfg.model.name)(mcfg).to(dev)
     m.load_state_dict(torch.load(os.path.join(RES, exp, str(seed), 'model', f'{epoch:05d}.pth'), map_location='cpu')['model'])
     m.eval()
-    return m, float(cfg.p_mask_vision)
+    pm = cfg.get('p_mask_vision', None)   # stage-2 (exp3) configs have none: vision is fully masked for t > 0
+    return m, (None if pm is None else float(pm))
 
 
 def batch_x(g, b0, B, dev):

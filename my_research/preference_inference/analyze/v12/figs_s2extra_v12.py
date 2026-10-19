@@ -80,10 +80,15 @@ def main():
             a, b = P[..., bins].reshape(-1), Q[..., bins].reshape(-1)
             sel = np.random.default_rng(0).choice(len(a), min(20000, len(a)), replace=False)
             ax = axes[i, j]
-            ax.scatter(a[sel], b[sel], s=2, alpha=0.2, color=CC[c])
-            r = np.corrcoef(a, b)[0, 1] if a.std() > 0 else float('nan')
-            ax.set_title(f'{c}: {nm}\nr = {r:+.3f} (all frames x bins)', fontsize=9)
-            ax.set_xlabel('A-2 true pleasure P_A2'); ax.set_ylabel('generated Q2')
+            if a.std() > 0:
+                ax.scatter(a[sel], b[sel], s=2, alpha=0.2, color=CC[c])
+                r = np.corrcoef(a, b)[0, 1]
+                ax.set_title(f'{c}: {nm}\nr = {r:+.3f} (all frames x bins)', fontsize=9)
+                ax.set_xlabel('A-2 true pleasure P_A2'); ax.set_ylabel('generated Q2')
+            else:   # P_A2 is always 0 in bins 2-5: show where Q2 goes instead
+                ax.hist(b, bins=60, color=CC[c], alpha=0.7)
+                ax.set_title(f'{c}: {nm}\nQ2 distribution (P_A2 is always 0 here); std {b.std():.3f}', fontsize=9)
+                ax.set_xlabel('generated Q2'); ax.set_ylabel('frames x bins')
         preds[c] = {}
         for nm, d in (('noswap', dg), ('swap', ds)):
             _, pr = run(model, d, dev, n=args.episode + 1, keep_pred=True)
