@@ -95,3 +95,35 @@ class SuperpositionNetworkMotionPleasure(SuperpositionNetworkBase):
             F.dropout(os, p=0.5, training=self.training),
         )
         return {'self_vision': self.vision_decoder_module(so)}
+
+
+class SuperpositionNetworkMotionPleasureHold(SuperpositionNetworkMotionPleasure):
+    """
+    v12 trial (P-c) and later (docs/v12_experiment_log.md Sec.10): as SuperpositionNetworkMotionPleasure,
+    but while the motion is hidden the pleasure input is held at its value at the FIRST hidden step of
+    the interval (computed from that step's view, which precedes the hidden motion), so that changes
+    of P cannot reveal the hidden motion. Visible steps use the current P. p1_override (analysis)
+    bypasses the hold.
+    """
+
+    def init_state(self, batch_size):
+        super().init_state(batch_size)
+        self._held = None
+        self._prev_hidden = None
+
+    def process1_input(self, x, p1_override=None, hidden_override=None):
+        sv, sm = x['self_vision'], x['self_motion'].float()
+        h = self.current_hidden(sv.shape[0], sv.device) if hidden_override is None else hidden_override.to(sv.device)
+        if p1_override is not None:
+            P = p1_override
+        else:
+            P_now = self.compute_pleasure(sv)
+            prev = torch.zeros_like(h) if self._prev_hidden is None else self._prev_hidden
+            start = h & ~prev
+            held = P_now if self._held is None else torch.where(start[:, None], P_now, self._held)
+            P = torch.where(h[:, None], held, P_now)
+            self._held = held
+        self._prev_hidden = h
+        m = torch.where(h[:, None], torch.zeros_like(sm), sm)
+        self.last_hidden = h
+        return torch.cat([m, P, h[:, None].float()], 1)

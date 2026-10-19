@@ -215,6 +215,8 @@ def p2test(model, p_mask, dev, flag, K=10, batch=50):
                  'own_proj_step10_per_bin': np.nanmean(own[:, :, -1], 0).round(4).tolist()}
         per[sg] = spec_
     r['frac_read'] = float(np.mean(~np.isnan(est['ctrl'][..., 0])))
+    # Sec.10 item 4: does the shift reverse between pleasure (+a) and displeasure (-a)? per episode
+    r['p_minus_m'] = summ(per['p'] - per['m'])
     return r, per
 
 
@@ -259,6 +261,7 @@ def main():
                 for flag in (0, 1):
                     r['p2test'][f'flag{flag}'], pp = p2test(model, p_mask, dev, flag)
                     per[f'p2_flag{flag}_p'] = pp['p']
+                    per[f'p2_flag{flag}_p_minus_m'] = pp['p'] - pp['m']
             per_all[c] = per
             with open(os.path.join(OUT, f'{args.prefix}eval_{c}_ep{e}{args.tag}.json'), 'w') as f:
                 json.dump(r, f, indent=1)
