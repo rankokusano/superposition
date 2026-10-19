@@ -1,0 +1,35 @@
+# v12 stage 2 (docs/v12_experiment_log.md Sec.21): v11_s2_pref_mixed_s0.yml (paper exp3) with the v12 model and pretrain = v12_s1_mixed_l1_s2 ep200; run with --seed 2.
+model:
+  name: SuperpositionNetworkMotionPleasureHoldOther
+  config: default
+  mode: ~
+runner: MotionGenerationPredictionFeaturePredictionRunner
+data:
+  name: v11_s2_pref
+load_state_dict_strict: False
+train:
+  loss_function: l1_loss
+  pretrain:
+    exp_config: v12_s1_mixed_l1_s2
+    seed: 2
+    epoch: 200
+  batch_size: 10
+  max_epochs: 200
+  save_interval: 10
+  test_interval: 10
+  optimizer: AdamW
+  optim_config:
+    default:
+      lr: 0.001
+      weight_decay: 0.01
+    freeze:
+      - superposition_module
+      - vision_encoder_module
+      - vision_decoder_module
+      - integration_module
+      - share_lns
+      - feature_prediction_module
+    per_params:
+      - name: bias
+        args:
+          weight_decay: 0.0

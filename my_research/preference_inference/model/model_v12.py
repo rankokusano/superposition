@@ -127,3 +127,42 @@ class SuperpositionNetworkMotionPleasureHold(SuperpositionNetworkMotionPleasure)
         m = torch.where(h[:, None], torch.zeros_like(sm), sm)
         self.last_hidden = h
         return torch.cat([m, P, h[:, None].float()], 1)
+
+
+class SuperpositionNetworkMotionPleasureHoldOther(SuperpositionNetworkMotionPleasureHold):
+    """
+    v12 stage 2 (docs/v12_experiment_log.md Sec.11.3, 21): the stage-1 model plus the other's module G,
+    built like the paper's MotionGeneratorModule (LSTMCell on the UNMASKED other-encoder output -> fc
+    -> tanh), 8-dim output Q2. process-2 = [motion 0, pleasure = Q2, flag 1]. process-1's motion is not
+    hidden in stage 2 (config motion_mask.enabled = false; flag 0, current pleasure). Trained with the
+    paper's exp3 recipe (only G trainable). p2_override (analysis) replaces the whole 11-dim process-2
+    input; the returned pred['q2_hat'] is always G's output.
+    """
+
+    def __init__(self, config):
+        super().__init__(config)
+        from .modules import MotionGeneratorModule
+        self.motion_generator_module = MotionGeneratorModule(config.motion_generator_module)
+        self.rnn_modules.append(self.motion_generator_module)
+        assert config.motion_generator_module.output == PLEASURE_DIM
+
+    def forward(self, x, p_mask_vision_self, p_mask_vision_other, p1_override=None, p2_override=None,
+                hidden_override=None):
+        sv = x['self_vision']
+        sv_enc = self.self_vision_encoder_module(sv)
+        ov_enc = self.other_vision_encoder_module(sv)
+        p1 = self.process1_input(x, p1_override, hidden_override)
+        q2 = self.motion_generator_module(ov_enc)          # G always runs (keeps its LSTM state)
+        if p2_override is None:
+            p2 = torch.cat([torch.zeros_like(q2[:, :MOTION_DIM]), q2, torch.ones_like(q2[:, :1])], 1)
+        else:
+            p2 = p2_override
+        self._t += 1
+        sv_enc = util.mask(sv_enc, p_mask_vision_self)
+        ov_enc = util.mask(ov_enc, p_mask_vision_other)
+        ss, os = self.superposition_module(sv_enc, p1, ov_enc, p2)
+        so = self.integration_module(
+            F.dropout(ss, p=0.5, training=self.training),
+            F.dropout(os, p=0.5, training=self.training),
+        )
+        return {'self_vision': self.vision_decoder_module(so), 'q2_hat': q2}
