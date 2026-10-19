@@ -1,0 +1,31 @@
+# v12 trial Fig.5 Decoder for (PB) (docs/v12_experiment_log.md Sec.8): pretrain = v12_trial_pb_mixed_mse seed 0 ep150.
+model:
+    name: Autoencoder
+    config: default
+    mode: ~
+runner: AutoencoderRunner
+data:
+    name: v11_s1_random_first1000
+load_state_dict_strict: False
+train:
+    loss_function: l1_loss
+    pretrain:
+        exp_config: v12_trial_pb_mixed_mse
+        seed: 0
+        epoch: 150
+    batch_size: 100
+    max_epochs: 100
+    save_interval: 1
+    test_interval: 100
+    optimizer: AdamW
+    optim_config:
+        default:
+            lr: 0.001
+            weight_decay: 3.
+        freeze:
+            - vision_encoder
+            - share_lns
+        per_params:
+            - name: bias
+              args:
+                  weight_decay: 0.0

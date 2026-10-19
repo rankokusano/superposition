@@ -50,7 +50,19 @@ if __name__ == '__main__':
     model = model_cls(model_config)
     model.to(device)
 
-    util.load_pretrain(model, exp_config)
+    enc_from = exp_config.train.get('pretrain_encoder_from', None) if hasattr(exp_config.train, 'get') else None
+    if enc_from:
+        # v12 (P-b, docs/v12_experiment_log.md Sec.8): load ONLY the two vision encoders and their
+        # shared LayerNorms from an absolute checkpoint path; everything else keeps its fresh init.
+        assert exp_config.train.pretrain is None
+        ck = torch.load(enc_from, map_location='cpu')['model']
+        keep = {k: v for k, v in ck.items()
+                if k.startswith(('self_vision_encoder_module', 'other_vision_encoder_module', 'share_lns'))}
+        res = model.load_state_dict(keep, strict=False)
+        assert not res.unexpected_keys
+        print(f'pretrain_encoder_from {enc_from}: loaded {len(keep)} encoder keys')
+    else:
+        util.load_pretrain(model, exp_config)
 
     params = util.gen_optim_params(model, exp_config.train.optim_config)
 

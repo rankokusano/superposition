@@ -44,6 +44,7 @@ from model import model_v12  # noqa
 from v11core.pleasure import BIN_UNIT  # noqa
 
 OUT = os.path.join(RES, 'v12', 'trial')
+PI_DIR_CFG = os.path.join(_PI, 'config')
 COMMON = os.path.join(DATA, 'v11_s1_random', 'data.h5')
 T0, A = 20, 0.28
 
@@ -222,6 +223,8 @@ def main():
     ap.add_argument('--epochs', type=int, nargs='+', default=[60, 100, 150])
     ap.add_argument('--p2_epoch', type=int, default=150)
     ap.add_argument('--tag', default='')
+    ap.add_argument('--exp_fmt', default='v12_trial_{}_mse', help='e.g. v12_trial_pb_{}_mse for (P-b)')
+    ap.add_argument('--prefix', default='', help='output file prefix, e.g. pb_')
     args = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
     dev = torch.device('cuda:0')
@@ -233,9 +236,9 @@ def main():
     for e in args.epochs:
         per_all = {}
         for c in ('random', 'mixed'):
-            model, p_mask = load_v12(f'v12_trial_{c}_mse', 0, e, dev)
+            model, p_mask = load_v12(args.exp_fmt.format(c), 0, e, dev)
             d = run(model, p_mask, dev)
-            r = {'exp': f'v12_trial_{c}_mse', 'epoch': e, 'err_mean_visible': float(d['err'][~d['hidden']].mean()),
+            r = {'exp': args.exp_fmt.format(c), 'epoch': e, 'err_mean_visible': float(d['err'][~d['hidden']].mean()),
                  'err_mean_hidden': float(d['err'][d['hidden']].mean())}
             r['tracking'] = tracking(d)
             r['M1'], per = m1_all(d, cf, cfv)
@@ -257,12 +260,12 @@ def main():
                     r['p2test'][f'flag{flag}'], pp = p2test(model, p_mask, dev, flag)
                     per[f'p2_flag{flag}_p'] = pp['p']
             per_all[c] = per
-            with open(os.path.join(OUT, f'eval_{c}_ep{e}{args.tag}.json'), 'w') as f:
+            with open(os.path.join(OUT, f'{args.prefix}eval_{c}_ep{e}{args.tag}.json'), 'w') as f:
                 json.dump(r, f, indent=1)
             print(c, e, json.dumps({'track': r['tracking']['p_next'], 'M1_hidden': {k: r['M1']['hidden'][k] for k in ('M1c_c_pred', 'M1d_c_cf')},
                                     'freeze_K15_hold': r['freeze']['K15_hold']['g'], 'align': r['alignment']}), flush=True)
         paired = {k: summ(per_all['mixed'][k] - per_all['random'][k]) for k in per_all['mixed']}
-        with open(os.path.join(OUT, f'paired_ep{e}{args.tag}.json'), 'w') as f:
+        with open(os.path.join(OUT, f'{args.prefix}paired_ep{e}{args.tag}.json'), 'w') as f:
             json.dump(paired, f, indent=1)
         print('paired', e, json.dumps({k: round(v['mean'], 4) for k, v in paired.items()}), flush=True)
 
