@@ -1,0 +1,31 @@
+# v12 main Fig.5 Decoder (docs/v12_experiment_log.md Sec.16): v11 recipe; pretrain = v12_s1_mixed_l1_s0 ep200. The encoders are the frozen v4 weights in every v12 run, so one Decoder serves all (encoder identity is checked separately). Run with --seed 0.
+model:
+    name: Autoencoder
+    config: default
+    mode: ~
+runner: AutoencoderRunner
+data:
+    name: v11_s1_random_first1000
+load_state_dict_strict: False
+train:
+    loss_function: l1_loss
+    pretrain:
+        exp_config: v12_s1_mixed_l1_s0
+        seed: 0
+        epoch: 200
+    batch_size: 100
+    max_epochs: 100
+    save_interval: 1
+    test_interval: 100
+    optimizer: AdamW
+    optim_config:
+        default:
+            lr: 0.001
+            weight_decay: 3.
+        freeze:
+            - vision_encoder
+            - share_lns
+        per_params:
+            - name: bias
+              args:
+                  weight_decay: 0.0

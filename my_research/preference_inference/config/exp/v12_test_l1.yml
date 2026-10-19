@@ -1,0 +1,35 @@
+# v12 TEST ONLY (docs/v12_experiment_log.md Sec.16): l1-stage dry run from v12_trial_pc_mixed_mse ep150, 1 epoch. Not a result.
+model:
+    name: SuperpositionNetworkMotionPleasureHold
+    config: default
+    mode: ~
+runner: PredictionFeaturePredictionRunner
+data:
+    name: v11_s1_mixed_first1000
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+    loss_function: l1_loss
+    pretrain:
+        exp_config: v12_trial_pc_mixed_mse
+        seed: 0
+        epoch: 150
+    batch_size: 10
+    max_epochs: 1
+    save_interval: 1
+    test_interval: 10
+    optimizer: AdamW
+    optim_config:
+        default:
+            lr: 0.001
+            weight_decay: 0.01
+        freeze:
+            - superposition_module
+            - vision_encoder_module
+            - integration_module
+            - share_lns
+            - feature_prediction_module
+        per_params:
+            - name: bias
+              args:
+                  weight_decay: 0.0

@@ -124,8 +124,10 @@ def m1_all(d, cf, cfv):
     for nm, fm in (('all', None), ('hidden', d['hidden']), ('visible', ~d['hidden'])):
         delta, cp = m1c(d, d['src'], fm)
         S, cd = m1d(d, d['src'], cf, cfv, fm)
+        col = (S['Red'] - S['Green'])[d['layout'] == 1]    # colour criterion (v11 Sec.7.13): swap episodes
         out[nm] = {'M1c_c_pred': summ(cp), 'M1c_Delta': {X: float(np.nanmean(v)) for X, v in delta.items()},
-                   'M1d_c_cf': summ(cd), 'M1d_S': {X: float(np.nanmean(v)) for X, v in S.items()}}
+                   'M1d_c_cf': summ(cd), 'M1d_S': {X: float(np.nanmean(v)) for X, v in S.items()},
+                   'colour_swap_SRed_minus_SGreen': summ(col)}
         per[f'{nm}_c_pred'] = cp; per[f'{nm}_c_cf'] = cd
     return out, per
 
@@ -227,8 +229,12 @@ def main():
     ap.add_argument('--tag', default='')
     ap.add_argument('--exp_fmt', default='v12_trial_{}_mse', help='e.g. v12_trial_pb_{}_mse for (P-b)')
     ap.add_argument('--prefix', default='', help='output file prefix, e.g. pb_')
+    ap.add_argument('--seed', type=int, default=0)
+    ap.add_argument('--out', default=None, help='output dir under data/result/v12 (default: trial)')
+    ap.add_argument('--no_p2', action='store_true', help='skip the process-2 test (G5b is computed by eval_g5_v12.py)')
     args = ap.parse_args()
-    os.makedirs(OUT, exist_ok=True)
+    out_dir = OUT if args.out is None else os.path.join(RES, 'v12', args.out)
+    os.makedirs(out_dir, exist_ok=True)
     dev = torch.device('cuda:0')
     torch.backends.cudnn.deterministic = True
     fcf = h5py.File(os.path.join(RES, 'v11', 'cf', 'cf_views.h5'), 'r')
@@ -238,7 +244,7 @@ def main():
     for e in args.epochs:
         per_all = {}
         for c in ('random', 'mixed'):
-            model, p_mask = load_v12(args.exp_fmt.format(c), 0, e, dev)
+            model, p_mask = load_v12(args.exp_fmt.format(c), args.seed, e, dev)
             d = run(model, p_mask, dev)
             r = {'exp': args.exp_fmt.format(c), 'epoch': e, 'err_mean_visible': float(d['err'][~d['hidden']].mean()),
                  'err_mean_hidden': float(d['err'][d['hidden']].mean())}
@@ -253,22 +259,25 @@ def main():
                     s = slopes(ds, K)
                     gg = g_of(s)
                     r['freeze'][f'K{K}_{variant}'] = {'g': summ(gg), 'slope': {X: float(np.nanmean(s[:, i])) for i, X in enumerate(('Red', 'Green', 'Blue', 'Cyan'))},
-                                                     'dstar_curve_red': np.nanmean(ds[:, 0], 0).round(3).tolist()}
+                                                     'dstar_curve_red': np.nanmean(ds[:, 0], 0).round(3).tolist(),
+                                                     'dstar_curves_RGBC': np.nanmean(ds, 0).round(3).tolist()}
                     per[f'freeze_K{K}_{variant}'] = gg
             r['alignment'] = alignment(model)
-            if e == args.p2_epoch:
+            if e == args.p2_epoch and not args.no_p2:
                 r['p2test'] = {}
                 for flag in (0, 1):
                     r['p2test'][f'flag{flag}'], pp = p2test(model, p_mask, dev, flag)
                     per[f'p2_flag{flag}_p'] = pp['p']
                     per[f'p2_flag{flag}_p_minus_m'] = pp['p'] - pp['m']
             per_all[c] = per
-            with open(os.path.join(OUT, f'{args.prefix}eval_{c}_ep{e}{args.tag}.json'), 'w') as f:
+            with open(os.path.join(out_dir, f'{args.prefix}eval_{c}_ep{e}{args.tag}.json'), 'w') as f:
                 json.dump(r, f, indent=1)
             print(c, e, json.dumps({'track': r['tracking']['p_next'], 'M1_hidden': {k: r['M1']['hidden'][k] for k in ('M1c_c_pred', 'M1d_c_cf')},
                                     'freeze_K15_hold': r['freeze']['K15_hold']['g'], 'align': r['alignment']}), flush=True)
         paired = {k: summ(per_all['mixed'][k] - per_all['random'][k]) for k in per_all['mixed']}
-        with open(os.path.join(OUT, f'{args.prefix}paired_ep{e}{args.tag}.json'), 'w') as f:
+        np.savez_compressed(os.path.join(out_dir, f'{args.prefix}per_ep{e}{args.tag}.npz'),
+                            **{f'{c}__{k}': v for c in per_all for k, v in per_all[c].items()})
+        with open(os.path.join(out_dir, f'{args.prefix}paired_ep{e}{args.tag}.json'), 'w') as f:
             json.dump(paired, f, indent=1)
         print('paired', e, json.dumps({k: round(v['mean'], 4) for k, v in paired.items()}), flush=True)
 
