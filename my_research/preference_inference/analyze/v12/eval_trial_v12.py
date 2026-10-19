@@ -12,7 +12,8 @@ cudnn deterministic.
      K = 15 (main) and 20;
   4. self/other code alignment cos(ov(A-1 view), sv(A-2 view)) and control cos(ov(A-1), sv(A-1))
      (original layout, every 5th step);
-  5. process-2 test (ep150 only): t = 20..29 process-2 = [0, 0, +-a e_k, flag], flag 0 and 1;
+  5. process-2 test (ep150 only): t = 20..29 process-2 = [0, 0, +-a e_k, flag] vs control [0, 0, 0, flag];
+     flag 1 (motion hidden; main, as planned for stage 2) and flag 0 (supplement);
      d_spec from the A-2 position read from the predicted image.
 Writes data/result/v12/trial/eval_<cond>_ep<e>.json (+ paired file).
 """
@@ -184,10 +185,11 @@ def p2test(model, p_mask, dev, flag, K=10, batch=50):
         sp = sp_all[b0:b0 + batch, T0:T0 + K]
         keys = [('ctrl', None)] + [(f'{sg}{k}', (sgn, k)) for sg, sgn in (('p', 1.0), ('m', -1.0)) for k in range(8)]
         for key, spec in keys:
+            # process-2 = [motion 0, pleasure, flag]; the control has the same flag (only pleasure differs)
             Q = torch.zeros(B, 11, device=dev)
+            Q[:, 10] = float(flag)
             if spec is not None:
                 Q[:, 2 + spec[1]] = spec[0] * A
-                Q[:, 10] = float(flag)
             util.seed_all(0)
             model.init_state(B)
             prs = []
