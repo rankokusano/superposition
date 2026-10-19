@@ -35,15 +35,21 @@ def main():
             m, p = J(s, f'g5_mixed_ep{e}.json'), J(s, f'g5_paired_ep{e}.json')
             a = {k: bool(m['G5a'][f'{k}_K15_freeze']['g_other']['ci95'][0] > 0 and p[f'G5a_{k}_K15_freeze']['ci95'][0] > 0)
                  for k in ('green', 'pref')}
+            # secondary (Sec.22, B1 background-relative read-out); not used for the stage-2 decision
+            ab = {k: bool(m['G5a_bg'][f'{k}_K15_freeze']['g_other']['ci95'][0] > 0 and p[f'G5a_bg_{k}_K15_freeze']['ci95'][0] > 0)
+                  for k in ('green', 'pref')} if 'G5a_bg' in m else {'green': False, 'pref': False}
+            bb = bool(m['G5b']['bg']['main_pm_own']['ci95'][0] > 0 and p['G5b_bg']['ci95'][0] > 0) if 'bg' in m['G5b'] else False
             rows.append({'ep': e, 'G5a': a['green'] and a['pref'], 'G5a_per_set': a,
+                         'G5a_bg': ab['green'] and ab['pref'], 'G5b_bg': bb,
                          'G5b': bool(m['G5b']['main_pm_own']['ci95'][0] > 0 and p['G5b']['ci95'][0] > 0),
                          'values': {'G5a_mixed': {k: m['G5a'][f'{k}_K15_freeze']['g_other']['mean'] for k in ('green', 'pref')},
                                     'G5a_paired': {k: p[f'G5a_{k}_K15_freeze']['mean'] for k in ('green', 'pref')},
                                     'G5b_mixed': m['G5b']['main_pm_own']['mean'], 'G5b_paired': p['G5b']['mean']}})
-        res['per_seed'][str(s)] = {'rows': rows, 'seed_pass': {k: sum(r[k] for r in rows) >= args.min_ckpt for k in ('G5a', 'G5b')}}
+        res['per_seed'][str(s)] = {'rows': rows, 'seed_pass': {k: sum(r[k] for r in rows) >= args.min_ckpt for k in ('G5a', 'G5b', 'G5a_bg', 'G5b_bg')}}
     res['gate'] = {k: sum(res['per_seed'][str(s)]['seed_pass'][k] for s in args.seeds) >= args.min_seed for k in ('G5a', 'G5b')}
+    res['secondary_bg'] = {k: sum(res['per_seed'][str(s)]['seed_pass'][k] for s in args.seeds) >= args.min_seed for k in ('G5a_bg', 'G5b_bg')}
     json.dump(res, open(os.path.join(root, 'gate_g5.json'), 'w'), indent=1)
-    print(json.dumps(res['gate']), json.dumps({s: v['seed_pass'] for s, v in res['per_seed'].items()}))
+    print(json.dumps(res['gate']), json.dumps(res['secondary_bg']), json.dumps({s: v['seed_pass'] for s, v in res['per_seed'].items()}))
 
 
 if __name__ == '__main__':

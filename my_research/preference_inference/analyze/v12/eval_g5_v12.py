@@ -32,21 +32,51 @@ import util  # noqa
 
 COLORS = ('Red', 'Green', 'Blue', 'Cyan')
 T0, A = 20, 0.28
+BG_OFF, BG_MIN_MASS = 0.05, 0.5
+
+
+def bg_weights(img):
+    """Sec.22 (B1): darkness below the row median of the same image. img (..., H, W, 3) in [0, 1]."""
+    mx = img.max(-1)
+    return np.clip(np.median(mx, axis=-1, keepdims=True) - mx - BG_OFF, 0, None)
+
+
+def calibrate_bg(sv, sp, op):
+    """True views (uint8): log(distance) = alpha + beta log(M_bg), frames where A-2 is visible."""
+    v = sv.astype(np.float32) / 255.0
+    M = bg_weights(v).sum((-1, -2)).reshape(-1)
+    vis = ((v.max(-1) < 0.1).sum((-1, -2)) >= 3).reshape(-1)
+    dist = np.linalg.norm(op - sp, axis=-1).reshape(-1)
+    m = vis & (M >= BG_MIN_MASS)
+    beta, alpha = np.polyfit(np.log(M[m]), np.log(dist[m]), 1)
+    return float(alpha), float(beta)
+
+
+def read_a2_bg(pred, sp, alpha, beta):
+    from v11core.pleasure import COL_ANGLES
+    w = bg_weights(pred)
+    col = w.sum(1)
+    M = col.sum(1)
+    phi = np.angle((col * np.exp(1j * COL_ANGLES)[None]).sum(1))
+    dist = np.exp(alpha + beta * np.log(np.maximum(M, 1e-6)))
+    est = sp + dist[:, None] * np.stack([np.cos(phi), np.sin(phi)], 1)
+    est[M < BG_MIN_MASS] = np.nan
+    return est
 
 
 @torch.no_grad()
-def g5a_est(model, d, PA2, dev, alpha, beta, K, variant, batch=50):
+def g5a_est(model, d, PA2, dev, alpha, beta, K, variant, batch=50, bg=None):
     g = h5py.File(d['path'], 'r')[d['split']]
     N = g['self_vision'].shape[0]
     util.seed_all(0)
-    out = []
+    out, out_bg = [], []
     for b0 in range(0, N, batch):
         x = torch.from_numpy(util.scale_vision(util.transpose_vision(g['self_vision'][b0:b0 + batch]))).to(dev)
         m = torch.from_numpy(g['self_motion'][b0:b0 + batch]).float().to(dev)
         sp = d['self_position'][b0:b0 + batch]
         B = x.shape[0]
         model.init_state(B)
-        est = []
+        est, est_bg = [], []
         for t in range(T0 + K):
             q = torch.zeros(B, 11, device=dev)
             q[:, 10] = 1.0
@@ -59,7 +89,13 @@ def g5a_est(model, d, PA2, dev, alpha, beta, K, variant, batch=50):
             if t >= T0:
                 p01 = ((pr + 1) / 2).clamp(0, 1).permute(0, 2, 3, 1).cpu().numpy()
                 est.append(read_a2(p01, sp[:, t + 1], alpha, beta))
+                if bg is not None:
+                    est_bg.append(read_a2_bg(p01, sp[:, t + 1], *bg))
         out.append(np.stack(est, 1))
+        if bg is not None:
+            out_bg.append(np.stack(est_bg, 1))
+    if bg is not None:
+        return np.concatenate(out), np.concatenate(out_bg)
     return np.concatenate(out)   # (N, K, 2)
 
 
@@ -95,8 +131,9 @@ def g5b(model, p_mask, dev, K=10, batch=50):
     g = h5py.File(COMMON, 'r')['test']
     sp_all, op_all = g['self_position'][()], g['other_position'][()]
     alpha, beta = calibrate(g['self_vision'][:, :100:5], sp_all[:, :100:5], op_all[:, :100:5])
+    bg = calibrate_bg(g['self_vision'][:, :100:5], sp_all[:, :100:5], op_all[:, :100:5])
     N = sp_all.shape[0]
-    est = {}
+    est, est_bg = {}, {}
     for b0 in range(0, N, batch):
         x, m = batch_x(g, b0, batch, dev)
         B = x.shape[0]
@@ -117,7 +154,17 @@ def g5b(model, p_mask, dev, K=10, batch=50):
                 if t >= T0:
                     prs.append(((pr + 1) / 2).clamp(0, 1).permute(0, 2, 3, 1).cpu().numpy())
             est.setdefault(key, []).append(np.stack([read_a2(prs[i], sp[:, i], alpha, beta) for i in range(K)], 1))
+            est_bg.setdefault(key, []).append(np.stack([read_a2_bg(prs[i], sp[:, i], *bg) for i in range(K)], 1))
     est = {k: np.concatenate(v) for k, v in est.items()}
+    est_bg = {k: np.concatenate(v) for k, v in est_bg.items()}
+    res_bg, main_bg = g5b_summary(est_bg)
+    res_main, main = g5b_summary(est)
+    res_main['bg'] = res_bg
+    res_main['bg']['calib'] = list(bg)
+    return res_main, main, main_bg
+
+
+def g5b_summary(est):
     Dp = np.stack([est[f'p{k}'][:, -1] - est['ctrl'][:, -1] for k in range(8)], 1)   # (N, 8, 2)
     Dm = np.stack([est[f'm{k}'][:, -1] - est['ctrl'][:, -1] for k in range(8)], 1)
     own_p = (Dp * BIN_UNIT[None]).sum(-1)
@@ -147,6 +194,7 @@ def main():
     PA2 = {k: true_pleasure(k, D[k]) for k in D}
     g = h5py.File(D['green']['path'], 'r')['test']
     alpha, beta = calibrate(g['self_vision'][:, :100:5], D['green']['self_position'][:, :100:5], D['green']['other_position'][:, :100:5])
+    bgc = calibrate_bg(g['self_vision'][:, :100:5], D['green']['self_position'][:, :100:5], D['green']['other_position'][:, :100:5])
     per = {}
     for c in ('random', 'mixed'):
         model, p_mask = load_v12(args.exp_fmt.format(c), args.seed, args.epoch, dev)
@@ -157,7 +205,14 @@ def main():
                 for variant in ('freeze', 'continue', 'zero'):
                     if K == 20 and variant != 'freeze':
                         continue
-                    est = g5a_est(model, D[k], PA2[k], dev, alpha, beta, K, variant)
+                    est, est_bg = g5a_est(model, D[k], PA2[k], dev, alpha, beta, K, variant, bg=bgc)
+                    gb, slb, Sb = g5a_metric(est_bg, D[k])
+                    cb = g5a_metric.curves
+                    r.setdefault('G5a_bg', {})[f'{k}_K{K}_{variant}'] = {'g_other': summ(gb), 's_liked': summ(slb),
+                                                                       'curve_liked': cb[0], 'curve_others': cb[1],
+                                                                       'S_mean_RGBC': np.nanmean(Sb, 0).round(4).tolist(),
+                                                                       'frac_read': float(np.isfinite(est_bg[..., 0]).mean())}
+                    per[(c, f'G5a_bg_{k}_K{K}_{variant}')] = gb
                     gg, sl, S = g5a_metric(est, D[k])
                     r['G5a'][f'{k}_K{K}_{variant}'] = {'g_other': summ(gg), 's_liked': summ(sl),
                                                        'curve_liked': g5a_metric.curves[0], 'curve_others': g5a_metric.curves[1],
@@ -165,8 +220,10 @@ def main():
                                                        'frac_read': float(np.isfinite(est[..., 0]).mean())}
                     per[(c, f'G5a_{k}_K{K}_{variant}')] = gg
         model.motion_masking = True      # canonical for G5b (as the stage-1 process-2 test)
-        r['G5b'], main_b = g5b(model, p_mask, dev)
+        r['G5b'], main_b, main_b_bg = g5b(model, p_mask, dev)
         per[(c, 'G5b')] = main_b
+        per[(c, 'G5b_bg')] = main_b_bg
+        r['calib_bg_G5a'] = list(bgc)
         with open(os.path.join(out, f'g5_{c}_ep{args.epoch}.json'), 'w') as f:
             json.dump(r, f, indent=1)
         print(c, json.dumps({'G5a_freeze_K15': {k: r['G5a'][f'{k}_K15_freeze']['g_other']['mean'] for k in D},
