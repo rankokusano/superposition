@@ -80,6 +80,13 @@ def g5a_metric(est, d):
     li = np.array([COLORS.index(l) for l in liked])
     s_l = S[np.arange(N), li]
     others = np.stack([np.delete(S[n], li[n]) for n in range(N)])
+    # per-step curves for the figure (Sec.5.2 of the instructions): mean projection on the liked
+    # direction and mean over the three other directions, relative to p2(T0)
+    P = np.stack([((est - p0[:, None]) * (lambda u: u / np.maximum(np.linalg.norm(u, axis=1, keepdims=True), 1e-9))(
+        refs(d['layout'], X)[:, 0] - p0)[:, None]).sum(-1) for X in COLORS], 1)   # (N, 4, K)
+    curve_l = np.nanmean(P[np.arange(N), li], 0)
+    curve_o = np.nanmean(np.stack([np.nanmean(np.delete(P[n], li[n], axis=0), 0) for n in range(N)]), 0)
+    g5a_metric.curves = (curve_l.round(4).tolist(), curve_o.round(4).tolist())
     return s_l - np.nanmean(others, 1), s_l, S
 
 
@@ -119,6 +126,9 @@ def g5b(model, p_mask, dev, K=10, batch=50):
     return {'main_pm_own': summ(main), 'own_p': summ(np.nanmean(own_p, 1)), 'own_m': summ(np.nanmean(own_m, 1)),
             'pm_own_bins0167': float(np.nanmean((own_p - own_m)[:, [0, 1, 6, 7]])),
             'pm_own_bins2to5': float(np.nanmean((own_p - own_m)[:, 2:6])),
+            'pm_own_per_bin': np.nanmean(own_p - own_m, 0).round(4).tolist(),
+            'own_p_per_bin': np.nanmean(own_p, 0).round(4).tolist(), 'own_m_per_bin': np.nanmean(own_m, 0).round(4).tolist(),
+            'mean_vec_p': np.nanmean(Dp, 0).round(4).tolist(), 'mean_vec_m': np.nanmean(Dm, 0).round(4).tolist(),
             'frac_read_ctrl': float(np.isfinite(est['ctrl'][..., 0]).mean())}, main
 
 
@@ -150,6 +160,7 @@ def main():
                     est = g5a_est(model, D[k], PA2[k], dev, alpha, beta, K, variant)
                     gg, sl, S = g5a_metric(est, D[k])
                     r['G5a'][f'{k}_K{K}_{variant}'] = {'g_other': summ(gg), 's_liked': summ(sl),
+                                                       'curve_liked': g5a_metric.curves[0], 'curve_others': g5a_metric.curves[1],
                                                        'S_mean_RGBC': np.nanmean(S, 0).round(4).tolist(),
                                                        'frac_read': float(np.isfinite(est[..., 0]).mean())}
                     per[(c, f'G5a_{k}_K{K}_{variant}')] = gg
