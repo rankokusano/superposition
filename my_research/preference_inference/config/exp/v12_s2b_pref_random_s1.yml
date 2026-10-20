@@ -1,0 +1,35 @@
+# v12 stage 2b (docs/v12_experiment_log.md Sec.35, exploratory): v12_s2_pref_random_s1.yml with G's output restricted to the stage-1 pleasure form (signed_pairs); run with --seed 1.
+model:
+  name: SuperpositionNetworkMotionPleasureHoldOtherShaped
+  config: signed_pairs
+  mode: ~
+runner: MotionGenerationPredictionFeaturePredictionRunner
+data:
+  name: v11_s2_pref
+load_state_dict_strict: False
+train:
+  loss_function: l1_loss
+  pretrain:
+    exp_config: v12_s1_random_l1_s1
+    seed: 1
+    epoch: 200
+  batch_size: 10
+  max_epochs: 200
+  save_interval: 10
+  test_interval: 10
+  optimizer: AdamW
+  optim_config:
+    default:
+      lr: 0.001
+      weight_decay: 0.01
+    freeze:
+      - superposition_module
+      - vision_encoder_module
+      - vision_decoder_module
+      - integration_module
+      - share_lns
+      - feature_prediction_module
+    per_params:
+      - name: bias
+        args:
+          weight_decay: 0.0

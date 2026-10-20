@@ -7,7 +7,7 @@ s=$1; g1=$2; g2=$3
 [ "$g1" = 0 ] || [ "$g2" = 0 ] && { echo "GPU0 is not allowed"; exit 1; }
 launch() {
     local st=$1 c=$2 gpu=$3
-    local exp=v12_s2_${st}_${c}_s${s}
+    local exp=${PREFIX:-v12_s2}_${st}_${c}_s${s}
     mkdir -p data/result/${exp}
     setsid nohup bash -c "CUDA_VISIBLE_DEVICES=${gpu} python -u train_v12.py --exp_config ${exp} --seed ${s} --device cuda:0 \
         --cudnn_deterministic --data_load_memory > data/result/${exp}/train_seed${s}.log 2>&1; echo \"exit \$?\" > data/result/${exp}/done_seed${s}" \

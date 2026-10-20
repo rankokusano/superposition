@@ -1,0 +1,35 @@
+# v12 stage 2b reference (docs/v12_experiment_log.md Sec.35): v12_s2_pref_mixed_s0.yml with G's output masked on bins 2-5 (shape A); run with --seed 0.
+model:
+  name: SuperpositionNetworkMotionPleasureHoldOtherShaped
+  config: mask
+  mode: ~
+runner: MotionGenerationPredictionFeaturePredictionRunner
+data:
+  name: v11_s2_pref
+load_state_dict_strict: False
+train:
+  loss_function: l1_loss
+  pretrain:
+    exp_config: v12_s1_mixed_l1_s0
+    seed: 0
+    epoch: 200
+  batch_size: 10
+  max_epochs: 200
+  save_interval: 10
+  test_interval: 10
+  optimizer: AdamW
+  optim_config:
+    default:
+      lr: 0.001
+      weight_decay: 0.01
+    freeze:
+      - superposition_module
+      - vision_encoder_module
+      - vision_decoder_module
+      - integration_module
+      - share_lns
+      - feature_prediction_module
+    per_params:
+      - name: bias
+        args:
+          weight_decay: 0.0
