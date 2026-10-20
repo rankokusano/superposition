@@ -7,7 +7,7 @@ split, ...) and load models with eval_trial_v11.load_model. Here
     classes (e.g. the Fig.5 Autoencoder) load as before;
   * run is replaced so that, before each pass over a dataset, the wrapper gets that split's
     self_motion array; the wrapper then injects x['self_motion'] for the current batch and step.
-Usage: python analyze/v12/v11fig.py {pca|pred_images|convergence} <the v11 script's own arguments>
+Usage: python analyze/v12/v11fig.py {pca|pred_images|convergence|h2} <the v11 script's own arguments>
 (use --sub ../v12/<dir> so outputs go under data/result/v12/).
 """
 
@@ -82,6 +82,10 @@ def main():
     which = sys.argv.pop(1)
     if which == 'convergence':
         import check_convergence_v11 as mod
+    elif which == 'h2':   # selection criterion (v12 Sec.26): h2_check_v11 reads 'v11_s1_<c>_mse'; map to v12
+        import h2_check_v11 as mod
+        mod.load_model = lambda exp, *a, **k: load_model(exp.replace('v11_s1_', 'v12_s1_', 1), *a, **k)
+        mod.run = run
     else:
         mod = __import__({'pca': 'pca_v11', 'pred_images': 'pred_images_v11'}[which])
         mod.load_model = load_model
