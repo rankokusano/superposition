@@ -1,0 +1,35 @@
+# v12 TEST ONLY (docs/v12_experiment_log.md Sec.34): shaped stage-2 dry run ('mask') from v12_trial_pc_random_mse ep150, 2 epochs. Not a result.
+model:
+  name: SuperpositionNetworkMotionPleasureHoldOtherShaped
+  config: mask
+  mode: ~
+runner: MotionGenerationPredictionFeaturePredictionRunner
+data:
+  name: v11_s2_green
+load_state_dict_strict: False
+train:
+  loss_function: l1_loss
+  pretrain:
+    exp_config: v12_trial_pc_random_mse
+    seed: 0
+    epoch: 150
+  batch_size: 10
+  max_epochs: 2
+  save_interval: 1
+  test_interval: 10
+  optimizer: AdamW
+  optim_config:
+    default:
+      lr: 0.001
+      weight_decay: 0.01
+    freeze:
+      - superposition_module
+      - vision_encoder_module
+      - vision_decoder_module
+      - integration_module
+      - share_lns
+      - feature_prediction_module
+    per_params:
+      - name: bias
+        args:
+          weight_decay: 0.0

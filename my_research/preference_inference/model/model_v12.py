@@ -166,3 +166,59 @@ class SuperpositionNetworkMotionPleasureHoldOther(SuperpositionNetworkMotionPlea
             F.dropout(os, p=0.5, training=self.training),
         )
         return {'self_vision': self.vision_decoder_module(so), 'q2_hat': q2}
+
+
+class SuperpositionNetworkMotionPleasureHoldOtherShaped(SuperpositionNetworkMotionPleasureHoldOther):
+    """
+    v12 stage 2 with G's output restricted to the form of the pleasure the network itself experienced in
+    stage 1 (docs/v12_experiment_log.md Sec.34; a design changed after seeing the stage-2 results). No new
+    module or loss: only G's 8 tanh outputs z are mapped, by config motion_generator_module.shape:
+      'mask'         : Q2 = P_max * z on bins 0,1,6,7 and 0 on bins 2-5 (in stage 1 the pleasure is always 0
+                       on bins 2-5 and |P| <= P_max = 1 on the others);
+      'signed_pairs' : the set of pleasure vectors seen in stage 1: bins 2-5 = 0, bins {0,1} share one sign and
+                       bins {6,7} the opposite sign. With u = z[2] (sign / strength, in (-1, 1)) and
+                       m_k = (z_k + 1) / 2 in (0, 1) for k in {0,1,6,7}:
+                       Q2 = P_max * [-u m0, -u m1, 0, 0, 0, 0, u m6, u m7].
+    pred['q2_hat'] is the restricted Q2 (what enters process-2).
+    """
+    COLOUR_BINS = (0, 1, 6, 7)
+
+    def __init__(self, config):
+        super().__init__(config)
+        self.q2_shape = str(config.motion_generator_module.shape)
+        self.p_max = float(config.motion_generator_module.p_max)
+        assert self.q2_shape in ('mask', 'signed_pairs')
+        mask = torch.zeros(PLEASURE_DIM)
+        mask[list(self.COLOUR_BINS)] = 1.0
+        self.register_buffer('q2_mask', mask)
+
+    def shape_q2(self, z):
+        if self.q2_shape == 'mask':
+            return self.p_max * z * self.q2_mask
+        u = z[:, 2:3]
+        m = (z + 1) / 2
+        q = torch.zeros_like(z)
+        q[:, 0:2] = -u * m[:, 0:2]
+        q[:, 6:8] = u * m[:, 6:8]
+        return self.p_max * q
+
+    def forward(self, x, p_mask_vision_self, p_mask_vision_other, p1_override=None, p2_override=None,
+                hidden_override=None):
+        sv = x['self_vision']
+        sv_enc = self.self_vision_encoder_module(sv)
+        ov_enc = self.other_vision_encoder_module(sv)
+        p1 = self.process1_input(x, p1_override, hidden_override)
+        q2 = self.shape_q2(self.motion_generator_module(ov_enc))
+        if p2_override is None:
+            p2 = torch.cat([torch.zeros_like(q2[:, :MOTION_DIM]), q2, torch.ones_like(q2[:, :1])], 1)
+        else:
+            p2 = p2_override
+        self._t += 1
+        sv_enc = util.mask(sv_enc, p_mask_vision_self)
+        ov_enc = util.mask(ov_enc, p_mask_vision_other)
+        ss, os = self.superposition_module(sv_enc, p1, ov_enc, p2)
+        so = self.integration_module(
+            F.dropout(ss, p=0.5, training=self.training),
+            F.dropout(os, p=0.5, training=self.training),
+        )
+        return {'self_vision': self.vision_decoder_module(so), 'q2_hat': q2}
