@@ -70,9 +70,19 @@ if __name__ == '__main__':
 
     runner = getattr(runners, exp_config.runner)()
 
-    train_loader, eval_loader, test_loader = util.gen_data_loader(
-        exp_config.data.name, exp_config.train.batch_size,
-        args.data_load_memory, device)
+    input_key = exp_config.data.get('input_vision', None) if hasattr(exp_config.data, 'get') else None
+    if input_key:
+        # v12 proposal C (docs/v12_experiment_log.md Sec.45): the network INPUT view comes from data key
+        # <input_key> (A-2 removed on hidden steps); the prediction target stays 'self_vision'.
+        from exp import loader_v12
+        train_loader, eval_loader, test_loader = loader_v12.gen_data_loader(
+            exp_config.data.name, exp_config.train.batch_size,
+            args.data_load_memory, device, input_key)
+        print(f'input view from data key {input_key}')
+    else:
+        train_loader, eval_loader, test_loader = util.gen_data_loader(
+            exp_config.data.name, exp_config.train.batch_size,
+            args.data_load_memory, device)
 
     train_logger, eval_logger, test_logger = util.gen_logger(log_dir)
 

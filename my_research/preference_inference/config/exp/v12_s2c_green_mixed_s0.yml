@@ -1,0 +1,36 @@
+# v12 proposal C (docs/v12_experiment_log.md Sec.45, DRAFT, not started): v12_s2b_green_mixed_s0.yml with the network input view from data key self_vision_in (A-2 removed on hidden steps, 10-30-step intervals); target unchanged; run with --seed 0.
+model:
+  name: SuperpositionNetworkMotionPleasureHoldOtherShaped
+  config: signed_pairs
+  mode: ~
+runner: MotionGenerationPredictionFeaturePredictionRunner
+data:
+  name: v12_hide_v11_s2_green
+  input_vision: self_vision_in
+load_state_dict_strict: False
+train:
+  loss_function: l1_loss
+  pretrain:
+    exp_config: v12_s1_mixed_l1_s0
+    seed: 0
+    epoch: 200
+  batch_size: 10
+  max_epochs: 200
+  save_interval: 10
+  test_interval: 10
+  optimizer: AdamW
+  optim_config:
+    default:
+      lr: 0.001
+      weight_decay: 0.01
+    freeze:
+      - superposition_module
+      - vision_encoder_module
+      - vision_decoder_module
+      - integration_module
+      - share_lns
+      - feature_prediction_module
+    per_params:
+      - name: bias
+        args:
+          weight_decay: 0.0
