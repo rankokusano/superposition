@@ -98,7 +98,9 @@ def get_pairs(out_dir, D, Mg, Mr):
         pr, r_used = t5_pairs_masked(D['green'], D['red'], Mg, Mr, 1.0), 1.0
         if min(int((pr[:, 0] == L).sum()) for L in (0, 1)) < 500:
             pr, r_used = t5_pairs_masked(D['green'], D['red'], Mg, Mr, 1.5), 1.5
-        np.savez(pp, pairs=pr, radius=r_used)
+        tmp = pp[:-4] + f'.tmp{os.getpid()}.npz'   # deterministic content; atomic rename avoids a partial read
+        np.savez(tmp, pairs=pr, radius=r_used)
+        os.replace(tmp, pp)
     z = np.load(pp)
     return z['pairs'], float(z['radius'])
 
