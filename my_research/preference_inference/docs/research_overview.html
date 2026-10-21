@@ -1,0 +1,308 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>修士研究の全体のまとめ</title><style>
+:root{--bg:#fff;--fg:#1d1d1f;--mut:#666;--line:#ddd;--card:#f6f7f9;--accent:#1f5f9f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16181c;--fg:#e8e8ea;--mut:#a0a3a8;--line:#33363c;--card:#1f2228;--accent:#7fb2e5}}
+:root[data-theme="dark"]{--bg:#16181c;--fg:#e8e8ea;--mut:#a0a3a8;--line:#33363c;--card:#1f2228;--accent:#7fb2e5}
+body{background:var(--bg);color:var(--fg);font-family:"Hiragino Sans","Noto Sans JP",sans-serif;line-height:1.75;margin:0 auto;max-width:1150px;padding:16px}
+h1{font-size:1.55rem;line-height:1.4}h2{border-bottom:2px solid var(--line);padding-bottom:4px;margin-top:2.4em}
+h3{margin-top:1.9em;border-left:5px solid var(--accent);padding-left:8px}h4{margin-top:1.6em}
+a{color:var(--accent)}
+figure{margin:14px 0 24px;background:var(--card);padding:10px;border-radius:6px}
+figure img{max-width:100%;height:auto;display:block;background:#fff;margin:0 auto}
+figcaption{font-size:.9rem;margin-top:6px}figcaption code{color:var(--mut);font-size:.78rem;word-break:break-all}
+table{border-collapse:collapse;font-size:.86rem;margin:8px 0}th,td{border:1px solid var(--line);padding:4px 8px;text-align:left;vertical-align:top}
+th{background:var(--card)}.scroll{overflow-x:auto}
+td code,li code,p code{font-size:.82rem;word-break:break-all}
+blockquote{margin:8px 0;padding:6px 12px;border-left:4px solid var(--mut);background:var(--card)}
+nav.toc{background:var(--card);border-radius:6px;padding:10px 16px;margin:16px 0}
+nav.toc ul{margin:2px 0;padding-left:1.3em}nav.toc>ul{padding-left:.6em}
+.gen{font-size:.8rem;color:var(--mut)}
+.top{position:fixed;right:14px;bottom:14px;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:4px 10px;font-size:.85rem;text-decoration:none}
+</style></head><body>
+<p class="gen">このページは <code>research_overview.md</code> から <code>analyze/build_research_overview_html.py</code> で生成したもの（2026-10-22）。手で編集しないこと。</p>
+<h1 id="修士研究の全体のまとめ：自分の価値の経験から、他者の好みが分かるようになるか">修士研究の全体のまとめ：自分の価値の経験から、他者の好みが分かるようになるか</h1>
+<nav class="toc" id="目次"><b>目次</b>
+<ul>
+<li><a href="#A.-研究の問いと背景">A. 研究の問いと背景</a></li>
+<ul>
+<li><a href="#問い">問い</a></li>
+<li><a href="#発達研究との対応">発達研究との対応</a></li>
+<li><a href="#元論文と本研究の位置づけ">元論文と本研究の位置づけ</a></li>
+</ul>
+<li><a href="#B.-元論文の仕組み">B. 元論文の仕組み</a></li>
+<ul>
+<li><a href="#入力と部品">入力と部品</a></li>
+<li><a href="#学習の手順">学習の手順</a></li>
+<li><a href="#何が示されたか（この研究室での再現の値）">何が示されたか（この研究室での再現の値）</a></li>
+<li><a href="#本研究で元論文と変えた点">本研究で元論文と変えた点</a></li>
+</ul>
+<li><a href="#C.-各版の実験">C. 各版の実験</a></li>
+<ul>
+<li><a href="#前史（v2・v3、step3-の-Phase-3）">前史（v2・v3、step3 の Phase 3）</a></li>
+<li><a href="#v4・v5：運動を「価値」（probe-Q）に置き換える">v4・v5：運動を「価値」（probe-Q）に置き換える</a></li>
+<li><a href="#v6：推定の対象を「報酬の重み」に変える">v6：推定の対象を「報酬の重み」に変える</a></li>
+<li><a href="#v7：自分の-critic-を部品にした逆強化学習">v7：自分の critic を部品にした逆強化学習</a></li>
+<li><a href="#v8・v9：構想のみ（実施していない）">v8・v9：構想のみ（実施していない）</a></li>
+<li><a href="#v10：価値は「色」に結びつくか、「場所」に結びつくか（詳しく）">v10：価値は「色」に結びつくか、「場所」に結びつくか（詳しく）</a></li>
+<li><a href="#v11：自分の経験から「価値と行動の結びつき」が生まれるか（詳しく）">v11：自分の経験から「価値と行動の結びつき」が生まれるか（詳しく）</a></li>
+<li><a href="#v12：運動を戻し、ときどき隠す（詳しく）">v12：運動を戻し、ときどき隠す（詳しく）</a></li>
+<ul>
+<li><a href="#v12-の-1-段目（自己）と関門">v12 の 1 段目（自己）と関門</a></li>
+<li><a href="#v12-の-2-段目：正式・b（探索）・c（新しい仮説の検証）">v12 の 2 段目：正式・b（探索）・c（新しい仮説の検証）</a></li>
+<li><a href="#事後の分析-B（事前登録外。判定は変えない。ログ-§41・§44）">事後の分析 B（事前登録外。判定は変えない。ログ §41・§44）</a></li>
+<li><a href="#v12-の-2-段目が好みを表さなかった理由：三層の分析（推測。ログ-§40・§43・§46）">v12 の 2 段目が好みを表さなかった理由：三層の分析（推測。ログ §40・§43・§46）</a></li>
+<li><a href="#v12-の限界">v12 の限界</a></li>
+</ul>
+</ul>
+<li><a href="#D.-全体を通して分かったこと">D. 全体を通して分かったこと</a></li>
+<ul>
+<li><a href="#示せたこと（主張できること）">示せたこと（主張できること）</a></li>
+<li><a href="#示せなかったこと（主張できないこと）">示せなかったこと（主張できないこと）</a></li>
+<li><a href="#元論文の重ね合わせが「他者の価値」に広がるために見えた条件">元論文の重ね合わせが「他者の価値」に広がるために見えた条件</a></li>
+<li><a href="#限界の一覧">限界の一覧</a></li>
+</ul>
+<li><a href="#E.-今後の課題">E. 今後の課題</a></li>
+<li><a href="#F.-図の一覧">F. 図の一覧</a></li>
+<li><a href="#G.-用語集">G. 用語集</a></li>
+<li><a href="#付録-1：読んだ文書の一覧">付録 1：読んだ文書の一覧</a></li>
+<li><a href="#付録-2：食い違いの一覧">付録 2：食い違いの一覧</a></li>
+</ul>
+</nav>
+<ul><li>作成：2026-10-22。修論の執筆の土台にする文書。<b>新しい学習・評価は一切行わず、既にある文書と結果だけから書いた。</b></li><li>文章の正はこのファイル（<code>docs/research_overview.md</code>）。<code>docs/research_overview.html</code> はこのファイルから <code>analyze/build_research_overview_html.py</code> で生成したもので、手では書いていない。</li><li>各版の詳しい数値・経緯は、各版のまとめの文書（末尾の「付録 1」）を正とする。この文書の数値は、主の基準と判定に絞った。</li><li>書き方の約束：<b>事実</b>（測った結果）と <b>解釈（推測）</b>（理由の読み）を分けて書く。推測には必ず「推測」と書く。専門の言葉は「G. 用語集」に一行ずつ説明を置いた。</li><li>パスは <code>my_research/preference_inference/</code> からの相対パス。図は本文の中に置き、一覧は「F. 図の一覧」にまとめた。v10 の後半の図（B4・再評価）は v10 の作業ツリー（<code>/home/kusano/superposition/my_research/...</code>）にだけあるので、そちらを指している。</li></ul>
+<hr>
+<h2 id="A.-研究の問いと背景">A. 研究の問いと背景</h2>
+<h3 id="問い">問い</h3>
+<p><b>自分が好みに従って動いた経験があると、他者の動きを見て、他者の好み（価値）が分かるようになるか。</b> 最低限、他者の好みが「場所」ではなく「物（色）」に結びついて表れることを求める。</p>
+<h3 id="発達研究との対応">発達研究との対応</h3>
+<ul><li><b>Woodward (1998)</b>：乳児は、手が二つの物のうち一方をつかむ場面をくり返し見たあと、二つの物の置き場所を入れ替えると、「同じ場所の別の物」に手が伸びたときの方を長く見る。乳児は他者の行為の目標を、場所ではなく物として捉えている。</li><li><b>Sommerville, Woodward &amp; Needham (2005)</b>：まだ自分で物をつかめない月齢の乳児に、物をつかめる経験（物がくっつくミトン）をさせると、他者の手の目標を物として捉えるようになる。<b>自分の行為の経験が、他者の目標の理解を生む。</b></li><li>本研究との対応：物＝ランドマークの「色」、置き場所＝「場所」、置き場所の入れ替え＝赤と緑の入れ替え（v10 以降の環境）、自分でつかむ経験＝「経験あり」の条件（A-1 が半分は好きな色の方へ動く。v11・v12）。v11・v12 の 2 段目の主の見分け T2（入れ替えの瞬間）は、Woodward の入れ替えの課題に当たる。</li><li>（文献の細部は、修論の執筆の際に原典で確かめること。この文書では指示書 <code>docs/v11_instructions_1_v2.md</code> §2.1 の対応づけに従った。）</li></ul>
+<h3 id="元論文と本研究の位置づけ">元論文と本研究の位置づけ</h3>
+<ul><li><b>元論文</b>（Noguchi, Iizuka, Yamamoto &amp; Taguchi, 2022, <i>Scientific Reports</i> 12:2859）は、一つの LSTM（共有モジュール）の中に「自分を表す処理（process-1）」と「他者を表す処理（process-2）」を重ねて持たせ、<b>自分の次の視界を予測する学習だけで</b>、他者の位置・他者から見た視界（Fig.5）・他者の運動（Fig.6）の表現が生まれることを示した。元論文の限界は「他者の内面（意図・価値）には届いていない」こと。</li><li><b>本研究</b>は、この重ね合わせの仕組みを「<b>他者の運動</b>」から「<b>他者の価値（好み）</b>」へ広げられるかを問う。自分の価値の扱い方（どちらが快いか、快い方へ動くこと）を予測学習の中で身につけ、それを同じ共有モジュールで他者にも当てはめれば、他者の好みが表れるはずだ、という考え方である。</li><li>v4〜v7 は「外から与えた価値（強化学習の critic）」を入力にする路線、v10 は価値と色の結びつきの確認、v11・v12 は「ネットワーク自身が自分の経験から価値と行動の結びつきを作る」路線である。</li></ul>
+<hr>
+<h2 id="B.-元論文の仕組み">B. 元論文の仕組み</h2>
+<figure><a href="figs/research_overview_network.svg" target="_blank"><img src="figs/research_overview_network.svg" alt="図 B1：元論文の重ね合わせのネットワーク（この文書のために作図。元論文の図 3・図 6 の要素をまとめたもの）"></a><figcaption>図 B1：元論文の重ね合わせのネットワーク（この文書のために作図。元論文の図 3・図 6 の要素をまとめたもの）<br><code>figs/research_overview_network.svg</code></figcaption></figure>
+<h3 id="入力と部品">入力と部品</h3>
+<ul><li><b>入力</b>：A-1 の全方位の視界（16×64 の画像）と、A-1 自身の運動 m_t（2 次元）。A-2 は A-1 の視界の中に黒い立方体として映るだけで、A-2 の視界はネットワークに入らない。</li><li><b>Encoder-1・Encoder-2</b>：同じ作り・別の重みで、<b>どちらも A-1 の視界</b>を読む。学習中は出力を 99% の確率で零にする（視覚がない間も運動を積み上げて位置を追うことを学ばせるため）。</li><li><b>共有モジュール</b>（LSTM、128 ユニット）：process-1（自己）と process-2（他者）で<b>重みを共有し、記憶（内部状態 h¹・h²）は別</b>に持つ。process-1 には自分の運動、process-2 には零ベクトル（exp1）を入れる。</li><li><b>統合部・Decoder</b>：h¹ と h² をまとめて、A-1 の次の視界を出す。<b>特徴予測部</b>は h¹・h² から次の Encoder 出力を予測する枝。</li><li><b>Motion Generator（MG）</b>：exp3 で足す他者用の部品。マスク前の Encoder-2 の出力を読み、A-2 の運動を作って process-2 に入れる。</li></ul>
+<h3 id="学習の手順">学習の手順</h3>
+<div class="scroll"><table>
+<tr><th>段</th><th>元論文の名前</th><th>データ</th><th>学習するもの</th></tr>
+<tr><td>1 段目</td><td>exp1（mse 段 200 エポック → l1 段 200 エポック）</td><td>A-1 はランダムに歩く、A-2 は静止（1000 エピソード）</td><td>mse 段で全部、l1 段で Decoder だけ</td></tr>
+<tr><td>Fig.5</td><td>exp2</td><td>同じ</td><td>Encoder を凍結し、Encoder-1 → Decoder を学習。Encoder-2 の出力を同じ Decoder に通して「A-2 から見た視界」を取り出す</td></tr>
+<tr><td>2 段目</td><td>exp3（200 エポック）</td><td>A-2 が周回する（時計回り・反時計回り・停止）</td><td>MG だけ（ほかは凍結）</td></tr>
+</table></div>
+<h3 id="何が示されたか（この研究室での再現の値）">何が示されたか（この研究室での再現の値）</h3>
+<ul><li>自他の分かれ方：h¹ から A-1 の位置が R² 0.977、h² から A-2 の位置が 0.973 で読める（h¹ から A-2 の位置は 0.037）。</li><li><b>Fig.5（他者の視点の取り出し）</b>：Encoder-2 の出力を Decoder に通した画像が、A-1 の視界より A-2 の本当の視界に近い（マージン +0.091、v4 の Encoder）。これは、Encoder-1 と Encoder-2 が自己と他者を<b>同じ書き方</b>で表すこと（自他の符号の揃い、コサイン 0.80）に支えられている。</li><li><b>Fig.6</b>：MG が作った A-2 の運動が本当の運動と相関する（再現で r≈0.87）。</li><li>再現の結果の置き場所：ルートの <code>docs/results_locations.md</code>、<code>data/result/exp1_l1_1000/</code>・<code>exp3_1000/</code>（ルート側）、<code>data/result/fig5_v4_exp1l1000/</code>。</li></ul>
+<h3 id="本研究で元論文と変えた点">本研究で元論文と変えた点</h3>
+<div class="scroll"><table>
+<tr><th>項目</th><th>元論文</th><th>v4・v5</th><th>v6</th><th>v7</th><th>v10</th><th>v11</th><th>v12</th></tr>
+<tr><td>process-1 の入力</td><td>運動 m_t（2）</td><td>8 方向の probe-Q（外の critic の Q 値）</td><td>probe-Q（報酬条件付き critic）</td><td>共有モジュールは使わない（critic で逆強化学習）</td><td>probe-Q</td><td><b>方向ごとの快・不快（8）</b>、運動なし</td><td><b>運動（2、区間で隠す）＋快・不快（8、隠れた間は止める）＋隠れの印（1）</b></td></tr>
+<tr><td>process-2 の入力</td><td>exp1 零／exp3 MG の運動</td><td>零／VE が作る Q̂²（8）</td><td>VE′ が作る r̂² → critic → Q̂²</td><td>—</td><td>零</td><td>1 段目 零／2 段目 部品 G の Q2（8）</td><td>1 段目 零／2 段目 [運動 0、Q2、印 1]（2 段目 b・c は Q2 の形を限る）</td></tr>
+<tr><td>Encoder</td><td>exp1 で学習</td><td>v4 は元論文の再現を凍結、v5 は一から</td><td>一から</td><td>取り出した視点に v4・v6 の Encoder</td><td>B3-frozen は凍結、B3-ft は学習</td><td>一から</td><td><b>v4 の重みで凍結</b></td></tr>
+<tr><td>A-1 の動き</td><td>ランダム</td><td>ランダム</td><td>ランダム</td><td>ランダム</td><td>ランダム</td><td>ランダム／<b>半分は赤の方へ</b></td><td>v11 と同じ</td></tr>
+<tr><td>A-2 の動き</td><td>静止／周回</td><td>強化学習（緑へ向かう）／静止</td><td>同左</td><td>3 つの目標の actor</td><td>緑へ向かう（評価に静止も）</td><td>1 段目 静止、2 段目 半分は好きな色の方へ</td><td>v11 と同じ</td></tr>
+<tr><td>環境</td><td>四隅に 4 色</td><td>同左</td><td>同左</td><td>同左</td><td><b>赤と緑の入れ替え</b>（1/2）</td><td>v10 と同じ</td><td>v10 と同じ</td></tr>
+<tr><td>他者について問うもの</td><td>位置・視点・運動</td><td>価値（Q 値）</td><td>報酬の重み r</td><td>目標（報酬）</td><td>（他者は対象外。価値が色か場所か）</td><td>好み（快・不快）</td><td>好み（快・不快）</td></tr>
+</table></div>
+<hr>
+<h2 id="C.-各版の実験">C. 各版の実験</h2>
+<h3 id="前史（v2・v3、step3-の-Phase-3）">前史（v2・v3、step3 の Phase 3）</h3>
+<ul><li>元論文の仕組みに Q 値を足す試み（v2・v3）は、他者側に学習の通り道（特徴予測部）がない・MG が運動の予測を学んでいない、などの作りの誤りで成り立たなかった。</li><li>step3 の Phase 3 では「h² から A-2 の好みが分類できる（0.77）」を得たが、<b>撤回した</b>。A-2 は好きな角へまっすぐ向かうので、好み＝位置になり、A-2 の位置だけの分類器（t=15 で 1.00）が h² を常に上回った。<b>「潜在状態から他者の好みが読める」は、位置と混ざらない比較があって初めて意味を持つ</b>、という教訓は、v7・v10・v12 でもくり返し効いた（<code>docs/thesis_skeleton.md</code> §4）。</li></ul>
+<h3 id="v4・v5：運動を「価値」（probe-Q）に置き換える">v4・v5：運動を「価値」（probe-Q）に置き換える</h3>
+<ul><li><b>何を変えたか</b>：process-1 の入力を運動から、A-1 の critic（強化学習）が計算した 8 方向の Q 値（probe-Q）に替えた。MG を Value Estimator（VE）に一対一で置き換え、他者の Q 値 Q̂² を作らせた。v5 では Encoder も価値の入力のもとで一から学習し直した。</li><li><b>なぜ</b>：元論文が「運動（観察できる）」で示したことを、「価値（観察できない）」で問い直すため。</li><li><b>主な結果</b>（<code>docs/thesis_skeleton.md</code>）：<ul><li>自己：h¹ から A-1 の位置が R² 0.91（R3-A_400、収束した 2 シード）。推論のときだけ critic を A-2 のものに差し替えると 0.91 → 0.59（−35%、R3-A）に落ちるので、h¹ は Q 値を「自分の価値の形」として使っている。</li><li>他者：<b>VE は A-2 の価値を作れなかった</b>。Q̂² と本当の Q の相関は r≈0（元論文の MG は r≈0.87）、ピークの方向は A-2 の目標と逆（cos −0.80）、本当の Q を入れると予測がかえって悪くなる。値域をそろえても（P1.75）、Encoder を学習し直しても（v5 の P2-a）、成功しなかった。Q̂² は A-2 ではなく A-1 自身の位置を表した（Q̂²→A-1 の位置 0.39、→A-2 の位置 0.10）。</li><li>v5：Encoder を学習し直すと、自己の側は良くなり、他者の側は悪くなった（h²→A-2 の位置 0.86 → 0.64、Fig.5 のマージン 0.091 → 0.025）。</li></ul></li><li><b>分かったこと</b>：予測学習だけで、自己の表現は価値の入力へ移る。しかし他者の価値を生成する部品は、他者の価値ではなく「予測に役立つ別の情報（位置）」を流す（<b>位置優先</b>、支持のある仮説）。自他の Q 値は別々に学んだ critic から来るので尺度が合わない（通約できない）。</li><li><b>限界</b>：h¹ に他者の情報も多い（h¹→A-2 の位置 0.585、原因未特定）。v5 は単一シード。critic は所与で、価値が生まれることは主張しない。</li></ul>
+<figure><a href="../data/result/baseline_v4/F4_q2hat_vs_trueq_4panel.png" target="_blank"><img src="../data/result/baseline_v4/F4_q2hat_vs_trueq_4panel.png" alt="図 C1：VE が作った Q̂² と本当の Q（元論文の MG は r=0.875、v4・v5 の VE はどれも r≈0）"></a><figcaption>図 C1：VE が作った Q̂² と本当の Q（元論文の MG は r=0.875、v4・v5 の VE はどれも r≈0）<br><code>../data/result/baseline_v4/F4_q2hat_vs_trueq_4panel.png</code></figcaption></figure>
+<h3 id="v6：推定の対象を「報酬の重み」に変える">v6：推定の対象を「報酬の重み」に変える</h3>
+<ul><li><b>何を変えたか</b>：自他で共有する<b>報酬条件付きの critic</b> Q(s, a, r) を一つ作り、VE′ は 4 次元の報酬の重み r̂²（赤・緑・青・シアン）を出す。</li><li><b>なぜ</b>：v4・v5 の失敗の二つの理由（自他の Q 値の尺度が合わない、出力の枠が位置を流せる）を、作りの上で同時に消すため。</li><li><b>主な結果</b>（<code>docs/v6_summary.md</code>）：条件付き critic は成功し、自他の Q 値の尺度の差は 70 倍から約 2.5 倍に縮んだ。正しい r を与えると、A-2 が目標から遠い場面で予測が良くなった（S4）。しかし<b>VE′ の r̂² はほぼ一定</b>に落ち（4 成分すべて正、最大は本来 0 の青）、本当の r に差し替えても h²→A-2 の位置は 0.471 → 0.481 とほとんど変わらなかった（S5）。</li><li><b>分かったこと</b>：仕組みは「正解を与えれば使える」が、「自分の観察だけから他者の報酬を取り出す」段階で止まる。</li><li><b>限界</b>：自己の視界だけから推す設計そのものに、他者の位置の表現の上限がある。ここでこの路線を終えた。</li></ul>
+<h3 id="v7：自分の-critic-を部品にした逆強化学習">v7：自分の critic を部品にした逆強化学習</h3>
+<ul><li><b>何を変えたか</b>：A-1 自身の条件付き critic で、A-2 の行動を最もよく説明する報酬を探す（ベイズ逆プランニング）。他者の状態には、Fig.5 の手順で取り出した「A-2 から見た視界」を使う。</li><li><b>なぜ</b>：予測の誤差だけでは他者の価値を作る理由がない（v6 までの見立て）ので、推論の原理を外から足した。</li><li><b>主な結果</b>（<code>docs/v7_experiment_log.md</code> §10.1）：t=50 で目標の正答率 1.000（段階 1・2 の関門に合格）。しかし、<b>状態を灰色にしても、別のエピソードのものにしても、critic を使わず固定の方向を使っても、正答率は変わらなかった</b>。</li><li><b>分かったこと</b>：ランドマークが四隅にあり、カメラは回転しないので、目標の向きは場所によらずほぼ一定になる。目標へまっすぐ向かう A-2 では「行動の向き＝目標」で、推論は状態（他者の視点）を使っていない。critic を学習し直しても、目標へ向かう向きの場（ベクトル場）にはならなかった。</li><li><b>限界</b>：環境の作り（四隅・非回転）に縛られている。critic の学習は不安定（7 本中 4 本が崩れた）。</li></ul>
+<figure><a href="../data/result/v7_irl/stage2/stage2_accuracy_vs_t.png" target="_blank"><img src="../data/result/v7_irl/stage2/stage2_accuracy_vs_t.png" alt="図 C2：v7 段階 2。状態を壊しても正答率が変わらない（左：灰色の画像 z1、別のエピソード z2、固定の方向 z3）"></a><figcaption>図 C2：v7 段階 2。状態を壊しても正答率が変わらない（左：灰色の画像 z1、別のエピソード z2、固定の方向 z3）<br><code>../data/result/v7_irl/stage2/stage2_accuracy_vs_t.png</code></figcaption></figure>
+<h3 id="v8・v9：構想のみ（実施していない）">v8・v9：構想のみ（実施していない）</h3>
+<ul><li>v8 は、ランドマークをアリーナの内側に置いて、目標の向きが場所で変わるようにする案（v7 §7.4 の案 2）。v9 も構想だけで、どちらも実装していない（<code>docs/v10_instructions.md</code> §0・§1、<code>docs/v10_experiment_log.md</code> §0）。文書も残っていない。</li></ul>
+<h3 id="v10：価値は「色」に結びつくか、「場所」に結びつくか（詳しく）">v10：価値は「色」に結びつくか、「場所」に結びつくか（詳しく）</h3>
+<ul><li><b>何を変えたか</b>：赤と緑のランドマークの位置を入れ替えられる環境を作った（青・シアン・報酬・視覚・行動は同じ）。段階 A で既存のモデルを入れ替えた環境で評価し、段階 B で入れ替えのある環境（エピソードごとに 1/2）で critic・actor（B1）と共有モジュール（B3）を学習し直した。B3 は Encoder を凍結する B3-frozen と、Encoder・Decoder も学習する B3-ft（主）の 2 条件。</li><li><b>なぜ前の版から導かれたか</b>：v7 で、価値が「場所」と区別できないこと（四隅・非回転）が推論を空洞にしていた。指導教員の指摘「今のモデルでは価値が位置に結びついている。まず価値と色が結びつくかを確かめる」。</li><li><b>事前登録</b>：あり（判定の基準はすべて計算の前にコミット）。途中で A-2 の位置の交絡が見つかり、主の評価データを「A-2 静止」に切り替えた（モデルの読み取りを見る前に、データの性質だけで決めた）。</li><li><b>主な結果</b>（<code>feature/v10-color-swap</code> ブランチの <code>docs/v10_summary.md</code>）：</li></ul>
+<div class="scroll"><table>
+<tr><th>段</th><th>主の基準</th><th>結果</th></tr>
+<tr><td>段階 A</td><td>critic の最良方向が「好きな色」と「元の場所」のどちらを向くか</td><td><b>場所</b>（元の場所との差 26.5°、赤との差 110.9°）。A-2 の actor は入れ替え後も 3000 本すべて元の場所へ行く</td></tr>
+<tr><td>B1</td><td>入れ替えで学習した critic の両配置の Q の相関（本当の報酬では −1.000）</td><td>+0.996 → <b>−0.81</b>（A-1 seed0）。ただし関門の合格は A-1 1/6・A-2 0/6（<b>関門は不合格</b>、結果を見た後の判断で seed0 で進んだ）</td></tr>
+<tr><td>再評価（主、A-2 静止）</td><td>h¹ から配置が読めるか（t=20）。関門 1：R3-A_400 との差、関門 2：Encoder の出力だけとの差</td><td>B3-ft 0.966 対 R3-A_400 0.545（<b>関門 1 合格</b>、+0.421）。Encoder だけとの差 +0.020（CI +0.002〜+0.039、<b>関門 2 合格・僅差</b>）</td></tr>
+</table></div>
+<ul><li><b>分かったこと</b>：<ul><li>元の環境で学んだ価値・行動は「場所」に結びついていた。入れ替えのある環境で critic を学ぶと、価値は「色」に沿う（不安定）。</li><li>入れ替えのある環境で学ぶと、h¹ に色（配置）の情報が表れる。ただし <b>B3-ft ではその大部分を Encoder が担う</b>（共有モジュールの上乗せは +0.020）。</li><li><b>副産物</b>：共有モジュールは、A-2 の行動の規則性（「A-2 は緑へ行く」）を、自分の経験なしに観察だけで覚えた（静止している A-2 を緑の方へ動いた位置に描いた。事前登録外）。これは v12 の事後の分析 B と同じ形である。</li></ul></li><li><b>限界</b>：色に結びついた価値は主に critic（共有モジュールの外）の学習による。B1・B3-frozen の学習は不安定。Encoder を学習すると自他の分かれ方が弱まる（Fig.5 のマージン 0.079 → 0.002〜0.022）。「他者の価値が分かった」は対象外。</li></ul>
+<figure><a href="../data/result/v10_swap/stageA/a2_terminal/fig_a2_actor_swap.png" target="_blank"><img src="../data/result/v10_swap/stageA/a2_terminal/fig_a2_actor_swap.png" alt="図 C3：v10 段階 A。元の環境で学んだ A-2 は、入れ替え後も元の緑の場所（今は赤）へ行く＝場所に結びついていた"></a><figcaption>図 C3：v10 段階 A。元の環境で学んだ A-2 は、入れ替え後も元の緑の場所（今は赤）へ行く＝場所に結びついていた<br><code>../data/result/v10_swap/stageA/a2_terminal/fig_a2_actor_swap.png</code></figcaption></figure>
+<figure><a href="../../../../../my_research/preference_inference/data/result/v10_swap/b4_reeval/a2stay/b4_layout_readout.png" target="_blank"><img src="../../../../../my_research/preference_inference/data/result/v10_swap/b4_reeval/a2stay/b4_layout_readout.png" alt="図 C4：v10 再評価（A-2 静止）。B3 の h¹ は配置を 0.96〜0.97 で読め、R3-A_400 は偶然の水準"></a><figcaption>図 C4：v10 再評価（A-2 静止）。B3 の h¹ は配置を 0.96〜0.97 で読め、R3-A_400 は偶然の水準<br><code>../../../../../my_research/preference_inference/data/result/v10_swap/b4_reeval/a2stay/b4_layout_readout.png</code></figcaption></figure>
+<figure><a href="../../../../../my_research/preference_inference/data/result/v10_swap/b4_reeval/diag_vision/fig_a2_learned_motion.png" target="_blank"><img src="../../../../../my_research/preference_inference/data/result/v10_swap/b4_reeval/diag_vision/fig_a2_learned_motion.png" alt="図 C5：v10 の副産物。静止した A-2 を、学習時のように「緑の方へ動いた」位置に描く"></a><figcaption>図 C5：v10 の副産物。静止した A-2 を、学習時のように「緑の方へ動いた」位置に描く<br><code>../../../../../my_research/preference_inference/data/result/v10_swap/b4_reeval/diag_vision/fig_a2_learned_motion.png</code></figcaption></figure>
+<h3 id="v11：自分の経験から「価値と行動の結びつき」が生まれるか（詳しく）">v11：自分の経験から「価値と行動の結びつき」が生まれるか（詳しく）</h3>
+<ul><li><b>何を変えたか</b>：外の critic をやめ、元論文のネットワークをそのまま使って、<b>process-1 に方向ごとの快・不快</b>（8 方向。各方向の範囲に見える赤の画素 − 緑の画素）を入れ、<b>運動は入れない</b>。A-1 の動き方だけが違う 2 条件（経験なし＝ランダム、経験あり＝一歩ごとに半分は赤の方へ）で、元論文の exp1 の手順で一から学習した（1 段目）。2 段目では 1 段目を凍結し、他者用の部品 G（MG と同じ作り）だけを exp3 の手順で学習し、G の出力 Q2 を process-2 の快・不快の枠に入れた。</li><li><b>なぜ前の版から導かれたか</b>：v4〜v10 では A-1 はランダムに歩いていたので、価値は A-1 の動きと無関係で、位置の手がかりにしかならなかった。また価値は外の critic が作ったものだった。運動を入れないのは、運動が入力にあると「自分がどちらへ動くか」を推し量る必要がなくなるため。</li><li><b>事前登録</b>：あり（1 段目 ログ §7.13、2 段目 ログ §7.42）。試し学習で測り方の問題（回帰器の縮み）が見つかり、本番の前に主の基準を M1(c)・M1(d) に直した。</li></ul>
+<p><b>表 C1：v11 の 1 段目（自己）の判定</b>（<code>docs/v11_summary.md</code> 表 1。組は 5 点中 3 点以上で合格、3 組中 2 組以上で合格）</p>
+<div class="scroll"><table>
+<tr><th>基準</th><th>経験ありの値</th><th>組の差（経験あり − なし）</th><th>判定</th></tr>
+<tr><td>M1(c)（予測が赤の方へ寄るか、&lt; 0 が仮説）</td><td>−0.0085〜−0.0098</td><td>−0.0097</td><td><b>合格</b>（3/3）</td></tr>
+<tr><td>M1(d)（反事実の視界への寄り、&gt; 0 が仮説）</td><td>+0.0088〜+0.0098</td><td>+0.0094</td><td><b>合格</b>（3/3）</td></tr>
+<tr><td>色の基準（入れ替えたエピソードで S_赤 − S_緑）</td><td>+0.0059〜+0.0068</td><td>—</td><td><b>合格</b>（3/3）</td></tr>
+<tr><td>入力停止の検査（見積もりが積み上がるか）</td><td>経験ありで g &gt; 0 が 0/3</td><td>—</td><td><b>不合格</b></td></tr>
+<tr><td>Fig.5（他者の視点の取り出し）</td><td>マージン −0.012〜+0.013（v4 は +0.091）、自他の符号の揃い 0.16〜0.30（v4 は 0.80）</td><td>—</td><td><b>成り立たない</b></td></tr>
+</table></div>
+<p><b>表 C2：v11 の 2 段目（他者）の判定</b>（同 表 3・§2.6。s1 は選び方の基準で外し、予備の組 s3 を足して 3 組）</p>
+<div class="scroll"><table>
+<tr><th>主の見分け</th><th>s0</th><th>s2</th><th>s3</th><th>判定</th><th>経験ありの値（D6＝本当の快・不快をそのまま入れた値）</th></tr>
+<tr><td>① T2（入れ替えの瞬間に Q2 が新しい緑の範囲へ移るか）</td><td>0/5</td><td>1/5</td><td>5/5</td><td><b>不合格</b>（1/3）</td><td>10 点中 9 点が負（s0・s2）。D6 は +0.60</td></tr>
+<tr><td>② T5（好みだけが違う A-2 で Q2 が違うか）</td><td>5/5</td><td>5/5</td><td>0/5</td><td><b>合格</b>（2/3）</td><td>+0.003〜+0.045。D6 は +0.42</td></tr>
+</table></div>
+<ul><li>② T5 の合格には、必ず次の 4 つを並べる：効果は D6 の 1/10 以下／組の差は経験なしの負の値が効いている／重視する副の指標（Q2 と A-2 の本当の快・不快の相関、|r| ≤ 0.13）が支えない／組によって向きがそろわない。<b>v11 の 2 段目の結論は「他者の好みは表れなかった」。</b></li><li>部品 G が学んだもの（事実）：生成した Q2 は予測を大きく良くする（自己の誤差 15〜25%、他者側の特徴予測の誤差 40〜55% 減る）。しかし D6（本当の快・不快）を入れても予測は零と変わらない。Q2 の分散の 79〜94% が、ランドマークの赤・緑が写らない範囲 2〜5（本当の快・不快では常に 0）にある。<b>v4 の VE と同じ形</b>（他者の価値ではなく、予測に役立つ別の符号を流す）。</li><li><b>分かったこと</b>：自分の行動の経験から、ネットワークの予測の中に「自分は快の高い方（赤の方）へ動くだろう」という見積もりが生まれ、それは色に結びつく（v10 の critic と違い、場所ではない）。ただし見積もりは毎ステップ作り直され、積み上がらない。それを他者に当てはめて他者の好みを表すことはできなかった。</li><li><b>失敗の理由の分析（推測。v11 まとめ §2.5 (d)・§4、v12 ログ §1）</b>：<ol><li><b>見込みが積み上がる形になっていない</b>：入力を止めると予測は 3〜5 ステップで落ち着き、赤の方へ進み続けない。見込みは「今の快・不快の入力から毎ステップ作る」形で、自分の景色を描く経路の中にだけあったと考えられる。そのため、凍結した 1 段目のネットワークは、process-2 に入る快・不快の形の入力を A-2 の予測に使えず（D6 が役に立たない）、部品 G にとって「A-2 の快・不快」を作る利点がなかった。</li><li><b>自他の書き方の揃いが失われた</b>：Encoder を運動以外の入力で一から学習したため、自他の符号の揃いが 0.80 から 0.16〜0.30 に落ち、Fig.5 も成り立たなかった。自分の価値の扱い方を他者に写すには、自他が同じ書き方で表されている必要があるのではないか。（揃いを操作して 2 段目が変わるかは確かめていない。運動が揃いの原因というのも、4 つのモデルの比較から見えた傾向にとどまる。）</li></ol></li><li><b>限界</b>：M1(c)・M1(d) の大きさは予測誤差の 5〜8%（目では分からない）。見積もりが共有モジュールにあるか Decoder にあるかは区別できない。D6 などの差し替えは凍結した 1 段目にとって分布の外の入力。単一環境、手で設計した快・不快と A-2 の規則。</li></ul>
+<figure><a href="../data/result/v11/summary_figs/fig_m1d_colours.png" target="_blank"><img src="../data/result/v11/summary_figs/fig_m1d_colours.png" alt="図 C6：v11 の 1 段目。M1(d) の色ごとの寄り。経験ありの寄りは赤に特有、経験なしは 4 色とも負"></a><figcaption>図 C6：v11 の 1 段目。M1(d) の色ごとの寄り。経験ありの寄りは赤に特有、経験なしは 4 色とも負<br><code>../data/result/v11/summary_figs/fig_m1d_colours.png</code></figcaption></figure>
+<figure><a href="../data/result/v11/summary_figs/fig_fig5_transform.png" target="_blank"><img src="../data/result/v11/summary_figs/fig_fig5_transform.png" alt="図 C7：v11 の Fig.5。自他の符号の揃いは v4 0.80 に対して v11 0.16〜0.30。線形の変換を 1 枚はさむと v4 並みに成り立つ"></a><figcaption>図 C7：v11 の Fig.5。自他の符号の揃いは v4 0.80 に対して v11 0.16〜0.30。線形の変換を 1 枚はさむと v4 並みに成り立つ<br><code>../data/result/v11/summary_figs/fig_fig5_transform.png</code></figcaption></figure>
+<figure><a href="../data/result/v11/stage2/figs/fig_s2_t3.png" target="_blank"><img src="../data/result/v11/stage2/figs/fig_s2_t3.png" alt="図 C8：v11 の 2 段目 T3。生成した Q2 は予測を大きく良くするが、D6（本当の快・不快）と位置の代理は零と変わらない"></a><figcaption>図 C8：v11 の 2 段目 T3。生成した Q2 は予測を大きく良くするが、D6（本当の快・不快）と位置の代理は零と変わらない<br><code>../data/result/v11/stage2/figs/fig_s2_t3.png</code></figcaption></figure>
+<h3 id="v12：運動を戻し、ときどき隠す（詳しく）">v12：運動を戻し、ときどき隠す（詳しく）</h3>
+<ul><li><b>何を変えたか</b>（<code>docs/v12_summary.md</code> §1）：<ul><li>process-1 の入力を「運動（2、元論文と同じ）＋ 快・不快（8）＋ 隠れの印（1）」にした。</li><li>運動は 5〜15 ステップの区間で交互に隠す（約 48%）。<b>運動が隠れた区間では、快・不快を区間の最初の一歩の値に止める</b>（快・不快の変わり方から自分の動きが読めてしまう抜け道をふさぐ）。</li><li><b>Encoder-1・Encoder-2 は v4 の重みで凍結</b>し、共有モジュール・統合部・Decoder・特徴予測部を学習する。</li><li>2 段目の process-2 は「運動 0・印あり・快・不快の枠に部品 G の出力 Q2」。</li></ul></li><li><b>なぜ前の版から導かれたか</b>：v11 の失敗の二つの読み（見込みが積み上がらない、自他の揃いが失われた）に、それぞれ手を打った。運動を隠すと、隠れている間は自分の動きを推し量るしかなくなり、経験ありなら「快の高い方へ動いている」と推し量って、その見積もりが共有モジュールの「動きを積み上げる仕組み」に入ると期待した。中心仮説：2 段目で他者側の運動を「隠れている」とし、快・不快の枠だけを部品に埋めさせると、A-2 の動きを予想させる一番の近道は「A-2 にとって快い方向」を書くこと、つまり好みを表すことになる。</li><li><b>試し学習で決まったこと</b>（ログ §8〜§14、判定には使わない段）：一から学習すると自他の揃いが戻らない（v12 本体 0.18〜0.27、元論文と同じ作りでも v11 のデータでは 0.48、v4 0.80）→ Encoder を凍結（P-b）。快・不快を止めないと積み上がりが出ない（P-b では g ≈ 0）→ 快・不快を止める（P-c で経験ありの g +0.095）。</li></ul>
+<figure><a href="../data/result/v12/figs/network_v11_v12.png" target="_blank"><img src="../data/result/v12/figs/network_v11_v12.png" alt="図 C9：v11・v12 のネットワーク（斜線＝凍結）"></a><figcaption>図 C9：v11・v12 のネットワーク（斜線＝凍結）<br><code>../data/result/v12/figs/network_v11_v12.png</code></figcaption></figure>
+<figure><a href="../data/result/v12/trial/figs/trial_alignment_fig5.png" target="_blank"><img src="../data/result/v12/trial/figs/trial_alignment_fig5.png" alt="図 C10：v12 の試し学習。自他の符号の揃いと Fig.5 のマージン。Encoder を凍結する理由"></a><figcaption>図 C10：v12 の試し学習。自他の符号の揃いと Fig.5 のマージン。Encoder を凍結する理由<br><code>../data/result/v12/trial/figs/trial_alignment_fig5.png</code></figcaption></figure>
+<h4 id="v12-の-1-段目（自己）と関門">v12 の 1 段目（自己）と関門</h4>
+<ul><li><b>事前登録</b>：あり（関門 ログ §17、2 段目の扱い §24、組の数の規則 §26）。2 段目に進む条件は G2・G3・G5a・G5b のすべてに合格（G1 は前提）。</li></ul>
+<p><b>表 C3：v12 の 1 段目の関門</b>（<code>docs/v12_summary.md</code> 表 1。各組 5 点中 3 点以上で組は合格、3 組中 2 組以上で関門は合格）</p>
+<div class="scroll"><table>
+<tr><th>関門</th><th>中身</th><th>s0</th><th>s1</th><th>s2</th><th>判定</th></tr>
+<tr><td>G1（前提）</td><td>運動が見える一歩で h¹→自己の位置 R² 0.80 以上</td><td>5/5</td><td>5/5</td><td>5/5</td><td>合格</td></tr>
+<tr><td>G2（主）</td><td>運動が隠れた一歩の M1(c)・M1(d)・色の基準</td><td>5/5</td><td>5/5</td><td>5/5</td><td>合格</td></tr>
+<tr><td>G3（主）</td><td>自分側の積み上がり（入力停止の検査で g &gt; 0、組の差 &gt; 0）</td><td>5/5</td><td>5/5</td><td>5/5</td><td>合格</td></tr>
+<tr><td>G4（確認）</td><td>Encoder が v4 と一致、Fig.5</td><td>—</td><td>—</td><td>—</td><td>12 本とも一致、マージン +0.075</td></tr>
+<tr><td>G5a（主）</td><td>他者側の積み上がり（process-2 に A-2 の本当の快・不快を入れて止めると、予測の A-2 が好きな色の方へ進むか）</td><td>5/5</td><td>4/5</td><td>3/5</td><td>合格（3/3 組）</td></tr>
+<tr><td>G5b（主）</td><td>process-2 に +a と −a を入れたとき、予測の A-2 のずれの向きが変わるか</td><td>5/5</td><td>2/5</td><td>3/5</td><td>合格（2/3 組）</td></tr>
+</table></div>
+<ul><li><b>関門にすべて合格したので、2 段目は正式に行った。</b></li><li>判定と並べる注意：G3 では経験なしも 4 色の方へ同じくらい進み、経験ありで違うのは「赤以外の方へは進まない」こと。G5 は組の間で強さがそろわない（s1・s2 は CI の下限が 0 に近い）。G5 の副（背景に対する暗さの読み取り B1）は s0 だけが合格の形。</li></ul>
+<figure><a href="../data/result/v12/main/s1eval/figs/accumulation_s1.png" target="_blank"><img src="../data/result/v12/main/s1eval/figs/accumulation_s1.png" alt="図 C11：v12 の自分側の積み上がり（入力停止の検査）。経験ありだけ、赤の方へだけ進み続ける。右は v11 との比較"></a><figcaption>図 C11：v12 の自分側の積み上がり（入力停止の検査）。経験ありだけ、赤の方へだけ進み続ける。右は v11 との比較<br><code>../data/result/v12/main/s1eval/figs/accumulation_s1.png</code></figcaption></figure>
+<figure><a href="../data/result/v12/main/g5/s0/g5a_curves.png" target="_blank"><img src="../data/result/v12/main/g5/s0/g5a_curves.png" alt="図 C12：v12 の G5a（組 s0）。process-2 に止めた快・不快を入れると、経験ありのモデルは A-2 を好きな色の方へ動かす"></a><figcaption>図 C12：v12 の G5a（組 s0）。process-2 に止めた快・不快を入れると、経験ありのモデルは A-2 を好きな色の方へ動かす<br><code>../data/result/v12/main/g5/s0/g5a_curves.png</code></figcaption></figure>
+<h4 id="v12-の-2-段目：正式・b（探索）・c（新しい仮説の検証）">v12 の 2 段目：正式・b（探索）・c（新しい仮説の検証）</h4>
+<p><b>表 C4：v12 の 2 段目の三つ</b>（判定は 3 組中 2 組以上。予備の組 s3 を足すと 4 組中 3 組以上）</p>
+<div class="scroll"><table>
+<tr><th></th><th>位置づけ</th><th>事前登録</th><th>変えたこと</th><th>① T2</th><th>② T5</th><th>結論</th></tr>
+<tr><td><b>2 段目（正式）</b></td><td>1 段目の関門にすべて合格したので正式（ログ §24・§30）</td><td>あり（§28、学習の前）</td><td>—</td><td>s0 5/5、s1 0/5（逆向き）、s2 0/5 → <b>不合格</b>（1/3）。s3 を足しても 1/4</td><td>s0 0/5（逆向き）、s1 5/5、s2 0/5 → <b>不合格</b>（1/3）。s3 を足しても 1/4</td><td><b>他者の好みを表す形は出なかった</b></td></tr>
+<tr><td><b>2 段目 b（探索）</b></td><td>正式の結果を見て変えた設計。合格しても事前登録した主の結果とは書かない（§35）</td><td>あり（探索として §35、学習の前）</td><td>部品 G の出力を「1 段目で自分が経験した快・不快の形」に限る（範囲 2〜5 は 0、範囲 0・1 と 6・7 は逆の符号）</td><td>s0 1/5、s1 0/5、s2 0/5 → <b>不合格</b>（0/3）</td><td>s0 4/5、s1 1/5、s2 0/5 → <b>不合格</b>（1/3）</td><td>「残る抜け道」の形に当たる（3 組とも）</td></tr>
+<tr><td><b>2 段目 c（新しい仮説の検証）</b></td><td>三層の分析から導いた新しい仮説を、事前登録して検証する探索（§46）</td><td>あり（§46、学習の前）</td><td>2 段目の学習データで A-2 を A-1 の視界から 10〜30 ステップの区間で隠す（約 47%）。出力の形は 2 段目 b と同じ。主は隠した test で測る</td><td><b>結果なし</b>（2026-10-21 に 12 本の学習を起動した段階）</td><td><b>結果なし</b></td><td>未定</td></tr>
+</table></div>
+<ul><li><b>正式の判定と並べる注意</b>（ログ §37）：合格の形になった組の経験ありの値（T2 +0.03〜+0.05、T5 +0.04〜+0.05）は D6（+0.60・+0.42）の 1/10 ほど。s0 の T2 の組の差は、経験なしの大きな負の値による部分が大きい。重視する副の指標はどの組でも支えない（Q2 と本当の快・不快の相関は弱く負寄り、Q2 の分散の 71〜86% が範囲 2〜5 で ±1 に張り付く）。T3 では、生成した Q2 が D6 よりずっと予測を良くする。組によって向きがそろわない。</li><li><b>2 段目 b で分かったこと</b>（事実）：部品 G は、組 s0・s2 では「どちら側が快いか」の符号を、配置にも A-2 の好みにもよらず<b>ほぼ一定に固定</b>し、範囲ごとの強さだけを変えた（符号が正の割合 0.00〜0.07 か 0.99〜1.00）。組 s1 では符号は動くが、好みには沿わない（ログ §47）。T3 では生成が D6 より他者側の予測でずっと良い（他者側の特徴予測の誤差：生成 0.167〜0.202、D6 0.252〜0.286、零 0.297〜0.326）。</li><li><b>2 段目 c の予想の形</b>（§46 D、事前登録）：うまくいった場合は「隠した test で T2・T5 が合格し、見えている test では不合格」で、隠れている間に「どちら側が快いか」の符号が好み・配置に応じて入れ替わる。うまくいかない場合は、a 位置を流す形のまま、b 平均に落ち着く、c 好みは読めるが経験の有無で差がない、の三つ。</li></ul>
+<figure><a href="../data/result/v12/report/figs/t2t5_ckpts.png" target="_blank"><img src="../data/result/v12/report/figs/t2t5_ckpts.png" alt="図 C13：v12 の 2 段目の T2・T5（チェックポイントごと）。上：正式（4 組）、下：2 段目 b（作った時点の s0・s2）。D6 は枠の外（+0.60・+0.42）"></a><figcaption>図 C13：v12 の 2 段目の T2・T5（チェックポイントごと）。上：正式（4 組）、下：2 段目 b（作った時点の s0・s2）。D6 は枠の外（+0.60・+0.42）<br><code>../data/result/v12/report/figs/t2t5_ckpts.png</code></figcaption></figure>
+<figure><a href="../data/result/v12/stage2/figs/q2_vs_pa2_green_s0.png" target="_blank"><img src="../data/result/v12/stage2/figs/q2_vs_pa2_green_s0.png" alt="図 C14：v12 の 2 段目（正式、組 s0）。Q2 と A-2 の本当の快・不快。範囲 2〜5 の Q2 は ±1 に張り付く"></a><figcaption>図 C14：v12 の 2 段目（正式、組 s0）。Q2 と A-2 の本当の快・不快。範囲 2〜5 の Q2 は ±1 に張り付く<br><code>../data/result/v12/stage2/figs/q2_vs_pa2_green_s0.png</code></figcaption></figure>
+<h4 id="事後の分析-B（事前登録外。判定は変えない。ログ-§41・§44）">事後の分析 B（事前登録外。判定は変えない。ログ §41・§44）</h4>
+<ul><li>事実：h² と Q2 には A-2 の好みの情報が少しある（好みが半々のデータで、エピソード単位 h² 0.71〜0.83、Q2 0.57〜0.79。位置だけでは 0.52）。しかし<b>経験あり・なしで差がそろわない</b>。</li><li>解釈（推測）：この情報は、見えていた A-2 の動きの履歴から観察だけで得られるもので、v10 の副産物と同じ形である。「判定の測り方が、経験ありの好みの表現を見落としていた」と言える形は出ていない。</li><li>B3（生成した Q2 を止めて G5a と同じ測り方）の組の差は多くが正だが、主に経験なしのモデルが好きな色から離れることによる。2 段目 b（Q2 が好みを表さない）でも同じ差が出るので、1 段目のモデルの癖から来ている可能性がある（推測）。</li></ul>
+<h4 id="v12-の-2-段目が好みを表さなかった理由：三層の分析（推測。ログ-§40・§43・§46）">v12 の 2 段目が好みを表さなかった理由：三層の分析（推測。ログ §40・§43・§46）</h4>
+<p>これは<b>草野の解釈で、推測である</b>。追加の計算では確かめていない。事実として確かなのは「生成した Q2 が D6（A-2 の本当の快・不快）より予測をずっと良くする（他者側の特徴予測の誤差：零 約 0.30、D6 0.25〜0.28、生成 0.13〜0.18）」ことである。</p>
+<div class="scroll"><table>
+<tr><th>層</th><th>中身（推測）</th><th>根拠になった事実</th><th>2 段目 b・c での扱い</th></tr>
+<tr><td><b>層 1：自由な枠の抜け道</b></td><td>部品の出力に、好み以外の情報（位置など）を流せる自由な枠がある</td><td>正式では Q2 の分散の 71〜86% が範囲 2〜5（1 段目では常に 0）。b で形を限っても、範囲ごとの強さの自由度で別の情報を流した</td><td>b・c は出力の形でふさぐ（ただし強さの自由度は残る）</td></tr>
+<tr><td><b>層 2：好みを伝える利点が小さい</b></td><td>共有モジュールが覚えた「快の高い方へ動く」見込みは弱く（G5a の動きは 1 ステップあたり 0.1〜0.2 歩）、A-2 も半分はランダムに歩くので、好みを正しく伝えても予測の改善は小さい</td><td>D6 を入れても他者側の誤差は 0.30 → 0.26〜0.28 にしか下がらない</td><td>c でも残る。ただし隠れている間は好きな色への寄りが積み上がるので、見えている場合より利点が大きい、と予想</td></tr>
+<tr><td><b>層 3：位置が視覚から取れる</b></td><td>A-2 の位置はマスク前の Encoder-2 の出力から取れて、好みより予測に役立つ</td><td>生成した Q2 から A-2 の位置が読める（T1 0.46〜0.72）。生成は D6 よりずっと予測を良くする</td><td>c で A-2 を隠してふさぐ</td></tr>
+</table></div>
+<ul><li>読み（推測）：抜け道（層 1）だけが問題なのではなく、抜け道をふさいでも（2 段目 b）、<b>好みを伝える道そのものに部品にとっての利点が小さい</b>という課題の構造（層 2・3）が核心である。部品が好みを表さないのは、予測を良くするという目的に対して合理的な選択だった、と読める。</li><li><b>2 段目 c の仮説</b>（§46 A）：A-2 が見えない間は、A-2 の好みを知らないと A-2 の動きを予測できない。そのため部品 G は、A-2 の好みを快・不快の形で表すようになり、その表し方は経験ありのモデルで強い。</li></ul>
+<h4 id="v12-の限界">v12 の限界</h4>
+<ul><li><b>自他を同じ書き方で表す性質は、学んだものではなく与えたもの</b>（Encoder を v4 の重みで凍結）。言えるのは「自他を同じ形で表す土台がある上で、価値の経験が他者の好みの理解を生むか」まで。</li><li>G5 は組によって強さがそろわない。2 段目 b・c は、正式の結果を見た後の設計（探索）。2 段目 c の結果はまだない。</li><li><code>docs/v12_summary.md</code> は「作成中」で、§4（主張できること・できないこと）が空のまま。2 段目 b の 3 組の判定（ログ §47）と 2 段目 c（ログ §45・§46）は、まとめの文書にまだ入っていない。この文書ではログから書いた。</li></ul>
+<hr>
+<h2 id="D.-全体を通して分かったこと">D. 全体を通して分かったこと</h2>
+<h3 id="示せたこと（主張できること）">示せたこと（主張できること）</h3>
+<div class="scroll"><table>
+<tr><th>主張</th><th>根拠（事実）</th><th>版</th></tr>
+<tr><td>予測学習だけで、自己位置の表現は運動以外の入力（価値、快・不快）でも成り立つ</td><td>h¹→自己の位置 R² 0.91（v4 R3-A_400）、0.82〜0.93（v11）、運動が見える一歩で 0.86〜0.94（v12 G1）</td><td>v4・v11・v12</td></tr>
+<tr><td>四隅の配置と回転しないカメラの環境では、外から与えた価値・行動は「場所」に結びつく。入れ替えのある環境で critic を学ぶと「色」に沿う（不安定）</td><td>段階 A：最良方向は元の場所（26.5°）を向く、Q の両配置の相関 +0.996。B1：−0.81（A-1 seed0、合格 1/6）</td><td>v7・v10</td></tr>
+<tr><td><b>自分が好みに従って動いた経験から、ネットワークの予測の中に「快の高い方へ動く」見積もりが生まれ、それは色に結びつく</b>（外から価値を与えず、予測学習だけで）</td><td>M1(c)・M1(d)・色の基準が 3 組とも合格、経験なしでは出ない</td><td>v11・v12（G2）</td></tr>
+<tr><td>運動を戻して隠し、隠れた間は快・不快を止めると、その見積もりが<b>積み上がる形</b>になる</td><td>入力停止の検査：v11 不合格 → v12 G3 合格（3/3、経験ありの g +0.089〜+0.104）</td><td>v11 → v12</td></tr>
+<tr><td>経験ありの共有モジュールは、process-2 に<b>他者の本当の快・不快</b>を入れると、予測の中の A-2 を好きな色の方へ動かす（他者側でも同じ仕組みが働く）</td><td>G5a 合格（3/3 組）、G5b 合格（2/3 組）。ただし組で強さがそろわない</td><td>v12</td></tr>
+<tr><td>他者の価値を作る部品は、どの版でも他者の価値ではなく「予測に役立つ別の情報（主に位置）」を流す</td><td>VE：Q̂² は A-1 の位置を表す、r≈0（v4・v5）。VE′：r̂² はほぼ一定（v6）。G：Q2 は範囲 2〜5 を使い、本当の快・不快と相関しない（v11・v12）。形を限っても強さの自由度で流す（v12 b）</td><td>v4〜v6・v11・v12</td></tr>
+<tr><td>他者の行動の規則性（好きな色の方へ行く）は、自分の経験なしに、観察だけで覚えられる</td><td>v10 の副産物（静止した A-2 を緑の方へ描く）。v12 の事後の分析 B（h²・Q2 から好みが少し読めるが経験の差なし）</td><td>v10・v12</td></tr>
+<tr><td>運動を入力にして学習した Encoder では自他の書き方が揃い、運動以外の入力で学習すると揃わない（傾向）</td><td>揃いのコサイン：v4 0.80、v10 B3-frozen 0.73、v5 0.25、v10 B3-ft 0.26〜0.32、v11 0.16〜0.30。揃わないモデルでは Fig.5 が成り立たない</td><td>v4・v5・v10・v11</td></tr>
+<tr><td>方法論：「内部状態から他者の好みが読める」は、位置などの観測できる量と混ざらない比較があって初めて意味を持つ</td><td>Phase 3 の撤回、v7 の「行動の向き＝目標」、v10 の A-2 の位置の交絡</td><td>前史・v7・v10</td></tr>
+</table></div>
+<h3 id="示せなかったこと（主張できないこと）">示せなかったこと（主張できないこと）</h3>
+<div class="scroll"><table>
+<tr><th>主張できないこと</th><th>根拠</th></tr>
+<tr><td><b>他者の好みが分かった</b>（自分の価値と行動の結びつきを他者に当てはめた）</td><td>v11：T2 不合格（逆向き）、T5 の合格は D6 の 1/10 以下で副の指標が支えない。v12 正式：T2・T5 とも不合格。v12 b：不合格。v12 c：結果なし</td></tr>
+<tr><td><b>自分の経験が他者の理解を助けた</b></td><td>2 段目では経験の有無の違いがどの副の指標でもそろわない（v11・v12）。事後の分析 B でも差がそろわない</td></tr>
+<tr><td>他者の価値を、観察だけから生成的に推定できる</td><td>VE（v4・v5）、VE′（v6）、逆強化学習（v7：状態を使っていない）、G（v11・v12）のどれも成り立たない</td></tr>
+<tr><td>見積もりが「共有モジュールに」ある（v11）</td><td>共有モジュールか Decoder か区別できなかった（v11 の入力停止の検査は不合格）</td></tr>
+<tr><td>自他の書き方の揃いが、価値の経験から生まれる</td><td>v12 では Encoder を凍結して<b>与えた</b></td></tr>
+<tr><td>運動入力が揃いの原因である</td><td>4 つのモデルの比較から見えた傾向で、入力だけを入れ替える操作はしていない</td></tr>
+<tr><td>2 段目の失敗の原因（v11 の揃いの喪失、v12 の三層）</td><td>どれも推測。操作して確かめていない</td></tr>
+<tr><td>共有モジュールが価値を自分で作った（v4〜v10）</td><td>価値は外の critic（強化学習）が作った</td></tr>
+<tr><td>単一環境・手で設計した報酬や快・不快を超える一般性</td><td>環境は一つ、A-2 の規則も手で設計</td></tr>
+</table></div>
+<h3 id="元論文の重ね合わせが「他者の価値」に広がるために見えた条件">元論文の重ね合わせが「他者の価値」に広がるために見えた条件</h3>
+<p>以下は、ここまでの結果から見えた<b>条件の候補</b>である。1〜3 は v11 → v12 の変化として事実で支えがあるが、「これがあれば他者の好みが表れる」ことはまだ示せていない。4 は推測（2 段目 c の仮説）である。</p>
+<ol><li><b>自分の価値の扱い方が、共有モジュールの中で「積み上がる」形になっていること</b>（v11 では毎ステップ作り直されるだけで、他者側で使えなかった。v12 で積み上がりと他者側での働き（G5a）が出た）。</li><li><b>自他を同じ書き方で表す土台（Encoder の揃い）があること</b>（v11 で失われ、Fig.5 も成り立たなかった。v12 では与えて保った）。</li><li><b>他者用の部品の出力が、自分が経験した入力と同じ形であること</b>（元論文の MG の出力が自分の運動と同じ形だったことに当たる。形を限らないと自由な枠が別の情報の通り道になる。v12 b）。ただし形を限るだけでは足りなかった。</li><li><b>他者の好みを知らないと他者の動きを予測できない場面があること</b>（推測。v12 の三層の分析。位置が見えていると、好みより位置が予測に役立つ）。2 段目 c で検証中。</li><li>前提として、<b>価値が場所ではなく色（物）に結びつく環境</b>であること（v10）と、<b>評価で位置と好みが混ざらないこと</b>（前史・v7・v10）。</li></ol>
+<h3 id="限界の一覧">限界の一覧</h3>
+<ol><li><b>Encoder の凍結</b>：v12 の自他の揃いは v4 の Encoder を凍結して与えたもの（v10 B3-frozen も同じ）。v4 の Encoder は入れ替えのない環境・運動入力で学習された。</li><li><b>環境の幾何の交絡</b>：ランドマークはアリーナの外の四隅にあり、全方位カメラは回転しない。どこにいても各色はほぼ同じ方角に見えるので、「赤の方へ」は「赤の象限の方へ」と区別しにくい（v7・v11）。快・不快が 0 以外になるのは範囲 0・1・6・7 だけで、範囲 2〜5 は常に 0。</li><li><b>A-2 の位置との交絡</b>：A-2 が好きな色の方へ動くので、A-2 の位置が好み・配置を表してしまう（Phase 3、v10 の B4、v12 の 2 段目の ① の配置）。</li><li><b>組ごとのばらつき</b>：v11・v12 の 2 段目の主の見分けは、組によって向きが逆になる。v12 の G5 も組で強さがそろわない。シードは 1 段目 3 組（＋予備 1）。</li><li><b>効果の小ささ</b>：M1(c)・M1(d) は予測誤差の 5〜8%。2 段目の合格の形の値は D6 の 1/10 前後。</li><li><b>設計を結果を見て変えた段</b>：v10 B1 の関門は不合格のまま進んだ。v12 の 2 段目 b・c は探索。</li><li><b>分布の外の入力</b>：2 段目の D6・零・位置の代理は、凍結した 1 段目にとって見たことのない入力。</li><li><b>予測画像からの A-2 の読み取り</b>：A-2 は薄い灰色で描かれ、読み取りの誤差が大きい（G5・T4 の読みは弱い）。</li><li><b>価値の出どころ</b>：v4〜v10 の価値は外の critic（所与）。v11・v12 の快・不快は手で設計した生まれつきの信号。</li><li><b>単一の環境</b>、手で設計した A-2 の規則（半分は好きな色の方へ）。</li><li><b>v12 のまとめが未完</b>：2 段目 c の結果がない。v12 のまとめの文書の §4・§5 は作成中。</li></ol>
+<hr>
+<h2 id="E.-今後の課題">E. 今後の課題</h2>
+<ol><li><b>v12 の 2 段目 c の結果を、事前登録（ログ §46）どおりに判定する</b>。「隠した test で合格、見えている test で不合格」になるか、予想した失敗の形 a〜c のどれに当たるかを書く。</li><li><b>自他の揃いを直接操作する比較</b>：ほかの条件をそろえて入力（運動の有無）だけを入れ替える学習。揃いを保ったまま／崩したまま 2 段目を行い、2 段目の結果が変わるかを見る（v11 の失敗の読みの検証）。</li><li><b>揃いを自分で学ぶ</b>：Encoder を凍結せずに、価値の経験から自他の揃いまで生まれる条件を探す（v12 の限界 1）。</li><li><b>好みを伝える利点を大きくする課題</b>：A-2 の規則をもっと強く（半分より多く好みに従う）、隠す区間を長くする、など（三層の層 2）。</li><li><b>環境の幾何を変える</b>：ランドマークを内側に置く（v8 の構想）、目標の位置をエピソードごとに変える、カメラを回転させる、など。目標の向きが場所で変わる環境で、「色に結びつく」と「方角に結びつく」を切り分ける。</li><li><b>位置と独立に定義できる好み</b>（時計回り・反時計回り・停止などの行動の型）での好みの分類（前史の教訓）。</li><li>シードの追加、v5 の複数シード、process-2 の働きを確かめる単流の統制（v4 の P1.5、未実施）。</li></ol>
+<hr>
+<h2 id="F.-図の一覧">F. 図の一覧</h2>
+<p>修論に使う候補の図。パスは <code>my_research/preference_inference/</code> から。「v10 本体」は v10 の作業ツリー（<code>/home/kusano/superposition/my_research/preference_inference/</code>）にだけある図。目視確認は各版の文書の記録に従った（記録がないものは「記録なし」）。</p>
+<div class="scroll"><table>
+<tr><th>番号</th><th>版</th><th>図</th><th>パス</th><th>目視確認</th><th>何を示すか</th></tr>
+<tr><td>B1</td><td>元論文</td><td>ネットワーク図</td><td><code>docs/figs/research_overview_network.svg</code></td><td>済み（この文書のために作図）</td><td>元論文の部品・入力・学習の段</td></tr>
+<tr><td>F-v4-1</td><td>v4・v5</td><td>4 軸の位置の読み取り R² の棒グラフ</td><td><code>data/result/baseline_v4/F2_4axis_R2_bars.png</code></td><td>記録なし</td><td>自他の役割の分かれ方（h¹・h² → 自己・他者）</td></tr>
+<tr><td>F-v4-2</td><td>v4・v5</td><td><b>Q̂² と本当の Q（Fig.6 に当たる図）</b></td><td><code>data/result/baseline_v4/F4_q2hat_vs_trueq_4panel.png</code></td><td>記録なし</td><td>元論文 MG r=0.875 に対し、VE はどれも r≈0（核心の図）</td></tr>
+<tr><td>F-v4-3</td><td>v4・v5</td><td>本当の Q を入れたときの予測の変化</td><td><code>data/result/baseline_v4/F5_trueq2_ablation_bars.png</code></td><td>記録なし</td><td>本当の Q を入れると予測が悪くなる</td></tr>
+<tr><td>F-v4-4</td><td>v4・v5</td><td>Fig.4c に当たる PCA の状態マップ</td><td><code>data/result/baseline_v4/fig4c_4way.png</code></td><td>記録なし</td><td>v5 で h² の 2 次元の場所の地図が崩れる</td></tr>
+<tr><td>F-v4-5</td><td>v4・v5</td><td>Fig.5 の再構成の並び</td><td><code>data/result/baseline_v4/fig5c_recon_montage_ep100.png</code></td><td>記録なし</td><td>元論文・v4・v5 の他者の視点の取り出し</td></tr>
+<tr><td>F-v4-6</td><td>v4・v5</td><td>収束の対比（運動入力 vs 価値入力）</td><td><code>data/result/baseline_v4/F9_convergence_contrast.png</code></td><td>記録なし</td><td>価値入力は長い停滞のあと急に収束する</td></tr>
+<tr><td>F-v6-1</td><td>v6</td><td>未知の r への汎化</td><td><code>data/result/v6_baseline/unseen_r_generalization_seed2_film_norelabel_curriculum.png</code></td><td>記録なし</td><td>条件付き critic は色で評価する</td></tr>
+<tr><td>F-v6-2</td><td>v6</td><td>正解の r を与えたときの距離ごとの効果</td><td><code>data/result/v6_baseline/v6_s3_base_l1_oracle_distance_binned.png</code></td><td>記録なし</td><td>遠い場面でだけ効く</td></tr>
+<tr><td>F-v6-3</td><td>v6</td><td>VE′ の r̂² の成分</td><td><code>data/result/v6_baseline/v6_s5_ve_r_hat_components_ep400.png</code></td><td>記録なし</td><td>r̂² はほぼ一定（推定の失敗）</td></tr>
+<tr><td>F-v7-1</td><td>v7</td><td><b>段階 2 の正答率と対照 z1〜z3</b></td><td><code>data/result/v7_irl/stage2/stage2_accuracy_vs_t.png</code></td><td>済み</td><td>状態を壊しても正答率が変わらない</td></tr>
+<tr><td>F-v7-2</td><td>v7</td><td>最良方向の分布</td><td><code>data/result/v7_irl/stage2/stage2_best_direction_hist.png</code></td><td>済み</td><td>critic の最良方向は場所によらずほぼ一定</td></tr>
+<tr><td>F-v7-3</td><td>v7</td><td>再学習した critic の最良方向の地図</td><td><code>data/result/v7_irl/retrain/compare_best_direction_maps.png</code></td><td>済み</td><td>再学習してもベクトル場にならない</td></tr>
+<tr><td>F-v10-1</td><td>v10</td><td><b>A-2 の actor の入れ替え前後の軌跡</b></td><td><code>data/result/v10_swap/stageA/a2_terminal/fig_a2_actor_swap.png</code></td><td>済み</td><td>元の環境で学んだ行動は場所に結びつく</td></tr>
+<tr><td>F-v10-2</td><td>v10</td><td><b>critic の Q 値・最良方向の地図（v3 と B1 seed0）</b></td><td><code>data/result/v10_swap/b1/fig_critic_v3_vs_b1seed0_a1.png</code></td><td>済み</td><td>入れ替えで学んだ critic は色に沿う</td></tr>
+<tr><td>F-v10-3</td><td>v10</td><td>予測画像（段階 A、R3-A_400、入れ替え）</td><td><code>data/result/v10_swap/stageA/pred_images/r3_a_direct_1000pretrain_400_s0_ep400/pred_images_swap_rg_ep0.png</code></td><td>済み</td><td>入れ替え後も元の配色で描く</td></tr>
+<tr><td>F-v10-4</td><td>v10</td><td><b>予測画像（B3-ft と B3-frozen、入れ替え）</b></td><td>v10 本体 <code>data/result/v10_swap/b4/pred_images/v10_b3_ft_s0_ep400/swap_rg/pred_images_swap_rg_ep1.png</code>、<code>.../v10_b3_frozen_s1_ep400/...</code></td><td>済み</td><td>B3-ft は正しい配色</td></tr>
+<tr><td>F-v10-5</td><td>v10</td><td><b>再評価（主）の配置の読み取り</b></td><td>v10 本体 <code>data/result/v10_swap/b4_reeval/a2stay/b4_layout_readout.png</code></td><td>済み</td><td>主関門の図</td></tr>
+<tr><td>F-v10-6</td><td>v10</td><td>B4 の配置の読み取り（交絡の例）</td><td>v10 本体 <code>data/result/v10_swap/b4/b4_layout_readout.png</code></td><td>済み</td><td>R3-A_400 でも 0.83 読める＝A-2 の位置との交絡</td></tr>
+<tr><td>F-v10-7</td><td>v10</td><td><b>副産物：静止した A-2 を緑の方へ描く</b></td><td>v10 本体 <code>data/result/v10_swap/b4_reeval/diag_vision/fig_a2_learned_motion.png</code></td><td>済み</td><td>他者の規則性を観察だけで覚えた</td></tr>
+<tr><td>F-v11-1</td><td>v11</td><td>快・不快の入力の確認</td><td><code>data/result/v11/gate61/gate61_pleasure_views.png</code></td><td>済み</td><td>入力の定義</td></tr>
+<tr><td>F-v11-2</td><td>v11</td><td><b>1 段目の主の基準</b></td><td><code>data/result/v11/main/gate/gate_mse_late5.png</code></td><td>済み</td><td>経験ありだけ仮説の向き、3 組とも</td></tr>
+<tr><td>F-v11-3</td><td>v11</td><td><b>M1(d) の色ごとの寄り</b></td><td><code>data/result/v11/summary_figs/fig_m1d_colours.png</code></td><td>済み</td><td>寄りは赤に特有</td></tr>
+<tr><td>F-v11-4</td><td>v11</td><td>入力停止の検査</td><td><code>data/result/v11/main/localise/localise_ep200.png</code></td><td>済み</td><td>積み上がらない</td></tr>
+<tr><td>F-v11-5</td><td>v11</td><td>予測画像（経験あり s0、入れ替え）</td><td><code>data/result/v11/main/pred_images/pred_common_mixed_swap_rg_ep1_s0_e200.png</code></td><td>済み</td><td>入れ替えた配置でも色を正しく描く</td></tr>
+<tr><td>F-v11-6</td><td>v11</td><td>Fig.5 の誤差の地図</td><td><code>data/result/v11/main/fig5/fig5_maps_v11_fig5_mixed_s0_s0_ep100.png</code></td><td>済み</td><td>取り出した視点は A-2 の視界に近くない</td></tr>
+<tr><td>F-v11-7</td><td>v11</td><td><b>Fig.5 の変換の前後と自他の揃い</b></td><td><code>data/result/v11/summary_figs/fig_fig5_transform.png</code></td><td>済み</td><td>揃い 0.16〜0.30（v4 0.80）</td></tr>
+<tr><td>F-v11-8</td><td>v11</td><td><b>2 段目の主の判定</b></td><td><code>data/result/v11/stage2/figs/fig_s2_primary.png</code></td><td>済み</td><td>T2 は逆向き、T5 は小さい正</td></tr>
+<tr><td>F-v11-9</td><td>v11</td><td><b>2 段目の T3</b></td><td><code>data/result/v11/stage2/figs/fig_s2_t3.png</code></td><td>済み</td><td>生成した Q2 は役に立つが、D6 は役に立たない</td></tr>
+<tr><td>F-v11-10</td><td>v11</td><td><b>範囲ごとの Q2</b></td><td><code>data/result/v11/stage2/figs/fig_s2_q2_bins.png</code></td><td>済み</td><td>Q2 は範囲 2〜5 で大きく振れる</td></tr>
+<tr><td>F-v12-1</td><td>v12</td><td><b>ネットワーク図（v11・v12）</b></td><td><code>data/result/v12/figs/network_v11_v12.png</code></td><td>済み（下書き）</td><td>作りの違い</td></tr>
+<tr><td>F-v12-2</td><td>v12</td><td>試し学習の揃いと Fig.5</td><td><code>data/result/v12/trial/figs/trial_alignment_fig5.png</code></td><td>済み</td><td>Encoder を凍結する理由</td></tr>
+<tr><td>F-v12-3</td><td>v12</td><td>1 段目の判定（隠れた／見える一歩）</td><td><code>data/result/v12/main/s1eval/figs/gate_s1.png</code></td><td>済み</td><td>G2・G3 の判定</td></tr>
+<tr><td>F-v12-4</td><td>v12</td><td>自己位置の追跡</td><td><code>data/result/v12/main/s1eval/figs/tracking_s1.png</code></td><td>済み</td><td>隠れた区間で追跡が下がる</td></tr>
+<tr><td>F-v12-5</td><td>v12</td><td>M1(d) の色ごとの寄り</td><td><code>data/result/v12/main/s1eval/figs/m1d_colours_s1.png</code></td><td>済み</td><td>赤に特有の寄り</td></tr>
+<tr><td>F-v12-6</td><td>v12</td><td><b>自分側の積み上がり（v11 との比較）</b></td><td><code>data/result/v12/main/s1eval/figs/accumulation_s1.png</code></td><td>済み</td><td>経験ありだけ赤の方へだけ進み続ける</td></tr>
+<tr><td>F-v12-7</td><td>v12</td><td><b>G5a の曲線</b></td><td><code>data/result/v12/main/g5/s{0,1,2}/g5a_curves.png</code></td><td>済み</td><td>他者側で A-2 が好きな色の方へ進む</td></tr>
+<tr><td>F-v12-8</td><td>v12</td><td>G5b の 8 方向</td><td><code>data/result/v12/main/g5/s{0,1,2}/g5b_bins.png</code></td><td>済み</td><td>+a と −a でずれの向きが変わるか</td></tr>
+<tr><td>F-v12-9</td><td>v12</td><td><b>2 段目の T2・T5（チェックポイントごと）</b></td><td><code>data/result/v12/report/figs/t2t5_ckpts.png</code></td><td>済み</td><td>正式と 2 段目 b（s0・s2）の主の値</td></tr>
+<tr><td>F-v12-10</td><td>v12</td><td>Q2 の時系列</td><td><code>data/result/v12/report/figs/q2_timeseries.png</code></td><td>済み</td><td>Q2 と本当の快・不快の時間の変化</td></tr>
+<tr><td>F-v12-11</td><td>v12</td><td>T4 の分布</td><td><code>data/result/v12/report/figs/t4_dist.png</code></td><td>済み</td><td>入れ替えのあと新しい緑へ向かう形はない</td></tr>
+<tr><td>F-v12-12</td><td>v12</td><td><b>Q2 と本当の快・不快の散布図・範囲 2〜5 の分布</b></td><td><code>data/result/v12/stage2/figs/q2_vs_pa2_green_s0.png</code></td><td>済み（s0 の緑好き）</td><td>範囲 2〜5 の Q2 は ±1 に張り付く</td></tr>
+<tr><td>F-v12-13</td><td>v12</td><td>T4 の例（入れ替えの前後の予測画像）</td><td><code>data/result/v12/stage2/figs/t4_example_green_s0.png</code></td><td>済み（s0 の緑好き）</td><td>予測の A-2 の向き</td></tr>
+<tr><td>—</td><td>v12</td><td>学習曲線（mse 段）</td><td><code>data/result/v12/main/convergence/curves_mse.png</code></td><td>済み</td><td>収束</td></tr>
+<tr><td>—</td><td>v12</td><td>2 段目 b・c の図</td><td>—</td><td><b>まだない</b></td><td>2 段目 b の 3 組の図、2 段目 c の図は作られていない</td></tr>
+</table></div>
+<hr>
+<h2 id="G.-用語集">G. 用語集</h2>
+<ul><li><b>A-1・A-2</b>：A-1 は学習するエージェント（自分）。A-2 はその視界に映る他者。</li><li><b>共有モジュール</b>：process-1 と process-2 が重みを共有する一つの LSTM（128 ユニット）。記憶（内部状態）は別に持つ。元論文の重ね合わせの中心。</li><li><b>process-1・process-2</b>：共有モジュールの中の、自分を表す処理（process-1）と他者を表す処理（process-2）。</li><li><b>h¹・h²</b>：process-1・process-2 の内部状態（128 次元）。h¹ から自分の位置、h² から他者の位置が読めるかで、自他の分かれ方を見る。</li><li><b>Encoder-1・Encoder-2</b>：どちらも A-1 の視界を読む画像の符号化器。Encoder-1 は自己用、Encoder-2 は他者用。</li><li><b>統合部・Decoder</b>：h¹・h² をまとめ、次の視界の画像を出す部分。</li><li><b>特徴予測部</b>：h¹・h² から次の Encoder の出力を予測する枝。他者側に学習の通り道を作る。</li><li><b>マスク（0.99）</b>：学習中に Encoder の出力を 99% の確率で零にすること。見えない間も位置を追うことを学ばせる。</li><li><b>exp1・exp2・exp3</b>：元論文の手順。exp1 は 1 段目の全体の学習、exp2 は Fig.5 のための Decoder の学習、exp3 は他者用の部品だけの学習。</li><li><b>mse 段・l1 段</b>：exp1 の前半（全部を二乗誤差で学習）と後半（Decoder だけを絶対誤差で学習）。</li><li><b>Fig.5（他者の視点の取り出し）</b>：Encoder-2 の出力を、Encoder-1 で学習した Decoder に通すと、A-2 から見た視界が出てくるか。マージン（A-1 の視界との誤差 − A-2 の視界との誤差）が正なら成り立つ。</li><li><b>自他の書き方の揃い</b>：Encoder-2 が A-1 の視界から作る符号と、Encoder-1 に A-2 の視界を入れたときの符号のコサイン類似度。v4 で 0.80。Fig.5 の前提。</li><li><b>Motion Generator（MG）</b>：元論文の他者用の部品。他者の運動を作って process-2 に入れる。</li><li><b>critic・actor</b>：強化学習の部品。critic は行動の価値（Q 値）を計算し、actor は行動を選ぶ。v4〜v10 の価値の出どころ。</li><li><b>probe-Q</b>：A-1 の critic で、8 方向それぞれに動いた場合の Q 値を計算し、正規化した 8 次元のベクトル。v4〜v10 の process-1 の入力。</li><li><b>VE（Value Estimator）・VE′</b>：v4〜v6 で MG の代わりに置いた他者用の部品。VE は他者の Q 値 Q̂²、VE′ は他者の報酬の重み r̂² を作る。</li><li><b>快・不快（P）</b>：v11・v12 の入力。全方位の視界を 8 つの方向の範囲に分け、各範囲に見える赤の画素 − 緑の画素を数えた値。A-1 は赤が好き。A-2 の本当の快・不快は P_A2（A-2 の視界から計算）。</li><li><b>範囲 0〜7</b>：快・不快の 8 つの方向の範囲。ランドマークの赤・緑が写るのは範囲 0・1・6・7 だけで、範囲 2〜5 は常に 0。</li><li><b>経験あり・経験なし</b>：v11・v12 の 2 条件。経験あり（mixed）は A-1 が一歩ごとに半分は赤の方へ動く。経験なし（random）はランダムに歩く。違いは動き方だけ。</li><li><b>配置（元・入れ替え）</b>：赤と緑のランドマークの位置。元（original）と、赤と緑を入れ替えた配置（swap_rg）。v10 以降はエピソードごとに 1/2。</li><li><b>見積もり（見込み）</b>：「自分は快の高い方へ動くだろう」という、ネットワークの予測の中の傾き。</li><li><b>M1(c)</b>：経験ありの予測が、赤の方へ動いた場合の視界に寄るかを、予測誤差の差で見る主の基準（負が仮説の向き）。</li><li><b>M1(d)</b>：反事実の比較。A-1 が実際には X の方へ動かなかったフレームで、予測が「X の方へ一歩動いた場合の視界」（描き直した視界）に、実際の次の視界より近いか（正が仮説の向き）。色ごとの寄り S_X。</li><li><b>色の基準</b>：入れ替えたエピソードで S_赤 − S_緑 が正か。見積もりが場所でなく色に結びつくかを見る。</li><li><b>入力停止の検査（積み上がり）</b>：t=20 から運動・視覚を隠し、快・不快を止めて進めたとき、予測が赤の方へ進み続けるか。d* は予測と最もよく合う「X の方へ d 歩動いた視界」の d、g は赤の方の d* の傾き − ほかの 3 色の平均。</li><li><b>隠れの印</b>：v12 の process-1 の入力の 1 次元。運動が隠れている間 1。眠り（運動 0）と区別するため。</li><li><b>G1〜G5</b>：v12 の 1 段目の関門。G1 自己位置の追跡（前提）、G2 価値と行動・色（運動が隠れた一歩の M1(c)・M1(d)・色の基準）、G3 自分側の積み上がり、G4 Encoder の一致と Fig.5（確認）、G5a 他者側の積み上がり、G5b process-2 に +a・−a を入れたときのずれの向き。</li><li><b>部品 G</b>：v11・v12 の 2 段目で学習する他者用の部品（MG と同じ作り）。マスク前の Encoder-2 の出力を読み、8 次元の Q2 を出す。</li><li><b>Q2</b>：部品 G の出力。process-2 の快・不快の枠に入れる「他者の快・不快」の候補。</li><li><b>T2</b>：2 段目の主の見分け ①。色の入れ替えの瞬間（t=50、位置は同じで色だけ違う）に、Q2 が新しい緑の範囲へ移るか。Woodward の入れ替えの課題に当たる。</li><li><b>T5</b>：2 段目の主の見分け ②。位置を揃えた緑好きと赤好きの A-2 で、Q2 が好みで違うか。</li><li><b>T1・T3・T4・T6</b>：2 段目の副の指標。T1 は Q2 から A-2 の位置が読めるか、T3 は Q2 を零・生成・D6・位置の代理に差し替えたときの予測の誤差、T4 は入れ替えのあと予測画像の A-2 が新しい緑へ向かうか、T6 は配置を固定したときの Q2 の変化と快・不快の変化の相関。</li><li><b>D6</b>：部品 G の代わりに A-2 の本当の快・不快 P_A2 をそのまま入れた参照の値。主の見分けの値の大きさを比べる物差し（T2 +0.60、T5 +0.42）。</li><li><b>位置の代理</b>：A-2 の位置から作った、位置の情報だけを持つ入力。T3 の比較に使う。</li><li><b>late-5</b>：最後の 5 つのチェックポイント（ep160〜200）。各点で判定し、5 点中 3 点以上でその組は合格とする。</li><li><b>組（s0〜s3）・組の差</b>：同じシードで作った経験あり・経験なしの 2 本のモデルを一組とする。組の差は経験あり − 経験なし（同じエピソードで対にしたブートストラップの 95% CI で判定）。s3 は予備の組。</li><li><b>選び方の基準</b>：2 段目に使う組の条件。1 段目の h²→A-2 の位置の R² が x・y とも 0.8 以上。</li><li><b>事前登録</b>：判定の基準を、計算・学習の前に実験ログに書いてコミットすること。結果を見た後に加えた確認は「事前登録外」と書く。</li><li><b>正式・探索</b>：正式は事前登録どおりで、主の結論の根拠にする段。探索は結果を見て設計を変えた段などで、合格しても主の結果とは書かない。</li><li><b>2 段目 b・c</b>：v12 の探索の 2 段目。b は部品 G の出力を自分が経験した快・不快の形に限るもの、c は A-2 を視界から隠すもの。</li><li><b>抜け道</b>：部品が、好み以外の情報（位置など）を流して予測を良くする道。範囲 2〜5 のような自由な枠や、範囲ごとの強さの自由度。</li><li><b>三層の分析</b>：v12 の 2 段目が好みを表さなかった理由の読み（推測）。層 1 自由な枠の抜け道、層 2 好みを伝える利点が小さい、層 3 位置が視覚から取れる。</li><li><b>事後の分析 B</b>：v12 の事前登録外の分析。B1 は Q2 から好みを読む、B2 は h² から好みを読む、B3 は生成した Q2 を止めて G5a と同じ測り方をする。</li><li><b>交絡</b>：調べたい量（好み・配置）が、観測できる別の量（他者の位置、行動の向き）と混ざって、区別できなくなること。</li><li><b>B3-frozen・B3-ft</b>：v10 の共有モジュールの学習の 2 条件。Encoder を凍結するか、Encoder・Decoder も学習するか。</li><li><b>R3-A_400</b>：v4 の主なモデル。元論文の Encoder を凍結し、probe-Q を入力にして 400 エポック学習したもの。</li><li><b>bit-identical</b>：同じチェックポイントを 2 回評価して、値がビット単位まで一致すること（評価の再現性の確認）。</li></ul>
+<hr>
+<h2 id="付録-1：読んだ文書の一覧">付録 1：読んだ文書の一覧</h2>
+<div class="scroll"><table>
+<tr><th>文書</th><th>場所</th><th>中身</th></tr>
+<tr><td><code>docs/results_locations.md</code>（ルート）</td><td>両方の作業ツリー</td><td>元論文の各図の出力先（元論文の再現の対応表。<b>再現そのもののまとめの文書はない</b>）</td></tr>
+<tr><td><code>my_research/PROJECT_MAP.md</code></td><td>v10 の作業ツリー（git 未登録）</td><td>v4 までの全体の地図（元論文の各段の対応表を含む。v4 を「進行中」とする古い版）</td></tr>
+<tr><td>ルートの <code>config/exp/exp1_mse.yml</code>・<code>exp2.yml</code>・<code>exp3.yml</code>、<code>config/model/SuperpositionNetworkFeaturePrediction/default.yml</code></td><td>ルート</td><td>元論文の作り（2 つの Encoder、LSTM 128、マスク 0.99、exp1〜3 の手順）の確認</td></tr>
+<tr><td><code>docs/thesis_skeleton.md</code></td><td>両方</td><td>v4・v5 のまとめ（論文骨子）</td></tr>
+<tr><td><code>docs/v6_summary.md</code></td><td>両方</td><td>v6 のまとめ</td></tr>
+<tr><td><code>docs/v7_instructions.md</code>、<code>docs/v7_experiment_log.md</code>（§6・§7・§10.1）</td><td>両方</td><td>v7 の設計と最終のまとめ（v7 のまとめの文書はない）</td></tr>
+<tr><td><code>docs/v10_instructions.md</code>（§0・§1）</td><td>両方</td><td>v8・v9 が構想のみであること</td></tr>
+<tr><td><code>docs/v10_summary.md</code></td><td><b>v10 の作業ツリーだけ</b>（ブランチ <code>feature/v10-color-swap</code>）</td><td>v10 のまとめ</td></tr>
+<tr><td><code>docs/v11_instructions_1.md</code>、<code>docs/v11_instructions_1_v2.md</code></td><td>v11 の作業ツリー</td><td>v11 の指示書（最初の版と最新の版）</td></tr>
+<tr><td><code>docs/v11_summary.md</code></td><td>v11 の作業ツリー</td><td>v11 のまとめ</td></tr>
+<tr><td><code>docs/v11_experiment_log.md</code>（見出しの全体、§7.50・§7.57・§7.58）</td><td>v11 の作業ツリー</td><td>v11 の実験ログ</td></tr>
+<tr><td><code>docs/v12_instructions.md</code></td><td>v11 の作業ツリー</td><td>v12 の指示書</td></tr>
+<tr><td><code>docs/v12_summary.md</code></td><td>v11 の作業ツリー</td><td>v12 のまとめ（作成中）</td></tr>
+<tr><td><code>docs/v12_experiment_log.md</code>（§1〜§47 の全体）</td><td>v11 の作業ツリー</td><td>v12 の実験ログ</td></tr>
+<tr><td><code>data/result/v12/report/index.html</code></td><td>v11 の作業ツリー</td><td>v12 の確認用の資料（HTML の作りの参考）</td></tr>
+</table></div>
+<ul><li>v4・v5・v7・v8・v9 には <code>*_summary.md</code> がない（v4・v5 は <code>thesis_skeleton.md</code>、v7 はログの §10.1 が代わり。v8・v9 は文書なし）。元論文の要約の文書も docs/ にはない。</li></ul>
+<h2 id="付録-2：食い違いの一覧">付録 2：食い違いの一覧</h2>
+<p>まとめの文書を正として書いた。次の食い違い・抜けがあった。</p>
+<ol><li><b>v12 のまとめが未完</b>：<code>docs/v12_summary.md</code> は「作成中」で、§3 の 2 段目 b は組 s0・s2 の途中の値まで（「組 s1・s3 と案 A は学習中」）、§4 は空。ログ §47 の 3 組の判定（① 0/3、② 1/3、不合格）、ログ §45・§46 の 2 段目 c は、まとめに入っていない。この文書ではログから書いた。</li><li><b>2 段目 b の「符号をほぼ一定に固定」</b>：<code>v12_summary.md</code> §3 は組 s0・s2 の途中の値についての記述で、ログ §47 は組 s1 では符号が動く（ただし好みに沿わない）と補っている。この文書では「s0・s2 では固定、s1 では動くが好みに沿わない」と書いた。</li><li><b>v4 の Encoder が赤・緑を区別するか</b>：<code>v10_summary.md</code> §6 の限界 8 は「凍結 Encoder は…赤・緑をほとんど区別しない」と書く。一方、v12 ログ §19・§22 は、v4 の Encoder-2 の出力から配置が線形に 0.93〜0.96 で読めるとして、v12 ログ §16 の同じ趣旨の記述を誤りと訂正している（v10 のまとめ自体の表でも、凍結 Encoder の出力から配置が 0.70〜0.84 読める）。この文書では v10 のこの限界を本文に書かず、限界の一覧にも入れなかった。v10 のまとめの記述を直すかは判断が必要。</li><li><b>v11 の 2 段目の組の数</b>：<code>v11_summary.md</code> §5 の限界 15 は「2 段目は 2 組」と書くが、同じ文書の §2.6（2026-10-20 追記）とログ §7.57・§7.58 では予備の組 s3 を足した 3 組（s0・s2・s3）で判定している。この文書では 3 組と書いた。</li><li><b>v11 の見積もりの場所</b>：<code>v12_instructions.md</code> §1 と v12 ログ §1 は「見込みは共有モジュール（LSTM）の中で積み上がる形になっていなかった」と書くが、<code>v11_summary.md</code> は「共有モジュールか Decoder か区別できなかった（ネットワークが、と書く）」とする。この文書では「ネットワークの中で積み上がらない」と書いた。</li><li><b>v12 の指示書の学習する部分</b>：<code>v12_instructions.md</code> §3.3 は「経験の効果は共有モジュール・統合部・Decoder（と特徴予測部）」に改訂済みで、ログ §15 と一致している（改訂前の版との違いのみ。食い違いではない）。</li><li><b>v12 のまとめの図の一覧</b>：指示書 §5.3・§5.4 で求める 2 段目の図（T3・範囲ごとの Q2 など）と v11・v12 の比較の図が、<code>v12_summary.md</code> §6 の一覧にまだない。この文書の F は、ログ §32・§42 で目視済みと記録された図で補った。</li><li><b>v10 のまとめの置き場所</b>：<code>docs/v10_summary.md</code> は v10 のブランチ（本体の作業ツリー）にだけあり、v11 のブランチにはない。v10 の後半の図（B4・再評価）も本体の作業ツリーにだけある。</li><li><b>v4・v5・v6 の図の目視確認</b>：<code>thesis_skeleton.md</code>・<code>v6_summary.md</code> には図の目視確認の記録がない（F では「記録なし」とした）。</li><li>依頼にあった「元論文の再現のまとめ」と「元論文の要約」にあたる文書は docs/ に見つからなかった。ルートの <code>docs/results_locations.md</code>、<code>PROJECT_MAP.md</code> §1、<code>thesis_skeleton.md</code> と、ルートの設定から把握した。</li></ol>
+<a class="top" href="#目次">目次へ</a></body></html>
