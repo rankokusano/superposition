@@ -1,0 +1,34 @@
+# v12 E1 (docs/v12_experiment_log.md Sec.53, post-hoc check for the discussion, NOT a thesis result): the paper's exp1 model
+# (motion only, no pleasure, no hiding) from scratch on the full v11_s1_random (train 3000), mse 200 ep (= v12_trial_pa_random_mse at full scale). --seed 0.
+model:
+  name: SuperpositionNetworkFeaturePrediction
+  config: default
+  mode: ~
+runner: PredictionFeaturePredictionRunner
+data:
+  name: v11_s1_random
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+  loss_function: mse_loss
+  pretrain: ~
+  batch_size: 10
+  max_epochs: 200
+  save_interval: 10
+  test_interval: 10
+  optimizer: AdamW
+  optim_config:
+    default:
+      lr: 0.001
+      weight_decay: 0.01
+    freeze: ~
+    per_params:
+      - name: bias
+        args:
+          weight_decay: 0.0
+      - name: vision_encoder
+        args:
+          weight_decay: 0.001
+      - name: share_lns
+        args:
+          weight_decay: 0.001

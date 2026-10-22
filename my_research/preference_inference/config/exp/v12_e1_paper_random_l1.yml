@@ -1,0 +1,35 @@
+# v12 E1 l1 stage (Sec.53): v11_s1_random_l1_s0.yml with the paper's exp1 model; pretrain = v12_e1_paper_random_mse ep200; Decoder only. --seed 0.
+model:
+    name: SuperpositionNetworkFeaturePrediction
+    config: default
+    mode: ~
+runner: PredictionFeaturePredictionRunner
+data:
+    name: v11_s1_random
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+    loss_function: l1_loss
+    pretrain:
+        exp_config: v12_e1_paper_random_mse
+        seed: 0
+        epoch: 200
+    batch_size: 10
+    max_epochs: 200
+    save_interval: 10
+    test_interval: 10
+    optimizer: AdamW
+    optim_config:
+        default:
+            lr: 0.001
+            weight_decay: 0.01
+        freeze:
+            - superposition_module
+            - vision_encoder_module
+            - integration_module
+            - share_lns
+            - feature_prediction_module
+        per_params:
+            - name: bias
+              args:
+                  weight_decay: 0.0
