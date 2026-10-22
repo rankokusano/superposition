@@ -6,9 +6,14 @@ pipe tables, standalone images (rendered as figures), block quotes, horizontal r
 fenced code, and inline code / bold / italic / links. Image paths are kept as written
 (relative to docs/), so the HTML must stay next to the Markdown file.
 
-Usage: python analyze/build_research_overview_html.py [--md docs/research_overview.md] [--out docs/research_overview.html]
+Usage: python analyze/build_research_overview_html.py [--md docs/research_overview.md] [--out docs/research_overview.html] [--embed]
+
+--embed writes every image into the page as a data URI, so the single HTML file can be copied
+and opened anywhere (default output for --embed: docs/research_overview_standalone.html).
 """
 import argparse
+import base64
+import mimetypes
 import datetime
 import html
 import pathlib
@@ -210,10 +215,23 @@ def convert(md):
     return title, body
 
 
+def embed_images(page, base_dir):
+    def to_data_uri(m):
+        src = html.unescape(m.group(1))
+        path = (base_dir / src).resolve()
+        mime = mimetypes.guess_type(str(path))[0] or 'application/octet-stream'
+        data = base64.b64encode(path.read_bytes()).decode('ascii')
+        return '<img src="data:%s;base64,%s"' % (mime, data)
+    page = re.sub(r'<a href="([^"]+)" target="_blank">(<img )', r'\2', page)
+    page = re.sub(r'(<img [^>]*>)</a>', r'\1', page)
+    return re.sub(r'<img src="([^"]+)"', to_data_uri, page)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--md', default=str(_HERE / 'docs' / 'research_overview.md'))
-    ap.add_argument('--out', default=str(_HERE / 'docs' / 'research_overview.html'))
+    ap.add_argument('--out', default=None)
+    ap.add_argument('--embed', action='store_true')
     args = ap.parse_args()
     md_path = pathlib.Path(args.md)
     title, body = convert(md_path.read_text(encoding='utf-8'))
@@ -223,8 +241,11 @@ def main():
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
             '<title>修士研究の全体のまとめ</title><style>%s</style></head><body>\n%s\n%s\n'
             '<a class="top" href="#目次">目次へ</a></body></html>\n') % (CSS, gen, body)
-    pathlib.Path(args.out).write_text(page, encoding='utf-8')
-    print('wrote', args.out, '(title: %s)' % title)
+    if args.embed:
+        page = embed_images(page, md_path.resolve().parent)
+    out = args.out or str(_HERE / 'docs' / ('research_overview_standalone.html' if args.embed else 'research_overview.html'))
+    pathlib.Path(out).write_text(page, encoding='utf-8')
+    print('wrote', out, '(title: %s)' % title)
 
 
 if __name__ == '__main__':
