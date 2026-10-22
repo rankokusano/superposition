@@ -143,3 +143,13 @@
 3. v14-B の T5（4）：主の指標として並べるが、合否の条件には入れない。
 4. v14-C の関門の経験なし（5）：v12 の経験なしと組にする。
 5. GPU と日程（6）：GPU6 に v14-C の 3 本（または 2 本＋空いた GPU に 1 本）、GPU5 に v14-A → v14-B の 6 本。
+
+## 8. 記録：v14-A の起動と、v14-B・C のコードの用意（2026-10-23 06:40〜06:50）
+- 時刻の訂正：§3 の見出しの「07:00」は書いたときの見込みで、事前登録のコミットは **06:40（`4478e81` の後、文言を直した `b0da18f`）**。評価はその直後に起動した。
+- **v14-A の起動**（06:41、`run_inverse_v14.sh 5`、コンテナの中で `setsid nohup`）：GPU5 だけ。v12 の 4 組と v11 の 2 組の late-5 を ② と ① で → ep200 の 2 回目 → 集計（`aggregate_v12_s0s1s2`、`_s0s1s2s3`、`aggregate_v11_s0s2`）。終わりの印 `data/result/v14/logs/inverse.done`。1 チェックポイント（2 セット）約 30 秒。
+- **v14-B のコード**（学習はまだ）：`model/model_v14.py` の `SuperpositionNetworkMotionPleasureHoldOtherOneBit`、model config `onebit.yml`（`signed_pairs.yml` から G の出力を 1 にし、`shape_vector` = c+）、exp config `v14_s2u_pref_{random,mixed}_s{0..3}`（`v12_s2b_pref_*` からモデルの名前だけを替えた。diff で確認）。学習の入口 `train_v14.py`（`train_v12.py` を変えずに runpy で動かし、v14 のクラスを見えるようにするだけ）。
+  - 確認（GPU6、学習なし）：v12 の経験あり s0 の l1 ep200 を読み込むと、足りないのは G と固定の形だけ。u は (B, 1)、Q2 = u × c+ を確かめた。同じ process-2 を入れると、予測は v12 の 1段目のモデルとビット単位で一致（cudnn deterministic のとき。deterministic でないと僅かにずれる）。G のパラメータは 99457 個。
+  - **注意**：u は (−1, 1) なので |Q2| は c+ の大きさ（0.104〜0.127）までに限られる。2段目 b の Q2 は 1 まで出せた。指示書の「Q2 = u × 固定の形」どおりで、v14-A の候補と同じ大きさ。
+- **v14-C のコード**（学習はまだ）：`SuperpositionNetworkMotionPleasureHoldSigned`（P = s·(赤 − 緑)、s はデータの `a1_liked_t` から）と読み込み器 `exp/loader_v14.py`（`a1_liked_t` がないデータでは `exp/loader.py` と同じ）。
+  - 確認（CPU）：同じ初期値・同じ乱数で、赤好きの行は v12 のモデルと process-1 の入力が完全に一致、緑好きの行は快・不快だけが符号反転（隠れた区間の止めも含めて 60 ステップ）、運動と印は同じ。隠す区間の列も同じ。
+- v14-C のデータの収集は 06:44 に 200/3000（v13 より遅い。v14-A の評価とコンテナの CPU を分け合っているためと考えられる）。終わりは 9 時ごろの見込み。

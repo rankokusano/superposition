@@ -1,0 +1,80 @@
+# v14-B (docs/v14_experiment_log.md Sec.4): signed_pairs.yml with module G's output reduced to one scalar u = tanh(.),
+# Q2 = u * shape_vector (the v14-A candidate c+, data/result/v14/cand_shape.json). process-2 = [0, 0, Q2, 1].
+input:
+    vision: &input_vision
+        channel: 3
+        width: 64
+        height: 16
+    motion: &p1_dim 11
+
+pleasure:
+    liked: Red
+    disliked: Green
+    scale: 1.0
+
+vision_encoder_module:
+    input: *input_vision
+    conv:
+        - ch: 16
+          kernel_size: [3, 10]
+          stride: 2
+          padding: 1
+        - ch: 32
+          kernel_size: [3, 10]
+          stride: 2
+          padding: 1
+        - ch: 64
+          kernel_size: [3, 10]
+          stride: 2
+          padding: 1
+    fc:
+        - input: ~
+          output: &enc_out 64
+
+superposition_module:
+    input:
+        motion: *p1_dim
+        vision: *enc_out
+    hidden: &sp_hidden 128
+
+integration_module:
+    fc:
+        each_input: *sp_hidden
+        output: *enc_out
+
+feature_prediction_module:
+    fc:
+        - input: *sp_hidden
+          output: 128
+        - input: 128
+          output: *enc_out
+
+vision_decoder_module:
+    fc:
+        - input: *enc_out
+          output: ~
+    conv:
+        - ch: 32
+          kernel_size: [4, 10]
+          stride: 2
+          padding: 1
+        - ch: 16
+          kernel_size: [4, 12]
+          stride: 2
+          padding: 1
+        - ch: 3
+          kernel_size: [4, 12]
+          stride: 2
+          padding: 1
+
+motion_mask:
+    enabled: false
+    len_min: 5
+    len_max: 15
+    n_steps: 100
+
+motion_generator_module:
+    input: *enc_out
+    hidden: 128
+    output: 1
+    shape_vector: [-0.1041654, -0.12710697, 0.0, 0.0, 0.0, 0.0, 0.12710697, 0.1041654]
