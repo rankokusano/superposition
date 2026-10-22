@@ -184,7 +184,7 @@
 - **なぜ前の版から導かれたか**：v11 の失敗の二つの読み（見込みが積み上がらない、自他の揃いが失われた）に、それぞれ手を打った。運動を隠すと、隠れている間は自分の動きを推し量るしかなくなり、経験ありなら「快の高い方へ動いている」と推し量って、その見積もりが共有モジュールの「動きを積み上げる仕組み」に入ると期待した。中心仮説：2 段目で他者側の運動を「隠れている」とし、快・不快の枠だけを部品に埋めさせると、A-2 の動きを予想させる一番の近道は「A-2 にとって快い方向」を書くこと、つまり好みを表すことになる。
 - **試し学習で決まったこと**（ログ §8〜§14、判定には使わない段）：一から学習すると自他の揃いが戻らない（v12 本体 0.18〜0.27、元論文と同じ作りでも v11 のデータでは 0.48、v4 0.80）→ Encoder を凍結（P-b）。快・不快を止めないと積み上がりが出ない（P-b では g ≈ 0）→ 快・不快を止める（P-c で経験ありの g +0.095）。
 
-![図 C9：v11・v12 のネットワーク（斜線＝凍結）](../data/result/v12/figs/network_v11_v12.png)
+![図 C9：v11・v12 のネットワーク（斜線＝凍結）](figs/network_v11_v12.svg)
 
 ![図 C10：v12 の試し学習。自他の符号の揃いと Fig.5 のマージン。Encoder を凍結する理由](../data/result/v12/trial/figs/trial_alignment_fig5.png)
 
@@ -387,7 +387,7 @@
 | F-v11-8 | v11 | **2 段目の主の判定** | `data/result/v11/stage2/figs/fig_s2_primary.png` | 済み | T2 は逆向き、T5 は小さい正 |
 | F-v11-9 | v11 | **2 段目の T3** | `data/result/v11/stage2/figs/fig_s2_t3.png` | 済み | 生成した Q2 は役に立つが、D6 は役に立たない |
 | F-v11-10 | v11 | **範囲ごとの Q2** | `data/result/v11/stage2/figs/fig_s2_q2_bins.png` | 済み | Q2 は範囲 2〜5 で大きく振れる |
-| F-v12-1 | v12 | **ネットワーク図（v11・v12）** | `data/result/v12/figs/network_v11_v12.png` | 済み（下書き） | 作りの違い |
+| F-v12-1 | v12 | **ネットワーク図（v11・v12）** | `docs/figs/network_v11_v12.svg`（清書、`analyze/v12/draw_network_svg_v12.py`。下書きは `data/result/v12/figs/network_v11_v12.png`） | 済み（2026-10-22 清書） | 作りの違い |
 | F-v12-2 | v12 | 試し学習の揃いと Fig.5 | `data/result/v12/trial/figs/trial_alignment_fig5.png` | 済み | Encoder を凍結する理由 |
 | F-v12-3 | v12 | 1 段目の判定（隠れた／見える一歩） | `data/result/v12/main/s1eval/figs/gate_s1.png` | 済み | G2・G3 の判定 |
 | F-v12-4 | v12 | 自己位置の追跡 | `data/result/v12/main/s1eval/figs/tracking_s1.png` | 済み | 隠れた区間で追跡が下がる |

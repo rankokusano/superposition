@@ -219,21 +219,21 @@ v10 までは、A-1 の行動価値（強化学習の critic の probe-Q）を�
 | **F4** | **1 段目の M1(d) の色ごとの寄り S_X** | `summary_figs/fig_m1d_colours.png` | 済み | 経験ありの寄りは赤に特有（緑は小さく、青・シアンは 0）、経験なしは 4 色とも負。M1(d) の意味の図 |
 | F4b | M1(d) の 1 コマの例（実際の次の視界・赤の方へ一歩動いた視界・予測） | `summary_figs/fig_m1d_example.png` | 済み | **載せることは勧めない**：寄りは画素単位で約 0.006 と小さく、目で見て分からない。最初に選んだコマは A-2 の隠れ方で寄りが大きく見える不適切な例だったので、A-2 が小さいコマに選び直した（事前登録外、説明用） |
 | **F5** | **予測画像（経験あり s0、入れ替えのエピソード、l1 ep200）** | `main/pred_images/pred_common_mixed_swap_rg_ep1_s0_e200.png` | 済み | 自己の予測は鮮明で、入れ替えた配置でも色を正しく描く。各列に、視覚が隠されたかと 8 方向の快・不快が付く |
-| F5b | 予測画像（ほかの組・条件・配置） | `main/pred_images/pred_{common,own}_{random,mixed}_{original,swap_rg}_ep{0,1}_s{0,1,2}_e200.png` | **未確認**（F5 以外） | 補足。載せる場合は目視確認が必要 |
-| F6 | l1 段の主の基準の形（副） | `main/gate/gate_l1_late5_secondary.png` | **未確認** | l1 段でも同じ形。載せる場合は目視確認が必要 |
+| F5b | 予測画像（ほかの組・条件・配置） | `main/pred_images/pred_{common,own}_{random,mixed}_{original,swap_rg}_ep{0,1}_s{0,1,2}_e200.png` | 済み（2026-10-22、全 24 枚。経験なしの own は common と同じファイル） | 予測はどの組・配置でも正解に近い。Fig.5 で取り出した A-2 の視点は、組によって暗い塊・色の並びの不一致など形はさまざまだが、どれも A-2 の本当の視界に近くない |
+| F6 | l1 段の主の基準の形（副） | `main/gate/gate_l1_late5_secondary.png` | 済み（2026-10-22） | l1 段でも同じ形（M1(c) 負・M1(d) 正・色の基準 正は経験ありだけ。M1(a′)・M1(b′) は支持しない） |
 | F7 | 見積もりの場所の検査（入力停止） | `main/localise/localise_ep200.png` | 済み | 入力を止めると 3〜5 ステップで一定に落ち着き、積み上がらない |
 | F8 | 参考の検査（process-2 に快・不快） | `main/p2test/p2test_ep200.png` | 済み | A-2 の予想は快の方向ではなく、快・不快が出る 4 方向へずれる |
 | F9 | M1(b′) の矢印 | `main/secondary/m1b_arrows_mse_ep200.png` | 済み | +a でも −a でも同じ方向へ動く＝位置の手がかり（副が支持しなかった理由） |
 | F10 | h¹ の PCA と位置・快・不快 | `main/pca_compare/pca_compare_ep200.png` | 済み | 価値の軸は入力由来で両条件にある（補足） |
 | **F11** | **Fig.5 の誤差の地図（経験あり s0）** | `main/fig5/fig5_maps_v11_fig5_mixed_s0_s0_ep100.png` | 済み | 取り出した「A-2 の視点」は A-2 の本当の視界に近くない。地図の最小は A-2 の近くに来ない |
 | **F12** | **Fig.5 の変換の前後（マージンと自他の符号の揃い、v11 の 6 本と v4）** | `summary_figs/fig_fig5_transform.png` | 済み | 揃いは v4 0.80 に対して v11 0.16〜0.30。線形の変換をはさむと Fig.5 は v4 とほぼ同じ水準で成り立つ |
-| — | Fig.5 の検証（v4 の Encoder で同じ手順） | `test_scripts/fig5_validation/fig5_maps_fig5_v4_exp1l1000_s0_ep100.png` | 未確認（ログに記録なし） | 手順が v4 では Fig.5 を再現することの確認。載せる場合は目視確認が必要 |
+| — | Fig.5 の検証（v4 の Encoder で同じ手順） | `test_scripts/fig5_validation/fig5_maps_fig5_v4_exp1l1000_s0_ep100.png` | 済み（2026-10-21） | 同じ手順で v4 では、other_rec の誤差の地図の最小が A-2 の位置に来て、取り出した視点も色を含めて A-2 の本当の視界に近い（手順は正しい） |
 | F13 | 1 段目の学習曲線 | `main/convergence/curves_mse.png` | 済み | 6 本とも滑らかに収束 |
 | **F14** | **2 段目の主の判定（T2・T5 のチェックポイントごと）** | `stage2/figs/fig_s2_primary.png` | 済み | ① T2 は経験ありで負（逆向き）、② T5 は経験ありで正だが小さい（D6 は +0.60・+0.42 で枠の外） |
 | F15 | d_T5 の時間の窓ごと | `stage2/figs/fig_s2_t5_curve.png` | 済み | 経験ありの d_T5 は時間を通じて小さく正、経験なしは負寄り |
 | **F16** | **2 段目の T3（Q2 の差し替え：零・生成・D6・位置の代理）** | `stage2/figs/fig_s2_t3.png` | 済み | 生成した Q2 は予測を大きく良くするが、D6 と位置の代理は零と変わらない。部品が「何を学んだか」の中心の図 |
 | **F17** | **範囲ごとの Q2 と P_A2（8 本、ep200）** | `stage2/figs/fig_s2_q2_bins.png` | 済み | Q2 は P_A2 では常に 0 の範囲 2〜5 で大きく振れる（±1、一部は張り付く）。快・不快の形ではない別の符号 |
-| F18 | 2 段目の学習曲線 | `stage2/convergence_green/curves_mse.png`、`stage2/convergence_pref/curves_mse.png` | ① 済み、② **未確認** | 8 本とも収束（途中の一時的な跳ね上がりあり） |
+| F18 | 2 段目の学習曲線 | `stage2/convergence_green/curves_mse.png`、`stage2/convergence_pref/curves_mse.png` | ① 済み、② 済み（2026-10-22。図の題は「mse stage」と出るが 2 段目の曲線） | 8 本とも収束（途中の一時的な跳ね上がりあり） |
 | **T1〜T4** | 表 1（1 段目の主の基準）、表 2（Fig.5）、表 3（2 段目の主の判定）、表 4（T3・T1） | 本書 §2 | — | 数値は数値ログ §8.3・§8.9〜8.11・§8.12〜8.13 |
 
 ---

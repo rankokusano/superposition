@@ -156,10 +156,11 @@
 | G5a の曲線 | `main/g5/s{0,1,2}/g5a_curves.png` | 済み | 他者側で、止めた快・不快のもとで A-2 が好きな色の方へ進む |
 | G5b の 8 方向 | `main/g5/s{0,1,2}/g5b_bins.png` | 済み | +a と −a でずれの向きが変わるか |
 | 学習曲線（mse 段） | `main/convergence/curves_mse.png` | 済み | 収束 |
-| ネットワーク図（v11・v12） | `figs/network_v11_v12.png` | 済み（下書き） | 作りの違い |
-| 予測画像（v11 と v12、同じエピソード） | `main/pred_images/pred_common_*_s0_e200.png`（v11 は `../v11/main/pred_images/`） | 済み（s0 の 2 例）／未確認（ほか） | 予測と Fig.5 の視点の取り出し |
+| ネットワーク図（v11・v12） | `docs/figs/network_v11_v12.svg`（清書。PNG は `report/figs/network_v11_v12.png`） | 済み（2026-10-22） | 作りの違い（入力・凍結・部品 G・2 段目 b・c） |
+| v11 と v12 の比較 | `report/figs/compare_v11_v12.png`（`analyze/v12/figs_compare_v11_v12.py`） | 済み（2026-10-22） | 1 段目の主の指標、G3・G5 の有無、2 段目の判定を一枚に |
+| 予測画像（v11 と v12、同じエピソード） | `main/pred_images/pred_common_*_s0_e200.png`（v11 は `../v11/main/pred_images/`） | 済み（2026-10-22、v11・v12 の common 全 24 枚と v11 の own） | 予測はどれも正解に近い。v12 の Fig.5 の視点は並びが合うが赤・緑が黄色っぽい（凍結した Encoder と共通の Decoder なので全モデルで同じ画像）。v11 は組ごとに形が違い、どれも A-2 の視界に近くない |
 | Fig.5 の誤差の地図（v4・v11・v12） | `main/fig5/fig5_maps_v12_fig5_s0_s0_ep100.png` ほか | 済み | v12 は v4 と同じ形（凍結による） |
-| PCA（v11・v12） | `main/pca/pca_{random,mixed}_s0_ep200.png` | 済み（s0）／未確認（s1・s2） | v12 は h² が A-2 の位置で広がる |
+| PCA（v11・v12） | `main/pca/pca_{random,mixed}_s0_ep200.png` | 済み（2026-10-22、v11・v12 の s0〜s2） | v12 は 6 本とも h² が A-2 の位置で広がる。v11 は h¹ の主成分に射影すると縮む（s1 の経験なしは線状、v11 で s1 を 2 段目から外した理由と合う） |
 | Q2 と P_A2 の時系列 | `report/figs/q2_timeseries.png` | 済み | 正式は範囲 2〜5 が ±1、b は符号 u が固定 |
 | Q2 と P_A2 の散布図・範囲 2〜5 の分布 | `stage2/figs/q2_vs_pa2_*`、`stage2b/figs/q2_vs_pa2_*` | 済み（s0）／未確認（ほか） | 相関が弱い、範囲 2〜5 に張り付く |
 | T2・T5 の時点ごとの値 | `report/figs/t2t5_ckpts.png` | 済み | D6 よりずっと小さく、条件の順がそろわない |

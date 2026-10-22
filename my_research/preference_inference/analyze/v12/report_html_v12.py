@@ -46,7 +46,7 @@ def ci(d):
 
 def table_b():
     rows_r, rows_b3 = [], []
-    files = sorted(glob.glob(os.path.join(RES, 'v12', 'post', '*.json')))
+    files = sorted(glob.glob(os.path.join(RES, 'v12', 'post', 'v12_s2*_s[0-9].json')))
     for f in files:
         r = json.load(open(f))
         fam = '正式' if r['prefix'] == 'v12_s2' else '2b'
@@ -114,17 +114,19 @@ def body():
 <tr><td>自分側の積み上がり（入力を止める）</td><td><b>不合格</b> 0/3（3〜5 ステップで落ち着く）</td><td><b>合格</b>（G3 3/3、組の差 +0.068〜+0.075。注意：経験なしも 4 色の方へ同じくらい進む）</td></tr>
 <tr><td>他者側の積み上がり（process-2 に A-2 の本当の快・不快）</td><td>陽性の形にならない（参考の検査）</td><td><b>合格</b>（G5a 3/3、G5b 2/3。注意：s1・s2 は CI の下限が 0 に近い、B1 の読み取りでは s0 だけ）</td></tr>
 <tr><td>自他の書き方の揃い・Fig.5</td><td>揃い 0.16〜0.30、Fig.5 成り立たず</td><td>Encoder を v4 で凍結したので v4 と同じ（12 本とも一致、マージン +0.075）。<b>与えたもので、学んだものではない</b></td></tr>
-<tr><td rowspan="4">2 段目（他者）</td><td>① T2（入れ替えの瞬間）</td><td><b>不合格</b>（s0・s2・s3 で 1/3）</td><td><b>不合格</b>（正式 1/3、4 組でも不合格）</td></tr>
+<tr><td rowspan="5">2 段目（他者）</td><td>① T2（入れ替えの瞬間）</td><td><b>不合格</b>（s0・s2・s3 で 1/3）</td><td><b>不合格</b>（正式 1/3、4 組でも不合格）</td></tr>
 <tr><td>② T5（好みだけが違う A-2）</td><td><b>合格</b> 2/3（ただし D6 の 1/10 以下、相関が支えない、組で向きがそろわない）</td><td><b>不合格</b>（正式 1/3）</td></tr>
 <tr><td>部品 G が使った枠</td><td>Q2 の分散の 79〜94% が範囲 2〜5</td><td>71〜86% が範囲 2〜5（同じ形）</td></tr>
-<tr><td>2 段目 b（探索、出力の形を限定）</td><td>—</td><td>途中（s0・s2）：T2 1/5・0/5、T5 4/5・0/5。符号 u をほぼ一定に固定＝登録した「残る抜け道」の形。s1・s3・案 A は学習・評価中</td></tr>
+<tr><td>2 段目 b（探索、出力の形を限定）</td><td>—</td><td><b>不合格</b>（① 0/4、② 1/4）。4 組とも「残る抜け道」の形。案 A（参考、s0）も同じ形</td></tr>\n<tr><td>2 段目 c（探索、A-2 を隠す。主は隠した test）</td><td>—</td><td><b>不合格</b>（① 0/3、② 1/3）。「うまくいかない場合 a」。① は 3 組とも大きく逆向き</td></tr>
 </table></div>''')
 
+    a(fig(f'{V12}/report/figs/network_v11_v12.png', 'v11・v12 のネットワーク（清書）', '青が 1 段目で学習、橙が 2 段目で学習する部品 G、斜線が凍結した v4 の重み。赤字は共有モジュールへの入力。', True))
+    a(fig(f'{V12}/report/figs/compare_v11_v12.png', 'v11 と v12 の比較', '(a)(b) 1 段目の価値と行動・色、(c) 自分側の積み上がり（v11 は不合格、v12 は合格）、(d) 他者側の積み上がり（v12 だけ）、(e) 2 段目の判定。', True))
     a('<h2>1. 予測画像の比較（同じエピソード・同じ時刻）</h2>')
     a('<p>上から：入力、次の視界（正解）、予測、予測の誤差、Fig.5 の再構成、A-2 の本当の視界、Fig.5 で取り出した A-2 の視点、その誤差。'
       't=1,5,10,20,50（t>0 は視覚を隠す）。v11 と v12 は同じ test のエピソード（共通の random test）。</p>')
     for c, lay, ep, chk in (('random', 'original', 0, True), ('mixed', 'swap_rg', 1, True),
-                            ('random', 'swap_rg', 1, False), ('mixed', 'original', 0, False)):
+                            ('random', 'swap_rg', 1, True), ('mixed', 'original', 0, True)):
         cj = '経験なし' if c == 'random' else '経験あり'
         lj = '元の配置' if lay == 'original' else '入れ替えた配置'
         a(f'<h3>{cj}・{lj}（エピソード {ep}、組 s0、ep200）</h3><div class="pair">')
@@ -137,7 +139,7 @@ def body():
               ('' if chk else '（この組み合わせは目視していないので、説明は他の例からの推定）'), chk))
         a('</div>')
     a(links([f'{d}/main/pred_images/pred_common_{c}_{lay}_ep{ep}_s{s}_e200.png' for d in (V11, V12) for s in (1, 2)
-             for c, lay, ep in (('random', 'original', 0), ('mixed', 'swap_rg', 1))]))
+             for c, lay, ep in (('random', 'original', 0), ('mixed', 'swap_rg', 1))], '目視：済み（2026-10-22）'))
     a('<h3>2 段目：入れ替え（t=50）の前後の予測画像（T4 の例）</h3><div class="pair">')
     a(fig(f'{V12}/stage2/figs/t4_example_green_s0.png', '2 段目（正式）、組 s0',
           '上 2 行が正解（入れ替えなし／あり）、下 4 行が経験なし・ありの予測。黄色い線は予測画像から読んだ A-2 の方角。入れ替えのあと、予測の A-2 が新しい緑（左）の方へ向かう形は、経験ありでも見えない。下の分布は経験なしの方が平均が大きい（+0.82 対 +0.37）。', True))
@@ -172,7 +174,7 @@ def body():
         a(fig(f'{d}/main/pca/pca_mixed_s0_ep200.png', f'{ver} 経験あり s0',
               '読み方は左と同じ。' + note2 + ' PCA の違いは判定には使っていない（v11 ログ §7.26）。', True))
         a('</div>')
-    a(links([f'{d}/main/pca/pca_{c}_s{s}_ep200.png' for d in (V11, V12) for c in ('random', 'mixed') for s in (1, 2)]))
+    a(links([f'{d}/main/pca/pca_{c}_s{s}_ep200.png' for d in (V11, V12) for c in ('random', 'mixed') for s in (1, 2)], '目視：済み（2026-10-22）'))
 
     a('<h2>4. 1 段目の主な結果</h2>')
     a(fig(f'{V11}/summary_figs/fig_m1d_colours.png', 'v11 M1(d) の色ごとの寄り',
@@ -204,6 +206,8 @@ def body():
             [f'{V12}/stage2b/figs/q2_vs_pa2_{st}_s{s}.png' for st in ('green', 'pref') for s in (0, 2)]))
     a(fig(f'{V12}/report/figs/t2t5_ckpts.png', 'T2・T5 の G の時点ごとの値（全組、正式と 2 段目 b）',
           '赤の実線が経験あり、灰の破線が経験なし。仮説の向きは正。どの値も ±0.2 以内で、D6（T2 +0.60、T5 +0.42）よりずっと小さい。経験ありが経験なしの上にそろう形はない。', True))
+    a(fig(f'{V12}/report/figs/s2_attempts.png', '2 段目の三つの試み（正式・2 段目 b・案 A・2 段目 c）の主の値',
+          '黒い横線が経験ありの値、赤い点と縦線が組の差（経験あり − なし）と 95% CI、上の n/5 は合格の形の点の数（2 段目 c は隠した test）。合格の形の組も D6 よりずっと小さく、組・試みで向きがそろわない。2 段目 c の ① は 3 組とも大きく逆向き。', True))
     a(fig(f'{V12}/report/figs/t4_dist.png', 'B4：T4 のエピソードごとの分布（①のモデル、ep200）',
           '正なら、入れ替えのあと予測の A-2 が新しい緑の方へ向く。箱は四分位、橙の線は中央値。どの組でも分布は広く、中央値は経験なしの方が大きいか同じ（経験ありで大きい形はない）。', True))
 
