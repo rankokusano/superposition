@@ -1,0 +1,36 @@
+# v13 stage 1 main, l1 stage (docs/v13_instructions.md Sec.4.2): v12_s1_mixed_l1_s1.yml with the data changed to v13_s1_mixed80 and
+# pretrain = v13_s1_mixed_mse (same seed) ep200. Decoder only. Run with --seed 1.
+model:
+    name: SuperpositionNetworkMotionPleasureHold
+    config: default
+    mode: ~
+runner: PredictionFeaturePredictionRunner
+data:
+    name: v13_s1_mixed80
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+    loss_function: l1_loss
+    pretrain:
+        exp_config: v13_s1_mixed_mse
+        seed: 1
+        epoch: 200
+    batch_size: 10
+    max_epochs: 200
+    save_interval: 10
+    test_interval: 10
+    optimizer: AdamW
+    optim_config:
+        default:
+            lr: 0.001
+            weight_decay: 0.01
+        freeze:
+            - superposition_module
+            - vision_encoder_module
+            - integration_module
+            - share_lns
+            - feature_prediction_module
+        per_params:
+            - name: bias
+              args:
+                  weight_decay: 0.0

@@ -1,0 +1,284 @@
+{
+ "item1": {
+  "a_eq_b": true,
+  "a_eq_full_first3": true,
+  "pass": true
+ },
+ "item2": {
+  "random_vs_mixed80": {
+   "train": {
+    "n_episodes": 3000,
+    "layout_eq": true,
+    "init_self_pos_eq": true,
+    "other_pos_eq_all_t": true,
+    "sleep_frames_eq": true
+   },
+   "test": {
+    "n_episodes": 300,
+    "layout_eq": true,
+    "init_self_pos_eq": true,
+    "other_pos_eq_all_t": true,
+    "sleep_frames_eq": true
+   },
+   "pass": true
+  },
+  "random_vs_mixed50": {
+   "train": {
+    "n_episodes": 3000,
+    "layout_eq": true,
+    "init_self_pos_eq": true,
+    "other_pos_eq_all_t": true,
+    "sleep_frames_eq": true
+   },
+   "test": {
+    "n_episodes": 300,
+    "layout_eq": true,
+    "init_self_pos_eq": true,
+    "other_pos_eq_all_t": true,
+    "sleep_frames_eq": true
+   },
+   "pass": true
+  },
+  "mixed80_attrs": {
+   "a1_liked": "Red",
+   "a1_policy": "mixed",
+   "a2_policy": "stay",
+   "dataset": "v13_s1_mixed80",
+   "layout_mode": "mix",
+   "layout_seed": 1575148752,
+   "other_vision_timing": "pre-step (same frame as self_vision)",
+   "p_rule": 0.8,
+   "seed_key": "v11_s1",
+   "seed_scheme": "per-episode md5(<seed_key>/<split>/<n>) for random & numpy; coin md5(<seed_key>/<split>/<n>/a1_mix); layout md5(<seed_key>/layout)",
+   "simulator": "sim_v10"
+  }
+ },
+ "item4_5": {
+  "random": {
+   "near_red5": {
+    "original": 0.029381040293810404,
+    "swap_rg": 0.03098950216521987
+   },
+   "near_red5_all": 0.030181518151815183,
+   "near_red5_t50_100": 0.03022875816993464,
+   "source_frac_of_awake": {
+    "random": 1.0,
+    "rule": 0.0,
+    "rule_fallback": 0.0
+   },
+   "rule_turn_frac_of_awake": 0.0,
+   "sleep_frac": 0.08095379537953795,
+   "awake_speed_ne1_frac": 0.0,
+   "n_episodes_per_layout": {
+    "original": 1507,
+    "swap_rg": 1493
+   },
+   "first_within5_median": 101.0,
+   "never_within5_frac": 0.5181028240405503,
+   "dist_red_t50_100_mean": 13.400198493844101,
+   "pleasure": {
+    "per_bin_mean": {
+     "original": [
+      -0.08550000190734863,
+      -0.0860000029206276,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0860000029206276,
+      0.0843999981880188
+     ],
+     "swap_rg": [
+      0.08569999784231186,
+      0.08470000326633453,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.08510000258684158,
+      -0.08569999784231186
+     ]
+    },
+    "per_bin_frac_positive": {
+     "original": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.7059,
+      0.6966
+     ],
+     "swap_rg": [
+      0.7032,
+      0.7006,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "liked_bins_mean_positive_part": 0.170362189412117
+   }
+  },
+  "mixed50": {
+   "near_red5": {
+    "original": 0.3249981932499819,
+    "swap_rg": 0.33025405688592974
+   },
+   "near_red5_all": 0.3276138613861386,
+   "near_red5_t50_100": 0.3898496732026144,
+   "source_frac_of_awake": {
+    "random": 0.5001238908180744,
+    "rule": 0.47687191844034027,
+    "rule_fallback": 0.0230041907415853
+   },
+   "rule_turn_frac_of_awake": 0.4998761091819256,
+   "sleep_frac": 0.08095379537953795,
+   "awake_speed_ne1_frac": 0.0,
+   "n_episodes_per_layout": {
+    "original": 1507,
+    "swap_rg": 1493
+   },
+   "first_within5_median": 35.0,
+   "never_within5_frac": 0.19080376538740043,
+   "dist_red_t50_100_mean": 7.0956871891293,
+   "rule_recompute": {
+    "checked": 13304,
+    "match_1e-4": 13304,
+    "max_abs_err": 2.9798171485850844e-08
+   },
+   "pleasure": {
+    "per_bin_mean": {
+     "original": [
+      -0.028300000354647636,
+      -0.11339999735355377,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.22660000622272491,
+      0.21570000052452087
+     ],
+     "swap_rg": [
+      0.21879999339580536,
+      0.22370000183582306,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.11190000176429749,
+      -0.02979999966919422
+     ]
+    },
+    "per_bin_frac_positive": {
+     "original": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.8285,
+      0.8149
+     ],
+     "swap_rg": [
+      0.821,
+      0.8301,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "liked_bins_mean_positive_part": 0.44244739413261414
+   }
+  },
+  "mixed80": {
+   "near_red5": {
+    "original": 0.8442318684423187,
+    "swap_rg": 0.8483550297427599
+   },
+   "near_red5_all": 0.8462838283828383,
+   "near_red5_t50_100": 0.9931830065359477,
+   "source_frac_of_awake": {
+    "random": 0.20000287283056403,
+    "rule": 0.5679621935497772,
+    "rule_fallback": 0.23203493361965877
+   },
+   "rule_turn_frac_of_awake": 0.7999971271694359,
+   "sleep_frac": 0.08095379537953795,
+   "awake_speed_ne1_frac": 0.0,
+   "n_episodes_per_layout": {
+    "original": 1507,
+    "swap_rg": 1493
+   },
+   "first_within5_median": 14.0,
+   "never_within5_frac": 0.0018102824040550326,
+   "dist_red_t50_100_mean": 0.9552935266091555,
+   "rule_recompute": {
+    "checked": 15880,
+    "match_1e-4": 15880,
+    "max_abs_err": 2.9798171485850844e-08
+   },
+   "pleasure": {
+    "per_bin_mean": {
+     "original": [
+      -0.007000000216066837,
+      -0.09350000321865082,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.3871000111103058,
+      0.3831000030040741
+     ],
+     "swap_rg": [
+      0.3847000002861023,
+      0.388700008392334,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.09449999779462814,
+      -0.007499999832361937
+     ]
+    },
+    "per_bin_frac_positive": {
+     "original": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.9415,
+      0.9445
+     ],
+     "swap_rg": [
+      0.9413,
+      0.9472,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "liked_bins_mean_positive_part": 0.771735668182373
+   }
+  }
+ },
+ "item4_pass": {
+  "near_red_80_gt_50_gt_random": true,
+  "rule_turn_frac_in_0.75_0.85": true,
+  "speed_ne1_le_1pct": true,
+  "sleep_frac_diff_lt_1pt": true
+ }
+}

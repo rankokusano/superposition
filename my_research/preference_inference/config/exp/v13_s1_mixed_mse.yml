@@ -1,0 +1,38 @@
+# v13 stage 1 main (docs/v13_instructions.md Sec.3, 4.2): v12_s1_mixed_mse.yml with only the data changed to v13_s1_mixed80 (A-1 follows its preference on 80% of awake steps; v12: 50%). Seeds 0-2 (spare 3) by --seed.
+# v11 stage 1 (docs/v11_experiment_log.md Sec.4.11, 5.3): copy of the paper's exp1_mse_1000.yml
+# with only the model name and data name changed.
+model:
+  name: SuperpositionNetworkMotionPleasureHold
+  config: default
+  mode: ~
+runner: PredictionFeaturePredictionRunner
+data:
+  name: v13_s1_mixed80
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+  loss_function: mse_loss
+  pretrain: ~
+  pretrain_encoder_from: /work/data/result/exp1_l1_1000/0/model/00200.pth
+  batch_size: 10
+  max_epochs: 200
+  save_interval: 1
+  test_interval: 10
+  optimizer: AdamW
+  optim_config:
+    default:
+      lr: 0.001
+      weight_decay: 0.01
+    freeze:
+      - vision_encoder
+      - share_lns
+    per_params:
+      - name: bias
+        args:
+          weight_decay: 0.0
+      - name: vision_encoder
+        args:
+          weight_decay: 0.001
+      - name: share_lns
+        args:
+          weight_decay: 0.001
