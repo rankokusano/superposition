@@ -233,6 +233,7 @@ def main():
     ap.add_argument('--seed', type=int, default=0)
     ap.add_argument('--out', default=None, help='output dir under data/result/v12 (default: trial)')
     ap.add_argument('--no_p2', action='store_true', help='skip the process-2 test (G5b is computed by eval_g5_v12.py)')
+    ap.add_argument('--conds', nargs='+', default=['random', 'mixed'], help='E2 (Sec.53) has the experienced run only')
     args = ap.parse_args()
     out_dir = OUT if args.out is None else os.path.join(RES, 'v12', args.out)
     os.makedirs(out_dir, exist_ok=True)
@@ -244,7 +245,7 @@ def main():
     views, vvalid = fv['views'][()], fv['valid'][()]
     for e in args.epochs:
         per_all = {}
-        for c in ('random', 'mixed'):
+        for c in args.conds:
             model, p_mask = load_v12(args.exp_fmt.format(c), args.seed, e, dev)
             d = run(model, p_mask, dev)
             r = {'exp': args.exp_fmt.format(c), 'epoch': e, 'err_mean_visible': float(d['err'][~d['hidden']].mean()),
@@ -275,6 +276,8 @@ def main():
                 json.dump(r, f, indent=1)
             print(c, e, json.dumps({'track': r['tracking']['p_next'], 'M1_hidden': {k: r['M1']['hidden'][k] for k in ('M1c_c_pred', 'M1d_c_cf')},
                                     'freeze_K15_hold': r['freeze']['K15_hold']['g'], 'align': r['alignment']}), flush=True)
+        if len(per_all) < 2:
+            continue
         paired = {k: summ(per_all['mixed'][k] - per_all['random'][k]) for k in per_all['mixed']}
         np.savez_compressed(os.path.join(out_dir, f'{args.prefix}per_ep{e}{args.tag}.npz'),
                             **{f'{c}__{k}': v for c in per_all for k, v in per_all[c].items()})
