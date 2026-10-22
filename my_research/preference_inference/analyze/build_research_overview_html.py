@@ -40,6 +40,12 @@ nav.toc{background:var(--card);border-radius:6px;padding:10px 16px;margin:16px 0
 nav.toc ul{margin:2px 0;padding-left:1.3em}nav.toc>ul{padding-left:.6em}
 .gen{font-size:.8rem;color:var(--mut)}
 .top{position:fixed;right:14px;bottom:14px;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:4px 10px;font-size:.85rem;text-decoration:none}
+@media print{:root{--bg:#fff;--fg:#000;--mut:#555;--line:#bbb;--card:#f4f4f4;--accent:#1f5f9f}
+body{max-width:none;padding:0;font-size:10pt;line-height:1.6}.top,.gen{display:none}
+h2{break-before:page}h1+nav.toc{break-after:page}h2,h3,h4{break-after:avoid}
+figure{break-inside:avoid}figure img{max-height:22cm;width:auto}tr{break-inside:avoid}
+table{font-size:8pt}a{color:inherit;text-decoration:none}figcaption code{display:none}}
+@page{size:A4;margin:15mm 12mm}
 """
 
 _LIST_RE = re.compile(r'^(\s*)([-*]|\d+\.)\s+(.*)$')
