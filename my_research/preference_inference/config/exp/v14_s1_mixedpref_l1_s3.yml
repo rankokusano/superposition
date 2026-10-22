@@ -1,0 +1,36 @@
+# v14-C stage 1, l1 stage: v12_s1_mixed_l1_s3.yml with data v14_s1_mixedpref, the signed-pleasure model and pretrain =
+# v14_s1_mixedpref_mse (same seed) ep200. Decoder only. Run with train_v14.py --seed 3.
+model:
+    name: SuperpositionNetworkMotionPleasureHoldSigned
+    config: default
+    mode: ~
+runner: PredictionFeaturePredictionRunner
+data:
+    name: v14_s1_mixedpref
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+    loss_function: l1_loss
+    pretrain:
+        exp_config: v14_s1_mixedpref_mse
+        seed: 3
+        epoch: 200
+    batch_size: 10
+    max_epochs: 200
+    save_interval: 10
+    test_interval: 10
+    optimizer: AdamW
+    optim_config:
+        default:
+            lr: 0.001
+            weight_decay: 0.01
+        freeze:
+            - superposition_module
+            - vision_encoder_module
+            - integration_module
+            - share_lns
+            - feature_prediction_module
+        per_params:
+            - name: bias
+              args:
+                  weight_decay: 0.0
