@@ -6,9 +6,10 @@ feature-prediction error (FP) and, for comparison, by the self-vision L1:
   * c0 comparison: cumulative error of c0 minus that of the correct candidate, and minus cp / cm separately;
   * choice bias: share of episodes choosing c+ per cell (layout x A-2 liked), and the same for the
     reference choice (ref_red vs ref_green -> which side it puts as pleasant).
-Writes data/result/v14/inverse/fp_check.json.
+Writes data/result/v14/inverse/<name>.json (default fp_check; --pairs for other models, e.g. v13).
 """
 
+import argparse
 import json
 import os
 
@@ -45,8 +46,13 @@ def one(z, q, T, B):
 
 
 def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--pairs', nargs='+', default=[f'{a},{b}' for a, b in PAIRS], help='exp_tag,noexp_tag')
+    ap.add_argument('--name', default='fp_check')
+    args = ap.parse_args()
+    pairs = [tuple(p.split(',')) for p in args.pairs]
     out = {}
-    for ex, nx in PAIRS:
+    for ex, nx in pairs:
         for e in EPOCHS:
             ze = np.load(os.path.join(SUB, f'{ex}_ep{e}_pref.npz'))
             zr = np.load(os.path.join(SUB, f'{nx}_ep{e}_pref.npz'))
@@ -54,9 +60,9 @@ def main():
             for q in ('FP', 'L1'):
                 for T in (50, 100):
                     out[f'{ex}|{q}|T{T}|ep{e}'] = {'exp': one(ze, q, T, B), 'noexp': one(zr, q, T, B)}
-    with open(os.path.join(SUB, 'fp_check.json'), 'w') as f:
+    with open(os.path.join(SUB, args.name + '.json'), 'w') as f:
         json.dump(out, f, indent=1)
-    for ex, _ in PAIRS:
+    for ex, _ in pairs:
         for q in ('FP', 'L1'):
             r = out[f'{ex}|{q}|T50|ep200']
             print(ex, q, 'T50 ep200')
