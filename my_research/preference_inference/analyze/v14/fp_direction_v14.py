@@ -8,9 +8,10 @@ recent direction of travel? From the saved v14-A outputs (v12 pairs s0..s3, pref
 Per model / checkpoint / subset (all episodes; the lowest third of A-2's rule-step share among awake steps in
 t = 1..50): agreement of the choice with each answer (raw, 1000 episode bootstrap 95% CI), agreement of the two
 answers themselves, and among episodes where the answers disagree, the share of choices that follow preference.
-Writes data/result/v14/inverse/fp_direction.json.
+Writes data/result/v14/inverse/<name>.json (default fp_direction = the v12 run of Sec.19; --tags/--epochs for others).
 """
 
+import argparse
 import json
 import os
 import sys
@@ -59,34 +60,37 @@ def main():
     rule = ((src == 1) & aw).sum(1) / np.maximum(aw.sum(1), 1)
     low = np.where(rule <= np.percentile(rule, 100 / 3))[0]
     allep = np.arange(len(rule))
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--tags', nargs='+', default=[f'v12_{c}_{s}' for s in range(4) for c in ('mixed', 'random')],
+                    help='file tags (<tag>_ep<e>_pref.npz)')
+    ap.add_argument('--epochs', type=int, nargs='+', default=list(EPOCHS))
+    ap.add_argument('--name', default='fp_direction')
+    args = ap.parse_args()
     out = {'definition': 'Sec.18', 'rule_share_low_third_max': float(np.percentile(rule, 100 / 3)),
            'n_low': int(len(low)), 'u01': u01.tolist(), 'u67': u67.tolist()}
-    for s in range(4):
-        for cond in ('mixed', 'random'):
-            for e in EPOCHS:
-                z = np.load(os.path.join(SUB, f'v12_{cond}_{s}_ep{e}_pref.npz'))
-                pref = z['correct_sign']
-                for q in ('FP', 'L1'):
-                    chp = choice(z, q, T)
-                    for nm, idx in (('all', allep), ('low_rule', low)):
-                        out[f'{cond}_s{s}|{q}|{nm}|ep{e}'] = stats(chp, pref, dirn, idx, np.random.RandomState(0))
-    json.dump(out, open(os.path.join(SUB, 'fp_direction.json'), 'w'), indent=1)
+    for tag in args.tags:
+        for e in args.epochs:
+            z = np.load(os.path.join(SUB, f'{tag}_ep{e}_pref.npz'))
+            pref = z['correct_sign']
+            for q in ('FP', 'L1'):
+                chp = choice(z, q, T)
+                for nm, idx in (('all', allep), ('low_rule', low)):
+                    out[f'{tag}|{q}|{nm}|ep{e}'] = stats(chp, pref, dirn, idx, np.random.RandomState(0))
+    json.dump(out, open(os.path.join(SUB, args.name + '.json'), 'w'), indent=1)
     print('low-third rule share <=', round(out['rule_share_low_third_max'], 3), 'n', out['n_low'])
+    eps = args.epochs
     for q in ('FP', 'L1'):
         for nm in ('all', 'low_rule'):
             print(f'== {q} {nm}')
-            for s in range(4):
-                for cond in ('mixed', 'random'):
-                    r = out[f'{cond}_s{s}|{q}|{nm}|ep200']
-                    late = [out[f'{cond}_s{s}|{q}|{nm}|ep{e}'] for e in EPOCHS]
-                    rp = (min(x['agree_pref'] for x in late), max(x['agree_pref'] for x in late))
-                    rd = (min(x['agree_dir'] for x in late), max(x['agree_dir'] for x in late))
-                    rf = (min(x.get('disagree_follow_pref', np.nan) for x in late), max(x.get('disagree_follow_pref', np.nan) for x in late))
-                    print(f"  s{s} {cond:6s} pref {r['agree_pref']:.3f} {np.round(r['agree_pref_ci'], 3).tolist()} [{rp[0]:.3f}-{rp[1]:.3f}]  "
-                          f"dir {r['agree_dir']:.3f} {np.round(r['agree_dir_ci'], 3).tolist()} [{rd[0]:.3f}-{rd[1]:.3f}]  "
-                          f"answers agree {r['answers_agree']:.3f}  disagree n={r['n_disagree']} follow pref "
-                          f"{r.get('disagree_follow_pref', float('nan')):.3f} {np.round(r.get('disagree_follow_pref_ci', [np.nan, np.nan]), 3).tolist()} [{rf[0]:.3f}-{rf[1]:.3f}]")
-
+            for tag in args.tags:
+                rows = [out[f'{tag}|{q}|{nm}|ep{e}'] for e in eps]
+                r = rows[-1]
+                rf = [x.get('disagree_follow_pref', np.nan) for x in rows]
+                n_pref_cond = sum(x.get('disagree_follow_pref_ci', [0, 0])[0] > 0.5 for x in rows)
+                print(f"  {tag:16s} ep{eps[-1]} pref {r['agree_pref']:.3f} dir {r['agree_dir']:.3f} answers agree {r['answers_agree']:.3f} "
+                      f"disagree n={r['n_disagree']} follow pref {r.get('disagree_follow_pref', float('nan')):.3f} "
+                      f"{np.round(r.get('disagree_follow_pref_ci', [np.nan, np.nan]), 3).tolist()}  over epochs "
+                      f"[{np.nanmin(rf):.3f}-{np.nanmax(rf):.3f}], points with CI low > 0.5: {n_pref_cond}/{len(rows)}")
 
 if __name__ == '__main__':
     main()

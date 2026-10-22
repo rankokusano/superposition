@@ -299,3 +299,8 @@ FP で選ぶ（T = 50）。値は ep200（FP は 5 点で同じ値。§20）、[
 - 自己の視界の L1 の主の判定（v14-A）についても、同じ方角との比較を記述として並べる（条件は判定に使わない）。
 
 **D. 実装**：`eval_inverse_v14.py` に mse 段のチェックポイントを読む指定（`v13mse:mixed:s` → `v13_s1_mixed_mse`、`v12mse:random:s` → `v12_s1_random_mse` など）を足す。`fp_direction_v14.py` は組・エポック・タグを引数で渡せるようにし、§19 の v12 の出力は変えない。FP の判定は `aggregate_inverse_v14.py`（既にある FP の欄）で数え、方角の条件は `fp_direction_v14.py` の出力から数える。
+
+## 22. §21 の実装と起動（2026-10-23 08:50。v13 の値はまだ見ていない）
+- `eval_inverse_v14.py`：mse 段のチェックポイントの指定 `v12mse|v13mse:<cond>:<seed>`（→ `v12_s1_<cond>_mse`・`v13_s1_<cond>_mse`）を足した。既存の指定の動きは変えない。
+- `fp_direction_v14.py`：タグ・エポック・出力名を引数で渡せるようにした。既定の引数で流し直すと、§19 の出力と値がすべて一致（キーの名前の付け方だけが変わる：`mixed_s0|…` → `v12_mixed_0|…`）。§19 の `fp_direction.json` はそのまま残す。
+- 起動（08:50、`run_inverse_v13mse_v14.sh 6`、コンテナの中で切り離して）：GPU6 で v13 の経験あり・v12 の経験なしの mse 段 ep160〜200（s0〜s2）→ ep200 の 2 回目 → FP の判定（`aggregate_v13mse_s0s1s2.json` の FP の欄）→ 方角との比較（`fp_direction_v13mse.json`）。そのあと l1 段の連鎖（§16）が終わるのを待って、l1 段の点の方角との比較（`fp_direction_v13l1.json`）。終わりの印 `inverse_v13mse.done`・`inverse_v13l1_dir.done`。

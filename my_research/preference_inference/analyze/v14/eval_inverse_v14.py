@@ -13,6 +13,7 @@ Per episode and step t = 0..99 (target frame t+1) it stores
   FP : other-side feature-prediction MSE, predict_feature(h2) vs other encoder of x_{t+1} (as t1t3_s2_v11)
 -> data/result/v14/<out>/<tag>_<set>.npz (+ labels). With --keep_pred also the predicted images and the
 A-2 position read from them (v11 Sec.7.53 read-out) for cp / cm (smoke test and example figures).
+Model specs: v12|v13|v11:<cond>:<seed> (l1 stage), v12mse|v13mse:<cond>:<seed> (mse stage, Sec.21 B).
 """
 
 import argparse
@@ -44,6 +45,10 @@ CANDS = ('cp', 'cm', 'c0', 'ref_red', 'ref_green')
 def load(spec, epoch, dev):
     fam, c, s = spec.split(':')
     s = int(s)
+    if fam in ('v12mse', 'v13mse'):   # mse-stage checkpoints (Sec.21 B: FP changes only in the mse stage)
+        m, _ = load_v12(f'{fam[:3]}_s1_{c}_mse', s, epoch, dev)
+        m.motion_masking = False
+        return m, 11
     if fam in ('v12', 'v13'):
         m, _ = load_v12(f'{fam}_s1_{c}_l1_s{s}', s, epoch, dev)
         m.motion_masking = False   # stage-2 protocol: process-1 motion visible (flag 0)
