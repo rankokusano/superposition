@@ -17,7 +17,7 @@ import numpy as np  # noqa
 _PI = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 V = os.path.join(_PI, 'data', 'result', 'v12')
 ATT = [('formal', 'stage2', 'aggregate_primary_s0s1s2s3.json'), ('2b', 'stage2b', 'aggregate_primary_s0s1s2s3.json'),
-       ('shape A', 'stage2a', 'aggregate_primary_interim_s0.json'), ('2c (hidden test)', 'stage2c', None)]
+       ('shape A', 'stage2a', 'aggregate_primary_interim_s0.json'), ('2c', 'stage2c', None)]
 D6 = {'green:sT2_t50': 0.60, 'pref:dT5': 0.42}
 
 
@@ -59,12 +59,12 @@ def main():
         x += 0.6
     for ax, key, ttl in zip(axes, ('green:sT2_t50', 'pref:dT5'), ('① T2 (swap moment)', '② T5 (only the preference differs)')):
         ax.axhline(0, color='k', lw=0.8)
-        ax.set_ylim(-0.32, 0.31)
+        ax.set_ylim(-0.46, 0.31)
         ax.set_ylabel(ttl)
-        ax.text(0.995, 0.02, f'D6 = {D6[key]:+.2f} (off scale)', transform=ax.transAxes, ha='right', fontsize=8)
+        ax.text(0.005, 0.02, f'D6 = {D6[key]:+.2f} (off scale)', transform=ax.transAxes, ha='left', fontsize=8)
         ax.legend(fontsize=7, loc='upper right', bbox_to_anchor=(1.0, 0.9))
     axes[1].set_xticks(xt); axes[1].set_xticklabels(xl, fontsize=7)
-    fig.suptitle('v12 stage 2: the three attempts (late-5 checkpoints ep160-200; n/5 = checkpoints in the passing form)', fontsize=10)
+    fig.suptitle('v12 stage 2: the three attempts (late-5 checkpoints ep160-200; n/5 = checkpoints in the passing form; 2c on the hidden test)', fontsize=10)
     fig.tight_layout()
     os.makedirs(os.path.join(V, 'report', 'figs'), exist_ok=True)
     fig.savefig(os.path.join(V, 'report', 'figs', 's2_attempts.png'), dpi=120)
