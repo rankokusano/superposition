@@ -14,6 +14,9 @@ Usage (inside the container, from my_research/preference_inference; outputs via 
     python analyze/v13/v12run.py d6     <eval_d6_v12.py arguments>
     python analyze/v13/v12run.py track  <track_split_v13.py arguments>
     python analyze/v13/v12run.py h2     --runs random:<s>:200 mixed:<s>:200 --sub ../v13/main/h2_check_s<s>
+    python analyze/v13/v12run.py s2     <s2run.py arguments> --s2prefix v13_s2 --out ../v13/stage2
+                                        (v13_s2_<st>_random_s<s> -> v12_s2_<st>_random_s<s>, reused)
+    python analyze/v13/v12run.py s2fig  <figs_s2extra_v12.py arguments>
     python analyze/v13/v12run.py convergence --stage mse|l1 --exp_fmt v13_s1_{c}_... --sub ../v13/main/convergence
     python analyze/v13/v12run.py pca|pred_images  <the v11 script's arguments, exp_fmt v13_s1_...>
 """
@@ -34,6 +37,8 @@ def map_exp(exp):
                      ('v13ref_s1_mixed_', 'v12_s1_mixed_')):
         if exp.startswith(src):
             return dst + exp[len(src):]
+    if exp.startswith('v13_s2_') and '_random_' in exp:    # stage 2: no-experience runs reused from v12
+        return 'v12_s2_' + exp[len('v13_s2_'):]
     return exp
 
 
@@ -43,10 +48,16 @@ def wrap(fn):
 
 def main():
     which = sys.argv.pop(1)
-    if which in ('trial', 'g5', 'd6', 'track'):
+    if which in ('trial', 'g5', 'd6', 'track', 's2fig'):
         mod = __import__({'trial': 'eval_trial_v12', 'g5': 'eval_g5_v13', 'd6': 'eval_d6_v12',
-                          'track': 'track_split_v13'}[which])
+                          'track': 'track_split_v13', 's2fig': 'figs_s2extra_v12'}[which])
         mod.load_v12 = wrap(mod.load_v12)
+    elif which == 's2':   # stage-2 evaluations: analyze/v12/s2run.py <its arguments>, --s2prefix v13_s2
+        import s2run as mod
+        mod.load_v12 = wrap(mod.load_v12)
+        sys.argv[0] = mod.__file__
+        mod.main()
+        return
     elif which == 'convergence':   # reads the training logs of data/result/<exp>
         import check_convergence_v11 as mod
         mod.load = wrap(mod.load)
