@@ -31,6 +31,10 @@ sys.path.insert(0, os.path.join(_PI, 'analyze', 'v12'))
 sys.path.insert(0, os.path.join(_PI, 'analyze', 'v11'))
 sys.path.insert(0, _PI)
 
+# v13-NS (log Sec.19-20): make the NS model class visible where the v12 scripts look classes up
+from model import model_v12, model_v13  # noqa
+model_v12.SuperpositionNetworkMotionPleasureHoldNS = model_v13.SuperpositionNetworkMotionPleasureHoldNS
+
 
 def map_exp(exp):
     for src, dst in (('v13_s1_random_', 'v12_s1_random_'), ('v13ref_s1_random_', 'v12_s1_random_'),

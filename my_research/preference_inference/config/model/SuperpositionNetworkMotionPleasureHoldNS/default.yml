@@ -1,0 +1,76 @@
+# v13-NS (docs/v13_experiment_log.md Sec.19-20): identical to SuperpositionNetworkMotionPleasureHold/default.yml; the class splits the superposition LSTM into process-1 and process-2 copies.
+# innate pleasure 8 (as v11), motion-hidden flag 1] = 11; process-2 = zeros(11). Motion is hidden
+# in alternating visible/hidden intervals of length 5..15 (visible first, t = 0 visible).
+# Everything else = v11's SuperpositionNetworkPleasure default (= the paper's FeaturePrediction).
+input:
+    vision: &input_vision
+        channel: 3
+        width: 64
+        height: 16
+    motion: &p1_dim 11
+
+pleasure:
+    liked: Red
+    disliked: Green
+    scale: 1.0
+
+vision_encoder_module:
+    input: *input_vision
+    conv:
+        - ch: 16
+          kernel_size: [3, 10]
+          stride: 2
+          padding: 1
+        - ch: 32
+          kernel_size: [3, 10]
+          stride: 2
+          padding: 1
+        - ch: 64
+          kernel_size: [3, 10]
+          stride: 2
+          padding: 1
+    fc:
+        - input: ~
+          output: &enc_out 64
+
+superposition_module:
+    input:
+        motion: *p1_dim
+        vision: *enc_out
+    hidden: &sp_hidden 128
+
+integration_module:
+    fc:
+        each_input: *sp_hidden
+        output: *enc_out
+
+feature_prediction_module:
+    fc:
+        - input: *sp_hidden
+          output: 128
+        - input: 128
+          output: *enc_out
+
+vision_decoder_module:
+    fc:
+        - input: *enc_out
+          output: ~
+    conv:
+        - ch: 32
+          kernel_size: [4, 10]
+          stride: 2
+          padding: 1
+        - ch: 16
+          kernel_size: [4, 12]
+          stride: 2
+          padding: 1
+        - ch: 3
+          kernel_size: [4, 12]
+          stride: 2
+          padding: 1
+
+motion_mask:
+    enabled: true
+    len_min: 5
+    len_max: 15
+    n_steps: 100

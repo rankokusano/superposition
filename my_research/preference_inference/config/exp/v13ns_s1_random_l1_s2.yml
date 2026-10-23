@@ -1,0 +1,36 @@
+# v13-NS stage 1, l1 stage (docs/v13_experiment_log.md Sec.19-20): v12_s1_random_l1_s2.yml with the NS model class and
+# pretrain = v13ns_s1_random_mse (same seed) ep200. Decoder only. Run with --seed 2.
+model:
+    name: SuperpositionNetworkMotionPleasureHoldNS
+    config: default
+    mode: ~
+runner: PredictionFeaturePredictionRunner
+data:
+    name: v11_s1_random
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+    loss_function: l1_loss
+    pretrain:
+        exp_config: v13ns_s1_random_mse
+        seed: 2
+        epoch: 200
+    batch_size: 10
+    max_epochs: 200
+    save_interval: 10
+    test_interval: 10
+    optimizer: AdamW
+    optim_config:
+        default:
+            lr: 0.001
+            weight_decay: 0.01
+        freeze:
+            - superposition_module
+            - vision_encoder_module
+            - integration_module
+            - share_lns
+            - feature_prediction_module
+        per_params:
+            - name: bias
+              args:
+                  weight_decay: 0.0
