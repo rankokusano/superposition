@@ -13,7 +13,9 @@ Per episode and step t = 0..99 (target frame t+1) it stores
   FP : other-side feature-prediction MSE, predict_feature(h2) vs other encoder of x_{t+1} (as t1t3_s2_v11)
 -> data/result/v14/<out>/<tag>_<set>.npz (+ labels). With --keep_pred also the predicted images and the
 A-2 position read from them (v11 Sec.7.53 read-out) for cp / cm (smoke test and example figures).
-Model specs: v12|v13|v11:<cond>:<seed> (l1 stage), v12mse|v13mse:<cond>:<seed> (mse stage, Sec.21 B).
+Model specs: v12|v13|v11:<cond>:<seed> (l1 stage), v12mse|v13mse:<cond>:<seed> (mse stage, Sec.21 B),
+v14c|v14cmse:<mixedpref|randompref>:<seed> (v14-C, Sec.24). --a1_liked green (Sec.25) flips the sign of process-1's
+pleasure (P = Green - Red) at evaluation only (tag suffix _a1green); default Red = unchanged behaviour.
 """
 
 import argparse
@@ -47,6 +49,11 @@ def load(spec, epoch, dev):
     s = int(s)
     if fam in ('v12mse', 'v13mse'):   # mse-stage checkpoints (Sec.21 B: FP changes only in the mse stage)
         m, _ = load_v12(f'{fam[:3]}_s1_{c}_mse', s, epoch, dev)
+        m.motion_masking = False
+        return m, 11
+    if fam in ('v14c', 'v14cmse'):   # v14-C models (signed pleasure; without a1_liked_t the sign is +1 = Red)
+        import s2run_v14  # noqa  (registers the v14 classes for load_v12)
+        m, _ = load_v12(f'v14_s1_{c}_' + ('mse' if fam.endswith('mse') else f'l1_s{s}'), s, epoch, dev)
         m.motion_masking = False
         return m, 11
     if fam in ('v12', 'v13'):
@@ -119,6 +126,7 @@ def main():
     ap.add_argument('--tag_suffix', default='')
     ap.add_argument('--keep_pred', action='store_true')
     ap.add_argument('--device', default='cuda:0')
+    ap.add_argument('--a1_liked', default='red', choices=['red', 'green'])
     args = ap.parse_args()
     out = os.path.join(OUT, args.out)
     os.makedirs(out, exist_ok=True)
@@ -142,7 +150,11 @@ def main():
     for spec in args.models:
         for e in args.epochs:
             model, width = load(spec, e, dev)
-            tag = spec.replace(':', '_') + f'_ep{e}' + args.tag_suffix
+            if args.a1_liked == 'green':   # Sec.25: A-1 likes Green -> P = Green - Red (evaluation only)
+                assert width == 11
+                _orig = model.compute_pleasure
+                model.compute_pleasure = lambda sv, _f=_orig: -_f(sv)
+            tag = spec.replace(':', '_') + f'_ep{e}' + args.tag_suffix + ('_a1green' if args.a1_liked == 'green' else '')
             for k in args.sets:
                 d = D[k]
                 N = P[k]['cp'].shape[0]
