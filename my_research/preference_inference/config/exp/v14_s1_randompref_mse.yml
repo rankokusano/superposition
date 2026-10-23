@@ -1,0 +1,37 @@
+# v14-C no-experience version (docs/v14_experiment_log.md Sec.24): v12_s1_random_mse.yml with the data v14_s1_randompref
+# (v11_s1_random + A-1's per-episode liked colour) and the signed-pleasure model. Run with train_v14.py. Seeds 0-1.
+model:
+  name: SuperpositionNetworkMotionPleasureHoldSigned
+  config: default
+  mode: ~
+runner: PredictionFeaturePredictionRunner
+data:
+  name: v14_s1_randompref
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+  loss_function: mse_loss
+  pretrain: ~
+  pretrain_encoder_from: /work/data/result/exp1_l1_1000/0/model/00200.pth
+  batch_size: 10
+  max_epochs: 200
+  save_interval: 1
+  test_interval: 10
+  optimizer: AdamW
+  optim_config:
+    default:
+      lr: 0.001
+      weight_decay: 0.01
+    freeze:
+      - vision_encoder
+      - share_lns
+    per_params:
+      - name: bias
+        args:
+          weight_decay: 0.0
+      - name: vision_encoder
+        args:
+          weight_decay: 0.001
+      - name: share_lns
+        args:
+          weight_decay: 0.001

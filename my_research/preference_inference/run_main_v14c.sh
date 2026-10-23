@@ -2,13 +2,16 @@
 # v14-C stage 1 (docs/v14_experiment_log.md Sec.5, 10, 13). Per seed one chain: mse 200ep -> l1 200ep (Decoder only,
 # pretrain = same seed's mse ep200), with train_v14.py (signed pleasure, loader with a1_liked_t).
 # Run INSIDE the container from the v11 worktree's my_research/preference_inference:
-#     bash run_main_v14c.sh <seed> <gpu>
+#     bash run_main_v14c.sh <seed> <gpu>              (experienced, v14_s1_mixedpref)
+#     COND=randompref bash run_main_v14c.sh <seed> <gpu>   (no-experience version, Sec.24)
 # GPU5/6 only, unless ALLOW_GPU=<gpu> is set for a GPU Kusano-san approved (log entry first).
 set -u
 cd "$(dirname "$0")"
 seed=$1 gpu=$2
 case $gpu in 5|6) ;; *) [ "${ALLOW_GPU:-}" = "$gpu" ] || { echo "GPU $gpu is not allowed for v14"; exit 1; } ;; esac
-mse=v14_s1_mixedpref_mse l1=v14_s1_mixedpref_l1_s${seed}
+cond=${COND:-mixedpref}
+case $cond in mixedpref|randompref) ;; *) echo "unknown COND $cond"; exit 1 ;; esac
+mse=v14_s1_${cond}_mse l1=v14_s1_${cond}_l1_s${seed}
 test -e data/result/${mse}/${seed} && { echo "data/result/${mse}/${seed} exists; not overwriting"; exit 1; }
 mkdir -p data/result/${mse} data/result/${l1}
 setsid nohup bash -c "
@@ -19,4 +22,4 @@ setsid nohup bash -c "
         --cudnn_deterministic --data_load_memory > data/result/${l1}/train_seed${seed}.log 2>&1
     echo \"exit \$?\" > data/result/${l1}/chain_seed${seed}.done
 " < /dev/null > /dev/null 2>&1 &
-echo "launched v14-C seed ${seed} on GPU ${gpu}"
+echo "launched v14-C ${cond} seed ${seed} on GPU ${gpu}"
