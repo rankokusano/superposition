@@ -1,0 +1,37 @@
+# v15 stage 1 (docs/v15_experiment_log.md Sec.8): the paper's exp1 model (motion only) from scratch on v15_s1_p80_3000 (train 3000);
+# (ii) usual loss + 10 x the same loss on the chroma of the view (exp/runner_v15.py), l1 200 ep (Decoder only), pretrain mse ep200. Same recipe as v12 E1 (v12_e1_paper_random_*). --seed 0.
+model:
+    name: SuperpositionNetworkFeaturePrediction
+    config: default
+    mode: ~
+runner: PredictionFeaturePredictionColourRunner
+data:
+    name: v15_s1_p80_3000
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+    loss_function: l1_loss
+    colour_lambda: 10.0
+    pretrain:
+        exp_config: v15_s1_colour_mse
+        seed: 0
+        epoch: 200
+    batch_size: 10
+    max_epochs: 200
+    save_interval: 10
+    test_interval: 10
+    optimizer: AdamW
+    optim_config:
+        default:
+            lr: 0.001
+            weight_decay: 0.01
+        freeze:
+            - superposition_module
+            - vision_encoder_module
+            - integration_module
+            - share_lns
+            - feature_prediction_module
+        per_params:
+            - name: bias
+              args:
+                  weight_decay: 0.0

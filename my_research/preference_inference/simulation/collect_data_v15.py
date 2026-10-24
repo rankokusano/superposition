@@ -53,6 +53,8 @@ DATA_ROOT = os.path.join(_PI_DIR, 'data')
 CHECK = os.path.join(DATA_ROOT, 'result', 'v15', 'datacheck')
 T = 101
 N_EP = 1000
+N_SEQ = 3300  # layout/gray/cand sequences: train 0..2999 then test 0..299 (prefix of the 1000-episode sets)
+TEST_OFFSET = 3000
 
 RANK_A1 = ('Red', 'Blue', 'Cyan', 'Green')
 CAND = {
@@ -95,7 +97,7 @@ def episode_sequences(key, n_total):
     return layouts, grays, cands
 
 
-def collect(cfg, n_data, split, h5):
+def collect(cfg, n_data, split, h5, start=0):
     stage = cfg['stage']
     env = Env15('random', 'stay' if stage == 1 else 'random')
     env.init()
@@ -106,7 +108,7 @@ def collect(cfg, n_data, split, h5):
     else:
         pol1 = PrefPolicy(env.self_agent, 'random')
         pol2 = PrefPolicy(env.other_agent, 'mixed', p_rule=cfg['p'])
-    layouts, grays, cands = episode_sequences(cfg['key'], N_EP)
+    layouts, grays, cands = episode_sequences(cfg['key'], N_SEQ)
 
     g = h5.create_group(split)
     vs, ms = (n_data, T, 16, 64, 3), (n_data, T, 2)
@@ -123,9 +125,11 @@ def collect(cfg, n_data, split, h5):
         ep[k] = g.create_dataset(k, (n_data, 4), dtype='int8')
 
     for n in range(n_data):
-        lay = layouts[n] if cfg['layout'] == 'seq' else cfg['layout']
-        gray = grays[n] if cfg['gray'] == 'seq' else cfg['gray']
-        cand = None if stage == 1 else (cands[n] if cfg['cand'] == 'mix' else cfg['cand'])
+        ep_n = start + n
+        q = ep_n if split == 'train' else TEST_OFFSET + ep_n
+        lay = layouts[q] if cfg['layout'] == 'seq' else cfg['layout']
+        gray = grays[q] if cfg['gray'] == 'seq' else cfg['gray']
+        cand = None if stage == 1 else (cands[q] if cfg['cand'] == 'mix' else cfg['cand'])
         rank2 = CAND[cand] if cand else None
         if pol2 is not None:
             pol2.set_preference(rank2, rank_values(rank2))
@@ -136,12 +140,12 @@ def collect(cfg, n_data, split, h5):
         ep['a1_rank'][n] = [COLOR_CODE[c] for c in RANK_A1]
         ep['a2_rank'][n] = [COLOR_CODE[c] for c in rank2] if rank2 else -1
 
-        sd = get_seed(f'{cfg["key"]}/{split}/{n}')
+        sd = get_seed(f'{cfg["key"]}/{split}/{ep_n}')
         random.seed(sd)
         np.random.seed(sd)
-        pol1.set_rng(np.random.RandomState(get_seed(f'{cfg["key"]}/{split}/{n}/a1_mix')))
+        pol1.set_rng(np.random.RandomState(get_seed(f'{cfg["key"]}/{split}/{ep_n}/a1_mix')))
         if pol2 is not None:
-            pol2.set_rng(np.random.RandomState(get_seed(f'{cfg["key"]}/{split}/{n}/a2_mix')))
+            pol2.set_rng(np.random.RandomState(get_seed(f'{cfg["key"]}/{split}/{ep_n}/a2_mix')))
         env.reset()
         v1 = rank_values(RANK_A1)
         v2 = rank_values(rank2) if rank2 else None
@@ -177,7 +181,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--dataset', required=True, choices=list(DATASET_CONFIGS))
     ap.add_argument('--save_path', default=None)
-    ap.add_argument('--n', type=int, default=None, help='episodes (smoke tests only)')
+    ap.add_argument('--n', type=int, default=None, help='number of episodes (default: the dataset size)')
+    ap.add_argument('--start', type=int, default=0, help='first episode index (chunked generation)')
+    ap.add_argument('--split', default='train', choices=['train', 'test'])
     args = ap.parse_args()
     cfg = DATASET_CONFIGS[args.dataset]
     n_data = args.n or cfg.get('n', N_EP)
@@ -196,7 +202,8 @@ def main():
                      ('source_codes', '0 random, 1 rule, 2 rule->random fallback, 3 asleep, 4 no target; -1 static A-2'),
                      ('timing', 'views/positions/available before step t; *_eat = eaten after step t (gray from t+1)')):
             f.attrs[k] = v
-        collect(cfg, n_data, 'train', f)
+        f.attrs['episode_start'] = args.start
+        collect(cfg, n_data, args.split, f, start=args.start)
     print('saved', save_path, flush=True)
 
 
