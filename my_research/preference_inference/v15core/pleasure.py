@@ -14,9 +14,9 @@ from .world import COLORS
 RANK_VALUES = (1.0, 0.5, 0.0, -1.0)  # 1st .. 4th
 
 
-def rank_values(rank):
+def rank_values(rank, values=RANK_VALUES):
     """rank: tuple of colours, most liked first -> {colour: value}."""
-    return {c: RANK_VALUES[i] for i, c in enumerate(rank)}
+    return {c: values[i] for i, c in enumerate(rank)}
 
 
 def pleasure_np(v, values):

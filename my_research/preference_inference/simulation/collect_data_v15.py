@@ -45,13 +45,13 @@ os.environ['MESA_GL_VERSION_OVERRIDE'] = '3.3'
 
 from sim_v10 import layout  # noqa
 from v15core.env import Env15  # noqa
-from v15core.pleasure import pleasure_np, rank_values  # noqa
+from v15core.pleasure import RANK_VALUES, pleasure_np, rank_values  # noqa
 from v15core.rule_agent import PrefPolicy  # noqa
 from v15core.world import COLOR_CODE, COLORS  # noqa
 
 DATA_ROOT = os.path.join(_PI_DIR, 'data')
 CHECK = os.path.join(DATA_ROOT, 'result', 'v15', 'datacheck')
-T = 101
+T = T_DEFAULT = 101
 N_EP = 1000
 N_SEQ = 3300  # layout/gray/cand sequences: train 0..2999 then test 0..299 (prefix of the 1000-episode sets)
 TEST_OFFSET = 3000
@@ -75,6 +75,15 @@ for _p in (80, 90, 50):
 for _p in (80, 50):
     DATASET_CONFIGS[f'v15_s2_c3x_p{_p}'] = dict(stage=2, key='v15_s2c3', p=_p / 100, cand='X', layout='seq', gray='Green')
     DATASET_CONFIGS[f'v15_s2_c3xp_p{_p}'] = dict(stage=2, key='v15_s2c3', p=_p / 100, cand='Xp', layout='seq', gray='Green')
+# stage-2 design proposals (docs/v15_experiment_log.md Sec.9; data only, 300 episodes, key v15_p2):
+# (i) three positive colours (rank values 1, 0.5, 0.25, -1), gray every episode ('seq') or in half of them ('half');
+# (ii) lower A-2 rule probability p; one longer-episode variant (T = 151).
+for _g in ('seq', 'half'):
+    DATASET_CONFIGS[f'v15p_i_gray{_g}_p80'] = dict(stage=2, key='v15_p2', p=0.8, cand='mix', layout='seq', gray=_g,
+                                                   rank_values=(1.0, 0.5, 0.25, -1.0), n=300)
+for _p in (30, 40, 50, 60, 80):
+    DATASET_CONFIGS[f'v15p_ii_p{_p}'] = dict(stage=2, key='v15_p2', p=_p / 100, cand='mix', layout='seq', gray='seq', n=300)
+DATASET_CONFIGS['v15p_ii_p50_T151'] = dict(stage=2, key='v15_p2', p=0.5, cand='mix', layout='seq', gray='seq', n=300, T=151)
 DATASET_CONFIGS['v15_s2_genx_p80'] = dict(stage=2, key='v15_s2gen', p=0.8, cand='X', layout=layout.ORIGINAL, gray='Green')
 DATASET_CONFIGS['v15_s2_geny_p80'] = dict(stage=2, key='v15_s2gen', p=0.8, cand='Y', layout=layout.SWAP_RG, gray='Red')
 for _k in list(DATASET_CONFIGS):
@@ -99,16 +108,22 @@ def episode_sequences(key, n_total):
 
 def collect(cfg, n_data, split, h5, start=0):
     stage = cfg['stage']
+    T = cfg.get('T', T_DEFAULT)
+    vals = cfg.get('rank_values', RANK_VALUES)
+    rank_values_ = lambda r: rank_values(r, vals)  # noqa: E731
     env = Env15('random', 'stay' if stage == 1 else 'random')
     env.init()
     world = env.world
     if stage == 1:
-        pol1 = PrefPolicy(env.self_agent, 'mixed', p_rule=cfg['p'], rank=RANK_A1, values=rank_values(RANK_A1))
+        pol1 = PrefPolicy(env.self_agent, 'mixed', p_rule=cfg['p'], rank=RANK_A1, values=rank_values_(RANK_A1))
         pol2 = None
     else:
         pol1 = PrefPolicy(env.self_agent, 'random')
         pol2 = PrefPolicy(env.other_agent, 'mixed', p_rule=cfg['p'])
     layouts, grays, cands = episode_sequences(cfg['key'], N_SEQ)
+    # 'half': whether the episode has no gray at all, from its own sequence (the gray/layout draws are unchanged)
+    rng_h = np.random.RandomState(get_seed(cfg['key'] + '/grayhalf'))
+    gray_off = [rng_h.rand() < 0.5 for _ in range(N_SEQ)]
 
     g = h5.create_group(split)
     vs, ms = (n_data, T, 16, 64, 3), (n_data, T, 2)
@@ -128,14 +143,16 @@ def collect(cfg, n_data, split, h5, start=0):
         ep_n = start + n
         q = ep_n if split == 'train' else TEST_OFFSET + ep_n
         lay = layouts[q] if cfg['layout'] == 'seq' else cfg['layout']
-        gray = grays[q] if cfg['gray'] == 'seq' else cfg['gray']
+        gray = grays[q] if cfg['gray'] in ('seq', 'half') else cfg['gray']
+        if cfg['gray'] == 'half' and gray_off[q]:
+            gray = None
         cand = None if stage == 1 else (cands[q] if cfg['cand'] == 'mix' else cfg['cand'])
         rank2 = CAND[cand] if cand else None
         if pol2 is not None:
-            pol2.set_preference(rank2, rank_values(rank2))
+            pol2.set_preference(rank2, rank_values_(rank2))
         world.set_episode(lay, gray)
         ep['layout'][n] = layout.LAYOUT_CODE[lay]
-        ep['gray0'][n] = COLOR_CODE[gray]
+        ep['gray0'][n] = COLOR_CODE[gray] if gray else -1
         ep['a2_cand'][n] = CAND_CODE[cand] if cand else -1
         ep['a1_rank'][n] = [COLOR_CODE[c] for c in RANK_A1]
         ep['a2_rank'][n] = [COLOR_CODE[c] for c in rank2] if rank2 else -1
@@ -147,8 +164,8 @@ def collect(cfg, n_data, split, h5, start=0):
         if pol2 is not None:
             pol2.set_rng(np.random.RandomState(get_seed(f'{cfg["key"]}/{split}/{ep_n}/a2_mix')))
         env.reset()
-        v1 = rank_values(RANK_A1)
-        v2 = rank_values(rank2) if rank2 else None
+        v1 = rank_values_(RANK_A1)
+        v2 = rank_values_(rank2) if rank2 else None
 
         buf = {k: [] for k in ds}
         for t in range(T):
@@ -195,7 +212,7 @@ def main():
     with h5py.File(save_path, 'w') as f:
         for k, v in (('dataset', args.dataset), ('seed_key', cfg['key']), ('stage', cfg['stage']),
                      ('p_rule', cfg['p']), ('cand', str(cfg['cand'])), ('layout_mode', str(cfg['layout'])),
-                     ('gray_mode', str(cfg['gray'])), ('r_eat', 1.5), ('rank_values', '1, 0.5, 0, -1'),
+                     ('gray_mode', str(cfg['gray'])), ('r_eat', 1.5), ('rank_values', ', '.join(str(v) for v in cfg.get('rank_values', RANK_VALUES))), ('T', cfg.get('T', T_DEFAULT)),
                      ('a1_rank', ','.join(RANK_A1)), ('simulator', 'sim_v10 + v15core.World15'),
                      ('color_codes', '0 Red, 1 Green, 2 Blue, 3 Cyan'),
                      ('cand_codes', 'X 0 (R>B>C>G), Y 1 (G>C>B>R), Xp 2 (R>C>B>G)'),
