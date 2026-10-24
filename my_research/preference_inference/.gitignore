@@ -35,3 +35,8 @@ data/result/v11/**/*.pth
 data/result/v11_*/*/model/
 data/result/v11_*/*/test/
 data/result/v11_*/*/save/
+
+# v15: never track binary outputs (data/data/ is already ignored above)
+data/result/v15/**/*.h5
+data/result/v15/**/*.npz
+data/result/v15/**/*.pth
