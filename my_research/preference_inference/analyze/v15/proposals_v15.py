@@ -29,7 +29,7 @@ sys.path.insert(0, _PI_DIR)
 from analyze.v15 import stage0_v15 as S  # noqa
 
 OUT = os.path.join(_PI_DIR, 'data', 'result', 'v15', 'proposals')
-SETS = ['v15p_i_grayseq_p80', 'v15p_i_grayhalf_p80'] + [f'v15p_ii_p{p}' for p in (30, 40, 50, 60, 80)] + \
+SETS = ['v15p_half_p80', 'v15p_i_grayseq_p80', 'v15p_i_grayhalf_p80'] + [f'v15p_ii_p{p}' for p in (30, 40, 50, 60, 80)] + \
        ['v15p_ii_p50_T151', 'v15_s2_c2_p50', 'v15_s2_c2_p80']
 KAPPA = None  # read from the stage-0 summary
 

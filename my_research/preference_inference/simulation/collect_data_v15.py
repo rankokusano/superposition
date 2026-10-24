@@ -83,6 +83,8 @@ for _g in ('seq', 'half'):
                                                    rank_values=(1.0, 0.5, 0.25, -1.0), n=300)
 for _p in (30, 40, 50, 60, 80):
     DATASET_CONFIGS[f'v15p_ii_p{_p}'] = dict(stage=2, key='v15_p2', p=_p / 100, cand='mix', layout='seq', gray='seq', n=300)
+# (Sec.10) the current design (two positive colours, p 0.8) with gray in half of the episodes
+DATASET_CONFIGS['v15p_half_p80'] = dict(stage=2, key='v15_p2', p=0.8, cand='mix', layout='seq', gray='half', n=300)
 DATASET_CONFIGS['v15p_ii_p50_T151'] = dict(stage=2, key='v15_p2', p=0.5, cand='mix', layout='seq', gray='seq', n=300, T=151)
 DATASET_CONFIGS['v15_s2_genx_p80'] = dict(stage=2, key='v15_s2gen', p=0.8, cand='X', layout=layout.ORIGINAL, gray='Green')
 DATASET_CONFIGS['v15_s2_geny_p80'] = dict(stage=2, key='v15_s2gen', p=0.8, cand='Y', layout=layout.SWAP_RG, gray='Red')
