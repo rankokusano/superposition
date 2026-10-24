@@ -1,11 +1,11 @@
-# v15 stage 1 Fig.5 Decoder (docs/v15_experiment_log.md Sec.8.3): v12_e1_fig5_mse100.yml with data v15_s1_p80 (1000 episodes) and pretrain = v15_s1_plain_mse seed 0 ep150 (encoders frozen). --seed 0.
+# v15 stage 1 Fig.5 Decoder (docs/v15_experiment_log.md Sec.8.3): v12_e1_fig5_mse100.yml with data v15_s1_p80_half_first1000 (1000 episodes; log Sec.12) and pretrain = v15_s1_plain_mse seed 0 ep150 (encoders frozen). --seed 0.
 model:
     name: Autoencoder
     config: default
     mode: ~
 runner: AutoencoderRunner
 data:
-    name: v15_s1_p80
+    name: v15_s1_p80_half_first1000
 load_state_dict_strict: False
 train:
     loss_function: l1_loss

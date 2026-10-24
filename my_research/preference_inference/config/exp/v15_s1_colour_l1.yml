@@ -1,4 +1,4 @@
-# v15 stage 1 (docs/v15_experiment_log.md Sec.8): the paper's exp1 model (motion only) from scratch on v15_s1_p80_3000 (train 3000);
+# v15 stage 1 (docs/v15_experiment_log.md Sec.8): the paper's exp1 model (motion only) from scratch on v15_s1_p80_half_3000 (train 3000, gray in half of the episodes; log Sec.12);
 # (ii) usual loss + 10 x the same loss on the chroma of the view (exp/runner_v15.py), l1 200 ep (Decoder only), pretrain mse ep200. Same recipe as v12 E1 (v12_e1_paper_random_*). --seed 0.
 model:
     name: SuperpositionNetworkFeaturePrediction
@@ -6,7 +6,7 @@ model:
     mode: ~
 runner: PredictionFeaturePredictionColourRunner
 data:
-    name: v15_s1_p80_3000
+    name: v15_s1_p80_half_3000
 load_state_dict_strict: False
 p_mask_vision: 0.99
 train:

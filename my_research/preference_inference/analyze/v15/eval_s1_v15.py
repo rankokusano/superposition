@@ -35,7 +35,7 @@ from enc_colour_v12 import acc_cv  # noqa
 from eval_trial_v12 import alignment  # noqa
 from fig5_colour_check_v12 import rec, sep  # noqa
 
-DATA = os.path.join(_PI_DIR, 'data', 'data', 'v15_s1_p80_3000', 'data.h5')
+DATA = os.path.join(_PI_DIR, 'data', 'data', 'v15_s1_p80_half_3000', 'data.h5')  # log Sec.12 (gray in half of the episodes)
 OUT = os.path.join(_PI_DIR, 'data', 'result', 'v15', 'stage1')
 TS = np.arange(0, 100, 5)
 # colour code (0 Red, 1 Green, 2 Blue, 3 Cyan) -> corner, per layout code
