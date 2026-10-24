@@ -1,0 +1,31 @@
+# v15 stage 1 Fig.5 Decoder (docs/v15_experiment_log.md Sec.8.3): v12_e1_fig5_mse100.yml with data v15_s1_p80 (1000 episodes) and pretrain = v15_s1_colour_mse seed 0 ep100 (encoders frozen). --seed 0.
+model:
+    name: Autoencoder
+    config: default
+    mode: ~
+runner: AutoencoderRunner
+data:
+    name: v15_s1_p80
+load_state_dict_strict: False
+train:
+    loss_function: l1_loss
+    pretrain:
+        exp_config: v15_s1_colour_mse
+        seed: 0
+        epoch: 100
+    batch_size: 100
+    max_epochs: 100
+    save_interval: 1
+    test_interval: 100
+    optimizer: AdamW
+    optim_config:
+        default:
+            lr: 0.001
+            weight_decay: 3.
+        freeze:
+            - vision_encoder
+            - share_lns
+        per_params:
+            - name: bias
+              args:
+                  weight_decay: 0.0
