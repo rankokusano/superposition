@@ -71,6 +71,8 @@ def main():
         if which == 'h2':   # h2_check_v11 reads 'v11_s1_<c>_mse'
             import h2_check_v11 as mod
             names = {'v11_s1_random_mse': 'v12_s1_random_mse', 'v11_s1_mixed_mse': 'v13_s1_mixed_mse'}
+            if os.environ.get('V13_NS') == '1':   # v13-NS pairs (log Sec.19-21)
+                names = {'v11_s1_random_mse': 'v13ns_s1_random_mse', 'v11_s1_mixed_mse': 'v13ns_s1_mixed_mse'}
             mod.load_model = lambda exp, *a, **k: v11fig.load_model(names[exp], *a, **k)
         else:
             mod = __import__({'pca': 'pca_v11', 'pred_images': 'pred_images_v11'}[which])

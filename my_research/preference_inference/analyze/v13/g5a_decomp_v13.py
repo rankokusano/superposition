@@ -84,8 +84,17 @@ def main():
     ap.add_argument('--epochs', type=int, nargs='+', default=[160, 170, 180, 190, 200])
     ap.add_argument('--conds', nargs='+', default=list(EXPS))
     ap.add_argument('--check', action='store_true')
+    ap.add_argument('--ns', action='store_true', help='v13-NS pairs (log Sec.19-21): random / mixed80 = v13ns runs')
     args = ap.parse_args()
-    out = os.path.join(RES, 'v13', 'post', 'g5a_decomp', f's{args.seed}')
+    exps = dict(EXPS)
+    sub = 'g5a_decomp'
+    if args.ns:
+        from model import model_v12, model_v13
+        model_v12.SuperpositionNetworkMotionPleasureHoldNS = model_v13.SuperpositionNetworkMotionPleasureHoldNS
+        exps = {'random': 'v13ns_s1_random_l1_s{s}', 'mixed80': 'v13ns_s1_mixed_l1_s{s}'}
+        sub = 'g5a_decomp_ns'
+        args.conds = [c for c in args.conds if c in exps]
+    out = os.path.join(RES, 'v13', 'post', sub, f's{args.seed}')
     os.makedirs(out, exist_ok=True)
     dev = torch.device('cuda:0')
     torch.backends.cudnn.deterministic = True
@@ -93,7 +102,7 @@ def main():
     PA2 = {k: true_pleasure(k, D[k]) for k in D}
     g = h5py.File(D['green']['path'], 'r')['test']
     alpha, beta = calibrate(g['self_vision'][:, :100:5], D['green']['self_position'][:, :100:5], D['green']['other_position'][:, :100:5])
-    ref_f = os.path.join(RES, 'v13', 'post', 'g5a_decomp', 'ref_true_view.npz')
+    ref_f = os.path.join(RES, 'v13', 'post', sub, 'ref_true_view.npz')
     if not os.path.exists(ref_f):
         r = {}
         for k, d in D.items():
@@ -103,7 +112,7 @@ def main():
         print('ref', {q: round(float(np.nanmean(v)), 3) for q, v in r.items()}, flush=True)
     for e in args.epochs:
         for c in args.conds:
-            m, _ = load_v12(EXPS[c].format(s=args.seed), args.seed, e, dev)
+            m, _ = load_v12(exps[c].format(s=args.seed), args.seed, e, dev)
             m.motion_masking = False     # stage-2 protocol, as in the G5a gate
             r = {}
             for k in D:
