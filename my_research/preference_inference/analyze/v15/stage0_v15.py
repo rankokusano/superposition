@@ -446,14 +446,25 @@ def analyse_generated(dx, dy, d_fit, kappa, cands=('X', 'Y'), corner_check=True,
     return out
 
 
+def corner_state(d, n, t):
+    """rendered state of the four corners (TL, BL, BR, TR) at frame t: colour code or 4 (gray)."""
+    st = {}
+    for c in range(4):
+        st[_COL_CORNER[d['layout'][n]][c]] = c if d['available'][n, t, c] else 4
+    return tuple(st[k] for k in ('TL', 'BL', 'BR', 'TR'))
+
+
 def natural_pairs(d, models, kappa):
-    """Descriptive: eat events at left corners (red/green eaten) of different colour at the same corner."""
+    """Descriptive: eat events at left corners (red/green eaten) of different colour at the same corner.
+    Split (requested 2026-10-24, outside the pre-registration): (i) the corner states rendered at the eat
+    frame differ (layout readable from the remaining colours), (ii) they are identical (memory needed)."""
     ev = [(n, te, c) for n, te, c in events(d, K_MAIN) if c in (0, 1)]
     P = np.array([d['pos'][n, te] for n, te, _ in ev])
     D = np.array([unit(d['pos'][n, te] - d['pos'][n, te - K_MAIN]) for n, te, _ in ev])
     C = np.array([c for _, _, c in ev])
     TG = np.array([d['tgt'][n, te] for n, te, _ in ev])
     N = np.array([n for n, _, _ in ev])
+    CS = [corner_state(d, n, te) for n, te, _ in ev]
     out = {}
     for dd in (1, 2):
         for th in (15, 30):
@@ -464,22 +475,34 @@ def natural_pairs(d, models, kappa):
                         continue
                     if np.linalg.norm(P[i] - P[j]) <= dd and ang(D[i], D[j]) <= th:
                         pairs.append((i, j, np.linalg.norm(P[i] - P[j])))
-            used, match = set(), []
-            for i, j, _ in sorted(pairs, key=lambda x: x[2]):
-                if i not in used and j not in used:
-                    used |= {i, j}
-                    match.append((i, j))
-            out[f'd{dd}_th{th}'] = {'n_pairs': len(pairs), 'n_episodes': len(set(N[[p[0] for p in pairs]]) |
-                                                                                 set(N[[p[1] for p in pairs]])) if pairs else 0,
-                                    'n_matched': len(match), 'match': [(int(i), int(j)) for i, j in match]}
-    # predictions on matched pairs of d=2, th=30
-    m = out['d2_th30']['match']
-    rows = predict_events(d, [ev[i] for p in m for i in p], K_MAIN, models, kappa=kappa)
-    for r, pid in zip(rows, [k for k, p in enumerate(m) for _ in p]):
-        r['pair'] = pid
-    out['d2_th30_pred'] = {'summary': summarize(rows),
-                           'frac_same_a': float(np.mean([rows[2 * i]['pred_a'] == rows[2 * i + 1]['pred_a'] for i in range(len(m))])) if m else None,
-                           'frac_same_b0': float(np.mean([rows[2 * i]['pred_b0'] == rows[2 * i + 1]['pred_b0'] for i in range(len(m))])) if m else None}
+            res = {}
+            for cat in ('all', 'i', 'ii'):
+                pc = [p for p in pairs if cat == 'all' or (cat == 'ii') == (CS[p[0]] == CS[p[1]])]
+                used, match = set(), []
+                for i, j, _ in sorted(pc, key=lambda x: x[2]):
+                    if i not in used and j not in used:
+                        used |= {i, j}
+                        match.append((int(i), int(j)))
+                eps = set(N[[p[0] for p in pc]]) | set(N[[p[1] for p in pc]]) if pc else set()
+                res[cat] = {'n_pairs': len(pc), 'n_episodes': len(eps), 'n_matched': len(match), 'match': match}
+            out[f'd{dd}_th{th}'] = res
+    # predictions on the matched pairs (d = 2, theta = 30), per category
+    for cat in ('all', 'i', 'ii'):
+        m = out['d2_th30'][cat]['match']
+        if not m:
+            out[f'd2_th30_pred_{cat}'] = None
+            continue
+        rows = predict_events(d, [ev[i] for p in m for i in p], K_MAIN, models, kappa=kappa)
+        for r, pid in zip(rows, [k for k, p in enumerate(m) for _ in p]):
+            r['pair'] = pid
+        has = [r for r in rows if r['truth'] >= 0]
+        o = {'summary': summarize(rows),
+             'frac_same_a': float(np.mean([rows[2 * i]['pred_a'] == rows[2 * i + 1]['pred_a'] for i in range(len(m))])),
+             'frac_same_b0': float(np.mean([rows[2 * i]['pred_b0'] == rows[2 * i + 1]['pred_b0'] for i in range(len(m))]))}
+        if len(m) >= 2:
+            for b in ('a', 'b0', 'b1', 'b2'):
+                o[f'd_minus_{b}'] = boot_diff(has, 'd', b, unit_key='pair')
+        out[f'd2_th30_pred_{cat}'] = o
     out['events'] = [(int(n), int(te), int(c)) for n, te, c in ev]
     return out
 
