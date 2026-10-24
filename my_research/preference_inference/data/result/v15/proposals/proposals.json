@@ -1,5 +1,70 @@
 {
  "kappa": 24.057324218750047,
+ "v15p_half_p80": {
+  "T": 101,
+  "values": [
+   1.0,
+   0.5,
+   0.0,
+   -1.0
+  ],
+  "p": 0.8,
+  "n_episodes": 300,
+  "gray_none_frac": 0.5,
+  "eat_ge1": 0.9966666666666667,
+  "eat_mean": 1.7066666666666668,
+  "eat_hist": [
+   1,
+   86,
+   213,
+   0
+  ],
+  "informative_per_episode_mean": 0.7033333333333334,
+  "informative_hist": [
+   89,
+   211,
+   0
+  ],
+  "informative_ge2_frac": 0.0,
+  "t_inf1_median": 22.0,
+  "t_inf2_median": null,
+  "inf1": {
+   "n": 67,
+   "acc_a": 0.2835820895522388,
+   "acc_b0": 0.43283582089552236,
+   "acc_d": 1.0,
+   "acc_ds": 1.0,
+   "d_minus_a": {
+    "diff": 0.7164179104477612,
+    "ci95": [
+     0.5970149253731343,
+     0.8208955223880597
+    ]
+   },
+   "d_minus_b0": {
+    "diff": 0.5671641791044776,
+    "ci95": [
+     0.4473880597014926,
+     0.6865671641791045
+    ]
+   }
+  },
+  "inf2": null,
+  "identify": {
+   "main": {
+    "frac_identified_before_first_eat": 1.0,
+    "median_awake_steps": 1.0,
+    "mean_awake_steps": 1.38,
+    "p90_awake_steps": 2.0
+   },
+   "soft": {
+    "frac_identified_before_first_eat": 1.0,
+    "median_awake_steps": 1.0,
+    "mean_awake_steps": 1.85,
+    "p90_awake_steps": 3.0
+   }
+  }
+ },
  "v15p_i_grayseq_p80": {
   "T": 101,
   "values": [
