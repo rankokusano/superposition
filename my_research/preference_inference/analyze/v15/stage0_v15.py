@@ -320,6 +320,8 @@ def summarize(rows, tags=('a', 'b0', 'b1', 'b2', 'c', 'd', 'ds')):
             out[f'acc_{t}'] = float(np.mean([r[f'acc_{t}'] for r in has]))
             e = [r[f'angerr_{t}'] for r in rows if r.get(f'angerr_{t}') is not None]
             out[f'angerr_median_{t}'] = float(np.median(e)) if e else None
+            e = [r[f'angerr_{t}'] for r in has if r.get(f'angerr_{t}') is not None]
+            out[f'angerr_median_tgt_{t}'] = float(np.median(e)) if e else None
     return out
 
 
@@ -365,7 +367,7 @@ def analyse_prediction(d, d_fit, label, kappa):
         if not ci:
             continue
         fe = np.where(d['eat'][n] >= 0)[0]
-        stop = fe[0] + 1 if len(fe) else T - 1
+        stop = min(fe[0] + 1, T - 1) if len(fe) else T - 1
         awake = 0
         for t in range(1, stop + 1):
             if np.linalg.norm(d['mot'][n, t - 1]) > 1e-9:
@@ -400,7 +402,7 @@ def analyse_generated(dx, dy, d_fit, kappa, cands=('X', 'Y'), corner_check=True,
         if tx is None or ty is None:
             continue
         n_both += 1
-        if tx != ty:
+        if tx != ty or tx > T - 1:  # eaten after the last step: no frame t_e to compare
             continue
         te = tx
         same = same_upto(dx, dy, n, te)
@@ -419,7 +421,7 @@ def analyse_generated(dx, dy, d_fit, kappa, cands=('X', 'Y'), corner_check=True,
         n_frame_same += int(fs)
         dv = np.where(np.any(dx['opos32'][n] != dy['opos32'][n], -1))[0]
         diverge.append(int(dv[0]) - te if len(dv) else None)
-        if te + K_MAIN > T - 1:
+        if te - K_MAIN < 0 or te + K_MAIN > T - 1:  # Sec.4.2 event definition (t_e >= k, t_e + k <= 100)
             continue
         n_usable += 1
         rx = predict_events(dx, [(n, te, cx)], K_MAIN, models, cands=cands, kappa=kappa)[0]
@@ -454,11 +456,11 @@ def corner_state(d, n, t):
     return tuple(st[k] for k in ('TL', 'BL', 'BR', 'TR'))
 
 
-def natural_pairs(d, models, kappa):
+def natural_pairs(d, models, kappa, eps=None):
     """Descriptive: eat events at left corners (red/green eaten) of different colour at the same corner.
     Split (requested 2026-10-24, outside the pre-registration): (i) the corner states rendered at the eat
     frame differ (layout readable from the remaining colours), (ii) they are identical (memory needed)."""
-    ev = [(n, te, c) for n, te, c in events(d, K_MAIN) if c in (0, 1)]
+    ev = [(n, te, c) for n, te, c in events(d, K_MAIN) if c in (0, 1) and (eps is None or n in eps)]
     P = np.array([d['pos'][n, te] for n, te, _ in ev])
     D = np.array([unit(d['pos'][n, te] - d['pos'][n, te - K_MAIN]) for n, te, _ in ev])
     C = np.array([c for _, _, c in ev])
@@ -567,6 +569,8 @@ def main():
         print('control3', p, res[f'control3_p{p}']['n_usable'], flush=True)
     models = {lv: fit_b(c2, set(range(N_FIT)), K_MAIN, lv) for lv in (0, 1, 2)}
     res['natural_c2_p80'] = natural_pairs(c2, models, kappa)
+    # predictions are only valid out of sample: (b) was fitted on episodes 0..N_FIT-1
+    res['natural_c2_p80_eval'] = natural_pairs(c2, models, kappa, eps=set(range(N_FIT, len(c2['eat']))))
     with open(os.path.join(OUT, 'stage0_full.pkl'), 'wb') as f:
         pickle.dump(res, f)
     with open(os.path.join(OUT, 'stage0_summary.json'), 'w') as f:

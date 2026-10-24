@@ -1,0 +1,15 @@
+v15_s1_p80: full 1000 episodes, two generations identical: True 
+v15_s1_p50: check a == b: True ; check a == first 20 of full: True 
+v15_s2_c1_p80: check a == b: True ; check a == first 20 of full: True 
+v15_s2_c2_p80: full 1000 episodes, two generations identical: True 
+v15_s2_c1_p90: check a == b: True ; check a == first 20 of full: True 
+v15_s2_c2_p90: check a == b: True ; check a == first 20 of full: True 
+v15_s2_c1_p50: check a == b: True ; check a == first 20 of full: True 
+v15_s2_c2_p50: check a == b: True ; check a == first 20 of full: True 
+v15_s2_c3x_p80: check a == b: True ; check a == first 20 of full: True 
+v15_s2_c3xp_p80: check a == b: True ; check a == first 20 of full: True 
+v15_s2_c3x_p50: check a == b: True ; check a == first 20 of full: True 
+v15_s2_c3xp_p50: check a == b: True ; check a == first 20 of full: True 
+v15_s2_genx_p80: check a == b: True ; check a == first 20 of full: True 
+v15_s2_geny_p80: check a == b: True ; check a == first 20 of full: True 
+ALL IDENTICAL

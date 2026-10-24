@@ -81,7 +81,7 @@ def fig_pred(R):
     for j, k in enumerate(S.KS):
         for i, t in enumerate(PRED):
             acc = [R[n]['pred'][k].get(f'acc_{t}', np.nan) for n, _ in sets]
-            ang = [R[n]['pred'][k].get(f'angerr_median_{t}', np.nan) for n, _ in sets]
+            ang = [R[n]['pred'][k].get(f'angerr_median_tgt_{t}', np.nan) for n, _ in sets]
             x = np.arange(len(sets)) + (i - 3) * w
             ax[0, j].bar(x, acc, w * 0.88, color=PRED_COL[t], label=PRED_LABEL[t])
             ax[1, j].bar(x, [np.nan if v is None else v for v in ang], w * 0.88, color=PRED_COL[t])
@@ -90,7 +90,7 @@ def fig_pred(R):
             ax[r, j].set_xticklabels([l for _, l in sets], fontsize=7, rotation=15)
             style(ax[r, j])
         ax[0, j].set_title(f'k = {k}' + (' (main)' if k == S.K_MAIN else ''), fontsize=9)
-    ax[0, 0].set_ylabel('next-target accuracy'); ax[1, 0].set_ylabel('median angle error (deg)')
+    ax[0, 0].set_ylabel('next-target accuracy'); ax[1, 0].set_ylabel('median angle error (deg),\nevents with a next target')
     ax[0, 0].legend(fontsize=7, frameon=False, ncol=2)
     fig.suptitle('5.3 Predicting the move right after eating (evaluation episodes 700-999)', fontsize=10)
     fig.tight_layout(); fig.savefig(os.path.join(FIG, 'f3_predictors.png'), dpi=120); plt.close(fig)
