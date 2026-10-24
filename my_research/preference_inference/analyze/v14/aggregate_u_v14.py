@@ -28,14 +28,15 @@ def main():
     ap.add_argument('--name', default='aggregate_u')
     ap.add_argument('--set', default='pref')
     ap.add_argument('--exp_cond', default='mixed', help="experienced condition tag ('mixed80' = v13, Sec.30)")
+    ap.add_argument('--partner_cond', default='random', help="partner tag ('mixed' = v12 experienced, Sec.36 main comparison)")
     a = ap.parse_args()
     d = os.path.join(BASE, a.sub)
     res = {}
     for s in a.seeds:
         pts = {}
         for e in EPOCHS:
-            ze, zr = np.load(os.path.join(d, f'u_{a.exp_cond}_s{s}_ep{e}.npz')), np.load(os.path.join(d, f'u_random_s{s}_ep{e}.npz'))
-            je, jr = (json.load(open(os.path.join(d, f'u_{c}_s{s}_ep{e}.json')))[a.set] for c in (a.exp_cond, 'random'))
+            ze, zr = np.load(os.path.join(d, f'u_{a.exp_cond}_s{s}_ep{e}.npz')), np.load(os.path.join(d, f'u_{a.partner_cond}_s{s}_ep{e}.npz'))
+            je, jr = (json.load(open(os.path.join(d, f'u_{c}_s{s}_ep{e}.json')))[a.set] for c in (a.exp_cond, a.partner_cond))
             cl = ze[f'{a.set}_cell']
             ae, ar = ze[f'{a.set}_agree_ep'], zr[f'{a.set}_agree_ep']
             B = boot(cl, len(cl))

@@ -14,7 +14,7 @@ Per episode and step t = 0..99 (target frame t+1) it stores
 -> data/result/v14/<out>/<tag>_<set>.npz (+ labels). With --keep_pred also the predicted images and the
 A-2 position read from them (v11 Sec.7.53 read-out) for cp / cm (smoke test and example figures).
 Model specs: v12|v13|v11:<cond>:<seed> (l1 stage), v12mse|v13mse:<cond>:<seed> (mse stage, Sec.21 B),
-v14c|v14cmse:<mixedpref|randompref>:<seed> (v14-C, Sec.24). --a1_liked green (Sec.25) flips the sign of process-1's
+v14c|v14cmse:<mixedpref|randompref>:<seed> (v14-C, Sec.24), v13ns|v13nsmse:<cond>:<seed> (v13-NS, Sec.35). --a1_liked green (Sec.25) flips the sign of process-1's
 pleasure (P = Green - Red) at evaluation only (tag suffix _a1green); default Red = unchanged behaviour.
 """
 
@@ -34,6 +34,7 @@ sys.path.insert(0, os.path.join(_PI, 'analyze', 'v12'))
 sys.path.insert(0, os.path.join(_PI, 'analyze', 'v11'))
 sys.path.insert(0, _PI)
 from eval_trial_v12 import RES, load_v12  # noqa
+from model import model_v12  # noqa
 import eval_trial_v11  # noqa
 from eval_s2_v11 import load_set  # noqa
 from p2test_v11 import calibrate, read_a2  # noqa
@@ -49,6 +50,13 @@ def load(spec, epoch, dev):
     s = int(s)
     if fam in ('v12mse', 'v13mse'):   # mse-stage checkpoints (Sec.21 B: FP changes only in the mse stage)
         m, _ = load_v12(f'{fam[:3]}_s1_{c}_mse', s, epoch, dev)
+        m.motion_masking = False
+        return m, 11
+    if fam in ('v13ns', 'v13nsmse'):   # v13-NS (no self/other sharing; v13 log Sec.19-21), read only (Sec.35 B)
+        from model import model_v13
+        if not hasattr(model_v12, 'SuperpositionNetworkMotionPleasureHoldNS'):
+            model_v12.SuperpositionNetworkMotionPleasureHoldNS = model_v13.SuperpositionNetworkMotionPleasureHoldNS
+        m, _ = load_v12(f'v13ns_s1_{c}_' + ('mse' if fam.endswith('mse') else f'l1_s{s}'), s, epoch, dev)
         m.motion_masking = False
         return m, 11
     if fam in ('v14c', 'v14cmse'):   # v14-C models (signed pleasure; without a1_liked_t the sign is +1 = Red)

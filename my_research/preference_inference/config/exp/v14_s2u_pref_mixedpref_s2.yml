@@ -1,0 +1,35 @@
+# v14-B on v14-C (docs/v14_experiment_log.md Sec.36, exploratory): v14_s2u_pref_mixed_s2.yml with pretrain = v14_s1_mixedpref_l1_s2 ep200 (the one-bit model ignores a1_liked_t: A-1 = Red); run with --seed 2.
+model:
+  name: SuperpositionNetworkMotionPleasureHoldOtherOneBit
+  config: onebit
+  mode: ~
+runner: MotionGenerationPredictionFeaturePredictionRunner
+data:
+  name: v11_s2_pref
+load_state_dict_strict: False
+train:
+  loss_function: l1_loss
+  pretrain:
+    exp_config: v14_s1_mixedpref_l1_s2
+    seed: 2
+    epoch: 200
+  batch_size: 10
+  max_epochs: 200
+  save_interval: 10
+  test_interval: 10
+  optimizer: AdamW
+  optim_config:
+    default:
+      lr: 0.001
+      weight_decay: 0.01
+    freeze:
+      - superposition_module
+      - vision_encoder_module
+      - vision_decoder_module
+      - integration_module
+      - share_lns
+      - feature_prediction_module
+    per_params:
+      - name: bias
+        args:
+          weight_decay: 0.0
