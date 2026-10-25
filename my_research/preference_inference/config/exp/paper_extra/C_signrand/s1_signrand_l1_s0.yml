@@ -1,0 +1,36 @@
+# Paper extra C, l1 stage: v13_s1_mixed_l1_s0.yml with the signed-pleasure model, data paper_s1_mixed80_signrand and
+# pretrain = paper_extra/C_signrand/s1_signrand_mse (same seed) ep200. Decoder only. Run with analyze/paper_extra/train_paper_c.py --seed 0.
+model:
+    name: SuperpositionNetworkMotionPleasureHoldSigned
+    config: default
+    mode: ~
+runner: PredictionFeaturePredictionRunner
+data:
+    name: paper_s1_mixed80_signrand
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+    loss_function: l1_loss
+    pretrain:
+        exp_config: paper_extra/C_signrand/s1_signrand_mse
+        seed: 0
+        epoch: 200
+    batch_size: 10
+    max_epochs: 200
+    save_interval: 10
+    test_interval: 10
+    optimizer: AdamW
+    optim_config:
+        default:
+            lr: 0.001
+            weight_decay: 0.01
+        freeze:
+            - superposition_module
+            - vision_encoder_module
+            - integration_module
+            - share_lns
+            - feature_prediction_module
+        per_params:
+            - name: bias
+              args:
+                  weight_decay: 0.0
