@@ -8,7 +8,9 @@
   docker cp /usr/share/fonts/opentype/ipafont-gothic/ipagp.ttf kusano_research:/tmp/paperfonts/
   ```
 - **フォントの埋め込み（2026-10-26 改訂）**：Type 42（TrueType）。日本語は IPA Pゴシック（`ipagp.ttf`、TrueType の .ttf）、数式の記号は DejaVu Sans。matplotlib 3.4 は Type 42 を部分埋め込みしないので、`paper_style.save` で PDF を書いたあとコンテナの ghostscript（pdfwrite、`-dSubsetFonts=true`）で使った字形だけに絞って書き直す。環境は変えていない。Noto Sans CJK（.ttc、中身は CFF）は Type 42 にできず ghostscript も読めないので使わない（前の版は Noto の Type 3）。
-- pdffonts の結果（6 枚とも Type 3 なし、すべて `CID TrueType`・部分埋め込み・ToUnicode あり）とファイルの大きさ：network 153786 B、env_conditions 120220 B、central 117649 B、projection_error 88334 B、write_vs_choose 76643 B、inverse 127877 B。
+- pdffonts の結果（6 枚とも Type 3 なし、すべて `CID TrueType`・部分埋め込み・ToUnicode あり）とファイルの大きさ（2026-10-26、パネル名を直した版）：network 154051 B、env_conditions 120483 B、central 118195 B、projection_error 89141 B、write_vs_choose 78866 B、inverse 128069 B。
+- パネル名（2026-10-26 改訂）：network (a)(b)、env_conditions (a)〜(e)、central (a)〜(d)、projection_error (a)〜(d)、write_vs_choose (a)(b)、inverse (a)（組1〜6 の6枚をまとめて (a)）・(b)・(c)。重なりなし。
+- 事前登録の区別：central は各パネルの題に「事前登録」「事後に定義（組5・6 は事前登録）」。組1〜3 灰の実線・塗りの丸、組4 橙の破線・塗りの丸、組5・6 橙の点線・白抜きの四角。write_vs_choose は1ビットの経験50% を白抜きの菱形（凡例「事前登録外」）、経験80% を塗りの菱形（「事前登録」）。
 - 色：条件ごとに固定（経験なし 灰・丸、経験50% 橙・四角、経験80% 青・三角、非共有 緑・白抜きの菱形）。色だけに頼らないよう記号の形も変えた。
 - 目視：6 枚とも PDF を画像にして確かめた（2026-10-26、Type 42 に作り直した版も確かめた）。
 

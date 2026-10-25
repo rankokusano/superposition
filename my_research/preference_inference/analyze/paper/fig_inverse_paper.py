@@ -79,8 +79,8 @@ def main():
     conds = [('80', C_80, M_80, 'v13{}_mixed_{}', range(6)), ('50', C_50, M_50, 'v12{}_mixed_{}', range(6)),
              ('none', C_NONE, M_NONE, 'v12{}_random_{}', range(6)), ('ns', C_NS, M_NS, 'v13ns{}_mixed_{}', range(3))]
     axb = []
-    for k, (q, stage, title) in enumerate((('FP', 'mse', '他者特徴基準（MSE 期間の最終5点）'),
-                                          ('L1', '', '自己視界基準（L1 期間の最終5点）'))):
+    for k, (q, stage, title) in enumerate((('FP', 'mse', '(b) 他者特徴基準（MSE 期間の最終5点）'),
+                                          ('L1', '', '(c) 自己視界基準（L1 期間の最終5点）'))):
         ax = fig.add_subplot(gsb[0, k], sharey=axb[0] if axb else None)
         axb.append(ax)
         for j, (cn, c, mk, pat, seeds) in enumerate(conds):
@@ -99,10 +99,10 @@ def main():
         ax.axhline(0.5, color='0.3', lw=0.6, ls='--')
         ax.set_xticks(range(6))
         ax.set_xticklabels([pair_label(s) for s in range(6)])
-        ax.set_title(title, fontsize=8.5)
+        ax.set_title(title, fontsize=8.5, loc='left')
         if k == 0:
             ax.set_ylabel('好み追従率')
-            ax.text(-0.16, 1.2, '(b) 好みと方角が食い違う88エピソードで選択が好みに従う割合', transform=ax.transAxes,
+            ax.text(-0.16, 1.2, '好みと方角が食い違う88エピソードで選択が好みに従う割合（(b)・(c)）', transform=ax.transAxes,
                     fontsize=9)
         else:
             plt.setp(ax.get_yticklabels(), visible=False)

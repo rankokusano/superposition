@@ -87,7 +87,7 @@ def panel(ax, stage):
         box(ax, 0.8, 8.4, 1.35, 0.85, 'LSTM\n（process-1）', fs=5.6, ec='#2a78d6', z=3)
         box(ax, 2.3, 8.4, 1.35, 0.85, 'LSTM\n（process-2）', fs=5.6, ec='#2a78d6', z=3)
         ax.text(1.55, 7.65, '重みを共有しない', fontsize=5.6, ha='center', color='#2a78d6')
-    ax.set_title('段階I：自己の予測学習' if not s2 else '段階II：他者用モジュールの学習（$G$ 以外は凍結）',
+    ax.set_title('(a) 段階I：自己の予測学習' if not s2 else '(b) 段階II：他者用モジュールの学習（$G$ 以外は凍結）',
                  fontsize=8.5, loc='left')
 
 

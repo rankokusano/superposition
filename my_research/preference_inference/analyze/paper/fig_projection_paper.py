@@ -62,7 +62,7 @@ def main():
                                 label=lab if (g == 0 and s == 0) else None)
         ax.set_xticks(range(3))
         ax.set_xticklabels([c[3] for c in CONDS])
-        ax.set_title(f'(a) {stname}', loc='left', fontsize=9)
+        ax.set_title(f'({"ab"[col]}) {stname}：零・真値・生成の比較', loc='left', fontsize=9)
         if col == 0:
             ax.set_ylabel('他者側の特徴予測の誤差')
         # (b)
@@ -79,7 +79,7 @@ def main():
                     vals[f'split|{st}|{cn}|{pair_label(s)}|{k}'] = sp[f's{s}_{st}_{k}'][key]['mean']
         ax.set_xticks(range(3))
         ax.set_xticklabels([n for _, n in steps])
-        ax.set_title(f'(b) {stname}：A-2 の一歩の種類ごと（組1〜3）', loc='left', fontsize=9)
+        ax.set_title(f'({"cd"[col]}) {stname}\n真値条件の誤差を A-2 の一歩の種類ごとに（組1〜3）', loc='left', fontsize=9)
         if col == 0:
             ax.set_ylabel('真値条件の誤差')
     h, l = axs[0, 0].get_legend_handles_labels()

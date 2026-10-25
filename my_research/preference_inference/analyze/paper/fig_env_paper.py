@@ -54,11 +54,11 @@ def main():
     for j, (lay, lname) in enumerate(LAY):
         ax = fig.add_subplot(ga[0, j])
         topview(ax, lay, PT)
-        ax.set_title(('(a) ' if j == 0 else '') + lname + '（上から見た図）', fontsize=8.5)
+        ax.set_title(f'({"ab"[j]}) ' + lname + '（上から見た図）', fontsize=8.5)
         if j == 1:
             hs = [Rectangle((0, 0), 1, 1, color=COL[n]) for n in ('Red', 'Green', 'Blue', 'Cyan')]
             hs.append(plt.Line2D([], [], marker='^', color='k', ls='', ms=5))
-            ax.legend(hs, ['赤', '緑', '青', 'シアン', '(b) の A-1 の位置'], loc='center left',
+            ax.legend(hs, ['赤', '緑', '青', 'シアン', '(c)・(d) の A-1 の位置'], loc='center left',
                       bbox_to_anchor=(1.02, 0.5), frameon=False, fontsize=7)
     # (b)
     gb = outer[1].subgridspec(2, 2, height_ratios=(1, 1.1), hspace=0.08, wspace=0.18)
@@ -71,7 +71,7 @@ def main():
             ax.axvline(8 * k, color='w', lw=0.6)
         ax.set_xticks([])
         ax.set_yticks([])
-        ax.set_title(('(b) ' if j == 0 else '') + f'{lname}：A-1 の位置 ({PT[0]}, {PT[1]}) の視界', fontsize=8)
+        ax.set_title(f'({"cd"[j]}) ' + f'{lname}\nA-1 の位置 ({PT[0]}, {PT[1]}) の視界と快・不快', fontsize=8)
         ax2 = fig.add_subplot(gb[1, j])
         ax2.bar(np.arange(8) * 8 + 4, p, width=6.5, color=['#e8302a' if x > 0 else '#2fb52f' for x in p])
         ax2.axhline(0, color='k', lw=0.5)
@@ -106,7 +106,7 @@ def main():
                 ax.set_ylabel('元の配置' if row == 0 else '入れ替えた配置', fontsize=7.5)
     cb = fig.colorbar(im, ax=axs_c, fraction=0.03, pad=0.01)
     b = axs_c[0].get_position()
-    fig.text(b.x0 - 0.06, b.y1 + 0.03, '(c) 段階Iの学習データにおける A-1 の滞在位置', fontsize=9)
+    fig.text(b.x0 - 0.06, b.y1 + 0.03, '(e) 段階Iの学習データにおける A-1 の滞在位置', fontsize=9)
     cb.set_label('フレームの割合（1×1 の区画）', fontsize=7)
     cb.ax.tick_params(labelsize=6.5)
     save(fig, 'env_conditions')

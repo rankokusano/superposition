@@ -29,7 +29,7 @@ def main():
     ctag = {'50': ('v12_mixed_{}|L1', 'v12mse_mixed_{}|FP'), '80': ('v13_mixed_{}|L1', 'v13mse_mixed_{}|FP')}
     fig, axs = plt.subplots(1, 2, figsize=(6.3, 2.6), sharey=True)
     vals = {}
-    for ax, (cn, title) in zip(axs, (('50', '経験50%条件'), ('80', '経験80%条件'))):
+    for ax, (cn, title) in zip(axs, (('50', '(a) 経験50%条件'), ('80', '(b) 経験80%条件'))):
         for s in range(3):
             u = [ud[cn][f'{utag[cn].format(s)}|ep{e}|all']['disagree_follow_pref'] for e in EP]
             rows = [(fp[ctag[cn][0].format(s)]['late5_min'], fp[ctag[cn][0].format(s)]['late5_mean'], fp[ctag[cn][0].format(s)]['late5_max']),
@@ -37,8 +37,12 @@ def main():
                     (min(u), float(np.mean(u)), max(u))]
             vals[f'{cn}|{pair_label(s)}'] = {m[0]: r for m, r in zip(METH, rows)}
             for j, ((lo, m, hi), (lab, c, mk)) in enumerate(zip(rows, METH)):
-                ax.errorbar(s + (j - 1) * 0.22, m, yerr=[[m - lo], [hi - m]], color=c, marker=mk, ms=4, lw=1.0,
-                            capsize=2, label=lab if s == 0 else None)
+                open_mk = j == 2 and cn == '50'   # one-bit following share: pre-registered only for 80% (v14 log Sec.29)
+                if j == 2:
+                    lab = lab + ('（事前登録外）' if open_mk else '（事前登録）')
+                ax.errorbar(s + (j - 1) * 0.22, m, yerr=[[m - lo], [hi - m]], color=c, marker=mk, ms=4.5 if open_mk else 4,
+                            lw=1.0, capsize=2, mfc='white' if open_mk else c, mew=1.2,
+                            ls='none', label=lab if s == 0 else None)
         ax.axhline(0.5, color='0.3', lw=0.6, ls='--')
         ax.set_xticks(range(3))
         ax.set_xticklabels([pair_label(s) for s in range(3)])
@@ -47,8 +51,10 @@ def main():
     axs[0].set_ylabel('好み追従率')
     axs[0].set_ylim(0.2, 0.8)
     h, l = axs[0].get_legend_handles_labels()
-    fig.legend(h, l, loc='lower center', ncol=3, frameon=False, fontsize=7, columnspacing=1.0, handlelength=1.5)
-    fig.tight_layout(rect=(0, 0.1, 1, 1))
+    h2, l2 = axs[1].get_legend_handles_labels()
+    fig.legend(h + h2[2:], l + l2[2:], loc='lower center', ncol=2, frameon=False, fontsize=7, columnspacing=1.0,
+               handlelength=1.5)
+    fig.tight_layout(rect=(0, 0.17, 1, 1))
     save(fig, 'write_vs_choose')
     json.dump(vals, open(os.path.join(FIGS, 'write_vs_choose_values.json'), 'w'), indent=1, ensure_ascii=False)
 
