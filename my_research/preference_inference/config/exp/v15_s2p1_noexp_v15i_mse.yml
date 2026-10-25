@@ -1,12 +1,12 @@
 # v15 stage 2, phase 1 (docs/v15_experiment_log.md Sec.16), trial scale: v12_trial_pb_mixed_mse.yml (v12 trial, frozen v4 encoders)
-# with the v12 hold model + v15 pleasure (HoldV15), data v15_s1_random_half_1000t (train 1000 + test 300), encoders + share_lns from v15i (frozen). mse 150 ep. --seed 0.
+# with the v12 hold model + v15 pleasure (HoldV15), data v15_s1_goalcap_half_1000t (no experience = plan C', log Sec.20.4) (train 1000 + test 300), encoders + share_lns from v15i (frozen). mse 150 ep. --seed 0.
 model:
   name: SuperpositionNetworkMotionPleasureHoldV15
   config: default
   mode: ~
 runner: PredictionFeaturePredictionRunner
 data:
-  name: v15_s1_random_half_1000t
+  name: v15_s1_goalcap_half_1000t
 load_state_dict_strict: False
 p_mask_vision: 0.99
 train:
