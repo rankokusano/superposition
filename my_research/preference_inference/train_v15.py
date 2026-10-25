@@ -15,5 +15,10 @@ from exp import runner, runner_v15  # noqa
 
 runner.PredictionFeaturePredictionColourRunner = runner_v15.PredictionFeaturePredictionColourRunner
 
+# v15 stage 2 (Sec.16): model classes looked up in model_v12 by train_v12.py
+from model import model_v12, model_v15  # noqa: E402
+for _name in ('SuperpositionNetworkMotionPleasureHoldV15', 'SuperpositionNetworkMotionPleasureHoldOtherV15'):
+    setattr(model_v12, _name, getattr(model_v15, _name))
+
 if __name__ == '__main__':
     runpy.run_path(os.path.join(_PI_DIR, 'train_v12.py'), run_name='__main__')

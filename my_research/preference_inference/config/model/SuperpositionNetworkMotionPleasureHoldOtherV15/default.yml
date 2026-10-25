@@ -1,0 +1,84 @@
+# v15 stage 2 (docs/v15_experiment_log.md Sec.16): SuperpositionNetworkMotionPleasureHoldOther/default.yml with the v15 value-weighted pleasure.
+# v12 stage 2 (docs/v12_experiment_log.md Sec.21): the stage-1 model + G (paper MG, 8-dim output -> pleasure slots of process-2,
+# process-2 = [motion 0, Q2, flag 1]); process-1 motion is NOT hidden in stage 2 (motion_mask.enabled false).
+# innate pleasure 8 (as v11), motion-hidden flag 1] = 11; process-2 = zeros(11). Motion is hidden
+# in alternating visible/hidden intervals of length 5..15 (visible first, t = 0 visible).
+# Everything else = v11's SuperpositionNetworkPleasure default (= the paper's FeaturePrediction).
+input:
+    vision: &input_vision
+        channel: 3
+        width: 64
+        height: 16
+    motion: &p1_dim 11
+
+pleasure:
+    liked: Red        # unused (read by the v12 base class)
+    disliked: Green   # unused
+    scale: 1.0
+    values: {Red: 1.0, Blue: 0.5, Cyan: 0.0, Green: -1.0}   # A-1's rank values (v15)
+
+vision_encoder_module:
+    input: *input_vision
+    conv:
+        - ch: 16
+          kernel_size: [3, 10]
+          stride: 2
+          padding: 1
+        - ch: 32
+          kernel_size: [3, 10]
+          stride: 2
+          padding: 1
+        - ch: 64
+          kernel_size: [3, 10]
+          stride: 2
+          padding: 1
+    fc:
+        - input: ~
+          output: &enc_out 64
+
+superposition_module:
+    input:
+        motion: *p1_dim
+        vision: *enc_out
+    hidden: &sp_hidden 128
+
+integration_module:
+    fc:
+        each_input: *sp_hidden
+        output: *enc_out
+
+feature_prediction_module:
+    fc:
+        - input: *sp_hidden
+          output: 128
+        - input: 128
+          output: *enc_out
+
+vision_decoder_module:
+    fc:
+        - input: *enc_out
+          output: ~
+    conv:
+        - ch: 32
+          kernel_size: [4, 10]
+          stride: 2
+          padding: 1
+        - ch: 16
+          kernel_size: [4, 12]
+          stride: 2
+          padding: 1
+        - ch: 3
+          kernel_size: [4, 12]
+          stride: 2
+          padding: 1
+
+motion_mask:
+    enabled: false
+    len_min: 5
+    len_max: 15
+    n_steps: 100
+
+motion_generator_module:
+    input: *enc_out
+    hidden: 128
+    output: 8

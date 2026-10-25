@@ -1,0 +1,36 @@
+# v15 stage 2, phase 2 (docs/v15_experiment_log.md Sec.16), trial scale: v12_s2_pref_mixed_s0.yml (v12 stage 2, paper exp3 recipe, only G trains)
+# with HoldOtherV15, data v15_s2_c2_p80_half_1000t, pretrain = v15_s2p1_noexp_v4_mse ep150; l1 150 ep. --seed 0.
+model:
+  name: SuperpositionNetworkMotionPleasureHoldOtherV15
+  config: default
+  mode: ~
+runner: MotionGenerationPredictionFeaturePredictionRunner
+data:
+  name: v15_s2_c2_p80_half_1000t
+load_state_dict_strict: False
+train:
+  loss_function: l1_loss
+  pretrain:
+    exp_config: v15_s2p1_noexp_v4_mse
+    seed: 0
+    epoch: 150
+  batch_size: 10
+  max_epochs: 150
+  save_interval: 10
+  test_interval: 10
+  optimizer: AdamW
+  optim_config:
+    default:
+      lr: 0.001
+      weight_decay: 0.01
+    freeze:
+      - superposition_module
+      - vision_encoder_module
+      - vision_decoder_module
+      - integration_module
+      - share_lns
+      - feature_prediction_module
+    per_params:
+      - name: bias
+        args:
+          weight_decay: 0.0

@@ -1,0 +1,37 @@
+# v15 stage 2, phase 1 (docs/v15_experiment_log.md Sec.16), trial scale: v12_trial_pb_mixed_mse.yml (v12 trial, frozen v4 encoders)
+# with the v12 hold model + v15 pleasure (HoldV15), data v15_s1_random_half_1000t (train 1000 + test 300), encoders + share_lns from v15i (frozen). mse 150 ep. --seed 0.
+model:
+  name: SuperpositionNetworkMotionPleasureHoldV15
+  config: default
+  mode: ~
+runner: PredictionFeaturePredictionRunner
+data:
+  name: v15_s1_random_half_1000t
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+  loss_function: mse_loss
+  pretrain: ~
+  pretrain_encoder_from: data/result/v15_s1_plain_mse/0/model/00200.pth
+  batch_size: 10
+  max_epochs: 150
+  save_interval: 10
+  test_interval: 10
+  optimizer: AdamW
+  optim_config:
+    default:
+      lr: 0.001
+      weight_decay: 0.01
+    freeze:
+      - vision_encoder
+      - share_lns
+    per_params:
+      - name: bias
+        args:
+          weight_decay: 0.0
+      - name: vision_encoder
+        args:
+          weight_decay: 0.001
+      - name: share_lns
+        args:
+          weight_decay: 0.001
