@@ -1,0 +1,62 @@
+{
+ "tag": "v15_plain_mse200",
+ "ckpt": "data/result/v15_s1_plain_mse/0/model/00200.pth",
+ "ae": "data/result/v15_s1_plain_fig5_mse200/0/model/00100.pth",
+ "data": "/work/.worktrees/v15/my_research/preference_inference/data/data/v15_s1_p80_half_3000/data.h5",
+ "split": "test",
+ "n_frames": 6000,
+ "M1_alignment_v15_test": 0.6923872232437134,
+ "M1_alignment_v11_common_test": {
+  "cos_ov(A1)_sv(A2)": 0.6822302937507629,
+  "cos_ov(A1)_sv(A1)": 0.3913676142692566
+ },
+ "M3": {
+  "TL": {
+   "enc2": 0.8421666666666666,
+   "enc1": 0.6718333333333333,
+   "majority": 0.4871666666666667,
+   "counts": {
+    "Red": 737,
+    "Green": 2340,
+    "Gray": 2923
+   }
+  },
+  "BL": {
+   "enc2": 0.848,
+   "enc1": 0.701,
+   "majority": 0.4533333333333333,
+   "counts": {
+    "Red": 694,
+    "Green": 2720,
+    "Gray": 2586
+   }
+  },
+  "BR": {
+   "enc2": 0.6443333333333333,
+   "enc1": 0.9675,
+   "majority": 0.5195,
+   "counts": {
+    "Blue": 3117,
+    "Gray": 2883
+   }
+  },
+  "TR": {
+   "enc2": 0.8753333333333333,
+   "enc1": 0.8766666666666667,
+   "majority": 0.8833333333333333,
+   "counts": {
+    "Cyan": 5300,
+    "Gray": 700
+   }
+  }
+ },
+ "M3_enc2_min": 0.6443333333333333,
+ "M4": {
+  "other_sepRG": -0.002050332725048065,
+  "other_sepBC": 0.035207077860832214,
+  "self_sepRG": 0.22604818642139435,
+  "self_sepBC": 0.6703251600265503,
+  "true_sepRG": 1.9258646965026855,
+  "true_sepBC": 0.9667034149169922
+ }
+}

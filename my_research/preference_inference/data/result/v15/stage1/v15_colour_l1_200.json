@@ -1,0 +1,54 @@
+{
+ "tag": "v15_colour_l1_200",
+ "ckpt": "data/result/v15_s1_colour_l1/0/model/00200.pth",
+ "ae": null,
+ "data": "/work/.worktrees/v15/my_research/preference_inference/data/data/v15_s1_p80_half_3000/data.h5",
+ "split": "test",
+ "n_frames": 6000,
+ "M1_alignment_v15_test": 0.21643942594528198,
+ "M1_alignment_v11_common_test": {
+  "cos_ov(A1)_sv(A2)": 0.2789700925350189,
+  "cos_ov(A1)_sv(A1)": 0.28648433089256287
+ },
+ "M3": {
+  "TL": {
+   "enc2": 0.9281666666666667,
+   "enc1": 0.7381666666666666,
+   "majority": 0.4871666666666667,
+   "counts": {
+    "Red": 737,
+    "Green": 2340,
+    "Gray": 2923
+   }
+  },
+  "BL": {
+   "enc2": 0.9405,
+   "enc1": 0.7741666666666667,
+   "majority": 0.4533333333333333,
+   "counts": {
+    "Red": 694,
+    "Green": 2720,
+    "Gray": 2586
+   }
+  },
+  "BR": {
+   "enc2": 0.7861666666666667,
+   "enc1": 0.9718333333333333,
+   "majority": 0.5195,
+   "counts": {
+    "Blue": 3117,
+    "Gray": 2883
+   }
+  },
+  "TR": {
+   "enc2": 0.9688333333333333,
+   "enc1": 0.8791666666666667,
+   "majority": 0.8833333333333333,
+   "counts": {
+    "Cyan": 5300,
+    "Gray": 700
+   }
+  }
+ },
+ "M3_enc2_min": 0.7861666666666667
+}

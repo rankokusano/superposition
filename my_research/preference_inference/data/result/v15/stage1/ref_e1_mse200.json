@@ -1,0 +1,62 @@
+{
+ "tag": "ref_e1_mse200",
+ "ckpt": "data/result/v12_e1_paper_random_mse/0/model/00200.pth",
+ "ae": "data/result/v12_e1_fig5_mse200/0/model/00100.pth",
+ "data": "/work/.worktrees/v15/my_research/preference_inference/data/data/v15_s1_p80_half_3000/data.h5",
+ "split": "test",
+ "n_frames": 6000,
+ "M1_alignment_v15_test": 0.7213714122772217,
+ "M1_alignment_v11_common_test": {
+  "cos_ov(A1)_sv(A2)": 0.740345299243927,
+  "cos_ov(A1)_sv(A1)": 0.36958229541778564
+ },
+ "M3": {
+  "TL": {
+   "enc2": 0.5683333333333334,
+   "enc1": 0.5768333333333333,
+   "majority": 0.4871666666666667,
+   "counts": {
+    "Red": 737,
+    "Green": 2340,
+    "Gray": 2923
+   }
+  },
+  "BL": {
+   "enc2": 0.558,
+   "enc1": 0.5718333333333333,
+   "majority": 0.4533333333333333,
+   "counts": {
+    "Red": 694,
+    "Green": 2720,
+    "Gray": 2586
+   }
+  },
+  "BR": {
+   "enc2": 0.6655,
+   "enc1": 0.7568333333333334,
+   "majority": 0.5195,
+   "counts": {
+    "Blue": 3117,
+    "Gray": 2883
+   }
+  },
+  "TR": {
+   "enc2": 0.8823333333333333,
+   "enc1": 0.8796666666666667,
+   "majority": 0.8833333333333333,
+   "counts": {
+    "Cyan": 5300,
+    "Gray": 700
+   }
+  }
+ },
+ "M3_enc2_min": 0.558,
+ "M4": {
+  "other_sepRG": -0.00293935090303421,
+  "other_sepBC": 0.5395341515541077,
+  "self_sepRG": -0.01803089678287506,
+  "self_sepBC": 0.5320773124694824,
+  "true_sepRG": 1.9258646965026855,
+  "true_sepBC": 0.9667034149169922
+ }
+}
