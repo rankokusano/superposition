@@ -87,6 +87,8 @@ for _p in (30, 40, 50, 60, 80):
 # (Sec.15) stage 2: no-experience stage-1 data (A-1 random, same key -> paired with v15_s1_p80_half) and the
 # phase-2 data (A-1 random, A-2 candidates X / Y, gray in half of the episodes; 6000 + test 300)
 DATASET_CONFIGS['v15_s1_random_half'] = dict(stage=1, key='v15_s1', p=0.0, cand=None, layout='seq', gray='half', a1_policy='random')
+DATASET_CONFIGS['v15_s1_goal_half'] = dict(stage=1, key='v15_s1', p=0.8, cand=None, layout='seq', gray='half', a1_policy='goal')
+DATASET_CONFIGS['v15_s1_goalcap_half'] = dict(stage=1, key='v15_s1', p=0.8, cand=None, layout='seq', gray='half', a1_policy='goal_capped')
 for _e in ('random_eat', 'random_eat_any'):
     DATASET_CONFIGS[f'v15_s1_{_e}_half'] = dict(stage=1, key='v15_s1', p=0.0, cand=None, layout='seq', gray='half', a1_policy=_e)
 DATASET_CONFIGS['v15_s2_c2_p80_half'] = dict(stage=2, key='v15_s2', p=0.8, cand='mix', layout='seq', gray='half')
@@ -133,6 +135,8 @@ def collect(cfg, n_data, split, h5, start=0):
         pol1 = PrefPolicy(env.self_agent, 'random', rank=RANK_A1, values=rank_values_(RANK_A1), random_eat=eat)
         pol2 = None
     elif stage == 1:
+        # 'mixed' (experienced) or 'goal' (Sec.20 no-experience: same rule, eating and values, but goals drawn
+        # uniformly from the available objects instead of by preference)
         pol1 = PrefPolicy(env.self_agent, 'mixed', p_rule=cfg['p'], rank=RANK_A1, values=rank_values_(RANK_A1))
         pol2 = None
     else:
@@ -179,6 +183,10 @@ def collect(cfg, n_data, split, h5, start=0):
         random.seed(sd)
         np.random.seed(sd)
         pol1.set_rng(np.random.RandomState(get_seed(f'{cfg["key"]}/{split}/{ep_n}/a1_mix')))
+        if cfg.get('a1_policy') in ('goal', 'goal_capped'):
+            # 'goal_capped' (option C'): at most as many eats as positive-valued objects available at the start
+            cap = sum(1 for c in RANK_A1 if c != gray and rank_values_(RANK_A1)[c] > 0) if cfg['a1_policy'] == 'goal_capped' else None
+            pol1.set_goal_mode(np.random.RandomState(get_seed(f'{cfg["key"]}/{split}/{ep_n}/a1_goal')), max_eats=cap)
         if pol2 is not None:
             pol2.set_rng(np.random.RandomState(get_seed(f'{cfg["key"]}/{split}/{ep_n}/a2_mix')))
         env.reset()

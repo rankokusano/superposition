@@ -21,7 +21,7 @@ import numpy as np
 from v11core.pleasure import color_direction
 from v11core.rule_agent import (SRC_RANDOM, SRC_RULE, SRC_RULE_FALLBACK, SRC_SLEEP,
                                 AgentPolicy, slide_step)
-from .world import CORNER_POINT
+from .world import COLORS, CORNER_POINT
 
 SRC_NO_TARGET = 4
 R_EAT = 1.5
@@ -39,6 +39,23 @@ class PrefPolicy(AgentPolicy):
         super().__init__(agent, policy, p_rule=p_rule, liked=None, rng=rng)
         self.rank, self.values, self.r_eat = rank, values, r_eat
         self.random_eat = random_eat  # policy 'random' only: None (never eats), 'target' or 'any' (log Sec.19)
+        self.goal_mode = False  # log Sec.20: the target is drawn uniformly from the available objects (no preference)
+        self.goal, self.goal_rng = None, None
+
+    def set_goal_mode(self, rng, max_eats=None):
+        """Sec.20 no-experience A-1: per episode, a dedicated RandomState for drawing goals; resets the goal.
+        max_eats (option C'): after that many eats no new goal is drawn (random walk, as the experienced A-1 once
+        no positive object is left)."""
+        self.goal_mode, self.goal_rng, self.goal = True, rng, None
+        self.max_eats, self.n_eaten = max_eats, 0
+
+    def _goal(self, world):
+        if self.max_eats is not None and self.n_eaten >= self.max_eats:
+            return None
+        if self.goal is None or not world.available[self.goal]:
+            avail = [c for c in COLORS if world.available[c]]
+            self.goal = avail[self.goal_rng.randint(len(avail))] if avail else None
+        return self.goal
 
     def set_preference(self, rank, values):
         self.rank, self.values = rank, values
@@ -63,7 +80,7 @@ class PrefPolicy(AgentPolicy):
                             break
             return m, src, target, eaten
 
-        target = current_target(self.values, self.rank, world.available)
+        target = self._goal(world) if self.goal_mode else current_target(self.values, self.rank, world.available)
         if a.is_sleep:
             a.sleep_count -= 1
             if a.sleep_count == 0:
@@ -87,6 +104,8 @@ class PrefPolicy(AgentPolicy):
         eaten = None
         if target is not None and np.linalg.norm(a.p - CORNER_POINT[world.corner_of[target]]) <= self.r_eat:
             eaten = target
+            if self.goal_mode:
+                self.n_eaten += 1
         if random.random() < a.config.sleep_p:
             a.is_sleep = True
             a.sleep_count = a.config.sleep_base + \
