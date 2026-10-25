@@ -1,0 +1,35 @@
+# v15 stage-1 extra exploration (docs/v15_experiment_log.md Sec.15, NOT pre-registered): v15_s1_colour_mse.yml with
+# colour_lambda 3 instead of 10. --seed 0.
+model:
+  name: SuperpositionNetworkFeaturePrediction
+  config: default
+  mode: ~
+runner: PredictionFeaturePredictionColourRunner
+data:
+  name: v15_s1_p80_half_3000
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+  loss_function: mse_loss
+  colour_lambda: 3.0
+  pretrain: ~
+  batch_size: 10
+  max_epochs: 200
+  save_interval: 10
+  test_interval: 10
+  optimizer: AdamW
+  optim_config:
+    default:
+      lr: 0.001
+      weight_decay: 0.01
+    freeze: ~
+    per_params:
+      - name: bias
+        args:
+          weight_decay: 0.0
+      - name: vision_encoder
+        args:
+          weight_decay: 0.001
+      - name: share_lns
+        args:
+          weight_decay: 0.001

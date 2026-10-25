@@ -53,8 +53,9 @@ DATA_ROOT = os.path.join(_PI_DIR, 'data')
 CHECK = os.path.join(DATA_ROOT, 'result', 'v15', 'datacheck')
 T = T_DEFAULT = 101
 N_EP = 1000
-N_SEQ = 3300  # layout/gray/cand sequences: train 0..2999 then test 0..299 (prefix of the 1000-episode sets)
+N_SEQ = 6300  # layout/gray/cand sequences: train 0..2999, test 0..299, then train 3000..5999 (prefix of the 1000-episode sets)
 TEST_OFFSET = 3000
+TRAIN_HIGH_OFFSET = 300  # train episodes >= 3000 use sequence index n + 300 (after the test block; Sec.15)
 
 RANK_A1 = ('Red', 'Blue', 'Cyan', 'Green')
 CAND = {
@@ -83,6 +84,10 @@ for _g in ('seq', 'half'):
                                                    rank_values=(1.0, 0.5, 0.25, -1.0), n=300)
 for _p in (30, 40, 50, 60, 80):
     DATASET_CONFIGS[f'v15p_ii_p{_p}'] = dict(stage=2, key='v15_p2', p=_p / 100, cand='mix', layout='seq', gray='seq', n=300)
+# (Sec.15) stage 2: no-experience stage-1 data (A-1 random, same key -> paired with v15_s1_p80_half) and the
+# phase-2 data (A-1 random, A-2 candidates X / Y, gray in half of the episodes; 6000 + test 300)
+DATASET_CONFIGS['v15_s1_random_half'] = dict(stage=1, key='v15_s1', p=0.0, cand=None, layout='seq', gray='half', a1_policy='random')
+DATASET_CONFIGS['v15_s2_c2_p80_half'] = dict(stage=2, key='v15_s2', p=0.8, cand='mix', layout='seq', gray='half')
 # (Sec.12) stage 1 with gray in half of the episodes (same key as v15_s1_p80: the grayed episodes keep their colour)
 DATASET_CONFIGS['v15_s1_p80_half'] = dict(stage=1, key='v15_s1', p=0.8, cand=None, layout='seq', gray='half')
 # (Sec.10) the current design (two positive colours, p 0.8) with gray in half of the episodes
@@ -118,7 +123,9 @@ def collect(cfg, n_data, split, h5, start=0):
     env = Env15('random', 'stay' if stage == 1 else 'random')
     env.init()
     world = env.world
-    if stage == 1:
+    if stage == 1 and cfg.get('a1_policy', 'mixed') == 'random':
+        pol1 = PrefPolicy(env.self_agent, 'random')  # stage-1 no-experience data (Sec.15): A-1 walks at random, never eats
+    elif stage == 1:
         pol1 = PrefPolicy(env.self_agent, 'mixed', p_rule=cfg['p'], rank=RANK_A1, values=rank_values_(RANK_A1))
         pol2 = None
     else:
@@ -145,7 +152,7 @@ def collect(cfg, n_data, split, h5, start=0):
 
     for n in range(n_data):
         ep_n = start + n
-        q = ep_n if split == 'train' else TEST_OFFSET + ep_n
+        q = (ep_n if ep_n < TEST_OFFSET else ep_n + TRAIN_HIGH_OFFSET) if split == 'train' else TEST_OFFSET + ep_n
         lay = layouts[q] if cfg['layout'] == 'seq' else cfg['layout']
         gray = grays[q] if cfg['gray'] in ('seq', 'half') else cfg['gray']
         if cfg['gray'] == 'half' and gray_off[q]:
@@ -215,7 +222,7 @@ def main():
     print(f'Dataset {args.dataset}: {cfg}  n={n_data} -> {save_path}', flush=True)
     with h5py.File(save_path, 'w') as f:
         for k, v in (('dataset', args.dataset), ('seed_key', cfg['key']), ('stage', cfg['stage']),
-                     ('p_rule', cfg['p']), ('cand', str(cfg['cand'])), ('layout_mode', str(cfg['layout'])),
+                     ('p_rule', cfg['p']), ('a1_policy', cfg.get('a1_policy', 'mixed' if cfg['stage'] == 1 else 'random')), ('cand', str(cfg['cand'])), ('layout_mode', str(cfg['layout'])),
                      ('gray_mode', str(cfg['gray'])), ('r_eat', 1.5), ('rank_values', ', '.join(str(v) for v in cfg.get('rank_values', RANK_VALUES))), ('T', cfg.get('T', T_DEFAULT)),
                      ('a1_rank', ','.join(RANK_A1)), ('simulator', 'sim_v10 + v15core.World15'),
                      ('color_codes', '0 Red, 1 Green, 2 Blue, 3 Cyan'),

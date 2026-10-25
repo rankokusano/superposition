@@ -1,0 +1,34 @@
+# v15 stage-1 extra exploration (docs/v15_experiment_log.md Sec.15, NOT pre-registered): v15_s1_plain_mse.yml with
+# data v15_s1_p80_half_6000 (train 6000). --seed 0.
+model:
+  name: SuperpositionNetworkFeaturePrediction
+  config: default
+  mode: ~
+runner: PredictionFeaturePredictionRunner
+data:
+  name: v15_s1_p80_half_6000
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+  loss_function: mse_loss
+  pretrain: ~
+  batch_size: 10
+  max_epochs: 200
+  save_interval: 10
+  test_interval: 10
+  optimizer: AdamW
+  optim_config:
+    default:
+      lr: 0.001
+      weight_decay: 0.01
+    freeze: ~
+    per_params:
+      - name: bias
+        args:
+          weight_decay: 0.0
+      - name: vision_encoder
+        args:
+          weight_decay: 0.001
+      - name: share_lns
+        args:
+          weight_decay: 0.001
