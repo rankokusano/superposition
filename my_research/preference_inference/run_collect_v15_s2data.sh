@@ -13,7 +13,7 @@ run_one() {
   mkdir -p $(dirname $out)
   nice -n 10 xvfb-run --auto-servernum --server-args='-screen 0 1024x768x24' python simulation/collect_data_v15.py \
     --dataset $2 --split $3 --start $4 --n $6 --save_path $out > logs/v15/collect_${1}_$3_$4_$5.log 2>&1
-  echo "$(date +%T) done $* (exit $?)"
+  rc=$?; echo "$(date +%T) done $* (exit $rc)"
 }
 export -f run_one
 {

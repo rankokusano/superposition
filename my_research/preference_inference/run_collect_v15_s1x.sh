@@ -10,7 +10,7 @@ run_one() {
   nice -n 10 xvfb-run --auto-servernum --server-args='-screen 0 1024x768x24' python simulation/collect_data_v15.py \
     --dataset v15_s1_p80 --split $1 --start $2 --n $3 --save_path data/data/v15_s1_p80_3000/chunks/$1_$2.h5 \
     > logs/v15/collect_s1x_$1_$2.log 2>&1
-  echo "$(date +%T) done $1 $2 $3 (exit $?)"
+  rc=$?; echo "$(date +%T) done $1 $2 $3 (exit $rc)"
 }
 export -f run_one
 printf '%s\n' "train 1000 500" "train 1500 500" "train 2000 500" "train 2500 500" "test 0 300" "train 980 20" \

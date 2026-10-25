@@ -11,11 +11,11 @@ echo "$(date +%T) merged"
 run_one() {
   nice -n 10 xvfb-run --auto-servernum --server-args='-screen 0 1024x768x24' python simulation/collect_data_v15.py \
     --dataset $1 > logs/v15/collect_$1.log 2>&1
-  echo "$(date +%T) done $1 (exit $?)"
+  rc=$?; echo "$(date +%T) done $1 (exit $rc)"
 }
 export -f run_one
 printf '%s\n' v15p_i_grayseq_p80 v15p_i_grayhalf_p80 v15p_ii_p30 v15p_ii_p40 v15p_ii_p50 v15p_ii_p60 v15p_ii_p80 v15p_ii_p50_T151 \
   | xargs -P 4 -I{} bash -c 'run_one {}'
 nice -n 10 python -u analyze/v15/proposals_v15.py > logs/v15/proposals.log 2>&1
-echo "$(date +%T) proposals exit $?"
+rc=$?; echo "$(date +%T) proposals exit $rc"
 echo ALL_DONE

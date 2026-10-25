@@ -11,12 +11,12 @@ run_one() {
   else out=data/data/v15_s1_p80_half_3000/chunks/$1_$2.h5; args="--split $1 --start $2 --n $3"; fi
   nice -n 10 xvfb-run --auto-servernum --server-args='-screen 0 1024x768x24' python simulation/collect_data_v15.py \
     --dataset v15_s1_p80_half $args --save_path $out > logs/v15/collect_s1half_$1_$2.log 2>&1
-  echo "$(date +%T) done $* (exit $?)"
+  rc=$?; echo "$(date +%T) done $* (exit $rc)"
 }
 export -f run_one
 printf '%s\n' "train 0 750" "train 750 750" "train 1500 750" "train 2250 750" "test 0 300" "check a" "check b" \
   | xargs -P 4 -I{} bash -c 'run_one "{}"'
 if grep -v "exit 0" logs/v15_collect_s1half_driver.log | grep -q done; then echo "chunk job failed"; exit 1; fi
 nice -n 10 python analyze/v15/merge_s1half_v15.py --delete_chunks > logs/v15/merge_s1half.log 2>&1
-echo "$(date +%T) merge exit $?"
+rc=$?; echo "$(date +%T) merge exit $rc"
 echo ALL_DONE

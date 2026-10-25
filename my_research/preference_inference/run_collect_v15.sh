@@ -19,7 +19,7 @@ run_one() {
     nice -n 10 xvfb-run --auto-servernum --server-args='-screen 0 1024x768x24' python simulation/collect_data_v15.py \
       --dataset $d > logs/v15/collect_${d}.log 2>&1
   fi
-  echo "$(date +%T) done $1 (exit $?)"
+  rc=$?; echo "$(date +%T) done $1 (exit $rc)"
 }
 export -f run_one
 echo $JOBS | tr ' ' '\n' | grep -v '^$' | xargs -P 4 -I{} bash -c 'run_one {}'

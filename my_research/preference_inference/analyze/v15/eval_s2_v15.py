@@ -82,12 +82,12 @@ def run(m, sv, sm, dev, pmask, hidden=None, p2=None, frame=None, batch=50, need_
     Returns h1, h2 (N,100,128), err (N,100) = L1 of predicted view t+1 (if need_err), q2 (N,100,8) if any."""
     util.seed_all(0)
     N = sv.shape[0]
-    H1, H2, ERR, Q2 = [], [], [], []
+    H1, H2, ERR, Q2, G = [], [], [], [], []
     for b0 in range(0, N, batch):
         idx = np.arange(b0, min(N, b0 + batch))
         B = len(idx)
         m.init_state(B)
-        h1s, h2s, errs, q2s = [], [], [], []
+        h1s, h2s, errs, q2s, gs = [], [], [], [], []
         for t in range(T - 1):
             fi = np.full(B, t) if frame is None else frame(t)[idx]
             x = {'self_vision': torch.from_numpy(util.scale_vision(util.transpose_vision(sv[idx, fi], dim=4))).to(dev),
@@ -101,6 +101,8 @@ def run(m, sv, sm, dev, pmask, hidden=None, p2=None, frame=None, batch=50, need_
             out = m(x, pm, pm, **kw)
             st = m.superposition_module.state
             h1s.append(st['self'][0].cpu().numpy()); h2s.append(st['other'][0].cpu().numpy())
+            if hasattr(m, 'motion_generator_module'):
+                gs.append(m.motion_generator_module.state['motion_generator'][0].cpu().numpy())
             if 'q2_hat' in out:
                 q2s.append(out['q2_hat'].cpu().numpy())
             if need_err:
@@ -112,11 +114,15 @@ def run(m, sv, sm, dev, pmask, hidden=None, p2=None, frame=None, batch=50, need_
             ERR.append(np.stack(errs, 1))
         if q2s:
             Q2.append(np.stack(q2s, 1))
+        if gs:
+            G.append(np.stack(gs, 1))
     out = {'h1': np.concatenate(H1), 'h2': np.concatenate(H2)}
     if ERR:
         out['err'] = np.concatenate(ERR)
     if Q2:
         out['q2'] = np.concatenate(Q2)
+    if G:
+        out['g'] = np.concatenate(G)
     return out
 
 
@@ -190,6 +196,28 @@ def next_metrics(d, pos_te, lay, avail_te, truth):
     return c, float(cols[int(np.argmin(bear))] == truth) if np.linalg.norm(d) > 1e-9 else 0.0
 
 
+def bc_metrics(d, pos_te, lay, avail_te, truth):
+    """Sec.19 items 5-6, only when blue (2) and cyan (3) are both available and the next target is one of them:
+    diff = cos(d, next corner) - cos(d, the other of blue/cyan) (cancels a common 'leave the corner' direction);
+    blue = 1 if d is closer in angle to blue than to cyan (A-1's own next target after red: projection index)."""
+    if not (avail_te[2] and avail_te[3]) or truth not in (2, 3):
+        return None, None
+    cb = float(np.dot(unit(d), unit(CUBE_C[lay][2] - pos_te)))
+    cc = float(np.dot(unit(d), unit(CUBE_C[lay][3] - pos_te)))
+    return (cb - cc) if truth == 2 else (cc - cb), float(cb > cc)
+
+
+def split_boot(vals, ids, groups):
+    """boot_mean overall and per group label (None values dropped)."""
+    v = np.array([x for x in vals], dtype=object)
+    ok = np.array([x is not None for x in vals])
+    out = {'all': boot_mean(v[ok].astype(float), np.asarray(ids)[ok]) if ok.any() else None}
+    for gname in sorted(set(groups)):
+        m = ok & (np.asarray(groups) == gname)
+        out[str(gname)] = boot_mean(v[m].astype(float), np.asarray(ids)[m]) if m.any() else None
+    return out
+
+
 # ------------------------------------------------------------------ phase 1
 def phase1_tests(m1, dev):
     d = read('v15_s1_p80_half_3000', 'test', ['self_vision', 'self_motion', 'self_position', 'other_position',
@@ -209,13 +237,15 @@ def phase1_tests(m1, dev):
     h_m = lambda t: np.where(t >= te, True, hid[:, t])  # noqa: E731
     roll = run(m1, d['self_vision'], d['self_motion'], dev, pmask=p_m, hidden=h_m)
     p_hat = readout(usual['h1'], d['self_position'], np.ones_like(vis), roll['h1'], fo)
-    cs, acc, acc_a, ids = [], [], [], []
+    cs, acc, acc_a, ids, diffs = [], [], [], [], []
     for n, (t_e, col) in ev.items():
         dd = p_hat[n, t_e + K - 1] - p_hat[n, t_e - 1]
-        c, a = next_metrics(dd, d['self_position'][n, t_e], d['layout'][n], d['available'][n, t_e], d['a1_target'][n, t_e])
+        args = (d['self_position'][n, t_e], d['layout'][n], d['available'][n, t_e], d['a1_target'][n, t_e])
+        c, a = next_metrics(dd, *args)
         pre = d['self_position'][n, t_e] - d['self_position'][n, t_e - 5]
-        _, aa = next_metrics(pre, d['self_position'][n, t_e], d['layout'][n], d['available'][n, t_e], d['a1_target'][n, t_e])
-        cs.append(c); acc.append(a); acc_a.append(aa); ids.append(n)
+        _, aa = next_metrics(pre, *args)
+        cs.append(c); acc.append(a); acc_a.append(aa); ids.append(n); diffs.append(bc_metrics(dd, *args)[0])
+    r['P1c_diff_next_minus_other'] = split_boot(diffs, ids, ['X'] * len(ids))['all']
     r['P1c_c_next'] = boot_mean(cs, ids)
     r['P1c_acc'] = boot_mean(acc, ids)
     r['P1c_acc_a'] = boot_mean(acc_a, ids)
@@ -242,13 +272,20 @@ def phase2_tests(m1, dev):
                p2=lambda t: np.concatenate([zeros2, held(t), ones], 1))
     p_hat = readout(usual['h2'], d['other_position'], np.ones((N, 100), bool), roll['h2'], fo)
     r = {'P2a_r2_other_usual': r2_cv(usual['h2'], d['other_position'], np.ones((N, 100), bool), fo)}
-    cs, acc, ids = [], [], []
+    cs, acc, ids, diffs, blue, grp = [], [], [], [], [], []
     for n, (t_e, col) in ev.items():
         dd = p_hat[n, t_e + K - 1] - p_hat[n, t_e - 1]
-        c, a = next_metrics(dd, d['other_position'][n, t_e], d['layout'][n], d['available'][n, t_e], d['a2_target'][n, t_e])
-        cs.append(c); acc.append(a); ids.append(n)
+        args = (d['other_position'][n, t_e], d['layout'][n], d['available'][n, t_e], d['a2_target'][n, t_e])
+        c, a = next_metrics(dd, *args)
+        df, bl = bc_metrics(dd, *args)
+        cs.append(c); acc.append(a); ids.append(n); diffs.append(df); blue.append(bl)
+        grp.append('X' if d['a2_cand'][n] == 0 else 'Y')
     r['P2a_c_next'] = boot_mean(cs, ids)
     r['P2a_acc'] = boot_mean(acc, ids)
+    r['P2a_c_next_by_cand'] = split_boot(cs, ids, grp)
+    r['P2a_acc_by_cand'] = split_boot(acc, ids, grp)
+    r['P2a_diff_next_minus_other'] = split_boot(diffs, ids, grp)
+    r['P2a_toward_blue'] = split_boot(blue, ids, grp)
     # P2-b
     pc = cand_pleasure(d['other_vision'])
     errs = {}
@@ -257,15 +294,20 @@ def phase2_tests(m1, dev):
                 p2=lambda t, c=c: np.concatenate([zeros2, pc[c][:, t], ones], 1), need_err=True)
         errs[c] = o['err']
     truth = {n: ('X' if d['a2_cand'][n] == 0 else 'Y') for n in ev}
-    post, pre, ids = [], [], []
+    post, pre, ids, grp, chx_post, chx_pre = [], [], [], [], [], []
     for n, (t_e, col) in ev.items():
         e_post = {c: errs[c][n, t_e:t_e + K].sum() for c in 'XY'}
         e_pre = {c: errs[c][n, :t_e].sum() for c in 'XY'}
         post.append(float(min(e_post, key=e_post.get) == truth[n]))
         pre.append(float(min(e_pre, key=e_pre.get) == truth[n]))
-        ids.append(n)
+        chx_post.append(float(min(e_post, key=e_post.get) == 'X')); chx_pre.append(float(min(e_pre, key=e_pre.get) == 'X'))
+        ids.append(n); grp.append(truth[n])
     r['P2b_acc_post'] = boot_mean(post, ids)
     r['P2b_acc_pre'] = boot_mean(pre, ids)
+    r['P2b_acc_post_by_cand'] = split_boot(post, ids, grp)
+    r['P2b_acc_pre_by_cand'] = split_boot(pre, ids, grp)
+    r['P2b_chose_X_post'] = split_boot(chx_post, ids, grp)
+    r['P2b_chose_X_pre'] = split_boot(chx_pre, ids, grp)
     return r, {'P2a_c': np.array(cs)}
 
 
@@ -318,7 +360,7 @@ def pair_eval_g(m2, dev, both, te, pair):
     roll = run(m2, both['self_vision'], both['self_motion'], dev, pmask=lambda t: np.full(N, 0. if t == 0 else 1.),
                frame=lambda t: np.minimum(t, te))
     p_hat = readout(usual['h2'], both['other_position'], np.ones((N, 100), bool), roll['h2'], fo)
-    acc, ds = [], []
+    acc, ds, blue = [], [], []
     for i in range(N):
         t_e = te[i]
         dd = p_hat[i, t_e + K - 1] - p_hat[i, t_e - 1]
@@ -326,12 +368,14 @@ def pair_eval_g(m2, dev, both, te, pair):
         p0 = both['other_position'][i, t_e]
         cb = np.dot(unit(dd), unit(CUBE_C[lay][2] - p0)); cc = np.dot(unit(dd), unit(CUBE_C[lay][3] - p0))
         truth = both['a2_target'][i, t_e]
-        acc.append(float((cb > cc) == (truth == 2)) if truth in (2, 3) else np.nan)
+        acc.append(float((cb > cc) == (truth == 2)) if truth in (2, 3) else None)
+        blue.append(float(cb > cc))
         ds.append(dd)
-    acc = np.array(acc)
-    ok = ~np.isnan(acc)
-    return {'acc': boot_mean(acc[ok], pair[ok]), 'r2_other_usual': r2_cv(usual['h2'], both['other_position'], np.ones((N, 100), bool), fo)}, \
-        {'d': np.array(ds), 'q2': usual.get('q2')}
+    member = np.array(['first'] * (N // 2) + ['second'] * (N // 2))  # gen: X then Y; ctrl3: X then Xp
+    return {'acc': split_boot(acc, pair, ['all'] * N)['all'], 'acc_by_member': split_boot(acc, pair, member),
+            'toward_blue': split_boot(blue, pair, member),
+            'r2_other_usual': r2_cv(usual['h2'], both['other_position'], np.ones((N, 100), bool), fo)}, \
+        {'d': np.array(ds), 'roll': roll}
 
 
 def pair_eval_choose(m1, dev, both, te, pair):
@@ -342,12 +386,12 @@ def pair_eval_choose(m1, dev, both, te, pair):
     ones = np.ones((N, 1)); zeros2 = np.zeros((N, 2))
     errs = {c: run(m1, both['self_vision'], both['self_motion'], dev, pmask=lambda t: np.full(N, 0. if t == 0 else 1.),
                    p2=lambda t, c=c: np.concatenate([zeros2, pc[c][:, t], ones], 1), need_err=True)['err'] for c in 'XY'}
-    acc = []
+    acc, chx, grp = [], [], []
     for i in range(N):
         e = {c: errs[c][i, :te[i]].sum() for c in 'XY'}
         truth = 'X' if both['a2_cand'][i] == 0 else 'Y'
-        acc.append(float(min(e, key=e.get) == truth))
-    return {'acc': boot_mean(acc, pair)}
+        acc.append(float(min(e, key=e.get) == truth)); chx.append(float(min(e, key=e.get) == 'X')); grp.append(truth)
+    return {'acc': boot_mean(acc, pair), 'acc_by_cand': split_boot(acc, pair, grp), 'chose_X': split_boot(chx, pair, grp)}
 
 
 def natural_g(m2, dev):
@@ -384,21 +428,63 @@ def q2_stats(q2, dev):
     return {'var_frac_per_bin': (var / var.sum()).tolist(), 'corr_q2_pA2_per_bin': corr, 'cand_from_q2_acc': float(acc)}
 
 
+OFFSETS = (0, 1, 3, 5, 10)
+
+
+def memory_readout(m2, dev, roll_pairs, both, te, pair):
+    """Sec.19 item 7 (descriptive): A-2's candidate (X / Y) read linearly from h2 and from G's LSTM state at t_e + o
+    (o in OFFSETS; state after input frame t). Readout = logistic regression fitted on the training data
+    (v15_s2_c2_p80_half_1000t train, usual phase-2 protocol, first informative A-2 moment of each episode, same
+    offsets pooled), applied to the generated pairs under the P2-c protocol (input frozen at frame t_e)."""
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.pipeline import make_pipeline
+    from sklearn.preprocessing import StandardScaler
+    d = read('v15_s2_c2_p80_half_1000t', 'train', ['self_vision', 'self_motion', 'a2_eat', 'a2_target', 'a2_cand'])
+    N = d['self_vision'].shape[0]
+    usual = run(m2, d['self_vision'], d['self_motion'], dev, pmask=lambda t: np.full(N, 0. if t == 0 else 1.))
+    ev = first_informative(d['a2_eat'], d['a2_target'])
+    out = {}
+    for key in ('h2', 'g'):
+        X = np.concatenate([usual[key][n, min(t + o, T - 2)][None] for n, (t, _) in ev.items() for o in OFFSETS])
+        y = np.array([d['a2_cand'][n] for n, _ in ev.items() for o in OFFSETS])
+        clf = make_pipeline(StandardScaler(), LogisticRegression(max_iter=3000)).fit(X, y)
+        truth = (both['a2_cand'] == 0).astype(int)  # 1 = X
+        res = {}
+        for o in OFFSETS:
+            Z = roll_pairs[key][np.arange(len(te)), np.minimum(te + o, T - 2)]
+            pred = clf.predict(Z)
+            res[str(o)] = boot_mean((pred == both['a2_cand']).astype(float), pair)
+        out[key] = res
+    return out
+
+
+def load_ref0(tag, dev):
+    """'before training' references (Sec.19 item 1): phase-1 model at epoch 0 (encoders loaded and frozen, the rest
+    at its initial values), and the phase-2 class with those weights and G at its initial values (seed 0)."""
+    m1 = load(f'v15_s2p1_{tag}_mse', 0, dev)
+    torch.manual_seed(0)
+    mcfg = util.load_config(os.path.join(_PI_DIR, 'config', 'model', 'SuperpositionNetworkMotionPleasureHoldOtherV15', 'default.yml'))
+    m2 = model_v15.SuperpositionNetworkMotionPleasureHoldOtherV15(mcfg)
+    m2.load_state_dict(torch.load(os.path.join(RES, f'v15_s2p1_{tag}_mse', '0', 'model', '00000.pth'), map_location='cpu')['model'], strict=False)
+    return m1, m2.to(dev).eval()
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--tag', required=True)
     ap.add_argument('--device', default='cpu')
     ap.add_argument('--epoch', type=int, default=150)
+    ap.add_argument('--ref0', action='store_true', help='the before-training reference of this tag (Sec.19)')
     a = ap.parse_args()
     torch.set_num_threads(2)
     os.makedirs(OUT, exist_ok=True)
     dev = torch.device(a.device)
-    m1 = load(f'v15_s2p1_{a.tag}_mse', a.epoch, dev)
-    m2 = load(f'v15_s2p2_{a.tag}', a.epoch, dev)
-    R, NPZ = {'tag': a.tag, 'epoch': a.epoch, 'K': K}, {}
-    r, z = phase1_tests(m1, dev); R.update(r); NPZ.update(z); print('phase 1', r, flush=True)
-    m1 = load(f'v15_s2p1_{a.tag}_mse', a.epoch, dev)
-    r, z = phase2_tests(m1, dev); R.update(r); NPZ.update(z); print('phase 2', r, flush=True)
+    get1 = (lambda: load_ref0(a.tag, dev)[0]) if a.ref0 else (lambda: load(f'v15_s2p1_{a.tag}_mse', a.epoch, dev))
+    m2 = load_ref0(a.tag, dev)[1] if a.ref0 else load(f'v15_s2p2_{a.tag}', a.epoch, dev)
+    name = f'{a.tag}_ref0' if a.ref0 else a.tag
+    R, NPZ = {'tag': name, 'epoch': 0 if a.ref0 else a.epoch, 'K': K}, {}
+    r, z = phase1_tests(get1(), dev); R.update(r); NPZ.update(z); print('phase 1', r, flush=True)
+    r, z = phase2_tests(get1(), dev); R.update(r); NPZ.update(z); print('phase 2', r, flush=True)
     R['baselines_ab_at_A2_moments'] = baselines_ab()
     for key, (nx, ny) in (('gen', ('v15_s2_genx_p80', 'v15_s2_geny_p80')), ('ctrl3', ('v15_s2_c3x_p80', 'v15_s2_c3xp_p80'))):
         dx, dy, keep = pair_data(nx, ny)
@@ -407,13 +493,13 @@ def main():
         r, z = pair_eval_g(m2, dev, both, te, pair); R[f'P2c_{key}'] = r
         NPZ[f'{key}_d'] = z['d']; NPZ[f'{key}_te'] = te; NPZ[f'{key}_keys'] = np.array([n for n, _ in keep])
         if key == 'gen':
-            m1 = load(f'v15_s2p1_{a.tag}_mse', a.epoch, dev)
-            R["P2c'_gen"] = pair_eval_choose(m1, dev, both, te, pair)
+            R["P2c'_gen"] = pair_eval_choose(get1(), dev, both, te, pair)
+            R['memory_readout_gen'] = memory_readout(m2, dev, z['roll'], both, te, pair)
         print(key, R[f'P2c_{key}'], flush=True)
     r, q2 = natural_g(m2, dev); R['P2c_natural_all_moments'] = r
     R['q2_stats'] = q2_stats(q2, dev)
-    json.dump(R, open(os.path.join(OUT, f'eval_{a.tag}.json'), 'w'), indent=1)
-    np.savez_compressed(os.path.join(OUT, f'eval_{a.tag}.npz'), **NPZ)
+    json.dump(R, open(os.path.join(OUT, f'eval_{name}.json'), 'w'), indent=1)
+    np.savez_compressed(os.path.join(OUT, f'eval_{name}.npz'), **NPZ)
     print(json.dumps(R), flush=True)
 
 

@@ -35,9 +35,10 @@ def current_target(values, rank, available):
 
 
 class PrefPolicy(AgentPolicy):
-    def __init__(self, agent, policy, p_rule=0.8, rank=None, values=None, rng=None, r_eat=R_EAT):
+    def __init__(self, agent, policy, p_rule=0.8, rank=None, values=None, rng=None, r_eat=R_EAT, random_eat=None):
         super().__init__(agent, policy, p_rule=p_rule, liked=None, rng=rng)
         self.rank, self.values, self.r_eat = rank, values, r_eat
+        self.random_eat = random_eat  # policy 'random' only: None (never eats), 'target' or 'any' (log Sec.19)
 
     def set_preference(self, rank, values):
         self.rank, self.values = rank, values
@@ -47,7 +48,20 @@ class PrefPolicy(AgentPolicy):
         a = self.agent
         if self.policy == 'random':
             src = SRC_SLEEP if a.is_sleep else SRC_RANDOM
-            return a.step(), src, None, None
+            m = a.step()
+            target, eaten = None, None
+            if self.random_eat is not None:
+                target = current_target(self.values, self.rank, world.available)
+                if src != SRC_SLEEP:
+                    if self.random_eat == 'target':
+                        cands = [target] if target is not None else []
+                    else:
+                        cands = [c for c, ok in world.available.items() if ok]
+                    for c in cands:
+                        if np.linalg.norm(a.p - CORNER_POINT[world.corner_of[c]]) <= self.r_eat:
+                            eaten = c
+                            break
+            return m, src, target, eaten
 
         target = current_target(self.values, self.rank, world.available)
         if a.is_sleep:

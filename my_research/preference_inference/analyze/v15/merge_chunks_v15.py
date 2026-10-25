@@ -75,6 +75,7 @@ def main():
     write(out, attrs, parts, a.name)
     with h5py.File(ca, 'r') as fa, h5py.File(cb, 'r') as fb, h5py.File(out, 'r') as fo:
         n = fa['train']['self_vision'].shape[0]
+        assert fa['train']['self_vision'][:].any() and fo[csplit]['self_vision'][:].any(), 'empty views (generation failed)'
         s = int(cstart)
         bad_ab = [k for k in fa['train'] if not np.array_equal(fa['train'][k][:], fb['train'][k][:])]
         bad_m = [k for k in fa['train'] if not np.array_equal(fa['train'][k][:], fo[csplit][k][s:s + n])]

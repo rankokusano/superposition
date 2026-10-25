@@ -87,6 +87,8 @@ for _p in (30, 40, 50, 60, 80):
 # (Sec.15) stage 2: no-experience stage-1 data (A-1 random, same key -> paired with v15_s1_p80_half) and the
 # phase-2 data (A-1 random, A-2 candidates X / Y, gray in half of the episodes; 6000 + test 300)
 DATASET_CONFIGS['v15_s1_random_half'] = dict(stage=1, key='v15_s1', p=0.0, cand=None, layout='seq', gray='half', a1_policy='random')
+for _e in ('random_eat', 'random_eat_any'):
+    DATASET_CONFIGS[f'v15_s1_{_e}_half'] = dict(stage=1, key='v15_s1', p=0.0, cand=None, layout='seq', gray='half', a1_policy=_e)
 DATASET_CONFIGS['v15_s2_c2_p80_half'] = dict(stage=2, key='v15_s2', p=0.8, cand='mix', layout='seq', gray='half')
 # (Sec.12) stage 1 with gray in half of the episodes (same key as v15_s1_p80: the grayed episodes keep their colour)
 DATASET_CONFIGS['v15_s1_p80_half'] = dict(stage=1, key='v15_s1', p=0.8, cand=None, layout='seq', gray='half')
@@ -123,8 +125,13 @@ def collect(cfg, n_data, split, h5, start=0):
     env = Env15('random', 'stay' if stage == 1 else 'random')
     env.init()
     world = env.world
-    if stage == 1 and cfg.get('a1_policy', 'mixed') == 'random':
-        pol1 = PrefPolicy(env.self_agent, 'random')  # stage-1 no-experience data (Sec.15): A-1 walks at random, never eats
+    if stage == 1 and cfg.get('a1_policy', 'mixed') in ('random', 'random_eat', 'random_eat_any'):
+        # stage-1 no-experience data (Sec.15, 19): A-1 walks at random; 'random' never eats, 'random_eat' eats its current
+        # target (most liked available, positive value) when within r of its corner, 'random_eat_any' eats any coloured cube
+        # it comes within r of (Sec.19 options)
+        eat = {'random': None, 'random_eat': 'target', 'random_eat_any': 'any'}[cfg.get('a1_policy')]
+        pol1 = PrefPolicy(env.self_agent, 'random', rank=RANK_A1, values=rank_values_(RANK_A1), random_eat=eat)
+        pol2 = None
     elif stage == 1:
         pol1 = PrefPolicy(env.self_agent, 'mixed', p_rule=cfg['p'], rank=RANK_A1, values=rank_values_(RANK_A1))
         pol2 = None
