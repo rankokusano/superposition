@@ -188,7 +188,7 @@ def t_inverse():
         x = [d[pr][q]['points'][e][key] for e in EP]
         return min(x), max(x), d[pr][q]['n_pass']
 
-    top, bot = [], []
+    top, bot, nsr = [], [], []
     for s in range(6):
         a = ba_range(v13, f'v13:mixed:{s},v12:random:{s}', 'ba_exp')
         b = ba_range(v12, f'v12:mixed:{s},v12:random:{s}', 'ba_exp')
@@ -196,6 +196,7 @@ def t_inverse():
         fpk = [k for k in v13m if k.startswith(f'v13mse:mixed:{s},')][0]
         f_pass = v13m[fpk]['pref_FP_T50']['n_pass']
         f = fp[f'v13mse_mixed_{s}|FP']
+        fl = fp[f'v13_mixed_{s}|L1']
         how = '好み' if f['n_ci_low_above_half'] >= 3 else '方角'
         if s < 3:
             p = ns[f'v13:mixed:{s},v13ns:mixed:{s}']['pref_L1_T50']
@@ -203,22 +204,29 @@ def t_inverse():
             nsc = f"{p['n_pass']}/5，{sg(q['diff'])} {ci(*q['diff_ci'])}"
         else:
             nsc = '---'
-        vals[PAIRS[s]] = {'80': a, '50': b, 'none': n, 'fp_pass': f_pass, 'follow': f, 'ns': nsc, 'fp_key': fpk}
-        top.append(f'{PAIRS[s]} & {rg(a[0], a[1])}（{a[2]}/5） & {rg(b[0], b[1])}（{b[2]}/5） & {rg(n[0], n[1])} \\\\')
-        bot.append(f'{PAIRS[s]} & {f_pass}/5 & {rg(f["late5_min"], f["late5_max"])}（{f["n_ci_low_above_half"]}/5，{how}） & {nsc} \\\\')
+        vals[PAIRS[s]] = {'80': a, '50': b, 'none': n, 'fp_pass': f_pass, 'follow_fp_mse': f, 'follow_l1_l1': fl, 'ns': nsc,
+                          'fp_key': fpk}
+        top.append(f'{PAIRS[s]} & {rg(a[0], a[1])}（{a[2]}/5） & {rg(b[0], b[1])}（{b[2]}/5） & {rg(n[0], n[1])} & \\\\')
+        bot.append(f'{PAIRS[s]} & {f_pass}/5 & {rg(f["late5_min"], f["late5_max"])}（{f["n_ci_low_above_half"]}/5，{how}） & '
+                   f'{rg(fl["late5_min"], fl["late5_max"])}（{fl["n_ci_low_above_half"]}/5） & \\\\')
+        if s < 3:
+            nsr.append(f'{PAIRS[s]} & \\multicolumn{{4}}{{l}}{{{nsc}}} \\\\')
     d, dl = db['T50|all'], db['T50|low_rule']
-    body = ['\\setlength{\\tabcolsep}{3.5pt}%', '\\begin{tabular}{@{}llll@{}}', '\\toprule',
-            '\\multicolumn{4}{@{}p{0.9\\linewidth}@{}}{(a) 自己視界基準の正解率 BA（$T=50$，L1 期間の最終5点の範囲，括弧は合格の点）} \\\\', '\\midrule',
-            '組 & 経験80\\% & 経験50\\% & 経験なし \\\\', '\\midrule'] + top + [
+    body = ['\\setlength{\\tabcolsep}{3.5pt}%', '\\begin{tabular}{@{}lllll@{}}', '\\toprule',
+            '\\multicolumn{5}{@{}p{0.9\\linewidth}@{}}{(a) 自己視界基準の正解率 BA（$T=50$，L1 期間の最終5点の範囲，括弧は合格の点）} \\\\', '\\midrule',
+            '組 & 経験80\\% & 経験50\\% & 経験なし & \\\\', '\\midrule'] + top + [
             '\\midrule',
-            f'方角だけの基準 & \\multicolumn{{3}}{{l}}{{{d["ba"]:.3f} {ci(*d["ba_ci"], signed=False)}'
+            f'方角だけの基準 & \\multicolumn{{4}}{{l}}{{{d["ba"]:.3f} {ci(*d["ba_ci"], signed=False)}'
             f'（素の一致率 {d["raw_agree"]:.3f}）}} \\\\',
-            f' & \\multicolumn{{3}}{{l}}{{規則の一歩が少ない3分の1：{dl["ba"]:.3f} {ci(*dl["ba_ci"], signed=False)}'
+            f' & \\multicolumn{{4}}{{l}}{{規則の一歩が少ない3分の1：{dl["ba"]:.3f} {ci(*dl["ba_ci"], signed=False)}'
             f'（{dl["n"]}エピソード，素の一致率 {dl["raw_agree"]:.3f}）}} \\\\',
             '\\midrule[\\heavyrulewidth]',
-            '\\multicolumn{4}{@{}p{0.9\\linewidth}@{}}{(b) 経験80\\%条件の他者特徴基準・好み追従率（他者特徴基準，MSE 期間の最終5点）と，非共有条件との比較（自己視界基準）} \\\\', '\\midrule',
-            '組 & 他者特徴基準 & 好み追従率 & 経験80\\% $-$ 非共有 \\\\',
-            ' & 合格の点 & 範囲（点，書き方） & 点，ep200 の差 [CI] \\\\', '\\midrule'] + bot + [
+            '\\multicolumn{5}{@{}p{0.9\\linewidth}@{}}{(b) 経験80\\%条件の他者特徴基準の合格の点，好み追従率（他者特徴基準は MSE 期間，自己視界基準は L1 期間の最終5点の範囲，括弧は CI の下限 $>0.5$ の点）} \\\\', '\\midrule',
+            '組 & 他者特徴基準 & 好み追従率 & 好み追従率 & \\\\',
+            ' & 合格の点 & 他者特徴基準（書き方） & 自己視界基準 & \\\\', '\\midrule'] + bot + [
+            '\\midrule[\\heavyrulewidth]',
+            '\\multicolumn{5}{@{}p{0.9\\linewidth}@{}}{(c) 経験80\\% $-$ 非共有（自己視界基準の BA，$T=50$．組1〜3）：合格の点，ep200 の差 [95\\%信頼区間]} \\\\',
+            '\\midrule'] + nsr + [
             '\\bottomrule', '\\end{tabular}']
     write('inverse', '\n'.join(body))
     json.dump(vals, open(os.path.join(OUT, 'inverse_values.json'), 'w'), indent=1, ensure_ascii=False, default=str)
@@ -226,24 +234,31 @@ def t_inverse():
 # ---------------------------------------------------------------- table A1
 def t_gates():
     r6 = J(RES, 'v13', 'extra', 'robust6.json')
-    rows = [('自己位置の追跡（前提）', 'G1_50', 'G1_80'), ('価値と行動・色の結びつき', 'a_G2_50', 'a_G2_80'),
-            ('自己側の積み上がり', 'a_G3_50', 'a_G3_80'), ('他者側の積み上がり（G5a）', 'G5a_50', 'G5a_80'),
-            ('他者側の符号応答（G5b）', 'c_G5b_50', 'c_G5b_80')]
-    ns = {'自己位置の追跡（前提）': '0/5', '価値と行動・色の結びつき': '合格', '自己側の積み上がり': '5/5',
-          '他者側の積み上がり（G5a）': '0/5', '他者側の符号応答（G5b）': '0/5'}
-    body = ['\\begin{tabular}{@{}llllllll@{}}', '\\toprule',
+    rows = [('自己位置の追跡', 'G1_50', 'G1_80'), ('価値と行動・色の結びつき', 'a_G2_50', 'a_G2_80'),
+            ('自己側の積み上がり', 'a_G3_50', 'a_G3_80'), ('他者側の積み上がり G5a', 'G5a_50', 'G5a_80'),
+            ('他者側の符号応答 G5b', 'c_G5b_50', 'c_G5b_80')]
+    # no-sharing condition, pairs 1-3: v13_summary.md Sec.5 table 5 (G1 from the R2 values, all < 0.80)
+    ns = {'自己位置の追跡': [('非共有', ['0/5'] * 3)],
+          '価値と行動・色の結びつき': [('非共有：偏り', ['5/5'] * 3), ('非共有：寄り', ['5/5'] * 3),
+                                ('非共有：色の基準', ['0.009〜0.013', '0.011〜0.013', '0.010〜0.014'])],
+          '自己側の積み上がり': [('非共有', ['5/5'] * 3)],
+          '他者側の積み上がり G5a': [('非共有', ['0/5'] * 3)],
+          '他者側の符号応答 G5b': [('非共有', ['0/5'] * 3)]}
+    body = ['\\setlength{\\tabcolsep}{3pt}%', '\\begin{tabular}{@{}llllllll@{}}', '\\toprule',
             '指標 & 条件 & 組1 & 組2 & 組3 & 組4 & 組5 & 組6 \\\\', '\\midrule']
     for lab, k50, k80 in rows:
         for cn, k in (('経験50\\%', k50), ('経験80\\%', k80)):
             first = lab if k == k50 else ''
-            body.append(f'{first} & {cn} & ' +
-                        ' & '.join(f'{r6[f"s{s}"][k]}/5' for s in range(6)) + ' \\\\')
-        c = ns[lab]
-        nsrow = ' & '.join([c] * 3) if c != '合格' else '\\multicolumn{3}{l}{3組で合格}'
-        body.append(f' & 非共有 & {nsrow} & --- & --- & --- \\\\')
+            body.append(f'{first} & {cn} & ' + ' & '.join(f'{r6[f"s{s}"][k]}/5' for s in range(6)) + ' \\\\')
+        for cn, cells in ns[lab]:
+            tail = ' & --- & --- & ---' if len(cells) == 3 else ''
+            body.append(f' & {cn} & ' + ' & '.join(cells) + tail + ' \\\\')
         body.append('\\midrule')
-    body[-1] = '\\bottomrule'
-    body.append('\\end{tabular}')
+    body[-1] = '\\midrule'
+    body += ['\\multicolumn{8}{@{}p{0.97\\linewidth}@{}}{注：非共有条件は組1〜3 だけ．偏り＝予測の偏り，寄り＝反事実の視界への寄り．非共有の偏り・寄り・'
+             '自己側の積み上がり・G5a・G5b の点は，組の差（経験あり $-$ 非共有の経験なし）が仮説の向きで信頼区間が0を含まない点の数．'
+             '色の基準は値の範囲（最終5点）．自己位置の追跡は値（0.739〜0.762）が5点とも 0.80 未満．} \\\\',
+             '\\bottomrule', '\\end{tabular}']
     write('gates', '\n'.join(body))
 
 

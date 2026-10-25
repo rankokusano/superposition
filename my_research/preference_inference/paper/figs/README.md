@@ -5,11 +5,12 @@
 - **日本語のフォント**：コンテナに日本語のフォントがないので、作り直す前にホストから写す（リポジトリには置かない）：
   ```
   docker exec kusano_research mkdir -p /tmp/paperfonts
-  docker cp /usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc kusano_research:/tmp/paperfonts/
+  docker cp /usr/share/fonts/opentype/ipafont-gothic/ipagp.ttf kusano_research:/tmp/paperfonts/
   ```
-- **フォントの埋め込み**：matplotlib 3.4 は TrueType（Type 42）を部分埋め込みしないため、Noto の全体が入って PDF が 16 MB になった。ghostscript での部分化も .ttc を読めず別のフォントに置き換わったので使わない。**Type 3 で埋め込む**（使った字形だけ、PDF は 50〜70 KB）。図の中の文字は PDF 上で検索・コピーできない。投稿先が Type 3 を受け付けない場合は、matplotlib を 3.6 以降にして Type 42 にする（要相談）。
+- **フォントの埋め込み（2026-10-26 改訂）**：Type 42（TrueType）。日本語は IPA Pゴシック（`ipagp.ttf`、TrueType の .ttf）、数式の記号は DejaVu Sans。matplotlib 3.4 は Type 42 を部分埋め込みしないので、`paper_style.save` で PDF を書いたあとコンテナの ghostscript（pdfwrite、`-dSubsetFonts=true`）で使った字形だけに絞って書き直す。環境は変えていない。Noto Sans CJK（.ttc、中身は CFF）は Type 42 にできず ghostscript も読めないので使わない（前の版は Noto の Type 3）。
+- pdffonts の結果（6 枚とも Type 3 なし、すべて `CID TrueType`・部分埋め込み・ToUnicode あり）とファイルの大きさ：network 153786 B、env_conditions 120220 B、central 117649 B、projection_error 88334 B、write_vs_choose 76643 B、inverse 127877 B。
 - 色：条件ごとに固定（経験なし 灰・丸、経験50% 橙・四角、経験80% 青・三角、非共有 緑・白抜きの菱形）。色だけに頼らないよう記号の形も変えた。
-- 目視：6 枚とも PDF を画像にして確かめた（2026-10-26）。
+- 目視：6 枚とも PDF を画像にして確かめた（2026-10-26、Type 42 に作り直した版も確かめた）。
 
 | ファイル | 中身 | 元の値 | スクリプト | 目視 |
 |---|---|---|---|---|
