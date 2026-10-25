@@ -207,6 +207,35 @@ def bc_metrics(d, pos_te, lay, avail_te, truth):
     return (cb - cc) if truth == 2 else (cc - cb), float(cb > cc)
 
 
+def cell_boot(vals, ids, cells, seed=0):
+    """Sec.22: per-cell mean (bootstrap over units within the cell), counts, and the equal-weight average of the
+    cells (each bootstrap draw resamples units within every cell). None values are dropped."""
+    v = np.array([np.nan if x is None else x for x in vals], float)
+    ids, cells = np.asarray(ids), np.asarray(cells)
+    ok = ~np.isnan(v)
+    names = sorted(set(cells[ok]))
+    out = {'cells': {}, 'counts': {}}
+    rng = np.random.RandomState(seed)
+    draws = []
+    for c in names:
+        m = ok & (cells == c)
+        out['cells'][str(c)] = boot_mean(v[m], ids[m])
+        out['counts'][str(c)] = int(m.sum())
+    for _ in range(BOOT):
+        means = []
+        for c in names:
+            vv = v[ok & (cells == c)]
+            means.append(vv[rng.randint(len(vv), size=len(vv))].mean())
+        draws.append(np.mean(means))
+    out['equal_weight'] = {'mean': float(np.mean([out['cells'][str(c)]['mean'] for c in names])),
+                           'ci95': [float(np.percentile(draws, 2.5)), float(np.percentile(draws, 97.5))]}
+    return out
+
+
+def eaten_corner(lay, colour):
+    return S0._COL_CORNER[int(lay)][int(colour)]
+
+
 def split_boot(vals, ids, groups):
     """boot_mean overall and per group label (None values dropped)."""
     v = np.array([x for x in vals], dtype=object)
@@ -237,8 +266,9 @@ def phase1_tests(m1, dev):
     h_m = lambda t: np.where(t >= te, True, hid[:, t])  # noqa: E731
     roll = run(m1, d['self_vision'], d['self_motion'], dev, pmask=p_m, hidden=h_m)
     p_hat = readout(usual['h1'], d['self_position'], np.ones_like(vis), roll['h1'], fo)
-    cs, acc, acc_a, ids, diffs = [], [], [], [], []
+    cs, acc, acc_a, ids, diffs, corners = [], [], [], [], [], []
     for n, (t_e, col) in ev.items():
+        corners.append(eaten_corner(d['layout'][n], col))
         dd = p_hat[n, t_e + K - 1] - p_hat[n, t_e - 1]
         args = (d['self_position'][n, t_e], d['layout'][n], d['available'][n, t_e], d['a1_target'][n, t_e])
         c, a = next_metrics(dd, *args)
@@ -246,6 +276,7 @@ def phase1_tests(m1, dev):
         _, aa = next_metrics(pre, *args)
         cs.append(c); acc.append(a); acc_a.append(aa); ids.append(n); diffs.append(bc_metrics(dd, *args)[0])
     r['P1c_diff_next_minus_other'] = split_boot(diffs, ids, ['X'] * len(ids))['all']
+    r['P1c_diff_by_corner'] = cell_boot(diffs, ids, corners)  # Sec.22: TL / BL and their equal-weight average
     r['P1c_c_next'] = boot_mean(cs, ids)
     r['P1c_acc'] = boot_mean(acc, ids)
     r['P1c_acc_a'] = boot_mean(acc_a, ids)
@@ -272,8 +303,9 @@ def phase2_tests(m1, dev):
                p2=lambda t: np.concatenate([zeros2, held(t), ones], 1))
     p_hat = readout(usual['h2'], d['other_position'], np.ones((N, 100), bool), roll['h2'], fo)
     r = {'P2a_r2_other_usual': r2_cv(usual['h2'], d['other_position'], np.ones((N, 100), bool), fo)}
-    cs, acc, ids, diffs, blue, grp = [], [], [], [], [], []
+    cs, acc, ids, diffs, blue, grp, cellv = [], [], [], [], [], [], []
     for n, (t_e, col) in ev.items():
+        cellv.append(eaten_corner(d['layout'][n], col) + '_' + ('X' if d['a2_cand'][n] == 0 else 'Y'))
         dd = p_hat[n, t_e + K - 1] - p_hat[n, t_e - 1]
         args = (d['other_position'][n, t_e], d['layout'][n], d['available'][n, t_e], d['a2_target'][n, t_e])
         c, a = next_metrics(dd, *args)
@@ -286,6 +318,8 @@ def phase2_tests(m1, dev):
     r['P2a_acc_by_cand'] = split_boot(acc, ids, grp)
     r['P2a_diff_next_minus_other'] = split_boot(diffs, ids, grp)
     r['P2a_toward_blue'] = split_boot(blue, ids, grp)
+    r['P2a_diff_by_corner_cand'] = cell_boot(diffs, ids, cellv)  # Sec.22: 4 cells and their equal-weight average
+    r['P2a_c_next_by_corner_cand'] = cell_boot(cs, ids, cellv)
     # P2-b
     pc = cand_pleasure(d['other_vision'])
     errs = {}
@@ -428,6 +462,48 @@ def q2_stats(q2, dev):
     return {'var_frac_per_bin': (var / var.sum()).tolist(), 'corr_q2_pA2_per_bin': corr, 'cand_from_q2_acc': float(acc)}
 
 
+def control_check(m2, dev, both, te, pair):
+    """Sec.22: the control (3) pairs as a check of the evaluation pipeline (not a learning result).
+    (i) the inputs of the two episodes up to t_e must be identical (max |diff| of the views fed and of A-1's motion);
+        under the P2-c protocol (inputs frozen at t_e afterwards) the predictions must then be (almost) identical
+        (max |diff| of h2 over t <= t_e + K and of the read displacement);
+    (ii) descriptive, usual protocol (true views throughout): first step where the fed views differ (t_in), where A-2's
+        positions differ (t_traj) and where h2 differs (> 1e-4, t_pred); a prediction that diverges before the inputs
+        (t_pred < t_in) is reported as a leak."""
+    N = len(te); H = N // 2
+    a, b = np.arange(H), np.arange(H) + H
+    in_diff = max(int(np.abs(both['self_vision'][a[i], :te[a[i]] + 1].astype(int) - both['self_vision'][b[i], :te[b[i]] + 1]).max())
+                  for i in range(H))
+    mot_diff = max(float(np.abs(both['self_motion'][a[i], :te[a[i]] + 1] - both['self_motion'][b[i], :te[b[i]] + 1]).max())
+                   for i in range(H))
+    pm = lambda t: np.full(N, 0. if t == 0 else 1.)  # noqa: E731
+    roll = run(m2, both['self_vision'], both['self_motion'], dev, pmask=pm, frame=lambda t: np.minimum(t, te))
+    h2d = max(float(np.abs(roll['h2'][a[i], :te[a[i]] + K] - roll['h2'][b[i], :te[b[i]] + K]).max()) for i in range(H))
+    usual = run(m2, both['self_vision'], both['self_motion'], dev, pmask=pm)
+    p_hat = readout(usual['h2'], both['other_position'], np.ones((N, 100), bool), roll['h2'], [(pair % 2 == 0), (pair % 2 == 1)])
+    dd = max(float(np.abs((p_hat[a[i], te[a[i]] + K - 1] - p_hat[a[i], te[a[i]] - 1]) -
+                          (p_hat[b[i], te[b[i]] + K - 1] - p_hat[b[i], te[b[i]] - 1])).max()) for i in range(H))
+    t_in, t_traj, t_pred, leak = [], [], [], 0
+    for i in range(H):
+        dv = np.where(np.any(both['self_vision'][a[i]] != both['self_vision'][b[i]], axis=(1, 2, 3)))[0]
+        dp = np.where(np.any(both['other_position'][a[i]] != both['other_position'][b[i]], axis=1))[0]
+        dh = np.where(np.abs(usual['h2'][a[i]] - usual['h2'][b[i]]).max(1) > 1e-4)[0]
+        ti = int(dv[0]) if len(dv) else None
+        tp = int(dh[0]) if len(dh) else None
+        t_in.append(ti); t_traj.append(int(dp[0]) if len(dp) else None); t_pred.append(tp)
+        if tp is not None and (ti is None or tp < ti):
+            leak += 1
+    def med(x):
+        x = [v for v in x if v is not None]
+        return float(np.median(x)) if x else None
+    return {'max_input_diff_upto_te': in_diff, 'max_motion_diff_upto_te': mot_diff,
+            'max_h2_diff_frozen_protocol': h2d, 'max_displacement_diff_frozen_protocol': dd,
+            'usual_first_step_inputs_differ_median_minus_te': med([None if x is None else x - te[a[i]] for i, x in enumerate(t_in)]),
+            'usual_first_step_A2_positions_differ_median_minus_te': med([None if x is None else x - te[a[i]] for i, x in enumerate(t_traj)]),
+            'usual_first_step_h2_differs_median_minus_te': med([None if x is None else x - te[a[i]] for i, x in enumerate(t_pred)]),
+            'leaks_prediction_before_input': leak, 'n_pairs': H}
+
+
 OFFSETS = (0, 1, 3, 5, 10)
 
 
@@ -490,6 +566,10 @@ def main():
         dx, dy, keep = pair_data(nx, ny)
         both, te, pair = stack_pairs(dx, dy, keep)
         R[f'{key}_n_pairs'] = len(keep)
+        if key == 'ctrl3':
+            R['ctrl3_pipeline_check'] = control_check(m2, dev, both, te, pair)
+            print(key, R['ctrl3_pipeline_check'], flush=True)
+            continue
         r, z = pair_eval_g(m2, dev, both, te, pair); R[f'P2c_{key}'] = r
         NPZ[f'{key}_d'] = z['d']; NPZ[f'{key}_te'] = te; NPZ[f'{key}_keys'] = np.array([n for n, _ in keep])
         if key == 'gen':
