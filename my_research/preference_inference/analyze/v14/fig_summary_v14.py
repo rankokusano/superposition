@@ -42,12 +42,12 @@ def ba_curve(detail, pair, key):
 
 
 def fig1():
-    v13 = J('inverse', 'aggregate_v13_s0s1s2s3.json')['detail']
-    v12 = J('inverse', 'aggregate_v12_s0s1s2s3.json')['detail']
+    v13 = J('inverse', 'aggregate_v13_s0to5.json')['detail']
+    v12 = J('inverse', 'aggregate_v12_s0to5.json')['detail']
     ns = J('inverse', 'aggregate_v13_vs_ns.json')['detail']
-    fig, axs = plt.subplots(1, 4, figsize=(17, 4.3), sharey=True)
+    fig, axs = plt.subplots(2, 3, figsize=(15, 8), sharey=True)
     x = np.arange(len(TS))
-    for s, ax in enumerate(axs):
+    for s, ax in enumerate(axs.ravel()):
         rows = [('v13', v13, f'v13:mixed:{s},v12:random:{s}', 'ba_exp'),
                 ('v12', v12, f'v12:mixed:{s},v12:random:{s}', 'ba_exp'),
                 ('noexp', v12, f'v12:mixed:{s},v12:random:{s}', 'ba_noexp')]
@@ -60,13 +60,15 @@ def fig1():
         ax.axvline(x[TS.index(50)], color='0.88', lw=8, zorder=0)
         ax.set_xticks(x); ax.set_xticklabels([str(T) for T in TS]); ax.set_xlabel('T (frames accumulated)')
         n13 = v13[f'v13:mixed:{s},v12:random:{s}']['pref_L1_T50']['n_pass']
-        ax.set_title(f'pair s{s}{" (spare)" if s == 3 else ""}: v13 passing points {n13}/5' + ('' if s < 3 else '\n(no NS run for s3)'), fontsize=10)
-    axs[0].set_ylabel('balanced accuracy (choose c+ / c-)')
-    h, l = axs[0].get_legend_handles_labels()
+        tag = {3: ' (spare)', 4: ' (added)', 5: ' (added)'}.get(s, ' (main)')
+        ax.set_title(f'pair s{s}{tag}: v13 passing points {n13}/5' + ('' if s < 3 else '\n(no NS run)'), fontsize=10)
+    for ax in axs[:, 0]:
+        ax.set_ylabel('balanced accuracy (choose c+ / c-)')
+    h, l = axs[0, 0].get_legend_handles_labels()
     fig.legend(h, l, loc='lower center', ncol=4, frameon=False, fontsize=9)
     fig.suptitle('v14-A: inferring A-2\'s preference from A-1\'s view by the cumulative self-vision prediction error '
                  '(pref test; mean over l1 late-5, bars = range; grey band = registered T = 50)', fontsize=10)
-    fig.tight_layout(rect=(0, 0.07, 1, 1))
+    fig.tight_layout(rect=(0, 0.05, 1, 1))
     fig.savefig(os.path.join(OUT, 'fig1_ba_vs_T.png'), dpi=120)
 
 
@@ -77,12 +79,18 @@ def follow(d, key):
 
 def fig2():
     v13 = J('inverse', 'fp_direction_v13l1.json'); v13.update(J('inverse', 'fp_direction_v13l1_s3.json'))
+    v13.update(J('inverse', 'fp_direction_l1_s45.json'))
     v12 = J('inverse', 'fp_direction.json')
+    for k, v in J('inverse', 'fp_direction_l1_s45.json').items():   # v12_<cond>_<s>|... -> <cond>_s<s>|...
+        if k.startswith('v12_'):
+            t, rest = k.split('|', 1)
+            _, c, sd = t.split('_')
+            v12[f'{c}_s{sd}|{rest}'] = v
     ns = J('inverse', 'fp_direction_nsl1.json')
-    fig, axs = plt.subplots(1, 2, figsize=(14, 4.4), sharey=True)
+    fig, axs = plt.subplots(1, 2, figsize=(17, 4.6), sharey=True)
     for ax, q, title in zip(axs, ('FP', 'L1'), ('choosing by the other-side feature-prediction error (FP)',
                                                  'choosing by the self-vision error (L1, main of v14-A)')):
-        for s in range(4):
+        for s in range(6):
             rows = [('v13', v13, f'v13_mixed_{s}|{q}|all|ep200'), ('v12', v12, f'mixed_s{s}|{q}|all|ep200'),
                     ('noexp', v12, f'random_s{s}|{q}|all|ep200')]
             if s < 3:
@@ -93,7 +101,7 @@ def fig2():
                 ax.errorbar(xx, m, yerr=[[m - c[0]], [c[1] - m]], color=C[k], marker='o', ms=6, capsize=3, lw=1.5,
                             label=LAB[k] if s == 0 else None)
         ax.axhline(0.5, color='0.3', lw=0.8, ls='--')
-        ax.set_xticks(range(4)); ax.set_xticklabels(['pair s0', 'pair s1', 'pair s2', 'pair s3 (spare)'])
+        ax.set_xticks(range(6)); ax.set_xticklabels(['s0', 's1', 's2', 's3\n(spare)', 's4\n(added)', 's5\n(added)'])
         ax.set_title(title, fontsize=10)
     axs[0].set_ylabel('share following preference')
     axs[1].legend(frameon=False, fontsize=8, loc='lower right')
