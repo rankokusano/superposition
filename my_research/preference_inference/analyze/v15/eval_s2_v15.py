@@ -280,7 +280,8 @@ def phase1_tests(m1, dev):
     r['P1c_c_next'] = boot_mean(cs, ids)
     r['P1c_acc'] = boot_mean(acc, ids)
     r['P1c_acc_a'] = boot_mean(acc_a, ids)
-    return r, {'P1c_c': np.array(cs), 'P1c_ids': np.array(ids)}
+    return r, {'P1c_c': np.array(cs), 'P1c_ids': np.array(ids), 'P1c_acc_ev': np.array(acc),
+               'P1c_diff_ev': np.array([np.nan if x is None else x for x in diffs]), 'P1c_corner_ev': np.array(corners)}
 
 
 # ------------------------------------------------------------------ phase 2 (on the stage-2 test)
@@ -342,7 +343,10 @@ def phase2_tests(m1, dev):
     r['P2b_acc_pre_by_cand'] = split_boot(pre, ids, grp)
     r['P2b_chose_X_post'] = split_boot(chx_post, ids, grp)
     r['P2b_chose_X_pre'] = split_boot(chx_pre, ids, grp)
-    return r, {'P2a_c': np.array(cs)}
+    return r, {'P2a_c': np.array(cs), 'P2a_ids': np.array(list(ev.keys())), 'P2a_acc_ev': np.array(acc),
+               'P2a_diff_ev': np.array([np.nan if x is None else x for x in diffs]), 'P2a_cell_ev': np.array(cellv),
+               'P2a_blue_ev': np.array([np.nan if x is None else x for x in blue]),
+               'P2b_post_ev': np.array(post), 'P2b_pre_ev': np.array(pre)}
 
 
 def baselines_ab():
@@ -409,7 +413,7 @@ def pair_eval_g(m2, dev, both, te, pair):
     return {'acc': split_boot(acc, pair, ['all'] * N)['all'], 'acc_by_member': split_boot(acc, pair, member),
             'toward_blue': split_boot(blue, pair, member),
             'r2_other_usual': r2_cv(usual['h2'], both['other_position'], np.ones((N, 100), bool), fo)}, \
-        {'d': np.array(ds), 'roll': roll}
+        {'d': np.array(ds), 'roll': roll, 'acc_ev': np.array([np.nan if x is None else x for x in acc]), 'blue_ev': np.array(blue)}
 
 
 def pair_eval_choose(m1, dev, both, te, pair):
@@ -425,7 +429,8 @@ def pair_eval_choose(m1, dev, both, te, pair):
         e = {c: errs[c][i, :te[i]].sum() for c in 'XY'}
         truth = 'X' if both['a2_cand'][i] == 0 else 'Y'
         acc.append(float(min(e, key=e.get) == truth)); chx.append(float(min(e, key=e.get) == 'X')); grp.append(truth)
-    return {'acc': boot_mean(acc, pair), 'acc_by_cand': split_boot(acc, pair, grp), 'chose_X': split_boot(chx, pair, grp)}
+    return {'acc': boot_mean(acc, pair), 'acc_by_cand': split_boot(acc, pair, grp), 'chose_X': split_boot(chx, pair, grp),
+            '_acc_ev': np.array(acc)}
 
 
 def natural_g(m2, dev):
@@ -572,8 +577,10 @@ def main():
             continue
         r, z = pair_eval_g(m2, dev, both, te, pair); R[f'P2c_{key}'] = r
         NPZ[f'{key}_d'] = z['d']; NPZ[f'{key}_te'] = te; NPZ[f'{key}_keys'] = np.array([n for n, _ in keep])
+        NPZ[f'{key}_acc_ev'] = z['acc_ev']; NPZ[f'{key}_blue_ev'] = z['blue_ev']; NPZ[f'{key}_pair'] = pair
         if key == 'gen':
             R["P2c'_gen"] = pair_eval_choose(get1(), dev, both, te, pair)
+            NPZ['gen_choose_acc_ev'] = R["P2c'_gen"].pop('_acc_ev')
             R['memory_readout_gen'] = memory_readout(m2, dev, z['roll'], both, te, pair)
         print(key, R[f'P2c_{key}'], flush=True)
     r, q2 = natural_g(m2, dev); R['P2c_natural_all_moments'] = r
