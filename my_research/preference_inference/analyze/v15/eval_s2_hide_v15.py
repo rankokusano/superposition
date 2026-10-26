@@ -2,7 +2,7 @@
 v15 2(b) evaluation (method: docs/v15_experiment_log.md Sec.24.5). Phase-2 models on the generated pairs and the control (3)
 pairs with A-2 hidden in the INPUT view from t_e-5 to the end (data/data/<set>/hideA2_test.h5). Training protocol
 (vision masked for t > 0; G sees the encoder output of the input view), true (A-2-hidden) frames throughout. Pairs whose
-inputs differ before t_e + K (e.g. a cube eaten within the window) are dropped and counted.
+inputs differ between t_e and t_e + K (e.g. a cube eaten within the window) are dropped and counted.
 Measures as in P2-c: pair accuracy (blue vs cyan from the h2 displacement over K = 10 steps), by member, toward blue,
 readout of the candidate from h2 / G's LSTM state at t_e + {0,1,3,5,10} (readout fitted on the 2(b) training data,
 first informative moment of each episode, input view with A-2 hidden); control (3): input / prediction identity.
@@ -37,7 +37,8 @@ def hidden_pairs(nx, ny):
             d['self_vision_in'] = f['train']['self_vision_in'][()]
     keep2, dropped = [], 0
     for n, t_e in keep:
-        if np.array_equal(dx['self_vision_in'][n, :t_e + K + 1], dy['self_vision_in'][n, :t_e + K + 1]) and \
+        # Sec.24.5: the two inputs must be identical from t_e to t_e + K (before eating they differ in the top-left colour)
+        if np.array_equal(dx['self_vision_in'][n, t_e:t_e + K + 1], dy['self_vision_in'][n, t_e:t_e + K + 1]) and \
                 np.array_equal(dx['self_motion'][n, :t_e + K + 1], dy['self_motion'][n, :t_e + K + 1]):
             keep2.append((n, t_e))
         else:
