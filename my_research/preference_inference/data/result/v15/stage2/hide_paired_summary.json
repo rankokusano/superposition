@@ -1,0 +1,12 @@
+{
+ "v4": {
+  "exp_minus_noexp": "-0.038 [-0.063, -0.014]",
+  "hide_minus_nohide_exp": "+0.032 [+0.010, +0.052]",
+  "hide_minus_nohide_noexp": "+0.074 [+0.053, +0.096]"
+ },
+ "v15i": {
+  "exp_minus_noexp": "-0.177 [-0.199, -0.156]",
+  "hide_minus_nohide_exp": "+0.130 [+0.113, +0.147]",
+  "hide_minus_nohide_noexp": "+0.318 [+0.301, +0.335]"
+ }
+}
