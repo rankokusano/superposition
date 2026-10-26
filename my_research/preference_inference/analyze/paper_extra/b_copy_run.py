@@ -26,7 +26,7 @@ import torch
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _PI = os.path.dirname(os.path.dirname(_HERE))
-for p in (_HERE, os.path.join(_PI, 'analyze', 'v13'), os.path.join(_PI, 'analyze', 'v12'),
+for p in (_HERE, os.path.join(_PI, 'analyze', 'v14'), os.path.join(_PI, 'analyze', 'v13'), os.path.join(_PI, 'analyze', 'v12'),
           os.path.join(_PI, 'analyze', 'v11'), _PI):
     sys.path.insert(0, p)
 
@@ -90,9 +90,16 @@ def main():
     elif which == 'h2':
         import v11fig
         import h2_check_v11 as mod
-        pf = os.environ.get('B_PREFIX', 'v13nscp')
-        names = {'v11_s1_random_mse': f'{pf}_s1_random_mse', 'v11_s1_mixed_mse': f'{pf}_s1_mixed_mse'}
-        mod.load_model = lambda exp, *a, **k: v11fig.load_model(names[exp], *a, **k)
+        # v11fig.load_model reads config/exp/<exp>.yml itself, so load the v13-NS run by its own name and copy
+        # the weights inside the MotionFeed wrapper (Sec.17)
+        cp = copy_pleasure_cols if os.environ.get('B_PREFIX', 'v13nscp') == 'v13nscpp' else copy_lstm
+        names = {'v11_s1_random_mse': 'v13ns_s1_random_mse', 'v11_s1_mixed_mse': 'v13ns_s1_mixed_mse'}
+
+        def load_model(exp, *a, **k):
+            mf, p = v11fig.load_model(names[exp], *a, **k)
+            cp(mf.model)
+            return mf, p
+        mod.load_model = load_model
         mod.run = v11fig.run
     elif which == 'decomp':
         import g5a_decomp_v13 as mod
