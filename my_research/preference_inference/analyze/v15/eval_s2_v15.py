@@ -76,10 +76,13 @@ def cand_pleasure(ov):
 
 # ------------------------------------------------------------------ the generic runner
 @torch.no_grad()
-def run(m, sv, sm, dev, pmask, hidden=None, p2=None, frame=None, batch=50, need_err=False):
+def run(m, sv, sm, dev, pmask, hidden=None, p2=None, frame=None, batch=50, need_err=False, g_zero=None):
     """sv (N,T,16,64,3) uint8, sm (N,T,2). pmask(t) -> (N,) float; hidden(t) -> (N,) bool or None;
     p2(t) -> (N,11) float or None; frame(t) -> (N,) int index of the view fed at step t (default t).
+    g_zero(t) -> (N,) bool: steps at which the input of G (Encoder-2 output) is set to 0 (Sec.24.3; default never).
     Returns h1, h2 (N,100,128), err (N,100) = L1 of predicted view t+1 (if need_err), q2 (N,100,8) if any."""
+    gmod = getattr(m, 'motion_generator_module', None)
+    g_orig = gmod.forward if (g_zero is not None and gmod is not None) else None
     util.seed_all(0)
     N = sv.shape[0]
     H1, H2, ERR, Q2, G = [], [], [], [], []
@@ -94,6 +97,9 @@ def run(m, sv, sm, dev, pmask, hidden=None, p2=None, frame=None, batch=50, need_
                  'self_motion': torch.from_numpy(sm[idx, t]).to(dev)}
             pm = torch.from_numpy(pmask(t)[idx].astype(np.float32))[:, None].to(dev)
             kw = {}
+            if g_orig is not None:
+                keep = torch.from_numpy(~g_zero(t)[idx]).to(dev).float()[:, None]
+                gmod.forward = (lambda z, keep=keep: g_orig(z * keep))
             if hidden is not None:
                 kw['hidden_override'] = torch.from_numpy(hidden(t)[idx])
             if p2 is not None:
@@ -116,6 +122,8 @@ def run(m, sv, sm, dev, pmask, hidden=None, p2=None, frame=None, batch=50, need_
             Q2.append(np.stack(q2s, 1))
         if gs:
             G.append(np.stack(gs, 1))
+    if g_orig is not None:
+        del gmod.forward  # back to the class method
     out = {'h1': np.concatenate(H1), 'h2': np.concatenate(H2)}
     if ERR:
         out['err'] = np.concatenate(ERR)
