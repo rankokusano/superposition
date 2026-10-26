@@ -522,3 +522,18 @@
 - 評価の一式 `analyze/paper_extra/run_c_eval.sh <cond> <seed>`（trial の最終5点と ep200 の2回目、g3flip（符号無作為の組では経験80%・経験なしも）、g5 の最終5点と ep200 の2回目、decomp、d6、inverse 2 通り）。
 - 見張り `analyze/paper_extra/after_c_train.sh`（コンテナの中で切り離して起動、23:24）：学習の連鎖の終わり（`chain_seed<s>.done`）を待ち、同じ GPU で評価の一式を始める。符号無作為：組1 GPU4・組2 GPU5・組3 GPU7。零：組1 GPU6・組2 GPU1・組3 GPU2。記録 `C_signrand/eval/logs/launch.log`。
 - 集計 `analyze/paper_extra/c_aggregate.py`（§4.4・§14.3 の判定。評価の終わった組だけを使う）と学習曲線 `c_curves.py` は評価の後に流す。
+
+## 20. 事前登録外の確認：写しと他者特徴基準・真値条件（2026-10-27 0:05、草野さんの依頼。**事前登録外。計算の前に測り方を記録**。判定は変えない）
+- 動機：全部写すと他者特徴基準の BA が経験80%の水準に戻った（§18.3）。復号部を通らない量で、経験の有無と写し方の違いを確かめる。
+- **装置**：GPU は C の学習・評価で 8 枚とも使用中（0:04）なので **CPU**（コンテナの中、nice 10、1 本あたり torch のスレッド 3、同時に 3 本まで）。照合と真値条件は視覚を p = 1 で隠すので乱数に依らない。**比べるものはすべて CPU で測り直す**（GPU の既存の値とは直接比べず、一致の程度を記述する）。
+### 20.1 照合の BA（依頼 1）
+- モデル（組1〜3）：非共有・経験なし（`v13ns_s1_random`）に全部写す（`v13nscp:random`）・列だけ写す（`v13nscpp:random`）、比べる相手として全部写した経験あり（`v13nscp:mixed`）も CPU で測り直す。元の非共有・経験なしは GPU の保存値（`v14/inverse/v13ns{,mse}_random_<s>_ep<e>_pref.npz`）を並べる（記述）。
+- `eval_inverse_v14` を `b_copy_run.py inverse --device cpu` で（好み混合データ、300 エピソード）。自己視界基準は L1 期間の最終5点、他者特徴基準は MSE 期間の最終5点、T = 50。BA は `aggregate_inverse_v14.ba(correct(z, q, 50), cells(z))`。
+- **差の CI**：全部写した経験あり − 全部写した経験なし（同じエピソード）。`aggregate_inverse_v14.boot`（`RandomState(0)`、1000 回、4 つのセルがすべて入る標本）で同じ添字を両方に当て、点ごとの BA の差の 95% CI と、最終5点の平均の差（標本ごとに 5 点の差を平均）の 95% CI。
+- 確認：CPU で測り直した全部写した経験ありの BA を、GPU の値（§18.3）と並べる。
+### 20.2 真値条件の Δ（依頼 2）
+- モデル（組1〜3、L1 期間の ep200。特徴予測の誤差は L1 期間のどの点でも同じ）：非共有・経験あり 元（`ns_mixed`）／全部写す（`nscp_mixed`）／列だけ（`nscpp_mixed`）、非共有・経験なし 元（`ns_random`）／全部写す（`nscp_random`）、経験80%（`mixed80`）。
+- データ：緑好み・好み混合、A-2 の割合 0.5（元）と 0.8（`paper_*_a2p80`）の 4 つ。
+- `a_cross_eval.py` と同じ手順（process-2 = 零 / 本当の快・不快、t = 1〜99 の他者側の特徴予測の誤差）、`b_copy_run.py d6 --device cpu --threads 3`。出力 `data/result/paper_extra/B_extra/d6/`。
+- 量：Δ = 真値 − 零（エピソードの平均、エピソードのブートストラップ 95% CI、`default_rng(0)`）、Δ(0.8) − Δ(0.5)（A の D と同じ）。記述として 写し − 元、経験あり − 経験なし（同じ写し方）の差と CI。
+- **確認**：経験80%の CPU の値を A の GPU の値（`A_cross/eval/mixed80_s<s>_ep200_<set>.npz`）と比べる（エピソードごとの差の最大。§7.1 では 1e-7 程度）。
