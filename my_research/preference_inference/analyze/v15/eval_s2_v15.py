@@ -55,11 +55,11 @@ CUBE_C = S0.CUBE_C  # [layout][colour] -> cube centre
 
 
 # ------------------------------------------------------------------ models and data
-def load(exp, epoch, dev):
+def load(exp, epoch, dev, seed=0):
     cfg = util.load_config(os.path.join(_PI_DIR, 'config', 'exp', exp + '.yml'))
     mcfg = util.load_config(os.path.join(_PI_DIR, 'config', 'model', cfg.model.name, cfg.model.config + '.yml'))
     m = getattr(model_v15, cfg.model.name)(mcfg).to(dev)
-    m.load_state_dict(torch.load(os.path.join(RES, exp, '0', 'model', f'{epoch:05d}.pth'), map_location='cpu')['model'])
+    m.load_state_dict(torch.load(os.path.join(RES, exp, str(seed), 'model', f'{epoch:05d}.pth'), map_location='cpu')['model'])
     return m.eval()
 
 

@@ -57,7 +57,7 @@ N_SEQ = 6300  # layout/gray/cand sequences: train 0..2999, test 0..299, then tra
 TEST_OFFSET = 3000
 TRAIN_HIGH_OFFSET = 300  # train episodes >= 3000 use sequence index n + 300 (after the test block; Sec.15)
 
-RANK_A1 = ('Red', 'Blue', 'Cyan', 'Green')
+RANK_A1 = RANK_A1_DEFAULT = ('Red', 'Blue', 'Cyan', 'Green')
 CAND = {
     'X': ('Red', 'Blue', 'Cyan', 'Green'),
     'Y': ('Green', 'Cyan', 'Blue', 'Red'),
@@ -92,6 +92,9 @@ DATASET_CONFIGS['v15_s1_goalcap_half'] = dict(stage=1, key='v15_s1', p=0.8, cand
 for _e in ('random_eat', 'random_eat_any'):
     DATASET_CONFIGS[f'v15_s1_{_e}_half'] = dict(stage=1, key='v15_s1', p=0.0, cand=None, layout='seq', gray='half', a1_policy=_e)
 DATASET_CONFIGS['v15_s2_c2_p80_half'] = dict(stage=2, key='v15_s2', p=0.8, cand='mix', layout='seq', gray='half')
+# (Sec.28 (B)) stage 1 experienced with A-1's rank = candidate Y's (Green > Cyan > Blue > Red, same values)
+DATASET_CONFIGS['v15_s1_rankY_p80_half'] = dict(stage=1, key='v15_s1', p=0.8, cand=None, layout='seq', gray='half',
+                                               a1_rank=('Green', 'Cyan', 'Blue', 'Red'))
 # (Sec.12) stage 1 with gray in half of the episodes (same key as v15_s1_p80: the grayed episodes keep their colour)
 DATASET_CONFIGS['v15_s1_p80_half'] = dict(stage=1, key='v15_s1', p=0.8, cand=None, layout='seq', gray='half')
 # (Sec.10) the current design (two positive colours, p 0.8) with gray in half of the episodes
@@ -124,6 +127,7 @@ def collect(cfg, n_data, split, h5, start=0):
     T = cfg.get('T', T_DEFAULT)
     vals = cfg.get('rank_values', RANK_VALUES)
     rank_values_ = lambda r: rank_values(r, vals)  # noqa: E731
+    RANK_A1 = tuple(cfg.get('a1_rank', RANK_A1_DEFAULT))  # Sec.28 (B): A-1's rank can be set per dataset
     env = Env15('random', 'stay' if stage == 1 else 'random')
     env.init()
     world = env.world
@@ -239,7 +243,7 @@ def main():
         for k, v in (('dataset', args.dataset), ('seed_key', cfg['key']), ('stage', cfg['stage']),
                      ('p_rule', cfg['p']), ('a1_policy', cfg.get('a1_policy', 'mixed' if cfg['stage'] == 1 else 'random')), ('cand', str(cfg['cand'])), ('layout_mode', str(cfg['layout'])),
                      ('gray_mode', str(cfg['gray'])), ('r_eat', 1.5), ('rank_values', ', '.join(str(v) for v in cfg.get('rank_values', RANK_VALUES))), ('T', cfg.get('T', T_DEFAULT)),
-                     ('a1_rank', ','.join(RANK_A1)), ('simulator', 'sim_v10 + v15core.World15'),
+                     ('a1_rank', ','.join(cfg.get('a1_rank', RANK_A1))), ('simulator', 'sim_v10 + v15core.World15'),
                      ('color_codes', '0 Red, 1 Green, 2 Blue, 3 Cyan'),
                      ('cand_codes', 'X 0 (R>B>C>G), Y 1 (G>C>B>R), Xp 2 (R>C>B>G)'),
                      ('source_codes', '0 random, 1 rule, 2 rule->random fallback, 3 asleep, 4 no target; -1 static A-2'),

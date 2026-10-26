@@ -1,0 +1,36 @@
+# v15 Sec.28 (B): v15_s2p1_exp_v15i_mse.yml with A-1's rank = Y (data v15_s1_rankY_p80_half_1000t, model config rankY). --seed 0.
+model:
+  name: SuperpositionNetworkMotionPleasureHoldV15
+  config: rankY
+  mode: ~
+runner: PredictionFeaturePredictionRunner
+data:
+  name: v15_s1_rankY_p80_half_1000t
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+  loss_function: mse_loss
+  pretrain: ~
+  pretrain_encoder_from: data/result/v15_s1_plain_mse/0/model/00200.pth
+  batch_size: 10
+  max_epochs: 150
+  save_interval: 10
+  test_interval: 10
+  optimizer: AdamW
+  optim_config:
+    default:
+      lr: 0.001
+      weight_decay: 0.01
+    freeze:
+      - vision_encoder
+      - share_lns
+    per_params:
+      - name: bias
+        args:
+          weight_decay: 0.0
+      - name: vision_encoder
+        args:
+          weight_decay: 0.001
+      - name: share_lns
+        args:
+          weight_decay: 0.001

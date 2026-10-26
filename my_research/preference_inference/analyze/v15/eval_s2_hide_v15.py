@@ -28,6 +28,7 @@ from analyze.v15 import eval_s2_v15 as E  # noqa
 
 K, T = E.K, E.T
 OFFSETS = (0, 1, 3, 5, 10)
+CURVE = tuple(range(11))  # Sec.28: every step 0..10 after eating (the readout is the same; only applied at more steps)
 
 
 def hidden_pairs(nx, ny):
@@ -96,12 +97,14 @@ def evaluate(m2, dev):
         mem = {}
         for k2 in ('h2', 'g'):
             mem[k2] = {}
-            for o in OFFSETS:
+            for o in CURVE:
                 Z = roll[k2][np.arange(N), np.minimum(te + o, T - 2)]
                 mem[k2][str(o)] = E.boot_mean((clfs[k2].predict(Z) == both['a2_cand']).astype(float), pair)
         out['memory_readout'] = mem
         R[key] = out
         R['_acc_ev'] = np.array([np.nan if x is None else x for x in acc]).tolist()
+        R['_blue_ev'] = blue
+        R['_member'] = member.tolist()
         R['_pair'] = pair.tolist()
     return R
 
@@ -112,6 +115,8 @@ def main():
     ap.add_argument('--epoch', type=int, default=150)
     ap.add_argument('--ref0', default=None, help='tag (e.g. exp_v4): before-training reference')
     ap.add_argument('--device', default='cpu')
+    ap.add_argument('--seed', type=int, default=0, help='Sec.28 (A): training seed of the checkpoint')
+    ap.add_argument('--suffix', default='', help='output name suffix (Sec.28 re-run: _cpu)')
     a = ap.parse_args()
     torch.set_num_threads(3)
     dev = torch.device(a.device)
@@ -119,10 +124,10 @@ def main():
         m2 = E.load_ref0(a.ref0, dev)[1]
         name = f'{a.ref0}_ref0'
     else:
-        m2 = E.load(a.exp, a.epoch, dev)
-        name = a.exp
+        m2 = E.load(a.exp, a.epoch, dev, seed=a.seed)
+        name = a.exp if a.seed == 0 else f'{a.exp}_seed{a.seed}'
     R = {'name': name, 'device': a.device, **evaluate(m2, dev)}
-    json.dump(R, open(os.path.join(E.OUT, f'hide_{name}.json'), 'w'), indent=1)
+    json.dump(R, open(os.path.join(E.OUT, f'hide_{name}{a.suffix}.json'), 'w'), indent=1)
     print(json.dumps({k: v for k, v in R.items() if not k.startswith('_')}), flush=True)
 
 
