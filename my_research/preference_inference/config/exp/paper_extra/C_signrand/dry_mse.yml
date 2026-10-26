@@ -1,0 +1,38 @@
+# Paper extra C dry run (docs/paper_extra_log.md Sec.4.2): s1_signrand_mse.yml with max_epochs 0 -> only ep0 is saved,
+# to compare the initial weights with v13_s1_mixed_mse (same seed). CPU.
+# with only the model name and data name changed.
+model:
+  name: SuperpositionNetworkMotionPleasureHoldSigned
+  config: default
+  mode: ~
+runner: PredictionFeaturePredictionRunner
+data:
+  name: paper_s1_mixed80_signrand
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+  loss_function: mse_loss
+  pretrain: ~
+  pretrain_encoder_from: /work/data/result/exp1_l1_1000/0/model/00200.pth
+  batch_size: 10
+  max_epochs: 0
+  save_interval: 1
+  test_interval: 10
+  optimizer: AdamW
+  optim_config:
+    default:
+      lr: 0.001
+      weight_decay: 0.01
+    freeze:
+      - vision_encoder
+      - share_lns
+    per_params:
+      - name: bias
+        args:
+          weight_decay: 0.0
+      - name: vision_encoder
+        args:
+          weight_decay: 0.001
+      - name: share_lns
+        args:
+          weight_decay: 0.001
