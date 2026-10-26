@@ -197,7 +197,7 @@ def t_inverse():
         f_pass = v13m[fpk]['pref_FP_T50']['n_pass']
         f = fp[f'v13mse_mixed_{s}|FP']
         fl = fp[f'v13_mixed_{s}|L1']
-        how = '好み' if f['n_ci_low_above_half'] >= 3 else '方角'
+        how = '満たした' if f['n_ci_low_above_half'] >= 3 else '満たさなかった'
         if s < 3:
             p = ns[f'v13:mixed:{s},v13ns:mixed:{s}']['pref_L1_T50']
             q = p['points']['200']
@@ -223,7 +223,7 @@ def t_inverse():
             '\\midrule[\\heavyrulewidth]',
             '\\multicolumn{5}{@{}p{0.9\\linewidth}@{}}{(b) 経験80\\%条件の他者特徴基準の合格の点，好み追従率（他者特徴基準は MSE 期間，自己視界基準は L1 期間の最終5点の範囲，括弧は CI の下限 $>0.5$ の点）} \\\\', '\\midrule',
             '組 & 他者特徴基準 & 好み追従率 & 好み追従率 & \\\\',
-            ' & 合格の点 & 他者特徴基準（書き方） & 自己視界基準 & \\\\', '\\midrule'] + bot + [
+            ' & 合格の点 & 他者特徴基準 & 自己視界基準 & \\\\', '\\midrule'] + bot + [
             '\\midrule[\\heavyrulewidth]',
             '\\multicolumn{5}{@{}p{0.9\\linewidth}@{}}{(c) 経験80\\% $-$ 非共有（自己視界基準の BA，$T=50$．組1〜3）：合格の点，ep200 の差 [95\\%信頼区間]} \\\\',
             '\\midrule'] + nsr + [

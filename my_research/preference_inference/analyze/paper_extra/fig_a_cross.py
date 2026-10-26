@@ -39,7 +39,7 @@ def main():
         ax.axhline(0, color='0.6', lw=0.5)
         ax.set_xticks([0, 1]); ax.set_xticklabels(['0.5（元）', '0.8'])
         ax.set_xlim(-0.25, 1.25)
-        ax.set_xlabel('A-2 が好みに従う割合')
+        ax.set_xlabel('A-2 が規則の一歩を選ぶ確率 $p$')
         ax.set_title(title)
     axes[0].set_ylabel('改善 Δ（真値 − 零）\n他者側の特徴予測の誤差')
     axes[0].legend(frameon=False, loc='lower left')
