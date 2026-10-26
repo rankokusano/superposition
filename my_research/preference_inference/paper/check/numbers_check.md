@@ -633,3 +633,76 @@
 - **bib にあるが本文で引かれていないキー：なし**。
 - コメントの中だけにある \cite：なし。
 - 引用の多いもの：noguchi2022superposition 28 か所、goldman2006simulating 4 か所。ほかは 1〜3 か所（intro・related・discussion に分布）。
+
+---
+
+# 第2弾の再照合（2026-10-26、新しい版の原稿）
+
+- 対象：草野さんが置き直した版（7つの .tex は `paper/draft/sections/`、main.tex・references.bib・latexmkrc は直下。コミット `238796c`）。前の版（`61374a6` の `paper/draft/`）と比べた。
+- 差分は、変わった行が合わせて 94 行（main 2、intro 8、methods 8、results 44、discussion 16、conclusion 2、appendix 14、bib 2）。related は変更なし。
+- 照合の基準は上の第2弾と同じ（一次の結果 → 数値ログ → まとめ）。
+
+## R1. 変わった箇所の照合（新しく入った数字を含む）
+
+| ファイル:行 | 新しい記述 | 判定 | 出どころ |
+|---|---|---|---|
+| main 62、conclusion 9、intro 65、discussion 21 | 主の基準（自己視界）では方角だけの基準を上回らず、副の基準（他者特徴）でもわずかに上回るにとどまった | 一致（§6 の決定どおり） | `paper/check/direction_vs_model.json` |
+| discussion 21 | 「組ごとにはっきり上回ったのは1組」 | 一致（組4 が 5/5。組2 は 2/5 なので「はっきり」には入らない）。results 284 の「組4（5点中5点）と組2（5点中2点）」と言い方は違うが食い違いではない | 同上 |
+| results 283〜286 | 差の値：自己視界 −0.089 [−0.140, −0.038]・6組とも負・上回った点なし。他者特徴 +0.049 [+0.026, +0.072]・6組とも正・組4 5/5・組2 2/5。経験50% −0.044 [−0.087, −0.001]（組4 を除く5組）、経験なし −0.248 [−0.357, −0.138]、非共有 −0.260 [−0.361, −0.159]（組1〜3） | 一致 | 同上（round2 log §5） |
+| intro 51、results 58 | H1「経験なしよりはっきり強く生まれ」、経験なしの g「本番の3組で +0.019〜+0.033」 | 一致（組1〜3 の最終5点の平均 +0.019・+0.033・+0.021。6組でも +0.019〜+0.033） | `data/result/v13/extra/across_pairs.json` |
+| intro 57・64、results 137、discussion 25 | 零より悪い組「4組のうち2〜3組」（discussion は緑好み2組・好み混合3組） | 一致 | `paper/figs/projection_values.json` |
+| results 139〜140 | 緑好み 組2・組4、好み混合 組2〜4、追加の比較の全6組で3組と4組 | 一致 | 同上、`docs/paper_extra_results_log.md` |
+| results 137 | 真値条件 経験なし 0.25〜0.29、経験50% 0.24〜0.28、経験80% 0.38〜0.42（組1〜4、2データ） | 一致（0.2546〜0.2856、0.2408〜0.2764、0.3765〜0.4179） | 同上 |
+| results 159 | 経験なし・経験50% 0.24〜0.29、「零で約 0.30〜0.35」 | 一致（経験50% の零は 0.293〜0.349。「約」の範囲として可） | 同上 |
+| results 37 | G1 0.70〜0.75（本番の3組 0.72〜0.75） | 一致 | v13 数値ログ、`robust6.json`（組5 0.705〜0.718） |
+| results 39 | 段階IIを探索にした理由に G5a の関門を追加 | 一致 | v13 まとめ §4 |
+| results 106 | 非共有の h²→A-2 の位置 0.91〜0.93（組1〜3） | 一致（0.906〜0.933） | v13 まとめ §5 |
+| results 95・145、appendix 142 | 「と読める（推測）」に直した | 一致 | v13 まとめ §3.1、v13 ログ §25 |
+| results 174〜175 | 組6 は好み混合で0前後、緑好みで +0.032 [+0.017, +0.047]。組2 は A-2 0.8 でも零より悪い | 一致 | `docs/paper_extra_results_log.md` §A |
+| results 192（図 a_cross_delta の説明） | (a)(b) と線の説明を追加 | 一致。ただし細い線のうち組1〜3 が実線、組4〜6 が点線であることは書かれていない（軽微） | `paper/figs/a_cross_delta.pdf`（目で確かめた） |
+| results 203 | 生成 0.116〜0.146／0.121〜0.159、真値 0.252〜0.276／0.241〜0.265（組1〜4） | 一致 | `data/result/v12/stage2/t1t3/` |
+| results 207 | 相関は4組とも負 | 一致 | v13 数値ログ §8、v13 ログ §26 |
+| results 210 | T5 −0.006〜0.000 | 一致 | `judge_b_extra_v13.json` |
+| results 272 | 経験50% の他者特徴基準は組4 を除く | 一致 | `paper/check/follow_pref_late5.json` |
+| discussion 39・142 | 「支持し」「支持された（組によっては悪化が残った）」 | 一致 | `docs/paper_extra_results_log.md` |
+| discussion 42 | A-1 自身の好きな色への寄りは経験50%・好み切替で見られず、経験80% では調べていない | 一致 | v14 まとめ §3 |
+| discussion 51 | 0.112〜0.188、0.376〜0.418（組1〜4、2データ） | 一致 | `paper/figs/projection_values.json` |
+| discussion 89 | 経験50% の事後の分析で h² から好みを読めたが経験の有無で差なし、他者用モジュールの内部状態は調べていない | 一致 | v12 まとめ §7 |
+| methods 187〜188 | 組5・6 は実験2（真値条件は追加の比較でだけ）、他者遮蔽学習と1ビットは組1〜3、部分制限は組1 | 一致 | `paper/check/methods_check.md`、`docs/paper_extra_log.md` |
+| methods 209 | 実験4の BA の合格の点の基準を追加 | 一致 | v14 ログ §3 D |
+| methods 325 | 「復号部だけを学習する L1 期間」 | 一致 | methods_check A1 |
+| appendix 22〜23 | 好み切替の g（最終5点の平均）赤 +0.093〜+0.105、緑 +0.083〜+0.104。G5a は組3、G5b は組1 | 一致 | `data/result/v14/gates/aggregate_gates_v12noexp.json`、v14 数値ログ §4 |
+| appendix 94 | 形制限の符号は4組中3組で固定、組2 は動くが好みに沿わない | 一致 | v12 まとめ §5 |
+| appendix 97 | 部分制限（組1）は T2 5/5・T5 4/5 で判定の形は合格、値は本当の快・不快の 1/8〜1/20、相関は弱く負 | 一致（相関の範囲は −0.09〜+0.04 で、v12 まとめの言い方「弱く負」のとおり） | v12 まとめ §5 |
+| appendix 111 | 1ビット・経験50% の T2 −0.019〜+0.041（最終5点） | 一致 | `data/result/v14/stage2u/eval/` |
+| appendix 188 | 5〜8%・80〜90% を予備的な試み（快・不快を入力に一から学習）の値とし、本文の条件では確かめていないと明記 | 一致 | v11 実験ログ |
+| references.bib | rabinowitz2018machine の著者を6名に | 一致 | PMLR の頁（part_references.md） |
+
+## R2. 32 項目の直り方
+
+- **直っている**：#1〜#29、#31。
+- **#30（results 209、appendix 110「u の平均が好み×配置に沿って入れ替わった」）**：本文は変わっていない。保存値で確かめたので、**直さなくてよい**。
+  - 確かめたもの：`data/result/v14/stage2u/u/u_mixed_s{0,1,2}_ep{160,200}.json` の `u_mean_by_cell`。
+  - 経験50%条件では、組1〜3 のすべて・両チェックポイントで、正解が c− のセル（0・3）で平均が負、c+ のセル（1・2）で正だった。例えば組2 の ep200 は −0.389、+0.513、+0.291、−0.313。
+  - したがって、出どころが組1 の図だけという指摘は解消し、記述は3組で成り立つ。
+- **#32（3か月児・14か月児）**：文献の内容で、ログの照合の対象外（変更なし、文献の本文で確かめる事項）。
+- **直し方がずれているもの**：見つからなかった。
+- **軽微な残り**：
+  - 図 a_cross_delta の説明に、細い線の実線（組1〜3）と点線（組4〜6）の区別が書かれていない。
+  - discussion 21 の「はっきり上回ったのは1組」と results 284 の「組4（5点中5点）と組2（5点中2点）」は、言い方は違うが食い違いではない。
+
+## R3. upLaTeX で組んだ結果
+
+- **組み方**：写しを `paper/check/build/` に作った。中身は draft の main.tex・references.bib・latexmkrc・sections/ と、`paper/figs/*.pdf`・`paper/tables/*.tex` の写し。draft の latexmkrc と同じ処理系で、uplatex → upbibtex → uplatex ×2 → dvipdfmx の順に組んだ（コミットしない作業用）。
+- **結果**：45 ページの PDF（1.1 MB）。
+  - **エラー：0**。
+  - **未定義の参照：0**。
+  - **未定義の引用：0**（upbibtex の警告も0）。
+  - **はみ出し（Overfull）：0**。
+  - PDF の本文に「??」「未執筆」「図未作成」はない。Type 3 のフォントもない。
+- **読み込まれたもの**：7つの節、表 8 つ（alignment、conditions、gates、group_values、inverse、metrics、module、projection）、図 7 枚（a_cross_delta、central、env_conditions、inverse、network、projection_error、write_vs_choose）。
+- **警告は1つ**：`Float too large for page by 122.62383pt`（methods.tex 239 行、表2 `tables/metrics.tex`）。表2 が1ページに収まらず、約 4.3 cm はみ出す。直し方の候補は次の3つ。
+  - 表2 を `\footnotesize` にする。
+  - 表2 を付録へ回す。
+  - 表2 の「何を測るか」の文を短くする。
+- 本文に残る【要確認】は main.tex の2つ（著者と所属、データとコードの公開先）だけ。節の中の【要確認】はすべてコメントの中。
