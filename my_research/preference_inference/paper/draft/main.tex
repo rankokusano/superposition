@@ -1,0 +1,107 @@
+% ============================================================
+% main.tex  仮の親ファイル（2026-10-25）
+%   投稿先が決まったら、文書クラスと体裁をその学会誌のテンプレートに差し替える。
+%   本文は sections/*.tex に章ごとに書き、ここでは読み込むだけにする。
+% コンパイル：upLaTeX（Overleaf の Menu → Compiler は「LaTeX」、最上位に latexmkrc を置く）。
+%   LuaLaTeX＋ltjsarticle は Overleaf で時間切れになったため切り替えた（2026-10-25）。
+%   latexmkrc の中身：uplatex → upbibtex → dvipdfmx（$pdf_mode = 3）。
+% 文献：references.bib（upBibTeX）。
+% ============================================================
+\documentclass[uplatex,dvipdfmx,a4paper,11pt]{jsarticle}
+
+% ---------- パッケージ ----------
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage{pxjahyper}
+
+% ---------- 執筆中だけ使う仕組み ----------
+% (1) 図のファイルがまだないときは、枠と名前だけを表示して止まらないようにする。
+%     図が全部そろったら、この5行は消してよい。
+\makeatletter
+\let\orig@includegraphics\includegraphics
+\renewcommand{\includegraphics}[2][]{%
+  \IfFileExists{#2.pdf}{\orig@includegraphics[#1]{#2}}{%
+  \IfFileExists{#2.png}{\orig@includegraphics[#1]{#2}}{%
+  \IfFileExists{#2}{\orig@includegraphics[#1]{#2}}{%
+    \fbox{\parbox[c][4em][c]{0.9\linewidth}{\centering\ttfamily 図未作成：\detokenize{#2}}}}}}}
+\makeatother
+
+% (2) 表（tables/*.tex）は、まだないものの代わりに枠だけの仮のファイルを tables/ に置いてある。
+%     Claude Code が本物の表で上書きする。新しい表を本文に足したら、同じ形の仮のファイルも足す。
+
+% (3) 未確定の箇所の印。本文では【要確認】【結果待ち】をそのまま書いているが、
+%     目立たせたいときはこのマクロを使う。
+\newcommand{\todo}[1]{\textcolor{red}{#1}}
+
+% ---------- 表題 ----------
+\title{自他で共有された予測の仕組みは，自分の価値の経験から他者について何を生むか\\
+\large ──重ね合わせネットワークによるシミュレーション的な他者理解の可能性と限界──}
+% 英題（案）：What does a self--other shared predictive mechanism derive about others
+%            from one's own value experience? Possibilities and limits of simulation-based
+%            understanding of others in a superposition network
+\author{草野 \todo{【要確認：氏名・所属・共著者】}}
+\date{}
+
+% ============================================================
+\begin{document}
+\maketitle
+
+\begin{abstract}
+シミュレーション説は，人が自分の心の働きを他者に当てはめて他者を理解すると考える．
+自他で重みを共有する予測学習の仕組みである重ね合わせ機構は，自他の対応を与えずに他者の位置・視点・運動の表現を生むが，それが他者の価値のような内面に及ぶかは課題として残されている．
+本研究は，この仕組みが自分の価値の経験から他者について何を生み，何を生まないかを調べた．
+全方位の視界，自分の運動，方向ごとの快・不快から次の視界を予測するエージェントを，価値に従う行動の規則を選ぶ確率を変えたデータで学習させ，自他の重みの共有を外した対照と比べた．
+その結果，価値に従う行動の見込みが予測学習だけで生まれ，その強さは経験の量に応じて段階的に強まった．
+見込みは共有された重みを通して他者側に入れた快・不快に働き，共有を外すと他者側の働きだけが消えた．
+見込みを用いて二つの好みの候補を入れ比べると，経験が多いときには偶然を上回って好みの方を選べたが，正解率は他者の進んだ方角だけで選ぶ基準を上回らなかった．
+一方，行動の仕方が自分と違う他者では，本当の快・不快を与えたときの予測が経験の少ない条件より外れ（他者の行動の仕方を自分にそろえると，この悪化は小さくなった），他者用のモジュールは調べた構成のどれでも好みを書き出さず，位置や方角の手がかりを伝えた．
+ただし，経験の量の操作は学習データの位置の分布も変えており，両者の効果は分けられていない．
+共有された予測の仕組みは，他者を価値の方へ動く者として予測する枠組みを生むが，調べた条件では，他者に合わせた調整と，他者固有の好みを出力する働きは確認できなかった．
+% 構成の目安（400〜600字）：
+% 背景（シミュレーション説、重ね合わせの仕組みは他者の内面に届いていない）→
+% 問い（共有された予測の仕組みは、自分の価値の経験から他者について何を生み、何を生まないか）→
+% 方法（価値に従う経験の量だけを変えた予測学習、共有をなくした対照）→
+% 結果（自分側の見込みの段階的な強まり、共有を通じた当てはめ、投影の誤り、部品は好みを書き出さない、仮説の照合）→
+% 結論（できることとできないこと）
+\end{abstract}
+
+% \noindent\textbf{キーワード}：シミュレーション説，重ね合わせの仕組み，予測学習，自他の共有表現，価値
+
+% ---------- 本文 ----------
+% まだないファイルは見出しと「未執筆」だけを出す。
+\InputIfFileExists{sections/intro.tex}{}{\section{はじめに}\label{sec:intro}\todo{（未執筆）}}
+\InputIfFileExists{sections/related.tex}{}{\section{関連研究}\label{sec:related}\todo{（未執筆）}}
+\InputIfFileExists{sections/methods.tex}{}{\section{方法}\label{sec:method}\todo{（未執筆）}}
+\InputIfFileExists{sections/results.tex}{}{\section{結果}\label{sec:results}\todo{（未執筆）}}
+\InputIfFileExists{sections/discussion.tex}{}{\section{考察}\label{sec:discussion}\todo{（未執筆）}%
+  \subsection{限界}\label{sec:limitations}\todo{（未執筆）}}
+\InputIfFileExists{sections/conclusion.tex}{}{\section{おわりに}\label{sec:conclusion}\todo{（未執筆）}}
+
+\section*{データとコードの公開}
+実験に用いたシミュレータ，学習と評価のコード，設定ファイル（乱数のシードを含む），データの生成手順，図表を作るスクリプトは，\todo{【要確認：公開先と公開の時期（先生と相談）】}で公開する．
+事前登録の記録（判定の基準と，その記録の日時）も同じ場所に置く．
+
+% \section*{謝辞}
+% \todo{【要確認：助成番号など】}
+
+% ---------- 文献 ----------
+% 投稿先の指定に合わせて変える。unsrt は引用順で並べる（日本語の文献の並べ替えで問題が出にくい）。
+\bibliographystyle{unsrt}
+\bibliography{references}
+
+% ---------- 付録 ----------
+\appendix
+\InputIfFileExists{sections/appendix.tex}{}{%
+  \section{好み切替条件}\label{app:switch}\todo{（未執筆）}
+  \section{基準 Encoder の選定}\label{app:encoder}\todo{（未執筆）}
+  \section{他者用部品の各設計の結果}\label{app:component}\todo{（未執筆）}
+  \section{事前登録の経緯}\label{app:prereg}\todo{（未執筆）}
+  \section{関門の判定と下位指標の定義}\label{app:gates}\todo{（未執筆）}}
+
+\end{document}
