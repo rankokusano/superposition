@@ -514,3 +514,11 @@
 
 ### 18.5 図
 - B の図（G5b・符号に従う分・BA・h² の追跡を条件ごとに並べる）はまだ作っていない（次に作る）。
+
+## 19. C の評価の自動化（2026-10-26 23:20〜23:30。§18.1 の 3）
+- 評価の包み `analyze/paper_extra/c_run.py`（符号つきのクラスを登録して既存のスクリプトを動かす：trial（G1〜G3・自分の視界の誤差）、g5、decomp（符号に従う分）、d6（真値条件、A と同じ手順）、inverse（照合）、g3flip（G3 を P を保つ／零／反転で。§4.3 の 2））。出力 `data/result/paper_extra/C_signrand/eval/`（零の条件も同じ場所に条件名で分ける）。
+- **g3flip の確認**：経験80%の組1 ep200 で流し（GPU6、学習と同居）、「保つ」「零」のエピソードごとの g が保存済みの G3（`v13/main/s1eval/s0/per_ep200.npz` の `mixed__freeze_K15_{hold,zero}`）とビット単位で一致。参考値：保つ 0.245、零 0.192、反転 −0.201、d_P 0.223。
+- **各ステップの試し**（符号無作為の組1 の MSE 期間 ep200・L1 期間 ep0、出力は `C_signrand/smoke/`、値は使わない）：trial・g5・decomp・d6・inverse（L1 期間・MSE 期間）がトレースバックなしで動くことを確かめた。
+- 評価の一式 `analyze/paper_extra/run_c_eval.sh <cond> <seed>`（trial の最終5点と ep200 の2回目、g3flip（符号無作為の組では経験80%・経験なしも）、g5 の最終5点と ep200 の2回目、decomp、d6、inverse 2 通り）。
+- 見張り `analyze/paper_extra/after_c_train.sh`（コンテナの中で切り離して起動、23:24）：学習の連鎖の終わり（`chain_seed<s>.done`）を待ち、同じ GPU で評価の一式を始める。符号無作為：組1 GPU4・組2 GPU5・組3 GPU7。零：組1 GPU6・組2 GPU1・組3 GPU2。記録 `C_signrand/eval/logs/launch.log`。
+- 集計 `analyze/paper_extra/c_aggregate.py`（§4.4・§14.3 の判定。評価の終わった組だけを使う）と学習曲線 `c_curves.py` は評価の後に流す。
