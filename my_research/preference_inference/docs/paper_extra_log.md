@@ -641,3 +641,8 @@
   - `data/result/paper_extra/C_signrand/figs/c_signrand.{pdf,png}`（`analyze/paper_extra/fig_c_signrand.py`）：中心の図の量（(a) G3 保つ、(b)(c) 符号に従う分、(d) G5b）に (e) d_P と (f) 真値条件 Δ（塗り 緑好み、白抜き 好み混合）。横軸 経験なし・符号無作為・経験80%（零の条件は評価が終われば自動で加わる）。
   - `c_curves` の零の色を、非共有の緑と紛れないよう金色（#b8860b）に変えて作り直した（値は同じ）。
 - 3 枚とも pdffonts で Type 3 なし（IPAPGothic・DejaVu Sans の CID TrueType、部分埋め込み）。画像にして目で確かめた。`paper/figs/` には写していない。
+
+## 27. 図を paper/figs/ へ（2026-10-27 14:25、草野さんの依頼）
+- `b_copy.{pdf,png}`・`c_signrand.{pdf,png}` を §26 の版のまま `paper/figs/` に写した（cmp で同じ）。`paper/figs/README.md` に2行を足した。
+- 零の条件の評価が3組とも終わったら、`c_signrand` を零の条件を加えて作り直し、目で確かめてから `paper/figs/` の同じ名前のものを差し替える（README の行も直す）。
+- 状況（14:22）：零の学習は組1 L1 期間 ep175、組2 ep79、組3 ep80。評価の見張り（コンテナ内の `after_c_train.sh pzero`、3組分）は動いている。ホスト側の終わりの知らせ（前の会話で置いたもの）は止まっていたので置き直した。
