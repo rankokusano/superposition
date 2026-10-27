@@ -1,0 +1,80 @@
+% ============================================================
+% main_v2.tex  短縮・再構成版の親ファイル（2026-10-27）
+%   方針：論文_再構成案.md（改訂版）。投稿先の第一候補は Adaptive Behavior（日本語で固めてから英訳）。
+%   本文は sections_v2/*.tex，補足資料は supplement_v2.tex（supp_v2/*.tex）。
+%   図は figs/，表は tables/，文献は references.bib を初稿と共有する。
+% コンパイル：upLaTeX（latexmkrc は初稿と同じ）。Overleaf で main_v2.tex を主文書にする。
+% ============================================================
+\documentclass[uplatex,dvipdfmx,a4paper,11pt]{jsarticle}
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage{pxjahyper}
+
+% 図のファイルがないときは枠と名前だけを出す（図がそろったら消してよい）。
+\makeatletter
+\let\orig@includegraphics\includegraphics
+\renewcommand{\includegraphics}[2][]{%
+  \IfFileExists{#2.pdf}{\orig@includegraphics[#1]{#2}}{%
+  \IfFileExists{#2.png}{\orig@includegraphics[#1]{#2}}{%
+  \IfFileExists{#2}{\orig@includegraphics[#1]{#2}}{%
+    \fbox{\parbox[c][4em][c]{0.9\linewidth}{\centering\ttfamily 図未作成：\detokenize{#2}}}}}}}
+\makeatother
+% 図表の置き場所の制約をゆるめる（大きな図が [t] に入らず，以降の図表がすべて最後に回るのを防ぐ）。
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.75}
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{5}
+
+\newcommand{\todo}[1]{\textcolor{red}{#1}}
+
+\title{自分の価値の経験から学んだ予測は，どのような条件で他者の予測に転用されるか\\
+\large ──自他で重みを共有する予測学習における成立条件の切り分け──}
+% 英題（案）：When does prediction learned from one's own value-guided experience
+%            transfer to predicting others? Dissecting the conditions in a self--other
+%            shared predictive-learning model
+\author{草野 \todo{【要確認：氏名・所属・共著者】}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+シミュレーション説は，人が自分の心の働きを用いて他者を理解すると考える．
+本研究は，自他で重みを共有する予測学習の仕組みである重ね合わせ機構の上で，自分の価値の経験から学んだ予測傾向が，どのような条件で他者側の予測に転用されるかを調べた．
+方向ごとの快・不快を受けて次の視界を予測するエージェントを，価値に従って動く経験の量を変えて学習させた．
+価値に従う行動の見込みは報酬を用いない予測学習で生まれ，他者側に与えた快・不快にも他者の予測が応じるようになった．
+同じ軌跡で快・不快の符号だけを無作為にすると，自分側の快・不快への依存と他者側の符号に従う応答は0前後になり，他者側の符号応答も大きく弱まった．
+快・不快の入口の重みを写すだけでは転用は戻らなかった．
+一方，転用は他者の行動の予測を一般に正確にはせず，他者の行動の仕方が自分と違うと本当の快・不快を与えても予測が外れることがあり，他者固有の好みも書き出されなかった．
+成立条件を切り分けた対照は，自己位置の追跡の事前基準を満たさなかった条件で行った．
+\end{abstract}
+
+\noindent\textbf{キーワード}：シミュレーション説，予測学習，自他の共有表現，価値，計算モデル
+
+\input{sections_v2/intro}
+\input{sections_v2/related}
+\input{sections_v2/methods}
+\input{sections_v2/results}
+\input{sections_v2/discussion}
+\input{sections_v2/conclusion}
+
+\section*{補足資料}
+組ごとの値，学習後に重みを写す比較の詳細，真値条件の悪化の詳細，他者用モジュールの4通りの構成，仮説の照合の詳細，好み切替条件，基準エンコーダの選定，事前登録の経緯，関門の定義は補足資料に示す．
+
+\section*{データとコードの公開}
+実験に用いたシミュレータ，学習と評価のコード，設定ファイル（乱数のシードを含む），データの生成手順，図表を作るスクリプト，事前登録の記録は，\todo{【要確認：公開先と公開の時期（先生と相談）】}で公開する．
+
+\bibliographystyle{unsrt}
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,68 @@
+% ============================================================
+% supplement_v2.tex  補足資料（2026-10-27）
+%   初稿の結果・付録から，本文に残さなかった部分を移したもの（supp_v2/*.tex）。
+%   本文への参照は「本文3.4節」のように番号を直接書いた（main_v2.tex の節・図の番号が変わったら直す）。
+%   本文の番号：3.1 環境と価値の信号，3.2 ネットワーク，3.3 条件と対照，3.4 測る量，
+%     4.1 自分側，4.2 他者側への転用，4.3 価値の信号と行動の対応，4.4 予測の力学の再利用，
+%     4.5 本当の快・不快の役立ち方，4.6 好みの表現と推定，5.4 限界，5.5 今後の課題。
+%     図1 環境とモデル，図2 central，図3 c_signrand，図4 a_cross_delta，表1 v2_design，表2 組をまたいだ差。
+% 組の名前：組1=s0，組2=s1，組3=s2（本番），組4=s3（予備），組5=s4，組6=s5（追加）。
+% ============================================================
+\documentclass[uplatex,dvipdfmx,a4paper,11pt]{jsarticle}
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage{pxjahyper}
+
+\makeatletter
+\let\orig@includegraphics\includegraphics
+\renewcommand{\includegraphics}[2][]{%
+  \IfFileExists{#2.pdf}{\orig@includegraphics[#1]{#2}}{%
+  \IfFileExists{#2.png}{\orig@includegraphics[#1]{#2}}{%
+  \IfFileExists{#2}{\orig@includegraphics[#1]{#2}}{%
+    \fbox{\parbox[c][4em][c]{0.9\linewidth}{\centering\ttfamily 図未作成：\detokenize{#2}}}}}}}
+\makeatother
+% 図表の置き場所の制約をゆるめる（大きな図が [t] に入らず，以降の図表がすべて最後に回るのを防ぐ）。
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.75}
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{5}
+
+\newcommand{\todo}[1]{\textcolor{red}{#1}}
+
+\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+
+\title{補足資料：自分の価値の経験から学んだ予測は，どのような条件で他者の予測に転用されるか}
+\author{草野 \todo{【要確認：氏名・所属・共著者】}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\input{supp_v2/s_design}
+\input{supp_v2/s_prereq}
+\input{supp_v2/s_values}
+\input{supp_v2/s_copy}
+\input{supp_v2/s_projection}
+\input{supp_v2/s_module}
+\input{supp_v2/s_inverse}
+\input{supp_v2/s_switch}
+\input{supp_v2/s_encoder}
+\input{supp_v2/s_prereg}
+\input{supp_v2/s_gates}
+
+\bibliographystyle{unsrt}
+\bibliography{references}
+
+\end{document}
