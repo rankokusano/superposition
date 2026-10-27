@@ -341,8 +341,41 @@ def t_alignment():
 """)
 
 
+# ---------------------------------------------------------------- table v2_design (short version, table 1)
+def t_v2_design():
+    W = ('p{0.17\\linewidth}', 'p{0.455\\linewidth}', 'l', 'p{0.23\\linewidth}')
+    body = ['\\setlength{\\tabcolsep}{3pt}%', '\\begin{tabular}{@{}' + ''.join(W) + '@{}}', '\\toprule',
+            '条件 & 中身 & 組 & 位置づけ \\\\', '\\midrule']
+    rows = [
+        ('経験なし・50\\%・80\\%', 'A-1 が規則の一歩を選ぶ確率 $p=0$，0.5，0.8 で段階Iを学習', '組1〜6',
+         '事前登録（判定は組1〜3）'),
+        ('非共有条件', 'LSTM を process-1 用と process-2 用に分ける（経験80\\%のデータ）', '組1〜3', '事前登録した対照'),
+        ('符号無作為条件', '経験80\\%と同じ軌跡で，$P_t$ の符号だけをエピソードごとに無作為に反転', '組1〜3', '事前登録した対照'),
+        ('写しの比較', '非共有モデルの process-2 用 LSTM に process-1 用の重みを写す（全部／快・不快の8列，経験あり・なし）',
+         '組1〜3', '事前登録（G5b）．BA と $\\Delta$ は事前登録外'),
+        ('A-2 の規則の確率 0.8', '段階IIの評価用データで，A-2 が確率 0.8 で好きな色へ向かう', '組1〜6', '事前登録'),
+    ]
+    for r in rows:
+        body.append(' & '.join(r) + ' \\\\')
+    body += ['\\midrule', '指標 & \\multicolumn{2}{l}{何を測るか} & 事前登録の扱い \\\\', '\\midrule']
+    rows = [
+        ('$g$（G3）', '入力を隠し快・不快を保つと，予測が赤の方へ進み続ける傾き', '事前登録した主'),
+        ('$d_P$', '$(g_{\\mbox{\\scriptsize 保つ}}-g_{\\mbox{\\scriptsize 反転}})/2$．見込みの快・不快への依存', '事前登録（符号無作為の比較）'),
+        ('G5b', 'process-2 の一範囲への $\\pm a$ による，予測の中の A-2 のずれの差', '事前登録した主'),
+        ('符号に従う分', '本当の快・不快を保った傾きと，符号を反転した傾きの差の半分', '事後に定義（組1〜4），組5・6 は事前登録'),
+        ('真値条件の $\\Delta$', '本当の快・不快と零を入れた，他者側の特徴予測の誤差の差',
+         '事前登録外（A-2 0.8・符号無作為では事前登録）'),
+        ('照合の BA', '二つの好みの候補から予測誤差の小さい方を選んだ正解率', '自己視界基準は事前登録した主，他者特徴基準は副'),
+        ('T2・T5', '他者用モジュールの出力 $Q2$ が好みや色に応じて変わるか', '事前登録した主'),
+    ]
+    for n, m, st in rows:
+        body.append(f'{n} & \\multicolumn{{2}}{{p{{0.53\\linewidth}}}}{{{m}}} & {st} \\\\')
+    body += ['\\bottomrule', '\\end{tabular}']
+    write('v2_design', '\n'.join(body))
+
+
 def main():
-    for f in (t_conditions, t_metrics, t_group_values, t_projection, t_inverse, t_gates, t_module, t_alignment):
+    for f in (t_conditions, t_metrics, t_group_values, t_projection, t_inverse, t_gates, t_module, t_alignment, t_v2_design):
         f()
 
 
