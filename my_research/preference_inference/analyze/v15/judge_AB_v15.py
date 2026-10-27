@@ -3,8 +3,8 @@ v15 (A) / (B) judgement (pre-registered: docs/v15_experiment_log.md Sec.28.3, 30
 Per pair of the generated set (A-2-hidden test, same 930 pairs for every model): blue_X, blue_Y (predicted toward blue on
 the X / Y member), m = (blue_X + blue_Y) / 2, d = blue_X - blue_Y, pair accuracy = (acc_X + acc_Y) / 2.
 Paired differences over the same pairs, 2000 bootstrap draws (seed 0).
-Seed 0 uses the CPU re-run (hide_<exp>_cpu.json); seeds 1, 2 and (B) are evaluated on the GPU that trained them, so tiny
-numerical differences between CPU and GPU evaluation are possible (Sec.23.1).
+--source cpu (default, used for the judgement, Sec.30.8): every model's CPU evaluation hide_<name>_cpu.json; --source gpu: the
+GPU evaluations hide_<name>.json (reference). Writes judge_AB_<enc>_<source>.json.
 
     python analyze/v15/judge_AB_v15.py --enc v4      # (B) v4 version + (A) v4 seeds
     python analyze/v15/judge_AB_v15.py --enc v15i
@@ -21,11 +21,15 @@ _PI_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file
 S2 = os.path.join(_PI_DIR, 'data', 'result', 'v15', 'stage2')
 
 
+SOURCE = 'cpu'  # Sec.30.8: the judgement uses CPU evaluations for every model; 'gpu' gives the reference values
+
+
 def path(exp, seed):
-    if seed == 0:
-        p = os.path.join(S2, f'hide_{exp}_cpu.json')
-        return p if os.path.exists(p) else os.path.join(S2, f'hide_{exp}.json')
-    return os.path.join(S2, f'hide_{exp}_seed{seed}.json')
+    name = exp if seed == 0 else f'{exp}_seed{seed}'
+    if SOURCE == 'cpu':
+        return os.path.join(S2, f'hide_{name}_cpu.json')
+    p = os.path.join(S2, f'hide_{name}.json')  # GPU evaluation (seed 0 of the 2(b) models was evaluated on GPU first)
+    return p
 
 
 def per_pair(exp, seed):
@@ -56,9 +60,12 @@ def boot(v, seed=0):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--enc', required=True, choices=['v4', 'v15i'])
+    ap.add_argument('--source', default='cpu', choices=['cpu', 'gpu'])
     a = ap.parse_args()
+    global SOURCE
+    SOURCE = a.source
     e = a.enc
-    R = {'enc': e}
+    R = {'enc': e, 'source': SOURCE}
     exp3 = {s: per_pair(f'v15_s2p2h_exp_{e}' + ('' if s == 0 else f'_s{s}'), s) for s in (0, 1, 2)}
     noexp3 = {s: per_pair(f'v15_s2p2h_noexp_{e}' + ('' if s == 0 else f'_s{s}'), s) for s in (0, 1, 2)}
     for s in (0, 1, 2):
@@ -81,7 +88,7 @@ def main():
     R['A']['noexp_m_range'] = [min(R['A'][s]['noexp_m'] for s in (0, 1, 2)), max(R['A'][s]['noexp_m'] for s in (0, 1, 2))]
     R['A']['noexp_d_range'] = [min(R['A'][s]['noexp_d'] for s in (0, 1, 2)), max(R['A'][s]['noexp_d'] for s in (0, 1, 2))]
     # (B)
-    pB = os.path.join(S2, f'hide_v15_s2p2h_expY_{e}.json')
+    pB = path(f'v15_s2p2h_expY_{e}', 0)
     if os.path.exists(pB):
         B, X0, N0 = per_pair(f'v15_s2p2h_expY_{e}', 0), exp3[0], noexp3[0]
         assert np.array_equal(B['ids'], X0['ids'])
@@ -120,7 +127,7 @@ def main():
                             ('undecidable (interference criteria met, d and m inside the 3-seed ranges)' if inside else 'interference')
                             if interf else 'neither (describe)')
         R['B'] = b
-    json.dump(R, open(os.path.join(S2, f'judge_AB_{e}.json'), 'w'), indent=1, default=lambda o: o.item() if hasattr(o, 'item') else str(o))
+    json.dump(R, open(os.path.join(S2, f'judge_AB_{e}_{SOURCE}.json'), 'w'), indent=1, default=lambda o: o.item() if hasattr(o, 'item') else str(o))
     print(json.dumps(R, indent=1, default=lambda o: o.item() if hasattr(o, 'item') else str(o)))
 
 
