@@ -23,6 +23,7 @@ C = os.path.join(_PI, 'data', 'result', 'paper_extra', 'C_signrand')
 ps.FIGS = os.path.join(C, 'figs')
 C_SR, C_PZ = '#8a3ffc', '#b8860b'      # same colours as c_curves
 PAIR_MK = ('o', 's', '^')
+BREAK = {'経験なし': '経験\nなし', '符号無作為': '符号\n無作為', '快・不快 零': '快・不快\n零', '経験80%': '経験\n80%'}
 
 
 def main():
@@ -54,7 +55,7 @@ def main():
                             ms=3.6, lw=0.7, capsize=1.2)
         ax.axhline(0, color='0.6', lw=0.5)
         ax.set_xticks(range(len(conds)))
-        ax.set_xticklabels([lab for _, _, lab, _ in conds], fontsize=7)
+        ax.set_xticklabels([BREAK.get(lab, lab) for _, _, lab, _ in conds], fontsize=7)
         ax.set_xlim(-0.6, len(conds) - 0.4)
         ax.set_title(title, fontsize=8)
     for s in range(3):
