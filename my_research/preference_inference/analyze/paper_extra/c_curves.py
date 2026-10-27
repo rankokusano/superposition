@@ -21,7 +21,7 @@ import paper_style as ps  # noqa
 RES = os.path.join(_PI, 'data', 'result')
 OUT = os.path.join(RES, 'paper_extra', 'C_signrand', 'curves')
 RUNS = (('signrand', 'paper_extra/C_signrand/s1_signrand_mse', 'paper_extra/C_signrand/s1_signrand_l1_s{s}', '#8a3ffc', 'D', '符号無作為'),
-        ('pzero', 'paper_extra/C_pzero/s1_pzero_mse', 'paper_extra/C_pzero/s1_pzero_l1_s{s}', '#1baf7a', 'v', '快・不快 零'),
+        ('pzero', 'paper_extra/C_pzero/s1_pzero_mse', 'paper_extra/C_pzero/s1_pzero_l1_s{s}', '#b8860b', 'v', '快・不快 零'),
         ('mixed80', 'v13_s1_mixed_mse', 'v13_s1_mixed_l1_s{s}', ps.C_80, ps.M_80, ps.COND_LABEL['80']),
         ('random', 'v12_s1_random_mse', 'v12_s1_random_l1_s{s}', ps.C_NONE, ps.M_NONE, ps.COND_LABEL['none']))
 SERIES = (('train', 'self_vision'), ('test', 'self_vision'), ('train', 'feature_prediction_other'))
