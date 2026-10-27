@@ -19,8 +19,8 @@ sys.path.insert(0, os.path.join(PI, 'analyze', 'v13'))
 from fig_central_v13 import ns_values  # noqa
 
 PANELS = (('G3', '(a) 自己側の積み上がり $g$\n事前登録'),
-          ('sign_green', '(b) 符号に従う分（緑好みデータ）\n事後に定義（組5・6 は事前登録）'),
-          ('sign_pref', '(c) 符号に従う分（好み混合データ）\n事後に定義（組5・6 は事前登録）'),
+          ('sign_green', '(b) 符号に従う分（緑好みデータ）\n事後定義（組1〜4），組5・6 は事前登録'),
+          ('sign_pref', '(c) 符号に従う分（好み混合データ）\n事後定義（組1〜4），組5・6 は事前登録'),
           ('G5b', '(d) 他者側の符号応答 G5b\n事前登録'))
 # pairs 1-3: grey solid, filled circles; pair 4: orange dashed, filled circles; pairs 5-6: orange dotted, open squares
 # (pairs 1-4 vs 5-6 is where the sign-following part changes from post hoc to pre-registered)
