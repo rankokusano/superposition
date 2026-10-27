@@ -1,0 +1,37 @@
+# v15 (C) (log Sec.33): v15_s2p2h_expY_v15i.yml with pretrain seed 1 (phase 1 = v15_s2p1_expY_v15i_mse run with --seed 1). Run with --seed 1.
+# v15 Sec.28 (B): v15_s2p2h_exp_v15i.yml (A-2 hidden in the input) with A-1's rank = Y: model config rankY, pretrain = v15_s2p1_expY_v15i_mse ep150. --seed 0.
+model:
+  name: SuperpositionNetworkMotionPleasureHoldOtherV15
+  config: rankY
+  mode: ~
+runner: MotionGenerationPredictionFeaturePredictionRunner
+data:
+  name: v15_s2_c2_p80_half_1000t_hideA2
+  input_vision: self_vision_in
+load_state_dict_strict: False
+train:
+  loss_function: l1_loss
+  pretrain:
+    exp_config: v15_s2p1_expY_v15i_mse
+    seed: 1
+    epoch: 150
+  batch_size: 10
+  max_epochs: 150
+  save_interval: 10
+  test_interval: 10
+  optimizer: AdamW
+  optim_config:
+    default:
+      lr: 0.001
+      weight_decay: 0.01
+    freeze:
+      - superposition_module
+      - vision_encoder_module
+      - vision_decoder_module
+      - integration_module
+      - share_lns
+      - feature_prediction_module
+    per_params:
+      - name: bias
+        args:
+          weight_decay: 0.0
