@@ -21,6 +21,7 @@ _PI_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file
 S2 = os.path.join(_PI_DIR, 'data', 'result', 'v15', 'stage2')
 
 
+FALLBACK = []  # --source gpu: models whose GPU json has no per-pair arrays (CPU values used)
 SOURCE = 'cpu'  # Sec.30.8: the judgement uses CPU evaluations for every model; 'gpu' gives the reference values
 
 
@@ -29,6 +30,9 @@ def path(exp, seed):
     if SOURCE == 'cpu':
         return os.path.join(S2, f'hide_{name}_cpu.json')
     p = os.path.join(S2, f'hide_{name}.json')  # GPU evaluation (seed 0 of the 2(b) models was evaluated on GPU first)
+    if '_member' not in json.load(open(p)):  # seed-0 GPU runs predate the per-pair arrays: the CPU values stand in
+        FALLBACK.append(name)
+        return os.path.join(S2, f'hide_{name}_cpu.json')
     return p
 
 
@@ -127,6 +131,7 @@ def main():
                             ('undecidable (interference criteria met, d and m inside the 3-seed ranges)' if inside else 'interference')
                             if interf else 'neither (describe)')
         R['B'] = b
+    R['gpu_missing_per_pair_used_cpu'] = sorted(set(FALLBACK))
     json.dump(R, open(os.path.join(S2, f'judge_AB_{e}_{SOURCE}.json'), 'w'), indent=1, default=lambda o: o.item() if hasattr(o, 'item') else str(o))
     print(json.dumps(R, indent=1, default=lambda o: o.item() if hasattr(o, 'item') else str(o)))
 
