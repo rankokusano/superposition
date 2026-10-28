@@ -1,0 +1,194 @@
+{
+ "ref0_v15i": {
+  "goalcap": {
+   "share_called_blue": 1.0,
+   "share_inside_h1_range_pc12": 1.0,
+   "norm_h2_over_h1": 0.9926929473876953
+  },
+  "rankXY": {
+   "share_called_blue": 0.00026881720430107527,
+   "share_inside_h1_range_pc12": 1.0,
+   "norm_h2_over_h1": 1.035343050956726
+  }
+ },
+ "v15_s2p2h_exp_v15i": {
+  "goalcap": {
+   "share_called_blue": 0.06951612903225807,
+   "share_inside_h1_range_pc12": 0.9145698924731183,
+   "norm_h2_over_h1": 2.0148401260375977
+  },
+  "rankXY": {
+   "share_called_blue": 0.2089247311827957,
+   "share_inside_h1_range_pc12": 0.9555913978494623,
+   "norm_h2_over_h1": 2.3509225845336914
+  }
+ },
+ "v15_s2p2h_exp_v15i_s1_seed1": {
+  "goalcap": {
+   "share_called_blue": 0.856505376344086,
+   "share_inside_h1_range_pc12": 0.9673655913978495,
+   "norm_h2_over_h1": 2.239065408706665
+  },
+  "rankXY": {
+   "share_called_blue": 0.8104301075268817,
+   "share_inside_h1_range_pc12": 0.6975806451612904,
+   "norm_h2_over_h1": 2.6774063110351562
+  }
+ },
+ "v15_s2p2h_exp_v15i_s2_seed2": {
+  "goalcap": {
+   "share_called_blue": 0.36112903225806453,
+   "share_inside_h1_range_pc12": 0.7865591397849462,
+   "norm_h2_over_h1": 2.068220615386963
+  },
+  "rankXY": {
+   "share_called_blue": 0.8887634408602151,
+   "share_inside_h1_range_pc12": 0.5689247311827957,
+   "norm_h2_over_h1": 2.3790252208709717
+  }
+ },
+ "v15_s2p2h_noexp_v15i": {
+  "goalcap": {
+   "share_called_blue": 0.9513978494623656,
+   "share_inside_h1_range_pc12": 1.0,
+   "norm_h2_over_h1": 0.8789069056510925
+  },
+  "rankXY": {
+   "share_called_blue": 0.8620967741935484,
+   "share_inside_h1_range_pc12": 1.0,
+   "norm_h2_over_h1": 1.004748821258545
+  }
+ },
+ "v15_s2p2h_noexp_v15i_s1_seed1": {
+  "goalcap": {
+   "share_called_blue": 0.8668279569892473,
+   "share_inside_h1_range_pc12": 0.9079569892473118,
+   "norm_h2_over_h1": 1.2330906391143799
+  },
+  "rankXY": {
+   "share_called_blue": 0.09709677419354838,
+   "share_inside_h1_range_pc12": 0.8769354838709678,
+   "norm_h2_over_h1": 1.4405908584594727
+  }
+ },
+ "v15_s2p2h_noexp_v15i_s2_seed2": {
+  "goalcap": {
+   "share_called_blue": 0.2620967741935484,
+   "share_inside_h1_range_pc12": 1.0,
+   "norm_h2_over_h1": 1.0652806758880615
+  },
+  "rankXY": {
+   "share_called_blue": 0.11150537634408603,
+   "share_inside_h1_range_pc12": 0.9997849462365591,
+   "norm_h2_over_h1": 1.228805661201477
+  }
+ },
+ "v15_s2p2h_expY_v15i": {
+  "goalcap": {
+   "share_called_blue": 0.9940860215053764,
+   "share_inside_h1_range_pc12": 0.9982795698924731,
+   "norm_h2_over_h1": 1.8071317672729492
+  },
+  "rankXY": {
+   "share_called_blue": 0.07688172043010753,
+   "share_inside_h1_range_pc12": 0.3343010752688172,
+   "norm_h2_over_h1": 2.1659305095672607
+  }
+ },
+ "v15_s2p2h_expY_v15i_s1_seed1": {
+  "goalcap": {
+   "share_called_blue": 0.9905376344086021,
+   "share_inside_h1_range_pc12": 0.9658602150537634,
+   "norm_h2_over_h1": 1.792505145072937
+  },
+  "rankXY": {
+   "share_called_blue": 0.0024193548387096775,
+   "share_inside_h1_range_pc12": 0.34,
+   "norm_h2_over_h1": 2.1436328887939453
+  }
+ },
+ "v15_s2p2h_expY_v15i_s2_seed2": {
+  "goalcap": {
+   "share_called_blue": 0.8411290322580646,
+   "share_inside_h1_range_pc12": 1.0,
+   "norm_h2_over_h1": 2.0003662109375
+  },
+  "rankXY": {
+   "share_called_blue": 0.8558064516129033,
+   "share_inside_h1_range_pc12": 0.9659139784946237,
+   "norm_h2_over_h1": 2.303524971008301
+  }
+ },
+ "v15_s2p2h_exp_v15i_ns": {
+  "goalcap": {
+   "share_called_blue": 0.33763440860215055,
+   "share_inside_h1_range_pc12": 1.0,
+   "norm_h2_over_h1": 1.345017671585083
+  },
+  "rankXY": {
+   "share_called_blue": 0.32370967741935486,
+   "share_inside_h1_range_pc12": 1.0,
+   "norm_h2_over_h1": 1.570351243019104
+  }
+ },
+ "v15_s2p2h_exp_v15i_ns_s1_seed1": {
+  "goalcap": {
+   "share_called_blue": 0.6522043010752688,
+   "share_inside_h1_range_pc12": 1.0,
+   "norm_h2_over_h1": 1.4559571743011475
+  },
+  "rankXY": {
+   "share_called_blue": 0.6172580645161291,
+   "share_inside_h1_range_pc12": 1.0,
+   "norm_h2_over_h1": 1.7333904504776
+  }
+ },
+ "v15_s2p2h_exp_v15i_ns_s2_seed2": {
+  "goalcap": {
+   "share_called_blue": 0.4989784946236559,
+   "share_inside_h1_range_pc12": 1.0,
+   "norm_h2_over_h1": 1.1606968641281128
+  },
+  "rankXY": {
+   "share_called_blue": 0.4914516129032258,
+   "share_inside_h1_range_pc12": 1.0,
+   "norm_h2_over_h1": 1.3783131837844849
+  }
+ },
+ "v15_s2p2h_noexp_v15i_ns": {
+  "goalcap": {
+   "share_called_blue": 0.4521505376344086,
+   "share_inside_h1_range_pc12": 1.0,
+   "norm_h2_over_h1": 1.2397302389144897
+  },
+  "rankXY": {
+   "share_called_blue": 0.3161290322580645,
+   "share_inside_h1_range_pc12": 1.0,
+   "norm_h2_over_h1": 1.4019496440887451
+  }
+ },
+ "v15_s2p2h_noexp_v15i_ns_s1_seed1": {
+  "goalcap": {
+   "share_called_blue": 0.6548387096774193,
+   "share_inside_h1_range_pc12": 1.0,
+   "norm_h2_over_h1": 1.1559381484985352
+  },
+  "rankXY": {
+   "share_called_blue": 0.46118279569892473,
+   "share_inside_h1_range_pc12": 1.0,
+   "norm_h2_over_h1": 1.350049614906311
+  }
+ },
+ "v15_s2p2h_noexp_v15i_ns_s2_seed2": {
+  "goalcap": {
+   "share_called_blue": 0.9788172043010752,
+   "share_inside_h1_range_pc12": 1.0,
+   "norm_h2_over_h1": 0.8390763401985168
+  },
+  "rankXY": {
+   "share_called_blue": 0.30059139784946237,
+   "share_inside_h1_range_pc12": 1.0,
+   "norm_h2_over_h1": 0.9383779168128967
+  }
+ }
+}
