@@ -1135,3 +1135,4 @@
 - **見張り**：`analyze/paper_extra/after_s3s5_train.sh "3:1 4:2 5:4"`（22:18 起動、コミット `cc9c7aa`）。学習の連鎖が終わると同じ GPU で `run_c_eval.sh signrand <s>` → `run_b4.sh <s>`。記録 `C_signrand/eval/logs/launch_s3s5.log`、全部の終わりは `s3s5_all.done`。
 - 集計 `analyze/paper_extra/s3s5_aggregate.py`（`cc9c7aa`）は、組1〜3 の判定の値が `C_signrand/summary.json`・`B4/summary.json` と同じになること、除外の確認の組1〜3 の点の数が第4弾（R4）と同じになることを確かめてある。評価の後に流す。
 - 終わりの見込み：学習 10/29 14:30 ごろ、評価を含めて 15:15 ごろ。
+- 草野さんの確認（2026-10-28 22 時台）：`paper/` に作るのは `paper/check/signrand_s3s5_results.md` の 1 ファイルだけ。`paper/` のほかのファイル（figs、tables、draft_v2）は触らない。論文の方も同じリポジトリに並行してコミットするので、**コミットの前に pull する**。
