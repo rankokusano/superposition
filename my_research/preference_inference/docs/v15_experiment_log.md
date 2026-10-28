@@ -1758,3 +1758,42 @@
 - `run_R1b_v15.sh 5 6 7` を R2b も回すように直した（§39.1 の R1b の回す条件はそのまま、R2b は条件なし。終わりの記録は `done_R1b` と `done_R2b`）。
 - CPU での評価し直し：R1b は動いている `run_cpu_reeval_H4R1b.sh`、R2b は `run_cpu_reeval_R2b.sh`。
 - 書く量：R2b は約 0.15 GB 増え、H4・R1b と合わせて約 0.87 GB。空きは 11.00 GB（01:34）。
+
+## 42. ディスク（2026-10-29 01:46、草野さんの指示）
+
+### 42.1 E1〜E3 の抽出の npz を消した（01:43）
+- まとめに反映が済んだので、`data/result/v15/e123/*.npz` の 16 個（327 MB、コミットしていない）を消した。空きは 10.91 GB から 11.24 GB になった。
+- `e123_summary.json`、図、`e2_blue_share.json` は残っている。npz からは、抽出のスクリプト（`extract_e123_v15.py`、CPU で 1 本数分）で作り直せる。
+
+### 42.2 空きが 7 GB を下回ったときに消す、段階1 のチェックポイント（一覧は消す前のもの）
+- 消すもの：段階1（`data/result/v15_s1_*/0/model/`）のチェックポイントのうち、判定に使わないエポック。**1690 個、4.16 GB**。全部の一覧は `docs/v15_stage1_ckpt_delete_list.txt`。
+
+| 種類 | 本数 | 保存されているエポック | 残す | 消す個数 | 大きさ |
+|---|---|---|---|---|---|
+| mse 段（`v15_s1_{plain,plain6k,colour,colourl1,colourl3}_mse`） | 5 | 0〜200（10 ごと、21 個） | ep100・150・200 | 90 | 0.48 GB |
+| l1 段（`v15_s1_*_l1`） | 5 | 0〜200（10 ごと、21 個） | ep200 | 100 | 0.28 GB |
+| Fig.5 の Decoder（`v15_s1_*_fig5_mse{100,150,200}`） | 15 | 0〜100（毎エポック、101 個） | ep100 | 1500 | 3.41 GB |
+
+- 残すもの：35 個。一覧は `docs/v15_stage1_ckpt_keep_list.txt`。
+  - 判定に使った mse 段の ep100・150・200。v15 (i) の Encoder（2 段目の 1 段目の `pretrain_encoder_from`）は `v15_s1_plain_mse` の ep200 で、ここに含まれる。
+  - l1 段の ep200。
+  - Fig.5 の Decoder の ep100（`eval_s1_v15.py --ae`、`figs_s1_v15.py`、`fig5_v11.py --epoch 100` が読むもの）。
+- 消さないもの：段階0 のデータ、`v15_s1_p80_half_6000`。ほかのデータ、段階2 のチェックポイントも消さない。
+- 実装：`delete_s1_ckpt_v15.sh`（コンテナの中で動かす。ファイルは root の持ち物）。一覧の行が `v15_s1_*/0/model/NNNNN.pth` の形でないもの、または残す一覧と重なるものが一つでもあれば、何も消さずに止まる。消した後、残す 35 個がそろっているかを数える。
+- 見張り：空きが 7 GB を下回ったら、この消去を実行し、記録する。5 GB の STOP_NEW の見張りは続けている。
+
+### 42.3 原因の分からない減りの記録（01:45）
+- df：`/home` は `/dev/sdb1`（915267 MB、使用 904032 MB、空き 11236 MB）。
+- `/home` 以外の置き場：
+  - `/tmp` と `/` は別のディスク（`/dev/sda3`、空き 723 GB）。Docker の置き場は `/mnt/md0/docker`。どちらも `/home` の空きには関わらない。
+  - `/home` には 34 人分の home がある。
+- 読める範囲の du（`du -sm /home/*/`。読めない場所は数えられない。kusano は v11〜v14 の worktree を除いた）：
+  - 合計は約 754 GB で、df の使用量より約 150 GB 少ない。この差は、読む権限のない場所の分である。
+  - 大きい順：/home/kusano/ 155.4 GB、/home/keijiro/ 99.4 GB、/home/yoshinari/ 79.5 GB、/home/kyushima/ 64.6 GB、/home/smatsumori/ 56.1 GB、/home/miyauchi/ 51.6 GB、/home/baba/ 37.1 GB、/home/matsuzaki/ 34.6 GB、/home/sawaguchi/ 32.3 GB、/home/kameyama/ 29.1 GB、/home/raffael/ 20.3 GB、/home/ikegami/ 20.3 GB。
+- kusano の中（読める範囲、v11〜v14 を除く）：
+  - superposition の v15 の worktree 34.7 GB。
+  - superposition の `my_research`（v11〜v14 の worktree の外）69.7 GB、`data` 39.1 GB、`.git` 2.8 GB。
+  - `.vscode-server` 5.3 GB、`venv` 2.3 GB、`.cache` 1.0 GB、`.claude` 0.5 GB。
+  - `/tmp/claude-1022` は別のディスクで 146 MB。
+- 01:04〜01:34 の 30 分の減り約 0.9 GB のうち、分かっているのは論文の実験（毎エポック 3 本で約 12 MB）と H4 の合わせて約 0.3 GB。残りは、読める範囲で 01:00 以後に書かれた 20 MB 以上のファイルからは見つからなかった（他の人の .codex のログ 29 MB だけ）。
+- 次の測り：R1b・R2b の起動のときに同じ du を測り、home ごとの増え方を比べて書く。
