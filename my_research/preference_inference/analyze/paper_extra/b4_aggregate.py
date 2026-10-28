@@ -95,7 +95,7 @@ def main():
                           'saved': common[f's{s}']['values'][c]['G1_visible'][-1]}
         P['track_common_check'] = chk
         R['per_pair'][f's{s}'] = P
-    J = {k: sum(R['per_pair'][f's{s}'][k]['pair_ok'] for s in range(3)) for k in R['per_pair']['s0'] if 'points' in R['per_pair']['s0'][k]}
+    J = {k: sum(R['per_pair'][f's{s}'][k]['pair_ok'] for s in range(3)) for k, v in R['per_pair']['s0'].items() if isinstance(v, dict) and 'points' in v}
     R['judge_counts'] = J
     R['verdict'] = {f'B4V1_{q}': J[f'{q}_sr_vs80'] >= 2 for q in QS}
     with open(os.path.join(B4, 'summary.json'), 'w') as f:
