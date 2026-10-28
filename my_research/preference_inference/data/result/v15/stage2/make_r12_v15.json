@@ -1,0 +1,141 @@
+{
+ "n_pairs": 930,
+ "dropped": 33,
+ "tol": 1e-06,
+ "0": {
+  "r1_rest_equal_to_cp": true,
+  "r1_cols_equal_ns": true,
+  "r2_rest_equal_to_ns": true,
+  "r2_cols_equal_shared": true,
+  "cp_self_lstm_equal_shared": true,
+  "rel_diff_11cols_r1_vs_shared": 0.9869346618652344,
+  "norm_11cols": {
+   "shared": 34.319732666015625,
+   "ns_other": 3.2826220989227295
+  },
+  "shared_p2ep0_equals_p1ep150": true,
+  "cp_loaded_equals_ckpt": true,
+  "cp_rest_is_G_equal_shared_ep0": true,
+  "cp_n_G_tensors": 6,
+  "r1_loaded_equals_ckpt": true,
+  "r1_rest_is_G_equal_shared_ep0": true,
+  "r1_n_G_tensors": 6,
+  "r2_loaded_equals_ckpt": true,
+  "r2_rest_is_G_equal_shared_ep0": true,
+  "r2_n_G_tensors": 6,
+  "cp_vs_shared_ep0": {
+   "h1": {
+    "max_abs_diff": 0.0,
+    "bit_identical": true
+   },
+   "h2": {
+    "max_abs_diff": 0.0,
+    "bit_identical": true
+   },
+   "q2": {
+    "max_abs_diff": 0.0,
+    "bit_identical": true
+   },
+   "g": {
+    "max_abs_diff": 0.0,
+    "bit_identical": true
+   },
+   "err": {
+    "max_abs_diff": 0.0,
+    "bit_identical": true
+   }
+  },
+  "passed": true
+ },
+ "1": {
+  "r1_rest_equal_to_cp": true,
+  "r1_cols_equal_ns": true,
+  "r2_rest_equal_to_ns": true,
+  "r2_cols_equal_shared": true,
+  "cp_self_lstm_equal_shared": true,
+  "rel_diff_11cols_r1_vs_shared": 0.9870110750198364,
+  "norm_11cols": {
+   "shared": 33.01433181762695,
+   "ns_other": 3.290043592453003
+  },
+  "shared_p2ep0_equals_p1ep150": true,
+  "cp_loaded_equals_ckpt": true,
+  "cp_rest_is_G_equal_shared_ep0": true,
+  "cp_n_G_tensors": 6,
+  "r1_loaded_equals_ckpt": true,
+  "r1_rest_is_G_equal_shared_ep0": true,
+  "r1_n_G_tensors": 6,
+  "r2_loaded_equals_ckpt": true,
+  "r2_rest_is_G_equal_shared_ep0": true,
+  "r2_n_G_tensors": 6,
+  "cp_vs_shared_ep0": {
+   "h1": {
+    "max_abs_diff": 0.0,
+    "bit_identical": true
+   },
+   "h2": {
+    "max_abs_diff": 0.0,
+    "bit_identical": true
+   },
+   "q2": {
+    "max_abs_diff": 0.0,
+    "bit_identical": true
+   },
+   "g": {
+    "max_abs_diff": 0.0,
+    "bit_identical": true
+   },
+   "err": {
+    "max_abs_diff": 0.0,
+    "bit_identical": true
+   }
+  },
+  "passed": true
+ },
+ "2": {
+  "r1_rest_equal_to_cp": true,
+  "r1_cols_equal_ns": true,
+  "r2_rest_equal_to_ns": true,
+  "r2_cols_equal_shared": true,
+  "cp_self_lstm_equal_shared": true,
+  "rel_diff_11cols_r1_vs_shared": 0.9870288968086243,
+  "norm_11cols": {
+   "shared": 32.37812805175781,
+   "ns_other": 3.308255434036255
+  },
+  "shared_p2ep0_equals_p1ep150": true,
+  "cp_loaded_equals_ckpt": true,
+  "cp_rest_is_G_equal_shared_ep0": true,
+  "cp_n_G_tensors": 6,
+  "r1_loaded_equals_ckpt": true,
+  "r1_rest_is_G_equal_shared_ep0": true,
+  "r1_n_G_tensors": 6,
+  "r2_loaded_equals_ckpt": true,
+  "r2_rest_is_G_equal_shared_ep0": true,
+  "r2_n_G_tensors": 6,
+  "cp_vs_shared_ep0": {
+   "h1": {
+    "max_abs_diff": 0.0,
+    "bit_identical": true
+   },
+   "h2": {
+    "max_abs_diff": 0.0,
+    "bit_identical": true
+   },
+   "q2": {
+    "max_abs_diff": 0.0,
+    "bit_identical": true
+   },
+   "g": {
+    "max_abs_diff": 0.0,
+    "bit_identical": true
+   },
+   "err": {
+    "max_abs_diff": 0.0,
+    "bit_identical": true
+   }
+  },
+  "passed": true
+ },
+ "all_passed": true
+}
