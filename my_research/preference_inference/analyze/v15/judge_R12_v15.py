@@ -8,6 +8,8 @@ draws over pairs, seed 0).
     G's memory (descriptive): G 10-step readout of R1 next to the shared and NS values.
     R1b (Sec.39.1, only if run) v15_s2p2h_noexp_v15i_r1b*: R1 with the 11 columns scaled to the shared norm; same rule as R1,
     and the reading of the R1 / R1b pair.
+    R2b (Sec.41, only if run) v15_s2p2h_noexp_v15i_r2b*: NS with the 11 columns scaled to the shared norm; share of the R2 rise
+    kept, mean(R2b - NS) / mean(R2 - NS) over seeds: < 1/2 -> 'learned content works', >= 1/2 -> 'entrance size works'.
 
     python analyze/v15/judge_R12_v15.py   # -> data/result/v15/stage2/judge_R12_v15i_cpu.json
 """
@@ -86,9 +88,23 @@ def main():
     g10 = float(np.mean([R['per_seed'][s]['r1']['g10']['mean'] for s in SEEDS]))
     R['G_memory'] = {'r1_g10_mean': g10, 'reading': ('kept' if g10 >= G10_KEPT else 'lost' if g10 <= G10_LOST else 'between'),
                      'r2_g10_mean': float(np.mean([R['per_seed'][s]['r2']['g10']['mean'] for s in SEEDS]))}
+    if all(os.path.exists(os.path.join(S2, f"hide_v15_s2p2h_noexp_v15i_r2b{'' if s == 0 else f'_s{s}_seed{s}'}_cpu.json"))
+           for s in SEEDS):
+        Pc = load('v15_s2p2h_noexp_v15i_r2b')
+        rc = {s: {'r2b': summ(Pc[s], 'v15_s2p2h_noexp_v15i_r2b', s),
+                  'r2b_minus_ns': boot(Pc[s]['pairacc'] - P['ns'][s]['pairacc']),
+                  'r2b_minus_shared': boot(Pc[s]['pairacc'] - P['shared'][s]['pairacc']),
+                  'r2b_minus_r2': boot(Pc[s]['pairacc'] - P['r2'][s]['pairacc'])} for s in SEEDS}
+        for s in SEEDS:
+            rc[s]['share_of_r2_rise'] = rc[s]['r2b_minus_ns']['mean'] / R['per_seed'][s]['r2_minus_ns']['mean']
+        rise_b = float(np.mean([rc[s]['r2b_minus_ns']['mean'] for s in SEEDS]))
+        share = rise_b / R['R2']['mean_rise_over_ns']
+        R['R2b'] = {'per_seed': rc, 'mean_rise_over_ns': rise_b, 'share_of_r2_rise': share,
+                    'reading': 'learned content works' if share < 0.5 else 'entrance size works (content unknown)'}
     out = os.path.join(S2, 'judge_R12_v15i_cpu.json')
     json.dump(R, open(out, 'w'), indent=1, default=lambda o: o.item() if hasattr(o, 'item') else str(o))
-    print(json.dumps({k: v for k, v in R.items() if k != 'per_seed'}, indent=1))
+    print(json.dumps({k: ({kk: vv for kk, vv in v.items() if kk != 'per_seed'} if isinstance(v, dict) else v)
+                      for k, v in R.items() if k != 'per_seed'}, indent=1))
 
 
 if __name__ == '__main__':

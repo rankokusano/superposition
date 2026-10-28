@@ -1,0 +1,48 @@
+{
+ "0": {
+  "c": 10.454975128173828,
+  "rest_equal_to_ns": true,
+  "cols_equal_c_times_ns": true,
+  "cols_equal_r1b": true,
+  "norm": {
+   "shared": 34.319732666015625,
+   "ns": 3.2826220989227295,
+   "r2b": 34.31972122192383
+  },
+  "norm_matches": true,
+  "loaded_equals_ckpt": true,
+  "rest_is_G_equal_shared_ep0": true,
+  "passed": true
+ },
+ "1": {
+  "c": 10.034618377685547,
+  "rest_equal_to_ns": true,
+  "cols_equal_c_times_ns": true,
+  "cols_equal_r1b": true,
+  "norm": {
+   "shared": 33.01433181762695,
+   "ns": 3.290043592453003,
+   "r2b": 33.014244079589844
+  },
+  "norm_matches": true,
+  "loaded_equals_ckpt": true,
+  "rest_is_G_equal_shared_ep0": true,
+  "passed": true
+ },
+ "2": {
+  "c": 9.787070274353027,
+  "rest_equal_to_ns": true,
+  "cols_equal_c_times_ns": true,
+  "cols_equal_r1b": true,
+  "norm": {
+   "shared": 32.37812805175781,
+   "ns": 3.308255434036255,
+   "r2b": 32.37813186645508
+  },
+  "norm_matches": true,
+  "loaded_equals_ckpt": true,
+  "rest_is_G_equal_shared_ep0": true,
+  "passed": true
+ },
+ "all_passed": true
+}
