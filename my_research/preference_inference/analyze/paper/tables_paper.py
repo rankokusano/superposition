@@ -343,7 +343,7 @@ def t_alignment():
 
 # ---------------------------------------------------------------- table v2_design (short version, table 1)
 def t_v2_design():
-    W = ('p{0.17\\linewidth}', 'p{0.455\\linewidth}', 'l', 'p{0.23\\linewidth}')
+    W = ('p{0.168\\linewidth}', 'p{0.46\\linewidth}', 'l', 'p{0.25\\linewidth}')
     body = ['\\setlength{\\tabcolsep}{3pt}%', '\\begin{tabular}{@{}' + ''.join(W) + '@{}}', '\\toprule',
             '条件 & 中身 & 組 & 位置づけ \\\\', '\\midrule']
     rows = [
@@ -351,6 +351,7 @@ def t_v2_design():
          '事前登録（判定は組1〜3）'),
         ('非共有条件', 'LSTM を process-1 用と process-2 用に分ける（経験80\\%のデータ）', '組1〜3', '事前登録した対照'),
         ('符号無作為条件', '経験80\\%と同じ軌跡で，$P_t$ の符号だけをエピソードごとに無作為に反転', '組1〜3', '事前登録した対照'),
+        ('零入力条件', '同じ軌跡で $P_t$ を常に0', '組1〜3', '補助の対照（入口の重みは学習されない）'),
         ('写しの比較', '非共有モデルの process-2 用 LSTM に process-1 用の重みを写す（全部／快・不快の8列，経験あり・なし）',
          '組1〜3', '事前登録（G5b）．BA と $\\Delta$ は事前登録外'),
         ('A-2 の規則の確率 0.8', '段階IIの評価用データで，A-2 が確率 0.8 で好きな色へ向かう', '組1〜6', '事前登録'),
@@ -369,7 +370,7 @@ def t_v2_design():
         ('T2・T5', '他者用モジュールの出力 $Q2$ が好みや色に応じて変わるか', '事前登録した主'),
     ]
     for n, m, st in rows:
-        body.append(f'{n} & \\multicolumn{{2}}{{p{{0.53\\linewidth}}}}{{{m}}} & {st} \\\\')
+        body.append(f'{n} & \\multicolumn{{2}}{{p{{0.535\\linewidth}}}}{{{m}}} & {st} \\\\')
     body += ['\\bottomrule', '\\end{tabular}']
     write('v2_design', '\n'.join(body))
 
