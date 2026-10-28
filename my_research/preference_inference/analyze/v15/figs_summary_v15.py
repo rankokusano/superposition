@@ -58,6 +58,8 @@ def fig1():
     assert pair[iX] == pair[iY] == k
     t_e = te[iX]
     choice = {s: blue[(rp == k) & (member == m)][0] for s, m in (('X', 'first'), ('Y', 'second'))}
+    accv = np.array(r['_acc_ev'], float)
+    acc_side = {s: float(np.nanmean(accv[member == m])) for s, m in (('X', 'first'), ('Y', 'second'))}
     frames = [t_e - 8, t_e - 3, t_e, t_e + 3, t_e + 8]
     fig = plt.figure(figsize=(13, 4.8))
     gs = fig.add_gridspec(2, 5, left=0.04, right=0.60, top=0.80, bottom=0.18, hspace=0.55, wspace=0.08)
@@ -104,6 +106,8 @@ def fig1():
     sub.set_title('top view; arrows: choice of 2(b) v15(i) no experience, seed 0', fontsize=8.5, pad=4)
     fig.text(0.32, 0.93, f"Generated pair {k} (first kept pair; A-2 eats at t_e = {t_e}). A-1's input views, A-2 hidden from t_e-5:\n"
              'X and Y sides differ only before eating (top-left cube red vs green)', ha='center', fontsize=9.5, color=INK)
+    fig.text(0.32, 0.02, f"This pair is an example where the model chose the correct direction on both sides; over all {H2} pairs "
+             f"this model's accuracy is {acc_side['X']:.3f} (X side) and {acc_side['Y']:.3f} (Y side).", ha='center', fontsize=8.5, color=INK)
     fig.savefig(os.path.join(OUT, 'fig1_generated_pair.png'), dpi=130, bbox_inches='tight'); plt.close(fig)
     return {'pair': k, 't_e': int(t_e), 'choice_blue': {s: float(v) for s, v in choice.items()}, 'n_pairs': H2, 'dropped': dropped}
 
