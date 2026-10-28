@@ -344,7 +344,7 @@ def t_alignment():
 # ---------------------------------------------------------------- table v2_design (short version, table 1)
 def t_v2_design():
     W = ('p{0.168\\linewidth}', 'p{0.46\\linewidth}', 'l', 'p{0.25\\linewidth}')
-    body = ['\\setlength{\\tabcolsep}{3pt}%', '\\begin{tabular}{@{}' + ''.join(W) + '@{}}', '\\toprule',
+    body = ['\\setlength{\\tabcolsep}{3pt}\\renewcommand{\\arraystretch}{0.9}%', '\\begin{tabular}{@{}' + ''.join(W) + '@{}}', '\\toprule',
             '条件 & 中身 & 組 & 位置づけ \\\\', '\\midrule']
     rows = [
         ('経験なし・50\\%・80\\%', 'A-1 が規則の一歩を選ぶ確率 $p=0$，0.5，0.8 で段階Iを学習', '組1〜6',
@@ -358,6 +358,9 @@ def t_v2_design():
     ]
     for r in rows:
         body.append(' & '.join(r) + ' \\\\')
+    # check added after review: name and content span the first two columns to keep the table within half a page
+    body.append('\\multicolumn{2}{@{}p{0.64\\linewidth}}{自分の学習データと同じ作りの評価データ（A-1 は規則の確率 0.8，A-2 は元のまま）}'
+                ' & 組1〜3 & 査読を受けて追加した確認（計算の前に判定の基準を記録） \\\\')
     body += ['\\midrule', '指標 & \\multicolumn{2}{l}{何を測るか} & 事前登録の扱い \\\\', '\\midrule']
     rows = [
         ('$g$（G3）', '入力を隠し快・不快を保つと，予測が赤の方へ進み続ける傾き', '事前登録した主'),
