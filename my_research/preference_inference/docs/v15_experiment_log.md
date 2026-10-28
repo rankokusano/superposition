@@ -1329,7 +1329,7 @@
 - CPU の評価し直し（`run_cpu_reeval_CD.sh`）も同時に起動。GPU の評価が終わった本から、4 本までずつ CPU で評価し直す。
 - 1 段目は 1 エポック 約 57 秒（8 本とも同じ程度）。終わる見込み：1 段目 約 12:45、2 段目と GPU の評価 約 15:00、CPU の評価し直し 約 15:30。
 
-### 33.8 結果を見る前の追加：NS の解釈（2026-10-28 10:25、草野さんの指示。(C)・(D) の結果はまだ一つも出ていない）
+### 33.8 結果を見る前の追加：NS の解釈（2026-10-28 10:17、草野さんの指示。(C)・(D) の結果はまだ一つも出ていない）
 **1. 1 段目で NS の他者側の LSTM（`lstm_other`）が受け取るものと、学習される重み（コードから）**
 - 1 段目のモデルは `SuperpositionNetworkMotionPleasureHoldV15NS`。forward は v12 の `SuperpositionNetworkMotionPleasure.forward`（`model/model_v12.py` 82–97 行）をそのまま使う。
   - `ov_enc = other_vision_encoder_module(sv)`：`sv` は A-1 自身のカメラの画像（`x['self_vision']`）。つまり過程 2 の視界の入力は、**A-1 自身の視界を、他者側の符号器（v15 (i)、凍結）に通したもの**（64 次元）。過程 1 と同じ画像。
