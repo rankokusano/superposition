@@ -81,7 +81,7 @@ def main():
         axes[0, 0].plot([], [], PAIR_MK[s], color='0.3', ms=3.6, label=ps.pair_label(s))
     axes[0, 0].legend(frameon=False, fontsize=6.5, loc='lower left')
     fig.text(0.99, -0.045, '点：最終5点の平均（棒は5点の範囲）、(d)〜(f) は1点。白抜き：$h^2$ が読めない組（$R^2$ < 0.8）。\n'
-             '経験なし系の写し・列だけは事前登録外（ログ §24）。空き：測っていない', ha='right', fontsize=6.5)
+             '経験なし系の写し・列だけは事前登録外。空き：測っていない', ha='right', fontsize=6.5)
     fig.tight_layout()
     ps.save(fig, 'b_copy')
 
