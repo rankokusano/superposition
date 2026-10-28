@@ -23,7 +23,7 @@ C = os.path.join(_PI, 'data', 'result', 'paper_extra', 'C_signrand')
 ps.FIGS = os.path.join(C, 'figs')
 C_SR, C_PZ = '#8a3ffc', '#b8860b'      # same colours as c_curves
 PAIR_MK = ('o', 's', '^')
-BREAK = {'経験なし': '経験\nなし', '符号無作為': '符号\n無作為', '快・不快 零': '快・不快\n零', '経験80%': '経験\n80%'}
+BREAK = {'経験なし': '経験\nなし', '符号無作為': '符号\n無作為', '零入力': '零入力', '経験80%': '経験\n80%'}
 
 
 def main():
@@ -32,7 +32,7 @@ def main():
     R = json.load(open(os.path.join(C, 'summary.json')))
     conds = [('random', 'signrand', ps.COND_LABEL['none'], ps.C_NONE), ('signrand', 'signrand', '符号無作為', C_SR)]
     if 'pzero' in R:
-        conds.append(('pzero', 'pzero', '快・不快 零', C_PZ))
+        conds.append(('pzero', 'pzero', '零入力', C_PZ))
     conds.append(('mixed80', 'signrand', ps.COND_LABEL['80'], ps.C_80))
     # paper round 3 (work 5): main quantities first, (e)(f) are auxiliary and drawn lighter
     panels = (('G3_dP', '(a) 自分側の快・不快への依存 $d_P$'), ('G5b', '(b) 他者側の符号応答 G5b'),
