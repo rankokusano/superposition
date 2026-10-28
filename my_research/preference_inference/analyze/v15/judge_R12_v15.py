@@ -6,6 +6,8 @@ draws over pairs, seed 0).
     R1 (main) v15_s2p2h_noexp_v15i_r1*: R1 - shared noexp (same seed). "pathway needed" / "not needed" / describe.
     R2 (secondary, descriptive) v15_s2p2h_noexp_v15i_r2*: R2 - NS noexp (same seed).
     G's memory (descriptive): G 10-step readout of R1 next to the shared and NS values.
+    R1b (Sec.39.1, only if run) v15_s2p2h_noexp_v15i_r1b*: R1 with the 11 columns scaled to the shared norm; same rule as R1,
+    and the reading of the R1 / R1b pair.
 
     python analyze/v15/judge_R12_v15.py   # -> data/result/v15/stage2/judge_R12_v15i_cpu.json
 """
@@ -66,6 +68,21 @@ def main():
                'verdict': ('pathway needed' if all_below and drop >= NEED_MIN else
                            'not needed' if drop < NOT_NEEDED_MAX else 'neither (describe)')}
     R['R2'] = {'mean_rise_over_ns': float(np.mean([R['per_seed'][s]['r2_minus_ns']['mean'] for s in SEEDS]))}
+    if all(os.path.exists(os.path.join(S2, f"hide_v15_s2p2h_noexp_v15i_r1b{'' if s == 0 else f'_s{s}_seed{s}'}_cpu.json"))
+           for s in SEEDS):
+        Pb = load('v15_s2p2h_noexp_v15i_r1b')
+        rb = {s: {'r1b': summ(Pb[s], 'v15_s2p2h_noexp_v15i_r1b', s),
+                  'r1b_minus_shared': boot(Pb[s]['pairacc'] - P['shared'][s]['pairacc']),
+                  'r1b_minus_r1': boot(Pb[s]['pairacc'] - P['r1'][s]['pairacc'])} for s in SEEDS}
+        drop_b = -float(np.mean([rb[s]['r1b_minus_shared']['mean'] for s in SEEDS]))
+        below_b = all(rb[s]['r1b_minus_shared']['ci95'][1] < 0 for s in SEEDS)
+        vb = ('pathway needed' if below_b and drop_b >= NEED_MIN else
+              'not needed' if drop_b < NOT_NEEDED_MAX else 'neither (describe)')
+        v1 = R['R1']['verdict']
+        R['R1b'] = {'per_seed': rb, 'mean_drop': drop_b, 'all_seeds_ci_upper_below_0': bool(below_b), 'verdict': vb,
+                    'reading': ('learned content needed' if v1 == 'pathway needed' and vb == 'pathway needed' else
+                                'entrance size needed (content unknown)' if v1 == 'pathway needed' and vb == 'not needed'
+                                else 'describe')}
     g10 = float(np.mean([R['per_seed'][s]['r1']['g10']['mean'] for s in SEEDS]))
     R['G_memory'] = {'r1_g10_mean': g10, 'reading': ('kept' if g10 >= G10_KEPT else 'lost' if g10 <= G10_LOST else 'between'),
                      'r2_g10_mean': float(np.mean([R['per_seed'][s]['r2']['g10']['mean'] for s in SEEDS]))}

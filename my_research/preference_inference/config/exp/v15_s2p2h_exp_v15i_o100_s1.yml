@@ -1,0 +1,36 @@
+# v15 Sec.39 H4 (fewer observations): v15_s2p2h_exp_v15i_s1.yml with phase-2 data v15_s2_c2_p80_half_100t_hideA2 (the first 100 train episodes of the _1000t_hideA2 data, same test 300) and 1500 epochs (= 15000 updates, as 150 epochs x 100 batches of the 1000-episode runs); save every 100, eval/test every 50. Run with --seed 1.
+model:
+  name: SuperpositionNetworkMotionPleasureHoldOtherV15
+  config: default
+  mode: ~
+runner: MotionGenerationPredictionFeaturePredictionRunner
+data:
+  name: v15_s2_c2_p80_half_100t_hideA2
+  input_vision: self_vision_in
+load_state_dict_strict: False
+train:
+  loss_function: l1_loss
+  pretrain:
+    exp_config: v15_s2p1_exp_v15i_mse
+    seed: 1
+    epoch: 150
+  batch_size: 10
+  max_epochs: 1500
+  save_interval: 100
+  test_interval: 50
+  optimizer: AdamW
+  optim_config:
+    default:
+      lr: 0.001
+      weight_decay: 0.01
+    freeze:
+      - superposition_module
+      - vision_encoder_module
+      - vision_decoder_module
+      - integration_module
+      - share_lns
+      - feature_prediction_module
+    per_params:
+      - name: bias
+        args:
+          weight_decay: 0.0

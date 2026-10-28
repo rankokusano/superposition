@@ -1,0 +1,36 @@
+# v15 Sec.39 R1b: v15_s2p2h_noexp_v15i_r1.yml with the start checkpoint v15_s2p1_noexp_v15i_r1b (analyze/v15/make_r1b_v15.py: R1 with the other side's 11 input columns = the NS values times one constant per seed, so that their Frobenius norm equals the same-seed shared trained 11 columns). Run with --seed 0.
+model:
+  name: SuperpositionNetworkMotionPleasureHoldOtherV15NS
+  config: default
+  mode: ~
+runner: MotionGenerationPredictionFeaturePredictionRunner
+data:
+  name: v15_s2_c2_p80_half_1000t_hideA2
+  input_vision: self_vision_in
+load_state_dict_strict: False
+train:
+  loss_function: l1_loss
+  pretrain:
+    exp_config: v15_s2p1_noexp_v15i_r1b
+    seed: 0
+    epoch: 150
+  batch_size: 10
+  max_epochs: 150
+  save_interval: 10
+  test_interval: 10
+  optimizer: AdamW
+  optim_config:
+    default:
+      lr: 0.001
+      weight_decay: 0.01
+    freeze:
+      - superposition_module
+      - vision_encoder_module
+      - vision_decoder_module
+      - integration_module
+      - share_lns
+      - feature_prediction_module
+    per_params:
+      - name: bias
+        args:
+          weight_decay: 0.0
