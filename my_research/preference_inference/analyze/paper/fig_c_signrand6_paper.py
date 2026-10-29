@@ -22,8 +22,8 @@ CONDS = (('random', '経験\nなし'), ('signrand', '符号\n無作為'), ('pzer
 PANELS = (('dP', 'G3_dP', '(a) 自分側の快・不快への依存 $d_P$'), ('G5b', 'G5b', '(b) 他者側の符号応答 G5b'),
           ('signfollow_green', 'signfollow_green', '(c) 符号に従う分（緑好み）'),
           ('signfollow_pref', 'signfollow_pref', '(d) 符号に従う分（好み混合）'),
-          ('G3_hold', 'G3_hold', '(e) 補助：自分側の積み上がり $g$（P を保つ）'),
-          ('delta', 'delta', '(f) 補助：真値条件 Δ（真値 − 零）'))
+          ('G3_hold', 'G3_hold', '(e) 自分側の積み上がり $g$（P を保つ）'),
+          ('delta', 'delta', '(f) 真値条件 Δ（真値 − 零）'))
 AUX = ('G3_hold', 'delta')
 
 
@@ -83,14 +83,17 @@ def main():
         ax.set_xticklabels([lab for _, lab in CONDS], fontsize=7)
         ax.set_xlim(-0.6, len(CONDS) - 0.4)
         ax.set_title(title, fontsize=8, color='0.45' if aux else 'k')
-        if aux:
+        if aux:   # paper round 9: auxiliary panels on a light grey background with a '補助' tag (main panels plain)
+            ax.set_facecolor('0.92')
+            ax.text(0.03, 0.97, '補助', transform=ax.transAxes, ha='left', va='top', fontsize=8, color='0.3',
+                    fontweight='bold')
             for sp in ax.spines.values():
                 sp.set_color('0.6')
             ax.tick_params(colors='0.45')
     axes[0, 1].plot([], [], 'o-', color=ps.C_MAIN, ms=3.0, lw=0.6, label='組1〜3')
     axes[0, 1].plot([], [], 's-', color=ps.C_EXTRA, ms=3.0, lw=0.6, label='組4〜6')
     axes[0, 1].legend(frameon=False, fontsize=6.5, loc='upper left')
-    fig.text(0.99, -0.04, '点：最終5点の平均（棒は5点の範囲）、細い線は同じ組。零入力条件は組1〜3 のみ。(e)(f) は補助。'
+    fig.text(0.99, -0.04, '点：最終5点の平均（棒は5点の範囲）、細い線は同じ組。零入力条件は組1〜3 のみ。(a)〜(d) が主の量、灰色の背景の (e)(f) は補助。'
              '(f) は L1 期間 ep200 の1点、塗り：緑好み、白抜き：好み混合。$d_P$ =（保つ − 反転）/ 2', ha='right', fontsize=6.5)
     fig.tight_layout()
     ps.save(fig, 'c_signrand')
