@@ -12,6 +12,9 @@ B  red-form bias: B = L(green form) - L(red form) per episode (> 0: the red-like
    true preference; on the preference-mixed sets also bias = (B_red + B_green)/2 and discrimination = (B_red - B_green)/2.
 C  stage-1 sign convention: v14-C (v14c s0-2, v14cr s0-1) with A-1 Red / Green at evaluation, next to v12 p50 / none of
    the same seeds; the 4 conditions with A-1 Green (position only); checks that FP does not depend on A-1's sign.
+E1 (Sec.35.9, added to E1's pre-registration before E1's evaluation; only once sr50 runs exist for all 6 pairs): the
+   secondary judgement U^pos_pref p50 - sr50 on the preference-mixed set, frames 10-50, L1-stage late 5, A-1 Red: holds
+   if the 6-pair t CI lower bound > 0 (main form). Same forms as A (episode-paired form, per-pair points) on all 4 sets.
 -> data/result/paper_extra/E2/pos/summary.json, tables.md
 """
 
@@ -136,9 +139,9 @@ def bias_block(f, k, q, seeds, a1='red'):
     return {g: {'per_pair': v, 't': ttest(v) if len(v) > 2 else None} for g, v in r.items()}
 
 
-def checks(fams_g):
+def checks(fams_g, extra=()):
     out = {'L1_vs_e2': [], 'FP_vs_e2mse200': [], 'rep': [], 'v14_fp_a1_independent': [], 'v14_overlap': []}
-    for f in FAMS:
+    for f in FAMS + list(extra):
         for s in SEEDS:
             for k in SETS:
                 for e in EPS:
@@ -147,6 +150,8 @@ def checks(fams_g):
                     out['FP_vs_e2mse200'].append(bool(z['chk_FP_vs_e2mse200'].all()))
                     if f in fams_g:
                         out['FP_vs_e2mse200'].append(bool(fpos(f, s, e, k, 'green')['chk_FP_vs_e2mse200'].all()))
+                if not os.path.exists(os.path.join(RUNS, f'{f}_l1_s{s}_ep200_{k}_rep.npz')):
+                    continue
                 a, b = fpos(f, s, 200, k), fpos(f, s, 200, k, tag='_rep')
                 out['rep'].append(all(np.array_equal(a[x], b[x], equal_nan=True) for x in a if x.startswith('dev')))
     for f, seeds, nm in (('v14c', (0, 1, 2), 'mixedpref'), ('v14cr', (0, 1), 'randompref')):
@@ -224,7 +229,11 @@ def main():
             ch = {g: [a - b for a, b in zip(bg[g]['per_pair'], br[g]['per_pair'])] for g in bg}
             C['a1green'][f][k] = {'B_pos': bg, 'change_green_minus_red': {g: {'per_pair': v, 't': ttest(v)} for g, v in ch.items()},
                                   'Upos': {kind: [pv(f, s, k, 'pos', kind, 'green') for s in SEEDS] for kind in ('pref', 'use')}}
-    R['checks'] = checks(fams_g)
+    if 'sr50' in extra:   # Sec.35.9: E1 secondary judgement (p50 - sr50, preference-mixed set, holds if lower > 0)
+        R['E1'] = {k: comparison('p50', 'sr50', k, 'pos') for k in SETS}
+        R['E1']['judgement'] = {'set': 'pref', 'holds': bool(R['E1']['pref']['t']['ci95'][0] > 0),
+                                'holds_paired_form': bool(R['E1']['pref']['t_paired']['ci95'][0] > 0)}
+    R['checks'] = checks(fams_g, extra)
     with open(os.path.join(POS, 'summary.json'), 'w') as fh:
         json.dump(R, fh, indent=1)
     write_tables(R)
@@ -325,6 +334,17 @@ def write_tables(R):
                 for g in X['B_pos']:
                     L.append(f'| {SETNAME[k]} | {gn[g]} | {NAME[f]} | {ci(B["pos"][k][f][g]["t"])} | {ci(X["B_pos"][g]["t"])} | '
                              f'{ci(X["change_green_minus_red"][g]["t"])} |')
+    if 'E1' in R:
+        X, J = R['E1'], R['E1']['judgement']
+        L += ['', '## 表E1 E1 の副の判定（§35.9）：U^pos_pref の 経験50% − 符号無作為（経験50%）（フレーム 10〜50、L1 期間の最終5点、A-1 赤好き）', '',
+              f'判定（好み混合、主の形、6組の t の CI の下限 > 0）：{"成り立つ" if J["holds"] else "成り立たない"}'
+              f'（エピソードを対にした形：{"下限 > 0" if J["holds_paired_form"] else "0 を含むか下限 ≤ 0"}）', '',
+              '| データ | ' + ' | '.join(f'組{s + 1}' for s in SEEDS) + ' | 主の形 [95% CI] | エピソードを対にした形 [95% CI] | 正の組 | 組ごとの点で正の組 |',
+              '|' + '---|' * 11]
+        for k in SETS:
+            x = X[k]
+            L.append(f'| {SETNAME[k]} | ' + ' | '.join(f4(d) for d in x['diffs']) + f' | {ci(x["t"])} | {ci(x["t_paired"])} | '
+                     f'{x["n_pos"]}/6 | {x["pairs_ok"]}/6 |')
     L += ['', f'checks: {json.dumps(R["checks"], ensure_ascii=False)}']
     txt = '\n'.join(L) + '\n'
     open(os.path.join(POS, 'tables.md'), 'w').write(txt)
