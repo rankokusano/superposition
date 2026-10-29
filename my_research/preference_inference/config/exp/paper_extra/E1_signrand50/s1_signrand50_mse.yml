@@ -1,0 +1,38 @@
+# Paper round 11 E1 (docs/paper_extra_log.md Sec.35.4): v12_s1_mixed_mse.yml (experienced 50%) with the signed-pleasure model
+# and the data paper_s1_mixed50_signrand (v11_s1_mixed + the per-episode sign of the 80% signrand condition). Run with analyze/paper_extra/train_paper_e1.py.
+# with only the model name and data name changed.
+model:
+  name: SuperpositionNetworkMotionPleasureHoldSigned
+  config: default
+  mode: ~
+runner: PredictionFeaturePredictionRunner
+data:
+  name: paper_s1_mixed50_signrand
+load_state_dict_strict: False
+p_mask_vision: 0.99
+train:
+  loss_function: mse_loss
+  pretrain: ~
+  pretrain_encoder_from: /work/data/result/exp1_l1_1000/0/model/00200.pth
+  batch_size: 10
+  max_epochs: 200
+  save_interval: 1
+  test_interval: 10
+  optimizer: AdamW
+  optim_config:
+    default:
+      lr: 0.001
+      weight_decay: 0.01
+    freeze:
+      - vision_encoder
+      - share_lns
+    per_params:
+      - name: bias
+        args:
+          weight_decay: 0.0
+      - name: vision_encoder
+        args:
+          weight_decay: 0.001
+      - name: share_lns
+        args:
+          weight_decay: 0.001
