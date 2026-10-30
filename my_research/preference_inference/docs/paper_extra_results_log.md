@@ -163,3 +163,16 @@
 - oracle 系列・FP の $b_{dir}$ は、A-2 の初期位置を共変量に足すと大半が消える（0.040 → 0.006、0.059 → 0.002）。c± 系列と L1 では残る。
 - 未保存：符号無作為（50%）の c±、a2p80 の c± など。流し直していない。判定基準は決めていない（段階Bの材料）。
 - 表：`Vdir_A/tables.md`。図：`Vdir_A/fig_vdir_coef.{pdf,png}`・`fig_vdir_cells.{pdf,png}`。
+
+## V-dir 段階A の追加の分析（第12弾の追加。**探索的（事前登録外）**。ログ §36.7〜36.8、`data/result/paper_extra/Vdir_A/add_summary.json`、報告 `paper/check/vdir_stageA.md` §9）
+- c±・FP・経験50%（5 組）の主の形：
+  - $b_{pref}$ +0.032 [+0.020, +0.044]。
+  - $b_{dir}-b_{pref}$ +0.026 [+0.006, +0.047]（2段も 0 を外す）。
+- 初期位置ありの形：
+  - c±（FP・L1）と oracle・L1 では、経験50%・80% の $b_{dir}$ が残る。
+  - $b_{dir}-b_{pref}$ は、系列・誤差で向きがそろわない（c±・FP の経験50% は 0 に近い）。
+- 目安（1 組あたり）：
+  - oracle・FP の経験50% $b_{dir}$：2025 エピソード（主の形では 30）。
+  - c±・FP の $b_{dir}$：45〜120。
+  - L1：300〜500。
+- 表：`Vdir_A/add_tables.md`。
