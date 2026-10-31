@@ -467,7 +467,9 @@ def t_v3_design():
 STAGEC = os.path.join(RES, 'paper_extra', 'StageC', 'analysis', 'summary.json')
 
 
-def t_v3_stagec():
+def t_v3_stagec(full=True):
+    # full=True -> v3_stagec_full (supplement S8, the detailed version of 2026-11-01); full=False -> v3_stagec (main
+    # text: the judgements Q1a/Q1b and the values of Q1c/stage 2, the (L2) BA and Delta LL, generalisation and differences).
     # Stage C (pre-registration 3ade5ed, log Sec.38.5; amendment 1de4a37, Sec.38.9; results 74f33bb, stageC_G.md
     # Sec.2-5 and 13.3). Saved aggregation only. 4 pairs, t with df 3; the two-stage bootstrap of stage C uses one
     # episode resample per draw shared by all pairs and models (differs from stage B).
@@ -497,20 +499,23 @@ def t_v3_stagec():
                          ('Q2a 第2段：経験50\\%', 'p50|s2|std|pref', '97.5'),
                          ('Q2b 第2段：経験50\\% $-$ 経験なし', 'p50-none|s2|std|pref', '97.5'),
                          ('第1段：学習前（記述，95\\%）', 'pre|s1|std|pref', '95')):
+        if not full and key.startswith('pre|'):
+            continue
         e = L1[key][lv]
         body.append(row(lab, e['t'], e['boot']))
-    # (L1) unstandardised
-    body += head('標準化しない $q_e$ の第1段の $b_{\\mathrm{pref}}$（記述）')
-    for lab, key in (('経験50\\%', 'p50'), ('経験なし', 'none'), ('学習前', 'pre')):
-        e = L1[f'{key}|s1|raw|pref']['95']
-        body.append(row(lab, e['t'], e['boot'], d=4))
-    # norm of Q2 and sign agreement
-    rng = {c: (min(D[c]['norm_Q2_by_pair']), max(D[c]['norm_Q2_by_pair'])) for c in ('p50', 'none', 'pre')}
-    nq = '，'.join(f'{n} {rng[c][0]:.2f}〜{rng[c][1]:.2f}' for c, n in (('p50', '経験50\\%'), ('none', '経験なし'), ('pre', '学習前')))
-    body += head(f'$\\lVert Q2\\rVert$ の平均（フレーム1〜50，組ごとの範囲．記述）：{nq}')
-    sa = '，'.join(f"{n} {D[c]['sign_agree_all']['mean']:.3f}・{D[c]['sign_agree_dis']['mean']:.3f}"
-                   for c, n in (('p50', '経験50\\%'), ('none', '経験なし'), ('pre', '学習前')))
-    body += head(f'$q_e$ の符号と好みの一致率（全 1200・食い違う 280．記述）：{sa}')
+    # (L1) unstandardised, norm of Q2 and sign agreement (full version only)
+    if full:
+        body += head('標準化しない $q_e$ の第1段の $b_{\\mathrm{pref}}$（記述）')
+        for lab, key in (('経験50\\%', 'p50'), ('経験なし', 'none'), ('学習前', 'pre')):
+            e = L1[f'{key}|s1|raw|pref']['95']
+            body.append(row(lab, e['t'], e['boot'], d=4))
+        # norm of Q2 and sign agreement
+        rng = {c: (min(D[c]['norm_Q2_by_pair']), max(D[c]['norm_Q2_by_pair'])) for c in ('p50', 'none', 'pre')}
+        nq = '，'.join(f'{n} {rng[c][0]:.2f}〜{rng[c][1]:.2f}' for c, n in (('p50', '経験50\\%'), ('none', '経験なし'), ('pre', '学習前')))
+        body += head(f'$\\lVert Q2\\rVert$ の平均（フレーム1〜50，組ごとの範囲．記述）：{nq}')
+        sa = '，'.join(f"{n} {D[c]['sign_agree_all']['mean']:.3f}・{D[c]['sign_agree_dis']['mean']:.3f}"
+                       for c, n in (('p50', '経験50\\%'), ('none', '経験なし'), ('pre', '学習前')))
+        body += head(f'$q_e$ の符号と好みの一致率（全 1200・食い違う 280．記述）：{sa}')
     # (L2)
     for q, txt in (('BA', '(L2) $Q2$ からの好みの基本の読み出しの BA（全 1200．副の判定，基準 0.5）'),
                    ('dLL', '(L2) 調整した読み出しの $\\Delta\\mathrm{LL}_{\\mathrm{pref}}$（向きのある 1088．副の判定）')):
@@ -532,7 +537,7 @@ def t_v3_stagec():
             e = R[f'nest|{rep}|{c}|gen_dis']
             body.append(row(f'{rn}：{n}', e['t'], e['boot'], signed=('-' in c)))
     body += ['\\bottomrule', '\\end{tabular}']
-    write('v3_stagec', '\n'.join(body))
+    write('v3_stagec_full' if full else 'v3_stagec', '\n'.join(body))
 
 
 # ---------------------------------------------------------------- paper v3, chapter 6 (task 2, V-dir stage B)
@@ -605,6 +610,7 @@ def main():
     for f in (t_conditions, t_metrics, t_group_values, t_projection, t_inverse, t_gates, t_module, t_alignment, t_v2_design, t_v3_design,
               t_v3_discrim, t_v3_discrim_sub, t_v3_stagec):
         f()
+    t_v3_stagec(full=False)
 
 
 if __name__ == '__main__':
