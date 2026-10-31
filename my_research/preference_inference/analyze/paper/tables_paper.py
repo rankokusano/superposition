@@ -404,8 +404,54 @@ def t_v2_design():
     write('v2_design', '\n'.join(body))
 
 
+# ---------------------------------------------------------------- paper v3, table 1
+def t_v3_design():
+    # paper v3 (2026-10-31): v2_design with a column for the research questions (課題1〜3), both sign-randomised
+    # conditions (80%: log Sec.4/34; 50%: Sec.35.4-35.5, a1770ba), the stage-B/C measures of tasks 2 and 3 written as
+    # 'pre-registration to be fixed'. Rows for the copy comparison, the A-2 rule-probability data, the true-pleasure
+    # Delta and the inverse-inference BA are left out because draft_v3 does not use them.
+    W = ('p{0.16\\linewidth}', 'p{0.4\\linewidth}', 'l', 'l', 'p{0.25\\linewidth}')
+    body = ['\\setlength{\\tabcolsep}{3pt}\\renewcommand{\\arraystretch}{0.85}%', '\\begin{tabular}{@{}' + ''.join(W) + '@{}}',
+            '\\toprule', '条件 & 中身 & 組 & 課題 & 位置づけ \\\\', '\\midrule']
+    rows = [
+        ('経験なし・50\\%・80\\%', 'A-1 が規則の一歩を選ぶ確率 $p=0$，0.5，0.8 で段階Iを学習', '組1〜6', '1〜3',
+         '事前登録（判定は組1〜3）'),
+        ('符号無作為（経験80\\%）', '経験80\\%と同じ軌跡で，$P_t$ の符号だけをエピソードごとに無作為に反転', '組1〜6', '1・2',
+         '組1〜3 は事前登録，6組の判定は組1〜3 の後に登録'),
+        ('符号無作為（経験50\\%）', '経験50\\%と同じ軌跡で，同じエピソードの $P_t$ の符号を反転', '組1〜6', '1・2',
+         '6組の判定を学習の前に登録'),
+        ('非共有条件', 'LSTM を process-1 用と process-2 用に分ける（経験80\\%のデータ）', '組1〜3', '1', '事前登録した対照'),
+        ('零入力条件', '経験80\\%と同じ軌跡で $P_t$ を常に0', '組1〜3', '1', '補助の対照（入口の重みは学習されない）'),
+        ('好み切替条件', '好きな色をエピソードごとに赤か緑にし，$P_t$ ＝ 好きな色 $-$ 嫌いな色（$p=0.5$）', '組1〜3', '1',
+         '補助．$d_P$ は事前登録外の確認'),
+    ]
+    for r in rows:
+        body.append(' & '.join(r) + ' \\\\')
+    body.append('\\multicolumn{2}{@{}p{0.58\\linewidth}}{自分の学習データと同じ作りの評価データ（A-1 は規則の確率 0.8）}'
+                ' & 組1〜6 & 1 & 計算の前に判定の基準を記録 \\\\')
+    body += ['\\midrule', '指標 & \\multicolumn{2}{l}{何を測るか} & 課題 & 事前登録の扱い \\\\', '\\midrule']
+    rows = [
+        ('$g$（G3）', '入力を隠し快・不快を保つと，予測が赤の方へ進み続ける傾き', '1', '事前登録した主'),
+        ('$d_P$', '$(g_{\\mbox{\\scriptsize 保つ}}-g_{\\mbox{\\scriptsize 反転}})/2$．自分側の快・不快への依存', '1',
+         '事前登録（符号無作為との比較）'),
+        ('G5b', 'process-2 の一範囲への $\\pm a$ による，予測の中の A-2 のずれの差', '1', '事前登録した主'),
+        ('符号に従う分', '本当の快・不快を保った傾きと，符号を反転した傾きの差の半分', '1',
+         '定義は事後，組5・6 と符号無作為の比較は事前登録'),
+        ('$U_{\\mathrm{pref}}$', '他者自身の視界から作る候補で，反対の好みと正しい好みの他者側の誤差の差（診断）', '2', '事前登録'),
+        ('$b_{\\mathrm{pref}}$（段階B）', '観察者が作れる候補 $c^{\\pm}$ での誤差の差 $Q_e$ の，他者の好みの側の係数（移動の向き・赤の側・初期位置をそろえる）',
+         '2', '事前登録の確定待ち'),
+        ('T2・T5', '他者用モジュールの出力 $Q2$ が好みや色に応じて変わるか', '3', '事前登録した主'),
+        ('$G$ の表現（段階C）', '$G$ の入力・内部状態・$Q2$・$h^2$ から好み・向き・位置を未見のエピソードで読み出す', '3',
+         '事前登録の確定待ち'),
+    ]
+    for n, m, k, st in rows:
+        body.append(f'{n} & \\multicolumn{{2}}{{p{{0.475\\linewidth}}}}{{{m}}} & {k} & {st} \\\\')
+    body += ['\\bottomrule', '\\end{tabular}']
+    write('v3_design', '\n'.join(body))
+
+
 def main():
-    for f in (t_conditions, t_metrics, t_group_values, t_projection, t_inverse, t_gates, t_module, t_alignment, t_v2_design):
+    for f in (t_conditions, t_metrics, t_group_values, t_projection, t_inverse, t_gates, t_module, t_alignment, t_v2_design, t_v3_design):
         f()
 
 
