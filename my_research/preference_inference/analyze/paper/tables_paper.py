@@ -450,8 +450,75 @@ def t_v3_design():
     write('v3_design', '\n'.join(body))
 
 
+# ---------------------------------------------------------------- paper v3, chapter 6 (task 2, V-dir stage B)
+VDIRB = os.path.join(RES, 'paper_extra', 'Vdir_B', 'analysis', 'summary.json')
+V3_CMP = (('none', '経験なし'), ('p50', '経験50\\%'), ('sr50', '符号無作為（経験50\\%）'),
+          ('p50-none', '経験50\\% $-$ 経験なし'), ('p50-sr50', '経験50\\% $-$ 符号無作為（経験50\\%）'))
+
+
+def t_v3_discrim():
+    # tab:discrim of draft_v3 ch.6: families P and D (pre-registration 4216497, log Sec.37.5; results 02618a4,
+    # paper/check/vdir_stageB.md Sec.3 and Sec.9.5). Saved aggregation only (no new computation).
+    jd = J(VDIRB)['judgement']
+    lab = {'P1': 'P1 経験50\\% の $b_{\\mathrm{pref}}$', 'P2': 'P2 経験50\\% $-$ 経験なし',
+           'P3': 'P3 経験50\\% $-$ 符号無作為（経験50\\%）', 'D1': 'D1 経験50\\% の $b_{\\mathrm{dir}}$',
+           'D2': 'D2 経験50\\% $-$ 経験なし', 'D3': 'D3 経験50\\% $-$ 符号無作為（経験50\\%）'}
+    body = ['\\begin{tabular}{@{}p{0.39\\linewidth}p{0.09\\linewidth}p{0.21\\linewidth}p{0.21\\linewidth}@{}}', '\\toprule',
+            '判定 & 平均 & 6組の $t$ の 95\\% CI & 2段のブートストラップの 95\\% CI \\\\', '\\midrule']
+    for k in ('P1', 'P2', 'P3', 'D1', 'D2', 'D3'):
+        e = jd[k]
+        assert e['verdict'] == 'holds' and e['pairs_ge3of5'] == 6, k
+        body.append(f"{lab[k]} & {sg(e['mean'], 4)} & {ci(*e['t_ci95'], d=4)} & {ci(*e['boot2_ci95'], d=4)} \\\\")
+        if k == 'P3':
+            body.append('\\midrule')
+    body += ['\\bottomrule', '\\end{tabular}']
+    write('v3_discrim', '\n'.join(body))
+
+
+def t_v3_discrim_sub():
+    # Secondary analyses of stage B (log Sec.37.5.5; vdir_stageB.md Sec.9.1-9.4): b_pref without the direction term,
+    # two-choice BA (preference / direction label), preference accuracy on the 280 disagreeing episodes, and the
+    # sensitivity form (v) (P2/P3 forms outside the pre-registration). c+-, FP, frames 1-50, tau = 1.0.
+    S = J(VDIRB)
+    C = {**S['coef'], **S['diff']}
+    groups = [
+        ('向きを調整しない $b_{\\mathrm{pref}}$（全 1200 エピソード）', 'coef', 'nodir', 4, False),
+        ('二択の BA（好みのラベル，全 1200 エピソード）', 'sec', 'BA_pref', 3, False),
+        ('二択の BA（向きのラベル，向きのある 1088 エピソード）', 'sec', 'BA_dir', 3, False),
+        ('好みと向きが食い違う 280 エピソードでの好みの正解率', 'sec', 'acc_disagree', 3, False),
+        ('感度分析 (v) の $b_{\\mathrm{pref}}$（向きの代わりに A 側にいたフレームの割合，1088 エピソード．$^{*}$ は事前登録外の記述）', 'coef', 's_v', 4, True),
+    ]
+    body = ['\\begin{tabular}{@{}p{0.37\\linewidth}llll@{}}', '\\toprule',
+            '比較 & 形 & 平均 & 6組の $t$ の 95\\% CI & 2段の 95\\% CI \\\\']
+    for title, src, key, dg, extra in groups:
+        body += ['\\midrule', f'\\multicolumn{{5}}{{@{{}}p{{\\linewidth}}@{{}}}}{{{title}}} \\\\']
+        for cond, name in V3_CMP:
+            diff = '-' in cond
+            if src == 'coef':
+                e = C[f'cpm|FP|1-50|1.0|{key}|{cond}']
+                m, lo, hi = e['t']['pref']['mean'], *e['t']['pref']['ci95']
+                blo, bhi = e['boot2']['pref']
+                if key == 'nodir':
+                    assert e['n_used'] == 1200, cond
+                else:
+                    assert e['n_used'] == 1088, cond
+                form = {'p50': 'P1', 'p50-none': 'P2', 'p50-sr50': 'P3'}.get(cond)
+            else:
+                e = S['secondary'][f'cpm|FP|{cond}'][key]
+                m, lo, hi = e['t']['mean'], *e['t']['ci95']
+                blo, bhi = e['boot2']
+                form = None
+            signed = src == 'coef' or diff
+            f = (lambda v: sg(v, dg)) if signed else (lambda v: f'{v:.{dg}f}')
+            fm = (form + ('$^{*}$' if extra and form != 'P1' else '')) if form else ''
+            body.append(f'\\quad {name} & {fm} & {f(m)} & [{f(lo)}, {f(hi)}] & [{f(blo)}, {f(bhi)}] \\\\')
+    body += ['\\bottomrule', '\\end{tabular}']
+    write('v3_discrim_sub', '\n'.join(body))
+
+
 def main():
-    for f in (t_conditions, t_metrics, t_group_values, t_projection, t_inverse, t_gates, t_module, t_alignment, t_v2_design, t_v3_design):
+    for f in (t_conditions, t_metrics, t_group_values, t_projection, t_inverse, t_gates, t_module, t_alignment, t_v2_design, t_v3_design,
+              t_v3_discrim, t_v3_discrim_sub):
         f()
 
 
