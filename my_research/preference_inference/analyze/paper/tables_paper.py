@@ -406,13 +406,14 @@ def t_v2_design():
 
 # ---------------------------------------------------------------- paper v3, table 1
 def t_v3_design():
-    # paper v3 (2026-10-31): v2_design with a column for the research questions (課題1〜3), both sign-randomised
-    # conditions (80%: log Sec.4/34; 50%: Sec.35.4-35.5, a1770ba), the stage-B/C measures of tasks 2 and 3 written as
-    # 'pre-registration to be fixed'. Rows for the copy comparison, the A-2 rule-probability data, the true-pleasure
-    # Delta and the inverse-inference BA are left out because draft_v3 does not use them.
+    # paper v3 (2026-10-31; rebuilt 2026-11-01 with a column for experiments 1-3 instead of tasks 1-3): conditions and
+    # data with the experiments that use them, and the measures with their pre-registration status. Stage B
+    # (pre-registration 4216497, log Sec.37.5) and stage C (3ade5ed, Sec.38.5; amendment 1de4a37, Sec.38.9) are now
+    # registered and done. Rows for the copy comparison, the A-2 rule-probability data, the true-pleasure Delta and the
+    # inverse-inference BA are left out because draft_v3 does not use them.
     W = ('p{0.16\\linewidth}', 'p{0.4\\linewidth}', 'l', 'l', 'p{0.25\\linewidth}')
     body = ['\\setlength{\\tabcolsep}{3pt}\\renewcommand{\\arraystretch}{0.85}%', '\\begin{tabular}{@{}' + ''.join(W) + '@{}}',
-            '\\toprule', '条件 & 中身 & 組 & 課題 & 位置づけ \\\\', '\\midrule']
+            '\\toprule', '条件・データ & 中身 & 組 & 実験 & 位置づけ \\\\', '\\midrule']
     rows = [
         ('経験なし・50\\%・80\\%', 'A-1 が規則の一歩を選ぶ確率 $p=0$，0.5，0.8 で段階Iを学習', '組1〜6', '1〜3',
          '事前登録（判定は組1〜3）'),
@@ -424,12 +425,18 @@ def t_v3_design():
         ('零入力条件', '経験80\\%と同じ軌跡で $P_t$ を常に0', '組1〜3', '1', '補助の対照（入口の重みは学習されない）'),
         ('好み切替条件', '好きな色をエピソードごとに赤か緑にし，$P_t$ ＝ 好きな色 $-$ 嫌いな色（$p=0.5$）', '組1〜3', '1',
          '補助．$d_P$ は事前登録外の確認'),
+        ('$G$（自由出力）', '段階Iの予測器（経験なし・経験50\\%）の上で，好み混合データで予測誤差だけから学習', '組1〜4', '3',
+         '段階Cの主の対象（T5 と同じ $G$）'),
+        ('学習前の $G$', '段階IIの学習を始める直前に保存した $G$（経験50\\%の予測器の上）', '組1〜4', '3',
+         '事前登録（Q1c．第1段の不成立により記述）'),
     ]
     for r in rows:
         body.append(' & '.join(r) + ' \\\\')
     body.append('\\multicolumn{2}{@{}p{0.58\\linewidth}}{自分の学習データと同じ作りの評価データ（A-1 は規則の確率 0.8）}'
                 ' & 組1〜6 & 1 & 計算の前に判定の基準を記録 \\\\')
-    body += ['\\midrule', '指標 & \\multicolumn{2}{l}{何を測るか} & 課題 & 事前登録の扱い \\\\', '\\midrule']
+    body.append('\\multicolumn{2}{@{}p{0.58\\linewidth}}{段階Bの評価データ（新しい鍵，配置×好みの4セルに 300 ずつ，計 1200）}'
+                ' & ― & 2・3 & データの確認とともに作る前に登録 \\\\')
+    body += ['\\midrule', '指標 & \\multicolumn{2}{l}{何を測るか} & 実験 & 事前登録の扱い \\\\', '\\midrule']
     rows = [
         ('$g$（G3）', '入力を隠し快・不快を保つと，予測が赤の方へ進み続ける傾き', '1', '事前登録した主'),
         ('$d_P$', '$(g_{\\mbox{\\scriptsize 保つ}}-g_{\\mbox{\\scriptsize 反転}})/2$．自分側の快・不快への依存', '1',
@@ -437,17 +444,95 @@ def t_v3_design():
         ('G5b', 'process-2 の一範囲への $\\pm a$ による，予測の中の A-2 のずれの差', '1', '事前登録した主'),
         ('符号に従う分', '本当の快・不快を保った傾きと，符号を反転した傾きの差の半分', '1',
          '定義は事後，組5・6 と符号無作為の比較は事前登録'),
-        ('$U_{\\mathrm{pref}}$', '他者自身の視界から作る候補で，反対の好みと正しい好みの他者側の誤差の差（診断）', '2', '事前登録'),
-        ('$b_{\\mathrm{pref}}$（段階B）', '観察者が作れる候補 $c^{\\pm}$ での誤差の差 $Q_e$ の，他者の好みの側の係数（移動の向き・赤の側・初期位置をそろえる）',
-         '2', '事前登録の確定待ち'),
+        ('$U_{\\mathrm{pref}}$，$U^{\\mathrm{pos}}_{\\mathrm{pref}}$',
+         '他者自身の視界から作る候補で，反対の好みと正しい好みの他者側の誤差の差（$U^{\\mathrm{pos}}_{\\mathrm{pref}}$ は予測画像の A-2 の位置のずれの差．診断）',
+         '2', '事前登録'),
+        ('$b_{\\mathrm{pref}}$，$b_{\\mathrm{dir}}$（段階B）',
+         '観察者が作れる候補 $c^{\\pm}$ での誤差の差 $Q_e$ の，好みの側・移動の側の係数（赤の側・初期位置をそろえる）',
+         '2', '事前登録（族 P は主，族 D は副．(v) の経験の比較は事前登録外）'),
         ('T2・T5', '他者用モジュールの出力 $Q2$ が好みや色に応じて変わるか', '3', '事前登録した主'),
-        ('$G$ の表現（段階C）', '$G$ の入力・内部状態・$Q2$・$h^2$ から好み・向き・位置を未見のエピソードで読み出す', '3',
-         '事前登録の確定待ち'),
+        ('$b^{q}_{\\mathrm{pref}}$（段階C (L1)）', '$Q2$ を好みの軸 $c^{+}$ に射影した値（標準化）の好みの係数', '3',
+         '事前登録した主（第1段：Q1a・Q1b）'),
+        ('読み出し（段階C (L2)・(L3)）',
+         '$Q2$（L2）と，$G$ の入力・内部状態・$h^2$（L3）から好みを読む BA・$\\Delta\\mathrm{LL}_{\\mathrm{pref}}$・一般化', '3',
+         '(L2) は副，(L3) は記述．正則化の選び方は実データの集計の前に修正．一般化の差は事前登録外'),
     ]
     for n, m, k, st in rows:
         body.append(f'{n} & \\multicolumn{{2}}{{p{{0.475\\linewidth}}}}{{{m}}} & {k} & {st} \\\\')
     body += ['\\bottomrule', '\\end{tabular}']
     write('v3_design', '\n'.join(body))
+
+
+# ---------------------------------------------------------------- paper v3, experiment 3 (stage C)
+STAGEC = os.path.join(RES, 'paper_extra', 'StageC', 'analysis', 'summary.json')
+
+
+def t_v3_stagec():
+    # Stage C (pre-registration 3ade5ed, log Sec.38.5; amendment 1de4a37, Sec.38.9; results 74f33bb, stageC_G.md
+    # Sec.2-5 and 13.3). Saved aggregation only. 4 pairs, t with df 3; the two-stage bootstrap of stage C uses one
+    # episode resample per draw shared by all pairs and models (differs from stage B).
+    S = J(STAGEC)
+    L1, R, D = S['L1'], S['readout'], S['descriptive']
+    star = '$^{*}$'
+
+    def row(label, e, boot, d=3, signed=True):
+        f = (lambda v: sg(v, d)) if signed else (lambda v: f'{v:.{d}f}')
+        t = e['ci']
+        b = f'[{f(boot[0])}, {f(boot[1])}]' if boot is not None else '―'
+        return f'\\quad {label} & {f(e["mean"])} & [{f(t[0])}, {f(t[1])}] & {b} \\\\'
+
+    def head(txt):
+        return ['\\midrule', f'\\multicolumn{{4}}{{@{{}}p{{\\linewidth}}@{{}}}}{{{txt}}} \\\\']
+
+    body = ['\\renewcommand{\\arraystretch}{0.85}%', '\\begin{tabular}{@{}p{0.44\\linewidth}lll@{}}', '\\toprule',
+            '量・比較 & 平均 & 4組の $t$ の CI & 2段の CI \\\\']
+    # (L1) main judgement, standardised
+    body += head('(L1) 出力の価値の軸：$\\tilde q_e$ の $b^{q}_{\\mathrm{pref}}$（標準化した単位．Q1a・Q1b は主の判定で 95\\% の CI．'
+                 'Q1c と第2段は第1段の不成立により判定せず，97.5\\% の CI で記述）')
+    jd = S['judgement']
+    assert jd['stage1'] is False and jd['Q1c_and_stage2_judged'] is False
+    for lab, key, lv in (('Q1a 第1段：経験50\\%（不成立）', 'p50|s1|std|pref', '95'),
+                         ('Q1b 第1段：経験50\\% $-$ 経験なし（不成立）', 'p50-none|s1|std|pref', '95'),
+                         ('Q1c 第1段：経験50\\% $-$ 学習前', 'p50-pre|s1|std|pref', '97.5'),
+                         ('Q2a 第2段：経験50\\%', 'p50|s2|std|pref', '97.5'),
+                         ('Q2b 第2段：経験50\\% $-$ 経験なし', 'p50-none|s2|std|pref', '97.5'),
+                         ('第1段：学習前（記述，95\\%）', 'pre|s1|std|pref', '95')):
+        e = L1[key][lv]
+        body.append(row(lab, e['t'], e['boot']))
+    # (L1) unstandardised
+    body += head('標準化しない $q_e$ の第1段の $b_{\\mathrm{pref}}$（記述）')
+    for lab, key in (('経験50\\%', 'p50'), ('経験なし', 'none'), ('学習前', 'pre')):
+        e = L1[f'{key}|s1|raw|pref']['95']
+        body.append(row(lab, e['t'], e['boot'], d=4))
+    # norm of Q2 and sign agreement
+    rng = {c: (min(D[c]['norm_Q2_by_pair']), max(D[c]['norm_Q2_by_pair'])) for c in ('p50', 'none', 'pre')}
+    nq = '，'.join(f'{n} {rng[c][0]:.2f}〜{rng[c][1]:.2f}' for c, n in (('p50', '経験50\\%'), ('none', '経験なし'), ('pre', '学習前')))
+    body += head(f'$\\lVert Q2\\rVert$ の平均（フレーム1〜50，組ごとの範囲．記述）：{nq}')
+    sa = '，'.join(f"{n} {D[c]['sign_agree_all']['mean']:.3f}・{D[c]['sign_agree_dis']['mean']:.3f}"
+                   for c, n in (('p50', '経験50\\%'), ('none', '経験なし'), ('pre', '学習前')))
+    body += head(f'$q_e$ の符号と好みの一致率（全 1200・食い違う 280．記述）：{sa}')
+    # (L2)
+    for q, txt in (('BA', '(L2) $Q2$ からの好みの基本の読み出しの BA（全 1200．副の判定，基準 0.5）'),
+                   ('dLL', '(L2) 調整した読み出しの $\\Delta\\mathrm{LL}_{\\mathrm{pref}}$（向きのある 1088．副の判定）')):
+        body += head(txt)
+        for c, n, verdict in (('p50', '経験50\\%', '（成立）'), ('none', '経験なし', ''),
+                              ('p50-none', '経験50\\% $-$ 経験なし', '（不成立）'), ('pre', '学習前（記述）', ''),
+                              ('p50-pre', '経験50\\% $-$ 学習前（記述）', '')):
+            e = R[f'nest|Q|{c}|{q}']
+            body.append(row(n + verdict, e['t'], e['boot'], signed=(q == 'dLL' or '-' in c)))
+    # generalisation
+    body += head('一般化：一致するエピソードで当てはめ，食い違う 280 で採点した好みの正解率（記述．'
+                 + star + ' は事前登録外の差）')
+    e = R['nest|O|p50|gen_dis']
+    assert e['t']['ci'][0] == e['t']['ci'][1] == e['t']['mean']     # the same representation for every model
+    body.append(f"\\quad 観察（全モデルで共通） & {e['t']['mean']:.3f} & ―（幅0） & [{e['boot'][0]:.3f}, {e['boot'][1]:.3f}] \\\\")
+    for rep, rn in (('S', '$G$ の内部状態'), ('Q', '出力 $Q2$'), ('H', '$h^2$')):
+        for c, n in (('p50', '経験50\\%'), ('pre', '学習前'),
+                     ('p50-pre', '経験50\\% $-$ 学習前' + star), ('p50-none', '経験50\\% $-$ 経験なし' + star)):
+            e = R[f'nest|{rep}|{c}|gen_dis']
+            body.append(row(f'{rn}：{n}', e['t'], e['boot'], signed=('-' in c)))
+    body += ['\\bottomrule', '\\end{tabular}']
+    write('v3_stagec', '\n'.join(body))
 
 
 # ---------------------------------------------------------------- paper v3, chapter 6 (task 2, V-dir stage B)
@@ -518,7 +603,7 @@ def t_v3_discrim_sub():
 
 def main():
     for f in (t_conditions, t_metrics, t_group_values, t_projection, t_inverse, t_gates, t_module, t_alignment, t_v2_design, t_v3_design,
-              t_v3_discrim, t_v3_discrim_sub):
+              t_v3_discrim, t_v3_discrim_sub, t_v3_stagec):
         f()
 
 
