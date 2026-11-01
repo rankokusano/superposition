@@ -4,6 +4,7 @@ mixed), the per-pair difference 'sign-randomised - normal' at 50% (meets the tra
 Same saved values as v3_other (fig_v3_paper.load; no new computation). One point per pair (pairs 1-3 grey circles,
 pairs 4-6 orange squares), black square with bar = mean of the 6 pairs and t 95% CI (df 5); the means and CIs are the
 values of table tab:self (log Sec.34.8, Sec.35.11; compared by hand on 2026-11-01).
+2026-11-01 (draft v3 round 2): the 80% column (does not meet the premise) is shaded grey, as in v3_self.
 -> paper/figs/v3_other_diff.{pdf,png}, v3_other_diff_values.json
 """
 
@@ -33,6 +34,7 @@ def main():
             out[amt] = {'mean_ci': [m, lo, hi], 'pairs': {ps.pair_label(s): d[s] for s in range(6)}}
         vals[q] = out
         ax.axhline(0, color='0.6', lw=0.6, zorder=0)
+        ax.axvspan(0.5, 1.5, color='0.9', lw=0, zorder=0)
         ax.set_xticks([0, 1])
         ax.set_xticklabels(['経験50%\n（前提を満たす）', '経験80%\n（満たさない）'])
         ax.tick_params(axis='x', labelsize=7)

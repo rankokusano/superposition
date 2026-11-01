@@ -8,6 +8,7 @@ results 02618a4, paper/check/vdir_stageB.md Sec.3, Sec.9).
   (c) preference accuracy on the 280 episodes where preference and direction disagree (0.5 line).
 Pairs 1-3 grey circles, pairs 4-6 orange squares, one thin line per pair; black square with bar = mean of the 6 pairs
 and t 95% CI (df 5), checked against the saved t CI. Each per-pair value = mean over the 5 late checkpoints.
+2026-11-01 (draft v3 round 2): the y axes name the quantities instead of 'mean of the 5 late checkpoints'.
 -> paper/figs/v3_discrim.{pdf,png}, v3_discrim_values.json
 """
 
@@ -74,7 +75,7 @@ def main():
     for x, txt in ((1.06, '好みの係数 $b_{\\mathrm{pref}}$'), (4.56, '向きの係数 $b_{\\mathrm{dir}}$')):
         ax.text(x, 1.0, txt, transform=ax.get_xaxis_transform(), ha='center', va='bottom', fontsize=7.5)
     ax.set_title('(a) 主の回帰の係数', loc='left', pad=13)
-    ax.set_ylabel('最終5点の平均')
+    ax.set_ylabel('$b_{\\mathrm{pref}}$，$b_{\\mathrm{dir}}$')
 
     # (b) two-choice BA, preference label and direction label
     ax = axes[1]
@@ -90,6 +91,7 @@ def main():
     for x, txt in ((1.06, '好みのラベル'), (4.56, '向きのラベル')):
         ax.text(x, 1.0, txt, transform=ax.get_xaxis_transform(), ha='center', va='bottom', fontsize=7.5)
     ax.set_title('(b) 二択の BA', loc='left', pad=13)
+    ax.set_ylabel('BA')
 
     # (c) preference accuracy on the 280 disagreeing episodes
     ax = axes[2]
@@ -101,7 +103,7 @@ def main():
     ax.text(1.06, 1.0, '食い違う 280 件', transform=ax.get_xaxis_transform(), ha='center', va='bottom', fontsize=7.5)
     ax.set_title('(c) 好みの正解率', loc='left', pad=13)
 
-    ax.set_ylabel('最終5点の平均')
+    ax.set_ylabel('好みの側に当たった割合')
     lax = fig.add_subplot(gs[1, 2:])
     lax.axis('off')
     h = [plt.Line2D([], [], color=ps.C_MAIN, marker='o', ms=3.0, lw=0.8, label='組1〜3'),

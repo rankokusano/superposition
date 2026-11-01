@@ -8,6 +8,8 @@ Paper v3 figures (paper/draft_v3, 2026-10-31). No new computation: saved summari
             sign-randomised (same two summaries; the no-experience models are the same in both and are asserted equal).
 Pairs 1-3 grey circles, pairs 4-6 orange squares, one thin line per pair; black square with bar = mean of the 6 pairs
 and t 95% CI (df 5) of the per-pair values. Each per-pair value = mean of the 5 late checkpoints.
+2026-11-01 (draft v3 round 2): in v3_self the 80% condition (which does not meet the self-tracking premise) is shaded
+and labelled, the y axes name the quantities (g, d_P), and the panel titles use the draft's term (自己側).
 -> paper/figs/v3_self.{pdf,png}, v3_other.{pdf,png}, v3_values.json
 """
 
@@ -71,6 +73,15 @@ def draw_groups(ax, groups, xt):
     return out
 
 
+def premise_band(ax, x0, x1):
+    # grey band and label for the 80% condition: it does not meet the self-tracking premise
+    ax.axvspan(x0, x1, color='0.9', lw=0, zorder=0)
+    y0, y1 = ax.get_ylim()
+    ax.set_ylim(y0, y1 + 0.2 * (y1 - y0))      # room for the label above the data
+    ax.text((x0 + x1) / 2, 0.98, '追跡の前提を\n満たさない', transform=ax.get_xaxis_transform(), ha='center', va='top',
+            fontsize=7, color='0.3')
+
+
 def legend(fig):
     h = [ps.plt.Line2D([], [], color=ps.C_MAIN, marker='o', ms=3.0, lw=0.8, label='組1〜3'),
          ps.plt.Line2D([], [], color=ps.C_EXTRA, marker='s', mfc='white', ms=3.0, lw=0.8, label='組4〜6'),
@@ -94,18 +105,20 @@ def main():
             and abs(per[s][1] - late5(V[s]['50']['G3_hold'])) < 1e-9, s
     vals['self']['g'] = draw_groups(ax, [([0, 1, 2], per)], ['経験なし', '経験50%', '経験80%'])
     vals['self']['g_pairs'] = {ps.pair_label(s): v for s, v in per.items()}
-    ax.set_xlim(-0.4, 2.5)
-    ax.set_title('(a) 経験の量と自分側の積み上がり $g$', loc='left')
-    ax.set_ylabel('最終5点の平均')
+    ax.set_xlim(-0.4, 2.6)
+    premise_band(ax, 1.5, 2.6)
+    ax.set_title('(a) 経験の量と自己側の積み上がり $g$', loc='left')
+    ax.set_ylabel('$g$')
     ax = axes[1]
     p50 = {s: [late5(V[s]['50']['dP']), late5(V[s]['sr50']['dP'])] for s in range(6)}
     p80 = {s: [late5(V[s]['80']['dP']), late5(V[s]['sr80']['dP'])] for s in range(6)}
     vals['self']['dP'] = draw_groups(ax, [([0, 1], p50), ([2.5, 3.5], p80)],
                                      ['経験50%', '符号無作為\n（50%）', '経験80%', '符号無作為\n（80%）'])
     vals['self']['dP_pairs'] = {ps.pair_label(s): {'50': p50[s], '80': p80[s]} for s in range(6)}
-    ax.axvline(1.75, color='0.8', lw=0.6, zorder=0)
     ax.set_xlim(-0.4, 4.0)
-    ax.set_title('(b) 自分側の快・不快への依存 $d_P$', loc='left')
+    premise_band(ax, 1.75, 4.0)
+    ax.set_title('(b) 自己側の快・不快への依存 $d_P$', loc='left')
+    ax.set_ylabel('$d_P$')
     legend(fig)
     fig.tight_layout(rect=(0, 0.1, 1, 1), w_pad=1.5)
     ps.save(fig, 'v3_self')

@@ -465,6 +465,7 @@ def t_v3_design():
 
 # ---------------------------------------------------------------- paper v3, experiment 3 (stage C)
 STAGEC = os.path.join(RES, 'paper_extra', 'StageC', 'analysis', 'summary.json')
+ROUND15_D1 = os.path.join(RES, 'paper_extra', 'Round15', 'd1.json')
 
 
 def t_v3_stagec(full=True):
@@ -486,20 +487,35 @@ def t_v3_stagec(full=True):
     def head(txt):
         return ['\\midrule', f'\\multicolumn{{4}}{{@{{}}p{{\\linewidth}}@{{}}}}{{{txt}}} \\\\']
 
-    body = ['\\renewcommand{\\arraystretch}{0.85}%', '\\begin{tabular}{@{}p{0.44\\linewidth}lll@{}}', '\\toprule',
+    def baseline_rows(q):
+        # behaviour-only baselines B1 (summary cues) / B2 (A-2 trajectory), round 15 D1 (procedure dea5dd3, results
+        # 8350702, log Sec.39.1-39.2, paper/check/round15_D1D2.md Sec.1.2), outside the pre-registration. Their CI is
+        # the 95% CI over 1000 episode resamples (the same episode resamples as the stage-C two-stage bootstrap); no t CI.
+        B = J(ROUND15_D1)['baseline']
+        out = []
+        for k, n in (('B1', '行動だけの基準 B1（要約の手がかり）'), ('B2', '行動だけの基準 B2（A-2 の軌跡）')):
+            e = B[k][q]
+            lo, hi = e['ci']
+            out.append(f"\\quad {n}{star} & {e['point']:.3f} & ― & [{lo:.3f}, {hi:.3f}] \\\\")
+        return out
+
+    body = ['\\renewcommand{\\arraystretch}{0.85}%', '\\begin{tabular}{@{}p{0.48\\linewidth}lll@{}}', '\\toprule',
             '量・比較 & 平均 & 4組の $t$ の CI & 2段の CI \\\\']
     # (L1) main judgement, standardised
-    body += head('(L1) 出力の価値の軸：$\\tilde q_e$ の $b^{q}_{\\mathrm{pref}}$（標準化した単位．Q1a・Q1b は主の判定で 95\\% の CI．'
-                 'Q1c と第2段は第1段の不成立により判定せず，97.5\\% の CI で記述）')
+    # 2026-11-01 (draft v3 round 2): Q1c and stage 2 are 'outside the judgement' by the order rule of the
+    # pre-registration (Sec.38.5: judged only when stage 1 holds), not 'failed'; the short version drops Q2a/Q2b.
+    body += head('(L1) 出力の価値の軸：$\\tilde q_e$ の $b^{q}_{\\mathrm{pref}}$（標準化した単位）．Q1a・Q1b は主の判定（95\\% の CI）．'
+                 'Q1c と第2段は，第1段が成り立ったときだけ判定する順序の規則により判定対象外で，97.5\\% の CI で記述'
+                 + ('' if full else '（第2段の値は補足資料の詳細版の表）'))
     jd = S['judgement']
     assert jd['stage1'] is False and jd['Q1c_and_stage2_judged'] is False
     for lab, key, lv in (('Q1a 第1段：経験50\\%（不成立）', 'p50|s1|std|pref', '95'),
                          ('Q1b 第1段：経験50\\% $-$ 経験なし（不成立）', 'p50-none|s1|std|pref', '95'),
-                         ('Q1c 第1段：経験50\\% $-$ 学習前', 'p50-pre|s1|std|pref', '97.5'),
-                         ('Q2a 第2段：経験50\\%', 'p50|s2|std|pref', '97.5'),
-                         ('Q2b 第2段：経験50\\% $-$ 経験なし', 'p50-none|s2|std|pref', '97.5'),
+                         ('Q1c 第1段：経験50\\% $-$ 学習前（判定対象外）', 'p50-pre|s1|std|pref', '97.5'),
+                         ('Q2a 第2段：経験50\\%（判定対象外）', 'p50|s2|std|pref', '97.5'),
+                         ('Q2b 第2段：経験50\\% $-$ 経験なし（判定対象外）', 'p50-none|s2|std|pref', '97.5'),
                          ('第1段：学習前（記述，95\\%）', 'pre|s1|std|pref', '95')):
-        if not full and key.startswith('pre|'):
+        if not full and (key.startswith('pre|') or '|s2|' in key):
             continue
         e = L1[key][lv]
         body.append(row(lab, e['t'], e['boot']))
@@ -517,7 +533,8 @@ def t_v3_stagec(full=True):
                        for c, n in (('p50', '経験50\\%'), ('none', '経験なし'), ('pre', '学習前')))
         body += head(f'$q_e$ の符号と好みの一致率（全 1200・食い違う 280．記述）：{sa}')
     # (L2)
-    for q, txt in (('BA', '(L2) $Q2$ からの好みの基本の読み出しの BA（全 1200．副の判定，基準 0.5）'),
+    for q, txt in (('BA', '(L2) $Q2$ からの好みの基本の読み出しの BA（全 1200．副の判定，基準 0.5）'
+                    + ('' if full else '．行動だけの基準 B1・B2$^{*}$ の CI はエピソードの再標本化 1000 回の 95\\%（段階Cの2段と同じ再標本）で，2段の CI の列に示す')),
                    ('dLL', '(L2) 調整した読み出しの $\\Delta\\mathrm{LL}_{\\mathrm{pref}}$（向きのある 1088．副の判定）')):
         body += head(txt)
         for c, n, verdict in (('p50', '経験50\\%', '（成立）'), ('none', '経験なし', ''),
@@ -525,9 +542,11 @@ def t_v3_stagec(full=True):
                               ('p50-pre', '経験50\\% $-$ 学習前（記述）', '')):
             e = R[f'nest|Q|{c}|{q}']
             body.append(row(n + verdict, e['t'], e['boot'], signed=(q == 'dLL' or '-' in c)))
+        if q == 'BA' and not full:
+            body += baseline_rows('BA')
     # generalisation
     body += head('一般化：一致するエピソードで当てはめ，食い違う 280 で採点した好みの正解率（記述．'
-                 + star + ' は事前登録外の差）')
+                 + star + ' は事前登録外の差' + ('' if full else 'と基準') + '）')
     e = R['nest|O|p50|gen_dis']
     assert e['t']['ci'][0] == e['t']['ci'][1] == e['t']['mean']     # the same representation for every model
     body.append(f"\\quad 観察（全モデルで共通） & {e['t']['mean']:.3f} & ―（幅0） & [{e['boot'][0]:.3f}, {e['boot'][1]:.3f}] \\\\")
@@ -536,6 +555,8 @@ def t_v3_stagec(full=True):
                      ('p50-pre', '経験50\\% $-$ 学習前' + star), ('p50-none', '経験50\\% $-$ 経験なし' + star)):
             e = R[f'nest|{rep}|{c}|gen_dis']
             body.append(row(f'{rn}：{n}', e['t'], e['boot'], signed=('-' in c)))
+    if not full:
+        body += baseline_rows('gen_dis')
     body += ['\\bottomrule', '\\end{tabular}']
     write('v3_stagec_full' if full else 'v3_stagec', '\n'.join(body))
 
@@ -546,23 +567,84 @@ V3_CMP = (('none', '経験なし'), ('p50', '経験50\\%'), ('sr50', '符号無�
           ('p50-none', '経験50\\% $-$ 経験なし'), ('p50-sr50', '経験50\\% $-$ 符号無作為（経験50\\%）'))
 
 
+E2_SUM = os.path.join(RES, 'paper_extra', 'E2', 'summary.json')
+E2_POS = os.path.join(RES, 'paper_extra', 'E2', 'pos', 'summary.json')
+
+
 def t_v3_discrim():
     # tab:discrim of draft_v3 ch.6: families P and D (pre-registration 4216497, log Sec.37.5; results 02618a4,
     # paper/check/vdir_stageB.md Sec.3 and Sec.9.5). Saved aggregation only (no new computation).
+    # 2026-11-01 (draft v3 round 2): the first pre-registered judgements on the candidates made from A-2's own view are
+    # added above as 'initial judgements': U_pref, 50% - none (E2 main, pre-registration cdd5043, log Sec.35.3,
+    # result Sec.35.7) and U^pos_pref, 50% - sign-randomised 50% (E1 secondary, pre-registration 9e86dd4, Sec.35.9,
+    # result Sec.37.7 / bd7cf3f). Both were judged with the 6-pair t CI only; there is no two-stage bootstrap (blank).
     jd = J(VDIRB)['judgement']
+    u = J(E2_SUM)['main']
+    assert u['cell'] == ['pref', 'FP', '1-50'] and u['holds'] is False
+    up = J(E2_POS)['E1']
+    assert up['judgement']['set'] == 'pref' and up['judgement']['holds'] is False
+    upt = up['pref']['t']
     lab = {'P1': 'P1 経験50\\% の $b_{\\mathrm{pref}}$', 'P2': 'P2 経験50\\% $-$ 経験なし',
            'P3': 'P3 経験50\\% $-$ 符号無作為（経験50\\%）', 'D1': 'D1 経験50\\% の $b_{\\mathrm{dir}}$',
            'D2': 'D2 経験50\\% $-$ 経験なし', 'D3': 'D3 経験50\\% $-$ 符号無作為（経験50\\%）'}
-    body = ['\\begin{tabular}{@{}p{0.39\\linewidth}p{0.09\\linewidth}p{0.21\\linewidth}p{0.21\\linewidth}@{}}', '\\toprule',
-            '判定 & 平均 & 6組の $t$ の 95\\% CI & 2段のブートストラップの 95\\% CI \\\\', '\\midrule']
+
+    def sec(txt):
+        return ['\\midrule', f'\\multicolumn{{5}}{{@{{}}p{{\\linewidth}}@{{}}}}{{{txt}}} \\\\']
+
+    body = ['\\begin{tabular}{@{}p{0.38\\linewidth}llll@{}}', '\\toprule',
+            '判定 & 平均 & 6組の $t$ の 95\\% CI & 2段の 95\\% CI & 結果 \\\\']
+    body += sec('当初の判定：他者自身の視界から作る候補（事前登録）')
+    body.append(f"$U_{{\\mathrm{{pref}}}}$ 経験50\\% $-$ 経験なし & {sg(u['diff_mean'], 4)} & {ci(*u['ci95'], d=4)} &  & 不成立 \\\\")
+    body.append(f"$U^{{\\mathrm{{pos}}}}_{{\\mathrm{{pref}}}}$ 経験50\\% $-$ 符号無作為（経験50\\%） & {sg(upt['mean'], 3)} & "
+                f"{ci(*upt['ci95'], d=3)} &  & 不成立 \\\\")
+    body += sec('探索後の判定：観察者が作れる候補（段階B．段階Aの後に事前登録．主の回帰，向きのある 1088 エピソード）')
     for k in ('P1', 'P2', 'P3', 'D1', 'D2', 'D3'):
         e = jd[k]
         assert e['verdict'] == 'holds' and e['pairs_ge3of5'] == 6, k
-        body.append(f"{lab[k]} & {sg(e['mean'], 4)} & {ci(*e['t_ci95'], d=4)} & {ci(*e['boot2_ci95'], d=4)} \\\\")
+        body.append(f"{lab[k]} & {sg(e['mean'], 4)} & {ci(*e['t_ci95'], d=4)} & {ci(*e['boot2_ci95'], d=4)} & 成立 \\\\")
         if k == 'P3':
-            body.append('\\midrule')
+            body.append('\\cmidrule(l){1-5}')
     body += ['\\bottomrule', '\\end{tabular}']
     write('v3_discrim', '\n'.join(body))
+
+
+def t_v3_t2t5():
+    # Experiment 3, T2/T5 of the existing stage-II G (v12 stage 2, the formal run; registered before stage-II training).
+    # Values from data/result/v12/stage2/eval/aggregate_primary_s0s1s2s3.json (rule: v12 log Sec.26 / line 473,
+    # aggregate_s2_v12.py; checked in log Sec.38.2 Sec.1.1, paper/check/stageC_G.md Sec.1, stageC_patterns.md Sec.1).
+    # T2 = 'green:sT2_t50' (G trained on the green-liked data), T5 = 'pref:dT5' (G trained on the mixed data, the main
+    # G of stage C). 'Pass shape' value = the experienced ('mixed') value of the late-5 checkpoints of that pair.
+    # True pleasure value = d6_PA2 (Q2 replaced by A-2's true pleasure). The draft's \label is tab:t2t5.
+    A = J(RES, 'v12', 'stage2', 'eval', 'aggregate_primary_s0s1s2s3.json')
+    d6 = A['d6_PA2']
+    col = {}
+    for key, d6v in (('green:sT2_t50', d6['T2_mean']['t50']), ('pref:dT5', d6['T5_mean'])):
+        a = A[key]
+        assert a['n_pairs'] == 4 and a['setting_pass_v12_rule'] is False
+        for s_ in ('s0', 's1', 's2', 's3'):     # the saved point verdict is the criterion written in the table
+            for c in a[s_]['per_ckpt']:
+                assert c['pass'] == (c['mixed'] > 0 and c['ci'][0] > 0), (key, s_, c)
+            assert a[s_]['pair_pass'] == (a[s_]['n_pass'] >= 3), (key, s_)
+        ok = [s_ for s_ in ('s0', 's1', 's2', 's3') if a[s_]['pair_pass']]
+        assert len(ok) == 1
+        m = [c['mixed'] for c in a[ok[0]]['per_ckpt']]
+        assert len(m) == 5
+        col[key] = (f'4組中{len(ok)}組（組{int(ok[0][1]) + 1}）', rg(min(m), max(m), d=2, signed=True), sg(d6v, 2))
+    T2, T5 = col['green:sT2_t50'], col['pref:dT5']
+    body = ['\\begin{tabular}{@{}p{0.33\\linewidth}p{0.27\\linewidth}p{0.34\\linewidth}@{}}', '\\toprule',
+            ' & T2（入れ替え応答） & T5（好み差応答） \\\\', '\\midrule',
+            '評価した $G$ & 緑好みデータで学習 & 好み混合データで学習（段階Cの主の $G$） \\\\',
+            '事前登録した合格の基準 & \\multicolumn{2}{p{0.61\\linewidth}@{}}{各点で，経験50\\%条件の値 $>0$ かつ'
+            '「経験50\\%条件 $-$ 経験なし条件」の 95\\% CI（対にしたブートストラップ 1000 回）の下限 $>0$．'
+            '最終5点のうち3点以上でその組は合格の形，4組中3組以上で合格} \\\\',
+            f'合格の形になった組 & {T2[0]} & {T5[0]} \\\\',
+            f'合格の形の組の値（最終5点の範囲） & {T2[1]} & {T5[1]} \\\\',
+            f'本当の快・不快を入れた値 & {T2[2]} & {T5[2]} \\\\',
+            '判定 & 不成立 & 不成立 \\\\',
+            '\\midrule',
+            '\\multicolumn{3}{@{}p{\\linewidth}@{}}{合格の形の組の値は経験50\\%条件の値．本当の快・不快を入れた値は，$Q2$ の代わりに A-2 の本当の快・不快を入れた値} \\\\',
+            '\\bottomrule', '\\end{tabular}']
+    write('v3_t2t5', '\n'.join(body))
 
 
 def t_v3_discrim_sub():
@@ -608,7 +690,7 @@ def t_v3_discrim_sub():
 
 def main():
     for f in (t_conditions, t_metrics, t_group_values, t_projection, t_inverse, t_gates, t_module, t_alignment, t_v2_design, t_v3_design,
-              t_v3_discrim, t_v3_discrim_sub, t_v3_stagec):
+              t_v3_discrim, t_v3_discrim_sub, t_v3_stagec, t_v3_t2t5):
         f()
     t_v3_stagec(full=False)
 
