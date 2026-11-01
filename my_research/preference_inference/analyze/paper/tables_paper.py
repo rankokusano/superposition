@@ -578,12 +578,19 @@ def t_v3_discrim():
     # added above as 'initial judgements': U_pref, 50% - none (E2 main, pre-registration cdd5043, log Sec.35.3,
     # result Sec.35.7) and U^pos_pref, 50% - sign-randomised 50% (E1 secondary, pre-registration 9e86dd4, Sec.35.9,
     # result Sec.37.7 / bd7cf3f). Both were judged with the 6-pair t CI only; there is no two-stage bootstrap (blank).
+    # 2026-11-01 (round 3): U_pref, 50% - sign-randomised 50% (E1 secondary, pre-registration a1770ba, Sec.35.5,
+    # result Sec.35.11; E1_signrand50/summary.json 'e2') added, and the row names carry the measure, the comparison
+    # and the role, so the two '50% - sign-randomised' rows are told apart.
     jd = J(VDIRB)['judgement']
     u = J(E2_SUM)['main']
     assert u['cell'] == ['pref', 'FP', '1-50'] and u['holds'] is False
     up = J(E2_POS)['E1']
     assert up['judgement']['set'] == 'pref' and up['judgement']['holds'] is False
     upt = up['pref']['t']
+    E1 = J(RES, 'paper_extra', 'E1_signrand50', 'summary.json')
+    ue = E1['e2']['pref|FP|1-50']['p50_minus_sr50']
+    assert ue['holds'] is False and E1['judgement']['e2_upref'] is False
+    uet = ue['t']
     lab = {'P1': 'P1 経験50\\% の $b_{\\mathrm{pref}}$', 'P2': 'P2 経験50\\% $-$ 経験なし',
            'P3': 'P3 経験50\\% $-$ 符号無作為（経験50\\%）', 'D1': 'D1 経験50\\% の $b_{\\mathrm{dir}}$',
            'D2': 'D2 経験50\\% $-$ 経験なし', 'D3': 'D3 経験50\\% $-$ 符号無作為（経験50\\%）'}
@@ -594,9 +601,12 @@ def t_v3_discrim():
     body = ['\\begin{tabular}{@{}p{0.38\\linewidth}llll@{}}', '\\toprule',
             '判定 & 平均 & 6組の $t$ の 95\\% CI & 2段の 95\\% CI & 結果 \\\\']
     body += sec('当初の判定：他者自身の視界から作る候補（事前登録）')
-    body.append(f"$U_{{\\mathrm{{pref}}}}$ 経験50\\% $-$ 経験なし & {sg(u['diff_mean'], 4)} & {ci(*u['ci95'], d=4)} &  & 不成立 \\\\")
-    body.append(f"$U^{{\\mathrm{{pos}}}}_{{\\mathrm{{pref}}}}$ 経験50\\% $-$ 符号無作為（経験50\\%） & {sg(upt['mean'], 3)} & "
-                f"{ci(*upt['ci95'], d=3)} &  & 不成立 \\\\")
+    body.append(f"$U_{{\\mathrm{{pref}}}}$（他者特徴の誤差）：経験50\\% $-$ 経験なし（実験2の主） & {sg(u['diff_mean'], 4)} & "
+                f"{ci(*u['ci95'], d=4)} &  & 不成立 \\\\")
+    body.append(f"$U_{{\\mathrm{{pref}}}}$（他者特徴の誤差）：経験50\\% $-$ 符号無作為（経験50\\%）（実験1の副） & "
+                f"{sg(uet['mean'], 4)} & {ci(*uet['ci95'], d=4)} &  & 不成立 \\\\")
+    body.append(f"$U^{{\\mathrm{{pos}}}}_{{\\mathrm{{pref}}}}$（位置のずれ）：経験50\\% $-$ 符号無作為（経験50\\%）（実験1の副） & "
+                f"{sg(upt['mean'], 3)} & {ci(*upt['ci95'], d=3)} &  & 不成立 \\\\")
     body += sec('探索後の判定：観察者が作れる候補（段階B．段階Aの後に事前登録．主の回帰，向きのある 1088 エピソード）')
     for k in ('P1', 'P2', 'P3', 'D1', 'D2', 'D3'):
         e = jd[k]
