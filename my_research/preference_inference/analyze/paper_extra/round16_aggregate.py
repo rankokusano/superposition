@@ -103,6 +103,8 @@ def tci(v):
 def pct(d):
     d = np.asarray(d, float)
     d = d[np.isfinite(d)]
+    if len(d) == 0:                      # ratio over D_G = 0 (FP1 does not depend on Q2): undefined
+        return [float('nan'), float('nan')]
     return [float(np.percentile(d, 2.5)), float(np.percentile(d, 97.5))]
 
 
@@ -172,6 +174,7 @@ def fig(S):
     import matplotlib.pyplot as plt
     plt.rcParams.update({'pdf.fonttype': 42, 'ps.fonttype': 42, 'font.size': 9})
     conds = (('p50', '50% G'), ('none', 'no-experience G'), ('pre', 'pre-training G'))
+    conds_col = (('p50', '0.2'), ('none', '0.55'), ('pre', '0.85'))
     fg, ax = plt.subplots(2, 3, figsize=(9, 5.2), sharex=True)
     for j, (c, lab) in enumerate(conds):
         for i, (q, yl) in enumerate((('R1', 'R1(s) (total loss)'), ('R2', 'R2(s) (total loss)'))):
@@ -194,22 +197,25 @@ def fig(S):
         fg.savefig(os.path.join(OUT, f'fig_round16_R.{ext}'), dpi=200)
     plt.close(fg)
     names = ('S_pos', 'S_res', 'S_ax', 'S_orth', 'cut_res')
-    fg, a = plt.subplots(figsize=(8, 3.6))
-    w = 0.26
-    for j, (c, lab) in enumerate(conds):
-        x = np.arange(len(names)) + (j - 1) * w
-        m = [S['main'][c][f'tot|{n}']['mean'] for n in names]
-        ci = np.array([S['main'][c][f'tot|{n}']['ci95'] for n in names])
-        a.bar(x, m, w, label=lab, color=('0.2', '0.55', '0.85')[j], edgecolor='k', lw=0.5)
-        a.errorbar(x, m, yerr=[np.array(m) - ci[:, 0], ci[:, 1] - np.array(m)], fmt='none', ecolor='k', lw=0.8, capsize=2)
-        for k, n in enumerate(names):
-            a.plot([x[k]] * 4, S['main'][c][f'tot|{n}']['per_pair'], 'o', ms=2.5, color='r')
-    a.axhline(0, color='k', lw=0.7)
-    a.axhline(1, color='k', ls=':', lw=0.7)
-    a.set_xticks(np.arange(len(names)))
-    a.set_xticklabels(['S_pos', 'S_res', 'S_ax', 'S_orth', '[L(res)-L(a)]/D_G'])
-    a.set_ylabel('share of D_G (total loss)')
-    a.legend(frameon=False, fontsize=8)
+    # pre-training G on its own axis: its D_G is near 0 (ratios up to +-10) and would hide the trained G
+    fg, axs = plt.subplots(1, 2, figsize=(10, 3.6), gridspec_kw={'width_ratios': [2, 1]})
+    for a, grp in ((axs[0], conds[:2]), (axs[1], conds[2:])):
+        w = 0.8 / len(grp)
+        for j, (c, lab) in enumerate(grp):
+            x = np.arange(len(names)) + (j - (len(grp) - 1) / 2) * w
+            m = [S['main'][c][f'tot|{n}']['mean'] for n in names]
+            ci = np.array([S['main'][c][f'tot|{n}']['ci95'] for n in names])
+            a.bar(x, m, w, label=lab, color=dict(conds_col)[c], edgecolor='k', lw=0.5)
+            a.errorbar(x, m, yerr=[np.array(m) - ci[:, 0], ci[:, 1] - np.array(m)], fmt='none', ecolor='k', lw=0.8, capsize=2)
+            for k, n in enumerate(names):
+                a.plot([x[k]] * 4, S['main'][c][f'tot|{n}']['per_pair'], 'o', ms=2.5, color='r')
+        a.axhline(0, color='k', lw=0.7)
+        a.axhline(1, color='k', ls=':', lw=0.7)
+        a.set_xticks(np.arange(len(names)))
+        a.set_xticklabels(['S_pos', 'S_res', 'S_ax', 'S_orth', 'cut'], fontsize=8)
+        a.legend(frameon=False, fontsize=8)
+    axs[0].set_ylabel('share of D_G (total loss)')
+    axs[1].set_title('pre-training G (D_G near 0; own scale)', fontsize=8)
     fg.tight_layout()
     for ext in ('pdf', 'png'):
         fg.savefig(os.path.join(OUT, f'fig_round16_S.{ext}'), dpi=200)
