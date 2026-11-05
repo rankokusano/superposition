@@ -1,13 +1,11 @@
 #!/bin/bash
-# Paper round 21 (docs/paper_extra_log.md Sec.45.2): one evaluation worker inside Docker.
-# Usage: GPU=<1|2|3> setsid nohup bash analyze/paper_extra/run_round21_eval.sh <worker> <n_workers> &
+# Paper round 21 Sec.2 evaluation (docs/paper_extra_log.md Sec.45.2): worker <w> of <n> (round21_eval.py main).
+# Run INSIDE the container, detached:  GPU=<g> setsid nohup bash analyze/paper_extra/run_round21_eval.sh <w> <n> > /dev/null 2>&1 &
 set -u
 cd "$(dirname "$0")/../.."
-W=$1; NW=$2
-[ "${GPU}" = "0" ] && { echo "GPU0 is not used"; exit 1; }
-LOG=data/result/paper_extra/Round21/logs
-mkdir -p $LOG
-docker exec -e CUDA_VISIBLE_DEVICES=${GPU} -e OMP_NUM_THREADS=2 kusano_research bash -c \
-  "cd /work/.worktrees/v11/my_research/preference_inference && nice -n 10 python -W ignore analyze/paper_extra/round21_eval.py main --worker $W --n_workers $NW" \
-  > $LOG/eval_w${W}.log 2>&1
-echo "exit $? tracebacks $(grep -c Traceback $LOG/eval_w${W}.log) $(date +%m-%d\ %H:%M)" > $LOG/done_w${W}
+export CUDA_VISIBLE_DEVICES=${GPU:?}
+[ "$GPU" = "0" ] && { echo "GPU0 is not to be used"; exit 1; }
+export OMP_NUM_THREADS=2
+L=data/result/paper_extra/Round21/logs; mkdir -p $L
+nice -n 10 python -u -W ignore analyze/paper_extra/round21_eval.py main --worker $1 --n_workers $2 > $L/eval_w$1.log 2>&1
+echo "exit $? tracebacks $(grep -c Traceback $L/eval_w$1.log) $(date '+%m-%d %H:%M')" > $L/done_w$1
