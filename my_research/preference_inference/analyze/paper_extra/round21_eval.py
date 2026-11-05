@@ -27,7 +27,7 @@ Read-outs (per episode, step k = 1..K = prediction made at step T0+k-1):
   self  d*_L(k) = argmin_d mean|pred_k - view(p_T0 + d u_L)| over valid d (dstar rule: (episode, L) used only if
         d = 0..5 are valid), L in {L_old, L_new}; main = colour-agnostic (minimum over the views rendered in the
         pre-swap and the swapped layout), supplement = the data's current layout (as the existing d*);
-        s_L = OLS slope of d*_L over k (localise_v11.slopes); Delta_self = s_Lold - s_Lnew.
+        s_L = OLS slope of d*_L over k (localise_v11.slopes, 2 targets: slopes_t); Delta_self = s_Lold - s_Lnew.
   other A-2 position est_k from the predicted image (p2test_v11.read_a2, calibration of the common test as G5b,
         A-1 position of frame T0+k-1 as G5b); s_L = OLS slope over k of (est_k - p2) . unit(L - p2) with >= 5 finite
         points (as eval_g5_v12.g5a_metric); Delta_other = s_Lold - s_Lnew.
@@ -165,6 +165,18 @@ def dstar_lt(preds, views, valid, layout_idx, chunk=25):
     return out
 
 
+def slopes_t(ds, kmax):
+    """localise_v11.slopes for any number of targets: OLS slope of d* over k = 1..kmax, NaN if any step is NaN."""
+    ks = np.arange(1, kmax + 1)
+    s = np.full(ds.shape[:2], np.nan)
+    for n in range(ds.shape[0]):
+        for c in range(ds.shape[1]):
+            y = ds[n, c, :kmax]
+            if not np.isnan(y).any():
+                s[n, c] = np.polyfit(ks, y, 1)[0]
+    return s
+
+
 def other_slopes(est, p2, lo, ln):
     ks = np.arange(1, est.shape[1] + 1)
     S = np.full((est.shape[0], 2), np.nan)
@@ -199,7 +211,7 @@ def evaluate(cond, s, e, dev, DD, V, ab):
                 pr = freeze_flow(model, D, T0, K_SELF, 'self', pv, dev)
                 for tag, li in (('', None), ('_cur', cur)):
                     ds = dstar_lt(pr, V['views_lt'][:, ti], V['valid_lt'][:, ti], li)
-                    sl = slopes(ds, K_SELF)
+                    sl = slopes_t(ds, K_SELF)
                     sav[f'{dname}_{vname}_self_{pv}{tag}'] = (sl[:, 0] - sl[:, 1]).astype(np.float32)
                     if tag == '':
                         sav[f'{dname}_{vname}_self_{pv}_dstar'] = ds.astype(np.float16)
