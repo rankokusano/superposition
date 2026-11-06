@@ -2,7 +2,7 @@
 
 - 作成：2026-10-31（第13弾の後）。既存のファイルは変えず、確認と一覧づくりだけをした。
 - 追記：2026-11-01（第14弾の段階Cの行と報告のファイルを足した）。
-- 追記：2026-11-01（第15弾 D1・D2 の行と報告のファイルを足した）。2026-11-02（第16弾の行と報告のファイルを足した）。2026-11-02（第17弾の行と報告のファイルを足した）。2026-11-03（第18弾の行と報告のファイルを足した）。2026-11-05（第19弾の行と報告のファイルを足した）。2026-11-06（第20弾の行と報告のファイルを足した。同じ日に第20弾の追加 $I$ の行、第21弾の行と報告のファイルを足した）。
+- 追記：2026-11-01（第15弾 D1・D2 の行と報告のファイルを足した）。2026-11-02（第16弾の行と報告のファイルを足した）。2026-11-02（第17弾の行と報告のファイルを足した）。2026-11-03（第18弾の行と報告のファイルを足した）。2026-11-05（第19弾の行と報告のファイルを足した）。2026-11-06（第20弾の行と報告のファイルを足した。同じ日に第20弾の追加 $I$ の行、第21弾・第22弾の行と報告のファイルを足した）。
 - 作業場所：`.worktrees/v11/my_research/preference_inference`。枝 `feature/v11-self-experience`。この一覧の作成の時点で、手元の枝は origin と同じ（push 済み）。
 - 「事前登録」は計算の前にコミットした判定の形。「事前登録外」は、手順だけを計算の前にコミットした記述・探索。
 
@@ -30,6 +30,7 @@
 | §44 | **第20弾**：途中で赤と緑を入れ替える検査（Woodward 型。新しい評価データ 600 × N・O・S・R × `p_rule` 0.8・0.5、学習なし。$D_{\mathrm{swap}}$・$D_{\mathrm{noswap}}$、視覚 V0・V1・V2 × 入力 G・T・Z、自己の誤差・追跡の乱れ） | 探索・事前登録外（データの手順 `99d3bc7`、§2 の手順 `2d79c1c`） | `round20_results.md` のコミット | 主（経験50%・G・V1・0.8）の $D_{\mathrm{swap}}$ −0.0615 [−0.0777, −0.0453] [−0.0707, −0.0519]（4/4 が負）、$D_{\mathrm{noswap}}$ +0.0575。T も負（−0.0394）。読み方の表の行1（場所に結びつけた予測）。追跡の乱れなし |
 | §44.5〜44.6 | **第20弾の追加**：色の配置の効果 $I = D_{\mathrm{swap}}+D_{\mathrm{noswap}}$（保存配列だけ。G・T・Z × V1・V2・V0 × 0.8・0.5、条件の差・T − Z・G − Z） | 探索・事前登録外（手順 `7c04484`） | $I$ の結果のコミット | 入力 T で $I>0$ の行はない（経験50%・V1・0.8 は −0.0173、≈0）。主は −0.0041（≈0）。V1 はほぼ全部 ≈0。色の配置を使っていない読み |
 | §45 | **第21弾**：自己の経路で、入れ替えの後に「赤の新しい場所へ進む」と予測するか（新しい評価データ 600 × swap・noswap、A-2 はとどまる、学習なし。$C=\Delta_{\text{入れ替えなし}}-\Delta_{\text{入れ替えあり}}$、自己 K = 15・他者 K = 10、保つ・反転・零 × V1・V0） | 探索・事前登録外（データの手順 `7cc6885`、§2 の手順 `83a6916`） | `round21_results.md` のコミット | 主（経験50%・V1・保つ）の $C_{\mathrm{self}}$ +0.2494 [+0.2149, +0.2839] [+0.2256, +0.2753]（6/6 が正）、$C_{\mathrm{other}}$ +0.0247（≈0）。読み方の表の行2（自己から他者への流用の問題）。$C_{\mathrm{self}}$ の経験50% − 経験なし・− 符号無作為はどちらも $>0$（自分の価値の経験に依存） |
+| §46 | **第22弾**：他者の経路は快・不快の向きを使うか（第21弾のデータと流し方、学習なし。経験80%・符号無作為（経験80%）、他者の経路への入力 X1（2倍・4倍）・X2（自己とそろえる）・X3（1 つの範囲に +0.28）、読み出し img（予測画像の A-2 の位置）と feat（予測した他者の視点の特徴の照合）） | 探索・事前登録外（手順 `732d4a7`） | `round22_results.md` のコミット | 主（img）はどの行にも当たらない（他者の保つ − 反転 ≈0、$C_{\mathrm{other}}$ は ≈0 か CI が食い違う）。補足（feat）は経験50%・経験80% とも行1（経験50% の $C_{\mathrm{other}}$ +0.1871、6/6 が正）。img と feat は食い違う。他者の快・不快は自己より小さくない（X2 は 0.85 倍の縮小） |
 
 ## 2. 記録のファイル（すべて git に入っていて、push 済み）
 
@@ -49,6 +50,7 @@
 | 第19弾の報告 | `paper/check/round19_results.md` | 第19弾の行を足したコミット |
 | 第20弾の報告 | `paper/check/round20_results.md` | 第20弾の行を足したコミット |
 | 第21弾の報告 | `paper/check/round21_results.md` | 第21弾の行を足したコミット |
+| 第22弾の報告 | `paper/check/round22_results.md` | 第22弾の行を足したコミット |
 | この一覧 | `paper/check/extra_results_index.md` | この一覧と同じコミット |
 | コード（計算・集計・図・実行） | `analyze/paper_extra/e1_*.py`・`e2_*.py`・`e2pos_*.py`・`c_run.py`・`train_paper_e1.py`・`run_e1_*.sh`・`run_e2*.sh`・`vdir_*.py`・`vdirb_*.py`・`run_vdir_c.sh`・`run_vdirb_eval.sh`、`simulation/make_signrand_paper_e1.py`・`collect_data_vdir_b.py` | 各コミット（`git log -- <file>`） |
 | 設定 | `config/exp/paper_extra/E1_signrand50/*.yml`（7 ファイル） | `a1770ba` |
@@ -59,6 +61,7 @@
   - 図：PDF・PNG（下の §3）。
   - 例外：第20弾の指示書 `paper/check/paper_instructions_round20.md` は、指示書の指定でコミットした（`99d3bc7`）。
   - 例外：第21弾の指示書 `paper/check/paper_instructions_round21.md` は、§1 のコミット（`7cc6885`）に入れた。
+  - 例外：第22弾の指示書 `paper/check/paper_instructions_round22.md` は、§2 の手順のコミット（`732d4a7`）に入れた。
 
 ## 3. git に入っていない配列・データ・チェックポイント（2026-10-31 14:45 の大きさ）
 
@@ -83,6 +86,7 @@
 | `data/result/paper_extra/Round20/` | 第20弾の確認（`check/`、約 90 MB）、評価（`eval/`、228 ファイル、約 2.1 GB）、集計・表・図（`analysis/`） | 約 2.2 GB | §44.2〜44.4：`round20_data_check.py`、`run_round20_eval.sh <w> 9`（`round20_eval.py`）、`round20_aggregate.py` |
 | `data/data/paper_r21_swap/` | 第21弾の評価データ（`data_{swap,noswap}.h5`、600 エピソード、41 フレーム） | 17 MB | §45.1：`xvfb-run --auto-servernum python simulation/collect_data_round21.py`、鍵 `paper_round21_swap_20261106` |
 | `data/result/paper_extra/Round21/` | 第21弾の照合する視界（`views/`、16 MB）、確認（`check/`、25 MB）、評価（`eval/`、120 ファイル、74 MB）、集計・表・図（`analysis/`）、試し（`smoke/`・`synthetic/`、89 MB） | 約 225 MB | §45.1〜45.3：`round21_views.py`、`round21_data_check.py`、`round21_eval.py check`、`run_round21_eval.sh <w> 9`（`round21_eval.py main`）、`round21_aggregate.py` |
+| `data/result/paper_extra/Round22/` | 第22弾の確認（`check/`）、照合する視界（`views/`、28 MB）、評価（`eval/` 150 ファイル 104 MB、`eval21/` 30 ファイル 19 MB）、集計・表・図（`analysis/`）、試し（`synthetic/`、141 MB） | 約 290 MB | §46.1〜46.3：`round22_check.py`、`round22_views.py`、`round22_eval.py check`、`run_round22_eval.sh <w> 9`（`round22_eval.py main`）、`round22_aggregate.py` |
 
 - 学習に使ったほかのチェックポイント（経験なし・経験50%・経験80%・符号無作為（経験80%）・好み切替）は、§35 より前の作業（v12〜v14、第6弾）のもので、それぞれの作業記録にある。
 - 作り直しの手順は、どれも作業記録の該当の節に、コード・鍵・コマンドとして書いてある。
