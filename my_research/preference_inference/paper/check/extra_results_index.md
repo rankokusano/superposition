@@ -34,6 +34,7 @@
 | §47 | **第23弾**：特徴の照合は「動き」を読んでいるか（2.1 陽性対照：第20弾のデータ `p_rule` 0.5 で N/O・S/R の正答率、本当の特徴・本当の画像・予測した特徴・予測画像。2.2 見え方と動き：第21弾のデータで範囲 E・B・R に +0.28、$M_{\mathrm{feat}}$・$M_{\mathrm{img}}$。学習なし） | 探索・事前登録外（手順 `419d0e6`） | `round23_results.md` のコミット | 2.1 はどの行にも当たらない（本当の特徴の BA 0.774、予測した特徴 0.72〜0.75、予測画像 0.80〜0.84）。2.2 もどの行にも当たらない（$M_{\mathrm{feat}}$ E $>0$・B ≈0・R $>0$、経験の差は R だけ）。事後の記述：範囲 2〜5 には学習の間に快・不快が入らない |
 | §48 | **第24弾**：「自分を出発点にして、他者を見て直す」学ばせ方は作れるか（下調べ、学習なし。入れ替えを入れた段階IIのデータの作り方、手がかりの数、学ばせる部分の分け方・恒等写像の一致・勾配、損失、評価、時間の見積もり、§2 出発点の $C_{SO}$） | 探索・事前登録外（下調べ） | `round24_results.md` のコミット | §1 はどれも作れる（§1.5 は条件つき：生成器は 3 条件 × 組1〜4 だけ）。手がかりは 1 エピソード 18〜28。恒等写像で始めるとビット単位で一致。§2 の生成器の出力を入れた $C_{SO}$ は 3 条件とも ≈0（経験50% +0.0238） |
 | §49 | **第25弾**：「自分を出発点にして、他者を見て直す」学ばせ方の試し（組1。先生の了承の前。新しいデータ `paper_r25_swap50`（入れ替え 50%、`p_rule` 0.5）、足した層 8→8 + 生成器の段1（M・N、100 エポック）、共有の LSTM も学ぶ段2（1/10・1/100、50 エポック）、5 エポックごとの $D$ と自己の見張り） | 探索・事前登録外（§0 の一覧 `07bc6b8`、§2 の手順 `dd1a254`） | `round25_results.md` のコミット | §2.3 の止まる条件に 2 つ当たる：段2 の学習率（1/10・1/100 とも $C_{\mathrm{self}}$ が半分を割る条件がある）、範囲 2〜5（M では $D$ が動かず N でだけ動く）。§2.2 には記述として行4（$D_{\mathrm{end2}}\approx0$）に近い。全組には進まない。既存のものの sha256 は 9341／9341 が同じ |
+| §50 | **第26弾**：なぜ身につかないか（§1 学習の信号 $S_{\mathrm{WT}}=L(W)-L(T)$ を段階Iの予測器 4 条件 × 組1〜6・V／B で、学習なし。§2 足した層だけを学ばせ、生成器の代わりに T を入れる入口の上限（3 条件 × V／B × 組1〜3、50 エポック）。§3.1 A-1 の動きと快・不快の結びつき（3 つのデータ）。§3.2 段階Iのデータを半分混ぜた段2（1/10・1/100）） | 探索・事前登録外（手順と計算の前の一覧 `bfcbbc5`） | `round26_results.md` のコミット | §1 行2（主の $S_{\mathrm{WT}}$ V +0.229・B +1.403、>0）。§2 記述として行3（経験50% は 3 組とも V・B で動かない）。§3 行1（段階IIのデータの A-1 は無作為、混ぜると $C_{\mathrm{self}}$ は 1.11 倍以上を保つ。$D$ は ≈0）。全組には進まない。既存のものの sha256 は 10015／10015 が同じ |
 
 ## 2. 記録のファイル（すべて git に入っていて、push 済み）
 
@@ -57,6 +58,7 @@
 | 第23弾の報告 | `paper/check/round23_results.md` | 第23弾の行を足したコミット |
 | 第24弾の報告 | `paper/check/round24_results.md` | 第24弾の行を足したコミット |
 | 第25弾の報告・既存のものの一覧 | `paper/check/round25_results.md`、`round25_existing_inventory.md`・`round25_existing_inventory_sha256.txt`・`round25_existing_inventory_after.md` | 第25弾の行を足したコミット（一覧の前は `07bc6b8`） |
+| 第26弾の報告・既存のものの一覧 | `paper/check/round26_results.md`、`round26_existing_inventory.md`・`round26_existing_inventory_sha256.txt`・`round26_existing_inventory_after.md` | 第26弾の行を足したコミット（一覧の前は `bfcbbc5`） |
 | この一覧 | `paper/check/extra_results_index.md` | この一覧と同じコミット |
 | コード（計算・集計・図・実行） | `analyze/paper_extra/e1_*.py`・`e2_*.py`・`e2pos_*.py`・`c_run.py`・`train_paper_e1.py`・`run_e1_*.sh`・`run_e2*.sh`・`vdir_*.py`・`vdirb_*.py`・`run_vdir_c.sh`・`run_vdirb_eval.sh`、`simulation/make_signrand_paper_e1.py`・`collect_data_vdir_b.py` | 各コミット（`git log -- <file>`） |
 | 設定 | `config/exp/paper_extra/E1_signrand50/*.yml`（7 ファイル） | `a1770ba` |
@@ -99,6 +101,7 @@
 | `data/result/paper_extra/Round24/` | 第24弾の作り方の確かめ（`test/`）、§1.2 のデータ（`clue/`、位置だけ 3600 エピソード、13 MB）、画像用のエピソード（`check/`）、モデルの確かめ・時間（`model/`）、§2 の評価（`eval/` 12 ファイル）、表・図（`analysis/`） | 約 30 MB | §48：`simulation/collect_data_round24.py`、`round24_model.py`、`round24_clue.py`、`round24_eval.py run・aggregate` |
 | `data/data/paper_r25_swap50/` | 第25弾の学習用データ（`data.h5`、train 3000・test 300、101 フレーム、入れ替え 50%・時点 20〜80・`p_rule` 0.5） | 2.0 GB | §49.1：`simulation/collect_data_round24.py --key paper_round25_swap50 --split train --p_rule 0.5 --swap_t rand20-80 --p_swap 0.5 --n_ep 3000 --part <i> --n_parts 10`、test は `--key paper_round25_swap50_test --split test --n_ep 300 --n_parts 2`、`round25_make_data.py` |
 | `data/result/paper_extra/Round25/` | 第25弾の試し（組1）：走らせたもの 12 本（`runs/`、重み 5 エポックごと・評価 `eval/`）、確かめ（`check/`）、データの分割（`data_parts/`）、記録（`logs/`）、集計・表・図（`analysis/`） | 571 MB | §49：`round25_train.py check`、`run_round25.sh <cond>`（`round25_train.py stage1・stage2`）、`round25_aggregate.py` |
+| `data/result/paper_extra/Round26/` | 第26弾：作りの確かめ（`check/`）、§1 の窓の損失（`signal/`、4 条件 × 6 組）、§2 の走らせたもの 18 本（`runs/s2_*`、足した層の重み・評価 `eval/`）、§3.2 の 2 本（`runs/s32_*`）、§3.1（`data31/`）、記録（`logs/`）、集計・表・図（`analysis/`） | 62 MB | §50：`round26.py check`・`signal --jobs <条件>:<組>`・`train2 --cond --flow --pair`・`data31`・`train32 --ratio`、`round26_aggregate.py sig`・`s2`・`s3` |
 
 - 学習に使ったほかのチェックポイント（経験なし・経験50%・経験80%・符号無作為（経験80%）・好み切替）は、§35 より前の作業（v12〜v14、第6弾）のもので、それぞれの作業記録にある。
 - 作り直しの手順は、どれも作業記録の該当の節に、コード・鍵・コマンドとして書いてある。
