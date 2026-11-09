@@ -39,6 +39,7 @@
 | §52 | **第28弾**：自分の価値の経験は、他者の動きの予測を学ぶのを妨げるか（§1 第27弾 §2 の学び方（T、流し方 B、足した層 + 共有の LSTM（1/10）、段階Iのデータを半分混ぜる）を組4〜6 にも行い、3 条件 × 6 組にまとめた。手順1 は第26弾 §2 の B を組4〜6 で。§2 経験50% で段階Iのデータを混ぜない形、組1〜6、50 エポック） | 探索・事前登録外（手順と計算の前の一覧 `5f17e1f`） | `round28_results.md` のコミット | §1 行3（6 組で 経験50% − 経験なし −0.136・経験50% − 符号無作為 −0.072、どちらも ≈0。第27弾の組1〜3 の形は続かない）。§2 行3（50 エポック目の $C_{\mathrm{self}}$ の対の差 −0.009 ≈0。混ぜなくても下がらず、競合は確かめられない。$D_{T,\mathrm{late}}$ の対の差 +0.157 ≈0）。方向2 には進まない。既存のものの sha256 は 10850／10850 が同じ |
 | §53 | **第29弾**：新しい仕組みを作る前の確かめ（§0 動きの表し方・A-2 の規則・段階Iの過程2の入力・元論文の Motion Generator の入口。§1 過程2の運動の欄に動きを入れたときの予測画像と他者の視点の特徴、4 条件 × 組1〜6 × 8 方向、学習なし。§2 快・不快 → 次の自分の動きの小さな学習。§3 自分の経験だけで学んだ Encoder-1 の読み出しを他者の視点に当てる。§4 理想の観察者が好みを見分ける歩数、`p_rule` 0.5・0.8） | 探索・事前登録外（手順と計算の前の一覧 `ba82f9b`） | `round29_results.md` のコミット | §1 行1（$M_{\mathrm{img}}$ +0.250 >0、量は入れたとおりの約 1/4）。§2 行1（0.471、最良 0.496）。§3 行3（実際の他者の視点 0.442、予測した他者の視点 −0.113）。§4 行1（4 歩で 95%）。既存のものの sha256 は 11487／11487 が同じ |
 | §54 | **第30弾**：他者の快・不快を画像の空間で作れるか（§0 復号器・A-2 の視界の画像・快・不快の計算・描画の設定。§1 自分の視界の画像 → 赤 − 緑の小さな網を他者の実際の視界に当てる、種 1〜6。§2 予測した他者の視点の特徴を復号して網を当てる（既存の Visual Decoder が主、新しい復号器は記述）、観察中・入れ替えの後に止めた予測、3 条件 × 組1〜6。§3 予備：画像から A-2 の位置と配置を読み、幾何で作る） | 探索・事前登録外（手順と計算の前の一覧 `9fd388b`） | `round30_results.md` のコミット | §1 行1（0.986）。§2 主は行4（(a) −0.02、赤と緑の区別が消える）、新しい復号器は行3 の形（0.85／0.60／0.28）。§3 観察中は行1（0.80）、止めた予測は行2（0.66）。既存のものの sha256 は 11684／11684 が同じ |
+| §55 | **第31弾**：元論文と同じ形で、他者の視界の復号を確かめ直す（§1 Encoder-2 の入力・第29弾 §3 と第30弾 §2 で入れたもの・既存の復号器の学び方・元論文の Fig.5e の値。§2 格子の全配置（[−9, 9]²、重なりを除く、2 配置、259,920）で A-1 の視界 → Encoder-2 → 既存の復号器、3 つの画素の差・位置の量・色の量、§2.4 Encoder-2 → A-2 の赤 − 緑の診断のリッジ） | 探索・事前登録外（手順と計算の前の一覧 `ca8a920`） | `round31_results.md` のコミット | $d(\hat v^2, v^2)$ 0.105 < $d(\hat v^2, v^1)$ 0.157（元論文の向き）。位置の量 0.655、色の量 −0.066、Encoder-2 の色の読み出し 0.700（境目）。決め方のとおりでは行4（位置の量が目安の下）、形は行2 に近い。第30弾 (a) はすでに元論文と同じ入れ方だった。既存のものの sha256 は 14432／14432 が同じ |
 
 ## 2. 記録のファイル（すべて git に入っていて、push 済み）
 
@@ -67,6 +68,7 @@
 | 第28弾の報告・既存のものの一覧 | `paper/check/round28_results.md`、`round28_existing_inventory.md`・`round28_existing_inventory_sha256.txt`・`round28_existing_inventory_after.md` | 第28弾の行を足したコミット（一覧の前は `5f17e1f`） |
 | 第29弾の報告・既存のものの一覧 | `paper/check/round29_results.md`、`round29_existing_inventory.md`・`round29_existing_inventory_sha256.txt`・`round29_existing_inventory_after.md` | 第29弾の行を足したコミット（一覧の前は `ba82f9b`） |
 | 第30弾の報告・既存のものの一覧 | `paper/check/round30_results.md`、`round30_existing_inventory.md`・`round30_existing_inventory_sha256.txt`・`round30_existing_inventory_after.md` | 第30弾の行を足したコミット（一覧の前は `9fd388b`） |
+| 第31弾の報告・既存のものの一覧 | `paper/check/round31_results.md`、`round31_existing_inventory.md`・`round31_existing_inventory_sha256.txt`・`round31_existing_inventory_after.md` | 第31弾の行を足したコミット（一覧の前は `ca8a920`） |
 | この一覧 | `paper/check/extra_results_index.md` | この一覧と同じコミット |
 | コード（計算・集計・図・実行） | `analyze/paper_extra/e1_*.py`・`e2_*.py`・`e2pos_*.py`・`c_run.py`・`train_paper_e1.py`・`run_e1_*.sh`・`run_e2*.sh`・`vdir_*.py`・`vdirb_*.py`・`run_vdir_c.sh`・`run_vdirb_eval.sh`、`simulation/make_signrand_paper_e1.py`・`collect_data_vdir_b.py` | 各コミット（`git log -- <file>`） |
 | 設定 | `config/exp/paper_extra/E1_signrand50/*.yml`（7 ファイル） | `a1770ba` |
@@ -114,6 +116,7 @@
 | `data/result/paper_extra/Round28/` | 第28弾：作りの確かめ（`check/`）、§1 の手順1 の 9 本（`stage_a/runs/s2_*_B_s3〜s5`、第26弾と同じ形）、手順2 の 9 本（`runs/mix_*`）、§2 の 6 本（`runs/nomix_p50_s*`）、足した層と共有の LSTM の重み・評価 `eval/`、記録（`logs/`）、集計・表・図（`analysis/`） | 77 MB | §52：`round28.py check a`・`check bc`・`stage_a --cond --pair`・`train --cond --pair --mix 0/1`、`round28_aggregate.py s1`・`s2`・`all` |
 | `data/result/paper_extra/Round29/` | 第29弾：§1 の照合の視界と特徴（`views/`・`ref/`）、作りの確かめ（`check/`）、§1 の評価 120（`s1/`）、§2（`s2/`）、§3 18（`s3/`）、§4（`s4/`）、記録（`logs/`）、集計・表・図（`analysis/`） | 115 MB | §53：`round29.py views`・`encode`・`s1 --worker`・`s2`・`s3`・`s4`・`check`、`round29_aggregate.py all` |
 | `data/result/paper_extra/Round30/` | 第30弾：作りの確かめ（`check/`）、§1 の網と十分統計量（`s1/`）、新しい復号器（`dec/`）、§2 の 18（`s2/`）、§3（`s3/`）、記録（`logs/`）、集計・表・図（`analysis/`） | 44 MB | §54：`round30.py check`・`s1`・`dec`・`s2 --cond`・`s3 --part`、`round30_aggregate.py` |
+| `data/result/paper_extra/Round31/` | 第31弾：作りの確かめ（`check/`）、格子の全配置の特徴・画素の差・範囲ごとの量（`main/grid.npz`）と例の画像（`main/examples.npz`）、§2.4 の読み出し（`read/`）、記録（`logs/`）、集計・表・図（`analysis/`） | 290 MB | §55：`round31.py check`・`main`・`read`、`round31_aggregate.py` |
 
 - 学習に使ったほかのチェックポイント（経験なし・経験50%・経験80%・符号無作為（経験80%）・好み切替）は、§35 より前の作業（v12〜v14、第6弾）のもので、それぞれの作業記録にある。
 - 作り直しの手順は、どれも作業記録の該当の節に、コード・鍵・コマンドとして書いてある。
