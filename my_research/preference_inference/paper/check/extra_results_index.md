@@ -41,6 +41,7 @@
 | §54 | **第30弾**：他者の快・不快を画像の空間で作れるか（§0 復号器・A-2 の視界の画像・快・不快の計算・描画の設定。§1 自分の視界の画像 → 赤 − 緑の小さな網を他者の実際の視界に当てる、種 1〜6。§2 予測した他者の視点の特徴を復号して網を当てる（既存の Visual Decoder が主、新しい復号器は記述）、観察中・入れ替えの後に止めた予測、3 条件 × 組1〜6。§3 予備：画像から A-2 の位置と配置を読み、幾何で作る） | 探索・事前登録外（手順と計算の前の一覧 `9fd388b`） | `round30_results.md` のコミット | §1 行1（0.986）。§2 主は行4（(a) −0.02、赤と緑の区別が消える）、新しい復号器は行3 の形（0.85／0.60／0.28）。§3 観察中は行1（0.80）、止めた予測は行2（0.66）。既存のものの sha256 は 11684／11684 が同じ |
 | §55 | **第31弾**：元論文と同じ形で、他者の視界の復号を確かめ直す（§1 Encoder-2 の入力・第29弾 §3 と第30弾 §2 で入れたもの・既存の復号器の学び方・元論文の Fig.5e の値。§2 格子の全配置（[−9, 9]²、重なりを除く、2 配置、259,920）で A-1 の視界 → Encoder-2 → 既存の復号器、3 つの画素の差・位置の量・色の量、§2.4 Encoder-2 → A-2 の赤 − 緑の診断のリッジ） | 探索・事前登録外（手順と計算の前の一覧 `ca8a920`） | `round31_results.md` のコミット | $d(\hat v^2, v^2)$ 0.105 < $d(\hat v^2, v^1)$ 0.157（元論文の向き）。位置の量 0.655、色の量 −0.066、Encoder-2 の色の読み出し 0.700（境目）。決め方のとおりでは行4（位置の量が目安の下）、形は行2 に近い。第30弾 (a) はすでに元論文と同じ入れ方だった。既存のものの sha256 は 14432／14432 が同じ |
 | §56 | **第32弾（案A）**：色を描き分ける復号器を自分の視界だけで学び直し、他者の快・不快を答えなしで作れるか（§1 既存の復号器の学び方、赤・緑の画素の割合、復号器は一つで足りること。§2 候補 D1〜D4 × 乱数 3 本を自分の視界の検証で選ぶ、(a) 自分の視界、(b) 格子の元論文の量と赤 − 緑、(c) 格子の一続きの流れ（第30弾の価値の網）、(d) 第30弾 §2 の予測の場面、3 条件 × 組1〜6） | 探索・事前登録外（手順と計算の前の一覧 `0f906ab`） | `round32_results.md` のコミット | D3 を選んだ。**行3**：(a) 0.942、(c) 0.008、(d) 観察中 0.067・止めた予測 0.010。新しい復号器は Encoder-2 からの画像が崩れる（$d(\hat v^2, v^2)$ 0.294、既存 0.105）。既存のものの sha256 は 14445／14445 が同じ |
+| §57 | **第33弾（案A）**：他者の快・不快の作り方を比べる（§1 段階Iの入れ方・入力の写し・位置と配置の記録・配置の読み方。案1 内部状態の共有（R：$h^1$ → 自分の快・不快、(i) 快・不快の入力 0／(ii) 次の時点、線形・網、$h^2$ に当てる）、診断（$h^2$ → A-2 の赤 − 緑、答えを使う）、案2 位置で学ぶ（M：自分の位置と配置 → 自分の快・不快、A-2 の本当の位置・見つけた位置）、案3 幾何。(b) 観察中・(b2)・(c) 入れ替えの後に止めた予測、4 条件 × 組1〜6） | 探索・事前登録外（手順と計算の前の一覧 `2bfcc7c`） | `round33_results.md` のコミット | 経験50% (b)：案1 は 0 付近（最高 0.018）、診断 0.82 → **行2**。案2（見つけた位置）0.948 → **行4**。案3 実際 0.959。(c)：案1 0 付近、案2 0.50、案3 0.66。既存のものの sha256 は 14522／14522 が同じ |
 
 ## 2. 記録のファイル（すべて git に入っていて、push 済み）
 
@@ -71,6 +72,7 @@
 | 第30弾の報告・既存のものの一覧 | `paper/check/round30_results.md`、`round30_existing_inventory.md`・`round30_existing_inventory_sha256.txt`・`round30_existing_inventory_after.md` | 第30弾の行を足したコミット（一覧の前は `9fd388b`） |
 | 第31弾の報告・既存のものの一覧 | `paper/check/round31_results.md`、`round31_existing_inventory.md`・`round31_existing_inventory_sha256.txt`・`round31_existing_inventory_after.md` | 第31弾の行を足したコミット（一覧の前は `ca8a920`） |
 | 第32弾の報告・既存のものの一覧 | `paper/check/round32_results.md`、`round32_existing_inventory.md`・`round32_existing_inventory_sha256.txt`・`round32_existing_inventory_after.md` | 第32弾の行を足したコミット（一覧の前は `0f906ab`） |
+| 第33弾の報告・既存のものの一覧 | `paper/check/round33_results.md`、`round33_existing_inventory.md`・`round33_existing_inventory_sha256.txt`・`round33_existing_inventory_after.md` | 第33弾の行を足したコミット（一覧の前は `2bfcc7c`） |
 | この一覧 | `paper/check/extra_results_index.md` | この一覧と同じコミット |
 | コード（計算・集計・図・実行） | `analyze/paper_extra/e1_*.py`・`e2_*.py`・`e2pos_*.py`・`c_run.py`・`train_paper_e1.py`・`run_e1_*.sh`・`run_e2*.sh`・`vdir_*.py`・`vdirb_*.py`・`run_vdir_c.sh`・`run_vdirb_eval.sh`、`simulation/make_signrand_paper_e1.py`・`collect_data_vdir_b.py` | 各コミット（`git log -- <file>`） |
 | 設定 | `config/exp/paper_extra/E1_signrand50/*.yml`（7 ファイル） | `a1770ba` |
@@ -120,6 +122,7 @@
 | `data/result/paper_extra/Round30/` | 第30弾：作りの確かめ（`check/`）、§1 の網と十分統計量（`s1/`）、新しい復号器（`dec/`）、§2 の 18（`s2/`）、§3（`s3/`）、記録（`logs/`）、集計・表・図（`analysis/`） | 44 MB | §54：`round30.py check`・`s1`・`dec`・`s2 --cond`・`s3 --part`、`round30_aggregate.py` |
 | `data/result/paper_extra/Round31/` | 第31弾：作りの確かめ（`check/`）、格子の全配置の特徴・画素の差・範囲ごとの量（`main/grid.npz`）と例の画像（`main/examples.npz`）、§2.4 の読み出し（`read/`）、記録（`logs/`）、集計・表・図（`analysis/`） | 290 MB | §55：`round31.py check`・`main`・`read`、`round31_aggregate.py` |
 | `data/result/paper_extra/Round32/` | 第32弾：新しい復号器 12 本と検証の値・選んだもの（`dec/`）、(a)（`a/`）、(b)・(c) と例の画像（`grid/`）、(d)（`flow/`）、記録（`logs/`）、集計・表・図（`analysis/`） | 498 MB | §56：`round32.py train`・`select`・`selfeval`・`grid`・`flow --cond`、`round32_aggregate.py` |
+| `data/result/paper_extra/Round33/` | 第33弾：作りの確かめ（`check/`）、案1・診断・予測画像の位置（`flows/`）、実際の画像の位置と正解（`real/`）、案2（`pos/`）、案3（`geo/`）、記録（`logs/`）、集計・表・図（`analysis/`） | 206 MB | §57：`round33.py check`・`flows --cond`・`real`・`pos --cond`・`geo --part`、`round33_aggregate.py` |
 
 - 学習に使ったほかのチェックポイント（経験なし・経験50%・経験80%・符号無作為（経験80%）・好み切替）は、§35 より前の作業（v12〜v14、第6弾）のもので、それぞれの作業記録にある。
 - 作り直しの手順は、どれも作業記録の該当の節に、コード・鍵・コマンドとして書いてある。
